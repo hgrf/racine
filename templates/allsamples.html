@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+<!-- see http://damienfremont.com/2014/12/19/how-to-expandcollapse-table-rows-with-bootstrap/ -->
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='list.css')}}">
+{% endblock %}
+
+{% macro render_branch(parent, level=0) %}
+  {% for sample in samples %}
+    {% if sample.parent_id == parent %}
+      <div style="margin-left:{{level*15}}px" class="row list-entry" data-toggle="collapse" data-target="#sample{{ sample.id }}">
+        <div class="col-md-1">{{ sample.id }}</div>
+        <div class="col-md-6">{{ sample.name }}</div>
+        <div class="col-md-5">{{ sample.sampletype.name }}</div>
+      </div>
+      <div id="sample{{ sample.id }}" class="row-fluid collapse out">
+        {{ render_branch(sample.id, level+1) }}
+      </div>
+    {% endif %}
+  {% endfor %}
+{% endmacro %}
+
+{% block page_content %}
+<h1 class="page-header">Samples</h1>
+<div class="container-fluid">
+<div class="row list-header" style="margin-left:0px">   <!-- bug: margin-left:0 also shifts the row, that's why we need it here -->
+  <div class="col-md-1">#</div>
+  <div class="col-md-6">Name</div>
+  <div class="col-md-5">Type</div>
+</div>
+{{ render_branch(0) }}
+</div>
+{% endblock %}

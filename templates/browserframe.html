@@ -1,0 +1,14 @@
+<div id="address" style="display: none">{{ address }}</div>
+
+{% for folder in folders %}
+  <div>
+  <img src="{{ folder.image }}" class="folder" data-url="{{ address }}{% if address!='' %}/{% endif %}{{ folder.name }}{{ folder.ext }}" width="100px" height="100px">
+  {{ folder.name }}{{ folder.ext }}
+  </div>
+{% endfor %}
+{% for file in files %}
+  <div>
+  <img class="file" src="{{ file.image }}" width="100px" height="100px">
+  {{ file.name }}{{ file.ext }}
+  </div>
+{% endfor %}

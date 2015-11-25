@@ -1,0 +1,27 @@
+{% set active = "sampletypes" %}
+{% extends "settings.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+<h1 class="page-header">Sample types</h1>
+<div class="container-fluid">
+  <div class="row list-header">
+    <div class="col-md-2">#</div>
+    <div class="col-md-10">Name</div>
+  </div>
+  {% for sampletype in sampletypes %}
+  <div class="row list-entry">
+    <div class="col-md-2">{{ sampletype.id }}</div>
+    <div class="col-md-10">{{ sampletype.name }}</div>
+  </div>
+  {% endfor %}
+  <div class="row list-entry">
+    <form method="POST">
+      {{ form.hidden_tag() }}
+      <div class="col-md-2"></div>
+      <div class="col-md-9">{{ wtf.form_field(form.name) }}</div>
+      <div class="col-md-1">{{ wtf.form_field(form.submit) }}</div>
+    </form>
+  </div>
+</div>
+{% endblock %}

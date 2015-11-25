@@ -1,0 +1,8 @@
+{% set active = "shutdown" %}
+{% extends "settings.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+<h1 class="page-header">Shutdown</h1>
+{{ wtf.quick_form(form) }}
+{% endblock %}

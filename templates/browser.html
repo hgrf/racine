@@ -1,0 +1,36 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Browser{% endblock %}
+
+{% block content %}
+<div id="browser-frame">
+  {% include 'browserframe.html' %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript" charset="utf-8">
+$(function() {
+  $(document).ready(function() {
+    function init_browser() {
+    $('.folder').dblclick( function( event ) {
+      $.ajax({
+        url: "/browser/"+$(this).data('url'),
+        data: { "browserframe": true },
+        success: function( data ) {
+          $( "#browser-frame" ).html(data);
+          init_browser();
+          // CAUTION! this solution might fill the RAM in the long term
+          // (because we recreate callback functions and stuff everytime we open a different folder)
+        }
+      });
+      event.preventDefault();
+    });
+    }
+    
+    init_browser();
+  });
+});
+</script>
+{% endblock %}

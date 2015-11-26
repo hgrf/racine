@@ -116,6 +116,18 @@ $(function() {
   };
 
   function init_matrix_view() {
+        $('#submit').click( function(event) {
+          $.ajax({
+            url: "/matrixview/"+$('#sampleid').text(),
+            type: "post",
+            data: $('#newmatrixform').serialize(),
+            success: function( data ) {
+              load_matrix_view($('#sampleid').text());
+            }
+          });
+          event.preventDefault();
+        });
+
       $('.matrixcell').dblclick( function( event ) {
         $('#childbrowser').data('target', $(this));
         $('#childbrowser').modal('show');
@@ -314,7 +326,6 @@ $(function() {
       function load_address(address) {
         $.ajax({
           url: "/browser"+address,
-          data: { "browserframe": true },
           success: function( data ) {
             $( "#browser-frame" ).html(data);
             init_browser();

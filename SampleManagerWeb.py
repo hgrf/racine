@@ -319,10 +319,7 @@ def browser(address):
       f.image = "/static/folder.png"
       folders.append(f)
 
-  if(request.args.get("browserframe")=="true"):
-    return render_template('browserframe.html', files=files, folders=folders, address=address)
-  else:
-    return render_template('browser.html', files=files, folders=folders, address=address)
+  return render_template('browserframe.html', files=files, folders=folders, address=address)
 
 @app.route('/browser/img/<path:image>')
 def browserimage(image):

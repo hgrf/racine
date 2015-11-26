@@ -1,9 +1,16 @@
+{% import "bootstrap/wtf.html" as wtf %}
+
 <div id="sampleid" style="display: none">{{ sample.id }}</div>
 <div id="matrixview-frame">
 <h1>Sample {{ sample.name }}</h1>
 {% if sample.mheight == None %}
 No matrix defined.
-{{ wtf.quick_form(form) }}
+<form id="newmatrixform">
+  {{ form.hidden_tag() }}
+  <div class="col-md-2">{{ wtf.form_field(form.height) }}</div>
+  <div class="col-md-2">{{ wtf.form_field(form.width) }}</div>
+  <div class="col-md-1">{{ wtf.form_field(form.submit) }}</div>
+</form>
 {% else %}
 Matrix dimensions: {{ sample.mheight }}x{{ sample.mwidth }}
 <table style="width: 100%; border-style: solid; border-width: 1px">

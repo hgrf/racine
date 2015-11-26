@@ -9,6 +9,7 @@ from wtforms.widgets import TextArea
 from wtforms.fields.html5 import DateField
 from datetime import date, datetime
 import io
+import socket
 
 import tempfile
 from smb.SMBConnection import SMBConnection
@@ -75,6 +76,18 @@ class Action(db.Model):
   def __repr__(self):
     return '<Action %r>' % self.id
 
+class SMBResource(db.Model):
+  __tablename__ = 'smbresources'
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.String(64), unique=True)
+  servername = db.Column(db.String(64))
+  serveraddr = db.Column(db.String(64))
+  userid = db.Column(db.String(64))
+  password = db.Column(db.String(64))
+
+  def __repr__(self):
+    return '<SMBResource %r>' % self.id
+
 
 ####################### Forms
 class NewActionForm(Form):
@@ -96,6 +109,14 @@ class NewTypeForm(Form):
 class NewMatrixForm(Form):
   height = StringField('Height:')   # use some sort of integer field here!
   width = StringField('Width:')     # use some sort of integer field here!
+  submit = SubmitField('Submit')
+
+class NewSMBResourceForm(Form):
+  name = StringField('SMB Resource name:')
+  servername = StringField('Server name (NetBIOS):')
+  serveraddr = StringField('Server address:')
+  userid = StringField('User name:')
+  password = StringField('Password:')
   submit = SubmitField('Submit')
 
 # see http://flask.pocoo.org/snippets/67/
@@ -294,14 +315,14 @@ class FileTile:
 @app.route('/browser', defaults={'address': ''})
 @app.route('/browser/<path:address>')
 def browser(address):
-  userID = ""
-  password = ""
+  # for the moment we'll only use the first database entry
+  # TODO: add possibility to choose from SMBResources
+  resource = SMBResource.query.filter_by(id=1).first()
   client_machine_name = "SampleManagerWeb"
-  server_name = "blechbox"
-  server_ip = "127.0.0.1"
+  server_ip = socket.gethostbyname(resource.serveraddr)
   image_extensions = [".jpg", ".jpeg", ".png"]
-
-  conn = SMBConnection(userID, password, client_machine_name, server_name, use_ntlm_v2 = True)
+  # need to convert unicode -> string apparently... (checked with print type(resource.servername))
+  conn = SMBConnection(str(resource.userid), str(resource.password), client_machine_name, str(resource.servername), use_ntlm_v2 = True)
   assert conn.connect(server_ip, 139)
 
   files = []
@@ -323,15 +344,14 @@ def browser(address):
 
 @app.route('/browser/img/<path:image>')
 def browserimage(image):
-  print image
-  userID = ""
-  password = ""
+  # for the moment we'll only use the first database entry
+  # TODO: add possibility to choose from SMBResources
+  resource = SMBResource.query.filter_by(id=1).first()
   client_machine_name = "SampleManagerWeb"
-  server_name = "blechbox"
-  server_ip = "127.0.0.1"
+  server_ip = socket.gethostbyname(resource.serveraddr)
   image_extensions = [".jpg", ".jpeg", ".png"]
-
-  conn = SMBConnection(userID, password, client_machine_name, server_name, use_ntlm_v2 = True)
+  # need to convert unicode -> string apparently... (checked with print type(resource.servername))
+  conn = SMBConnection(str(resource.userid), str(resource.password), client_machine_name, str(resource.servername), use_ntlm_v2 = True)
   assert conn.connect(server_ip, 139)
 
   file_obj = tempfile.NamedTemporaryFile()
@@ -370,6 +390,24 @@ def set_actiontypes():
 
 class ShutdownForm(Form):
   submit = SubmitField('Confirm shutdown')
+
+@app.route('/settings/smbresources', methods=['GET', 'POST'])
+def set_smbresources():
+  if request.args.get("delete"):
+    resource = SMBResource.query.filter_by(id=int(request.args.get("delete"))).first()
+    db.session.delete(resource) # delete cascade automatically deletes associated actions
+    db.session.commit()
+    return redirect('/settings/smbresources')
+  form = NewSMBResourceForm()
+  if form.validate_on_submit():
+    db.session.add(SMBResource(name=form.name.data, servername=form.servername.data, serveraddr=form.serveraddr.data, userid=form.userid.data, password=form.password.data))
+    db.session.commit()
+    form.name.data=''
+    form.servername.data=''
+    form.serveraddr.data=''
+    form.userid.data=''
+    form.password.data=''
+  return render_template('settings-smbresources.html', smbresources=SMBResource.query.all(), form=form)
 
 @app.route('/settings/shutdown', methods=['GET', 'POST'])
 def set_shutdown():

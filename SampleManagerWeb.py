@@ -82,6 +82,7 @@ class SMBResource(db.Model):
   name = db.Column(db.String(64), unique=True)
   servername = db.Column(db.String(64))
   serveraddr = db.Column(db.String(64))
+  sharename = db.Column(db.String(64))
   userid = db.Column(db.String(64))
   password = db.Column(db.String(64))
 
@@ -115,6 +116,7 @@ class NewSMBResourceForm(Form):
   name = StringField('SMB Resource name:')
   servername = StringField('Server name (NetBIOS):')
   serveraddr = StringField('Server address:')
+  sharename = StringField('Share name:')
   userid = StringField('User name:')
   password = StringField('Password:')
   submit = SubmitField('Submit')
@@ -327,7 +329,7 @@ def browser(address):
 
   files = []
   folders = []
-  for i in conn.listPath('cleanroom', address):
+  for i in conn.listPath(resource.sharename, address):
     f = FileTile()
     f.name, f.ext = os.path.splitext(i.filename)
     if not i.isDirectory:
@@ -355,7 +357,7 @@ def browserimage(image):
   assert conn.connect(server_ip, 139)
 
   file_obj = tempfile.NamedTemporaryFile()
-  file_attributes, filesize = conn.retrieveFile('cleanroom', image, file_obj)
+  file_attributes, filesize = conn.retrieveFile(resource.sharename, image, file_obj)
 
   file_obj.seek(0)
   image_binary = file_obj.read()
@@ -400,11 +402,12 @@ def set_smbresources():
     return redirect('/settings/smbresources')
   form = NewSMBResourceForm()
   if form.validate_on_submit():
-    db.session.add(SMBResource(name=form.name.data, servername=form.servername.data, serveraddr=form.serveraddr.data, userid=form.userid.data, password=form.password.data))
+    db.session.add(SMBResource(name=form.name.data, servername=form.servername.data, serveraddr=form.serveraddr.data, sharename=form.sharename.data, userid=form.userid.data, password=form.password.data))
     db.session.commit()
     form.name.data=''
     form.servername.data=''
     form.serveraddr.data=''
+    form.sharename.data=''
     form.userid.data=''
     form.password.data=''
   return render_template('settings-smbresources.html', smbresources=SMBResource.query.all(), form=form)

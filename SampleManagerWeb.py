@@ -342,6 +342,8 @@ def browser(address):
       f.image = "/static/folder.png"
       folders.append(f)
 
+  files = sorted(files, key=lambda f: f.name)
+  folders = sorted(folders, key=lambda f: f.name)
   return render_template('browserframe.html', files=files, folders=folders, address=address)
 
 @app.route('/browser/img/<path:image>')

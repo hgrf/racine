@@ -5,6 +5,7 @@ from ..models import Sample
 from ..models import SampleType
 from ..models import Action
 from ..models import ActionType
+from ..models import User
 from ..models import SAMPLE_NAME_LENGTH   # <-- sort this out
 from . import main
 from forms import NewSampleForm, NewActionForm, NewMatrixForm
@@ -17,6 +18,11 @@ def index():
     samples=Sample.query.filter_by(owner=current_user)
     return render_template('editor.html', samples=samples, sampletypes=SampleType.query.all(),
                            actiontypes=ActionType.query.all())
+
+@main.route('/userlist')
+@login_required
+def userlist():
+    return render_template('userlist.html', users=User.query.all())
 
 
 @main.route('/allsamples')

@@ -80,7 +80,7 @@
     </div>
 </div>
 
-    <div class="modal fade" id="childbrowser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="childbrowser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -90,6 +90,24 @@
             <div class="modal-body">
               Select please:
                 <div id="childbrowser-frame"></div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="userbrowser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="myModalLabel">Browser</h4>
+            </div>
+            <div class="modal-body">
+              Select a user, please:
+                <div id="userbrowser-frame"></div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -322,7 +340,16 @@ $(function() {
       $(this).find('.btn-ok').data('type', $(e.relatedTarget).data('type'));
       $('.debug-id').html('Delete <strong>'+$(e.relatedTarget).data('type')+'</strong> ID: <strong>' + $(this).find('.btn-ok').attr('id') + '</strong>');
     });
-    
+
+    $('#userbrowser').on('show.bs.modal', function(e) {
+        $.ajax({
+           url: "/userlist",
+           success: function( data ){
+               $("#userbrowser-frame").html(data);
+           }
+        });
+    });
+
     $('#browser').on('show.bs.modal', function(e) {
       function load_address(address) {
         $.ajax({

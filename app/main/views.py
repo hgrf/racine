@@ -5,20 +5,10 @@ from ..models import Sample
 from ..models import SampleType
 from ..models import Action
 from ..models import ActionType
-from ..models import SMBResource
 from ..models import SAMPLE_NAME_LENGTH   # <-- sort this out
 from . import main
 from forms import NewSampleForm, NewActionForm, NewMatrixForm
 from datetime import date, datetime
-
-
-
-# see http://flask.pocoo.org/snippets/67/
-def shutdown_server():
-    func = request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
 
 
 @main.route('/')

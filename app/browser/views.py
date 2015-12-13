@@ -14,11 +14,13 @@ class FileTile:
     image = ""
 
 
-@browser.route('', defaults={'address': ''})
+@browser.route('/', defaults={'address': ''})
 @browser.route('/<path:address>')
 def imagebrowser(address):
     # for the moment we'll only use the first database entry
     # TODO: add possibility to choose from SMBResources
+    address = address.rstrip('/')
+    print "address: ", address
     resource = SMBResource.query.filter_by(id=1).first()
     client_machine_name = "SampleManagerWeb"
     server_ip = socket.gethostbyname(resource.serveraddr)
@@ -31,6 +33,10 @@ def imagebrowser(address):
     files = []
     folders = []
     for i in conn.listPath(resource.sharename, address):
+        if i.filename == '.':
+            continue
+        if i.filename == ".." and address == '':
+            continue
         f = FileTile()
         f.name, f.ext = os.path.splitext(i.filename)
         if not i.isDirectory:

@@ -24,9 +24,11 @@ def create_app(config_name):
 
     from .main import main as main_blueprint
     from .auth import auth as auth_blueprint
+    from .browser import browser as browser_blueprint
     from .settings import settings as settings_blueprint
     app.register_blueprint(main_blueprint)
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
+    app.register_blueprint(browser_blueprint, url_prefix='/browser')
     app.register_blueprint(settings_blueprint, url_prefix='/settings')
 
     return app

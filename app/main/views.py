@@ -10,11 +10,7 @@ from ..models import SAMPLE_NAME_LENGTH   # <-- sort this out
 from . import main
 from forms import NewSampleForm, NewActionForm, NewMatrixForm
 from datetime import date, datetime
-from smb.SMBConnection import SMBConnection
-import socket
-import tempfile
-import os
-import io
+
 
 
 # see http://flask.pocoo.org/snippets/67/
@@ -46,7 +42,7 @@ def allsamples():
 @login_required
 def sampleeditor(sampleid):
     sample = Sample.query.get(sampleid)
-    samples=Sample.query.filter_by(owner=current_user)
+    samples = Sample.query.filter_by(owner=current_user)
     if sample == None or sample.owner != current_user:
         return render_template('404.html'), 404
     else:
@@ -64,8 +60,11 @@ def sampleeditor(sampleid):
 
 
 @main.route('/changesamplename', methods=['POST'])
+@login_required
 def changesamplename():
     sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    if sample == None or sample.owner != current_user:
+        return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
     newname = request.form.get('value')
     if len(newname) > SAMPLE_NAME_LENGTH:
         return jsonify(code=1, error="Name too long", name=sample.name)
@@ -78,24 +77,33 @@ def changesamplename():
 
 
 @main.route('/changesampletype', methods=['POST'])
+@login_required
 def changesampletype():
     sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    if sample == None or sample.owner != current_user:
+        return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
     sample.sampletype_id = int(request.form.get('value'))
     db.session.commit()
     return sample.sampletype.name
 
 
 @main.route('/changesampleimage', methods=['POST'])
+@login_required
 def changesampleimage():
     sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    if sample == None or sample.owner != current_user:
+        return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
     sample.image = request.form.get('value')
     db.session.commit()
     return ""
 
 
 @main.route('/changeactiondate', methods=['POST'])
+@login_required
 def changeactiondate():
     action = Action.query.filter_by(id=int(request.form.get("id"))).first()
+    if action == None or action.sample.owner != current_user:
+        return jsonify(code=1, error="Action does not exist or you do not have the right to access it")
     try:
         action.timestamp = datetime.strptime(request.form.get('value'), '%Y-%m-%d')
     except ValueError:
@@ -105,24 +113,33 @@ def changeactiondate():
 
 
 @main.route('/changeactiontype', methods=['POST'])
+@login_required
 def changeactiontype():
     action = Action.query.filter_by(id=int(request.form.get("id"))).first()
+    if action == None or action.sample.owner != current_user:
+        return jsonify(code=1, error="Action does not exist or you do not have the right to access it")
     action.actiontype_id = request.form.get('value')
     db.session.commit()
     return action.actiontype.name
 
 
 @main.route('/changeactiondesc', methods=['POST'])
+@login_required
 def changeactiondesc():
     action = Action.query.filter_by(id=int(request.form.get("id"))).first()
+    if action == None or action.sample.owner != current_user:
+        return jsonify(code=1, error="Action does not exist or you do not have the right to access it")
     action.description = request.form.get('value')
     db.session.commit()
     return action.description
 
 
 @main.route('/delaction/<actionid>', methods=['GET', 'POST'])
+@login_required
 def deleteaction(actionid):
     action = Action.query.filter_by(id=int(actionid)).first()
+    if action == None or action.sample.owner != current_user:
+        return render_template('404.html'), 404
     sampleid = action.sample_id
     db.session.delete(action)
     db.session.commit()
@@ -130,16 +147,22 @@ def deleteaction(actionid):
 
 
 @main.route('/delsample/<sampleid>', methods=['GET', 'POST'])
+@login_required
 def deletesample(sampleid):
     sample = Sample.query.filter_by(id=int(sampleid)).first()
+    if sample == None or sample.owner != current_user:
+        return render_template('404.html'), 404
     db.session.delete(sample)  # delete cascade automatically deletes associated actions
     db.session.commit()
     return redirect("/")
 
 
 @main.route('/changeparent', methods=['POST'])
+@login_required
 def changeparent():
     sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    if sample == None or sample.owner != current_user:
+        return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
 
     # check if we're not trying to make the snake bite its tail
     parentid = int(request.form.get('parent'))
@@ -170,7 +193,12 @@ def newsample():
 
 
 @main.route('/newaction/<sampleid>', methods=['POST'])
+@login_required
 def newaction(sampleid):
+    sample = Sample.query.filter_by(id=int(sampleid)).first()
+    if sample == None or sample.owner != current_user:
+        return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
+
     form = NewActionForm()
     form.actiontype.choices = [(actiontype.id, actiontype.name) for actiontype in ActionType.query.order_by('name')]
     if form.validate_on_submit():  # what about CSRF protection?? (see http://flask-wtf.readthedocs.org/en/latest/csrf.html)
@@ -182,71 +210,6 @@ def newaction(sampleid):
         db.session.commit()
     return ""
 
-
-######################### Image browser
-class FileTile:
-    name = ""
-    ext = ""
-    image = ""
-
-
-@main.route('/browser', defaults={'address': ''})
-@main.route('/browser/<path:address>')
-def browser(address):
-    # for the moment we'll only use the first database entry
-    # TODO: add possibility to choose from SMBResources
-    resource = SMBResource.query.filter_by(id=1).first()
-    client_machine_name = "SampleManagerWeb"
-    server_ip = socket.gethostbyname(resource.serveraddr)
-    image_extensions = [".jpg", ".jpeg", ".png"]
-    # need to convert unicode -> string apparently... (checked with print type(resource.servername))
-    conn = SMBConnection(str(resource.userid), str(resource.password), client_machine_name, str(resource.servername),
-                         use_ntlm_v2=True)
-    assert conn.connect(server_ip, 139)
-
-    files = []
-    folders = []
-    for i in conn.listPath(resource.sharename, address):
-        f = FileTile()
-        f.name, f.ext = os.path.splitext(i.filename)
-        if not i.isDirectory:
-            if f.ext.lower() in image_extensions:
-                f.image = "/browser/img/" + address + (
-                    "" if address == "" else "/") + f.name + f.ext  # will at some point cause problems with big image files, consider caching compressed icons
-            else:
-                f.image = "/static/file.png"
-            files.append(f)
-        else:
-            f.image = "/static/folder.png"
-            folders.append(f)
-
-    files = sorted(files, key=lambda f: f.name)
-    folders = sorted(folders, key=lambda f: f.name)
-    return render_template('browserframe.html', files=files, folders=folders, address=address)
-
-
-@main.route('/browser/img/<path:image>')
-def browserimage(image):
-    # for the moment we'll only use the first database entry
-    # TODO: add possibility to choose from SMBResources
-    resource = SMBResource.query.filter_by(id=1).first()
-    client_machine_name = "SampleManagerWeb"
-    server_ip = socket.gethostbyname(resource.serveraddr)
-    image_extensions = [".jpg", ".jpeg", ".png"]
-    # need to convert unicode -> string apparently... (checked with print type(resource.servername))
-    conn = SMBConnection(str(resource.userid), str(resource.password), client_machine_name, str(resource.servername),
-                         use_ntlm_v2=True)
-    assert conn.connect(server_ip, 139)
-
-    file_obj = tempfile.NamedTemporaryFile()
-    file_attributes, filesize = conn.retrieveFile(resource.sharename, image, file_obj)
-
-    file_obj.seek(0)
-    image_binary = file_obj.read()
-
-    file_obj.close()
-
-    return send_file(io.BytesIO(image_binary))
 
 
 @main.route('/matrixview/<sampleid>', methods=['GET', 'POST'])

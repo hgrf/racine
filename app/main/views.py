@@ -7,7 +7,7 @@ from ..models import ActionType
 from ..models import SMBResource
 from ..models import SAMPLE_NAME_LENGTH   # <-- sort this out
 from . import main
-from forms import NewSampleForm, NewTypeForm, NewActionForm, ShutdownForm, NewSMBResourceForm, NewMatrixForm
+from forms import NewSampleForm, NewActionForm, NewMatrixForm
 from datetime import date, datetime
 from smb.SMBConnection import SMBConnection
 import socket
@@ -237,62 +237,6 @@ def browserimage(image):
     file_obj.close()
 
     return send_file(io.BytesIO(image_binary))
-
-
-@main.route('/settings/overview')
-def set_overview():
-    return render_template('settings-overview.html')
-
-
-@main.route('/settings/sampletypes', methods=['GET', 'POST'])
-def set_sampletypes():
-    form = NewTypeForm()
-    if form.validate_on_submit():
-        db.session.add(SampleType(name=form.name.data))
-        db.session.commit()
-        form.name.data = ''
-    return render_template('settings-sampletypes.html', sampletypes=SampleType.query.all(), form=form)
-
-
-@main.route('/settings/actiontypes', methods=['GET', 'POST'])
-def set_actiontypes():
-    form = NewTypeForm()
-    if form.validate_on_submit():
-        db.session.add(ActionType(name=form.name.data))
-        db.session.commit()
-        form.name.data = ''
-    return render_template('settings-actiontypes.html', actiontypes=ActionType.query.all(), form=form)
-
-
-@main.route('/settings/shutdown', methods=['GET', 'POST'])
-def set_shutdown():
-    form = ShutdownForm()
-    if form.validate_on_submit():
-        shutdown_server()
-        return 'Server shutting down...'
-    return render_template('settings-shutdown.html', form=form)
-
-
-@main.route('/settings/smbresources', methods=['GET', 'POST'])
-def set_smbresources():
-    if request.args.get("delete"):
-        resource = SMBResource.query.filter_by(id=int(request.args.get("delete"))).first()
-        db.session.delete(resource)  # delete cascade automatically deletes associated actions
-        db.session.commit()
-        return redirect('/settings/smbresources')
-    form = NewSMBResourceForm()
-    if form.validate_on_submit():
-        db.session.add(
-            SMBResource(name=form.name.data, servername=form.servername.data, serveraddr=form.serveraddr.data,
-                        sharename=form.sharename.data, userid=form.userid.data, password=form.password.data))
-        db.session.commit()
-        form.name.data = ''
-        form.servername.data = ''
-        form.serveraddr.data = ''
-        form.sharename.data = ''
-        form.userid.data = ''
-        form.password.data = ''
-    return render_template('settings-smbresources.html', smbresources=SMBResource.query.all(), form=form)
 
 
 @main.route('/matrixview/<sampleid>', methods=['GET', 'POST'])

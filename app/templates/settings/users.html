@@ -1,0 +1,33 @@
+{% set active = "users" %}
+{% extends "settings/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+<h1 class="page-header">Users</h1>
+<div class="container-fluid">
+  <div class="row list-header">
+    <div class="col-md-1">#</div>
+      <div class="col-md-1">Admin</div>
+    <div class="col-md-5">Name</div>
+      <div class="col-md-5">Email</div>
+  </div>
+  {% for user in users %}
+  <div class="row list-entry">
+    <div class="col-md-1">{{ user.id }}</div>
+      <div class="col-md-1">{{ user.is_admin }}</div>
+    <div class="col-md-5">{{ user.username }}</div>
+    <div class="col-md-5">{{ user.email }}</div>
+  </div>
+  {% endfor %}
+  <div class="row list-entry">
+    <form method="POST">
+      {{ form.hidden_tag() }}
+      <div class="col-md-1"></div>
+        <div class="col-md-1">{{ wtf.form_field(form.is_admin) }}</div>
+      <div class="col-md-5">{{ wtf.form_field(form.username) }}{{ wtf.form_field(form.password) }}{{ wtf.form_field(form.password2) }}</div>
+        <div class="col-md-4">{{ wtf.form_field(form.email) }}</div>
+      <div class="col-md-1">{{ wtf.form_field(form.submit) }}</div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,4 +1,5 @@
 from flask import render_template, redirect, request, jsonify, send_file
+from flask.ext.login import current_user, login_required
 from .. import db
 from ..models import Sample
 from ..models import SampleType
@@ -25,20 +26,28 @@ def shutdown_server():
 
 
 @main.route('/')
+@login_required
 def index():
-    return render_template('editor.html', samples=Sample.query.all(), sampletypes=SampleType.query.all(),
+    samples=Sample.query.filter_by(owner=current_user)
+    return render_template('editor.html', samples=samples, sampletypes=SampleType.query.all(),
                            actiontypes=ActionType.query.all())
 
 
 @main.route('/allsamples')
+@login_required
 def allsamples():
-    return render_template('allsamples.html', samples=Sample.query.all())
+    if current_user.is_admin:
+        return render_template('allsamples.html', samples=Sample.query.all())
+    else:
+        return render_template('404.html'), 404
 
 
 @main.route('/sample/<sampleid>', methods=['GET', 'POST'])
+@login_required
 def sampleeditor(sampleid):
     sample = Sample.query.get(sampleid)
-    if sample == None:
+    samples=Sample.query.filter_by(owner=current_user)
+    if sample == None or sample.owner != current_user:
         return render_template('404.html'), 404
     else:
         form = NewActionForm()
@@ -46,11 +55,11 @@ def sampleeditor(sampleid):
         form.description.data = ''
         form.timestamp.data = date.today()
         if (request.args.get("editorframe") == "true"):
-            return render_template('editorframe.html', samples=Sample.query.all(), sample=sample,
+            return render_template('editorframe.html', samples=samples, sample=sample,
                                    actions=sample.actions, form=form, sampletypes=SampleType.query.all(),
                                    actiontypes=ActionType.query.all())
         else:
-            return render_template('editor.html', samples=Sample.query.all(), sample=sample, actions=sample.actions,
+            return render_template('editor.html', samples=samples, sample=sample, actions=sample.actions,
                                    form=form, sampletypes=SampleType.query.all(), actiontypes=ActionType.query.all())
 
 
@@ -147,12 +156,13 @@ def changeparent():
 
 
 @main.route('/newsample', methods=['GET', 'POST'])
+@login_required
 def newsample():
     form = NewSampleForm()
     form.sampletype.choices = [(sampletype.id, sampletype.name) for sampletype in SampleType.query.order_by('name')]
     form.parent.choices = [(0, "/")] + [(sample.id, sample.name) for sample in Sample.query.order_by('name')]
     if form.validate_on_submit():
-        sample = Sample(name=form.name.data, sampletype_id=form.sampletype.data, parent_id=form.parent.data)
+        sample = Sample(owner=current_user, name=form.name.data, sampletype_id=form.sampletype.data, parent_id=form.parent.data)
         db.session.add(sample)
         db.session.commit()
         return redirect("/sample/" + str(sample.id))

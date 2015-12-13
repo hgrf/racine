@@ -1,5 +1,7 @@
 from flask.ext.wtf import Form
-from wtforms import SubmitField, StringField
+from wtforms import SubmitField, StringField, ValidationError, PasswordField, BooleanField
+from wtforms.validators import Required, Length, Email, Regexp, EqualTo
+from ..models import User
 
 
 class NewTypeForm(Form):
@@ -19,3 +21,23 @@ class NewSMBResourceForm(Form):
 
 class ShutdownForm(Form):
     submit = SubmitField('Confirm shutdown')
+
+
+class NewUserForm(Form):
+    is_admin = BooleanField('Admin:')
+    username = StringField('User name:', validators=[
+Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
+'Usernames must have only letters, '
+'numbers, dots or underscores')])
+    email = StringField('Email', validators=[Required(), Length(1,64), Email()])
+    password = PasswordField('Password', validators=[Required(), EqualTo('password2', message='Passwords must match.')])
+    password2 = PasswordField('Confirm password', validators=[Required()])
+    submit = SubmitField('Submit')
+
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).first():
+            raise ValidationError('Email already registered.')
+
+    def validate_username(self, field):
+        if User.query.filter_by(username=field.data).first():
+            raise ValidationError('Username already in use.')

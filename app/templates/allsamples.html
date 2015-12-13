@@ -12,7 +12,8 @@
     {% if sample.parent_id == parent %}
       <div style="margin-left:{{level*15}}px" class="row list-entry" data-toggle="collapse" data-target="#sample{{ sample.id }}">
         <div class="col-md-1">{{ sample.id }}</div>
-        <div class="col-md-6">{{ sample.name }}</div>
+          <div class="col-md-1">{{ sample.owner.username }}</div>
+        <div class="col-md-5">{{ sample.name }}</div>
         <div class="col-md-5">{{ sample.sampletype.name }}</div>
       </div>
       <div id="sample{{ sample.id }}" class="row-fluid collapse out">
@@ -27,7 +28,8 @@
 <div class="container-fluid">
 <div class="row list-header" style="margin-left:0px">   <!-- bug: margin-left:0 also shifts the row, that's why we need it here -->
   <div class="col-md-1">#</div>
-  <div class="col-md-6">Name</div>
+    <div class="col-md-1">Owner</div>
+  <div class="col-md-5">Name</div>
   <div class="col-md-5">Type</div>
 </div>
 {{ render_branch(0) }}

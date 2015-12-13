@@ -1,11 +1,7 @@
 #!/usr/bin/env python
 import os
 from app import create_app, db
-from app.models import Sample
-from app.models import SampleType
-from app.models import Action
-from app.models import ActionType
-from app.models import SMBResource
+from app.models import User
 from flask.ext.script import Manager, Shell
 from flask.ext.migrate import Migrate, MigrateCommand
 

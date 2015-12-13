@@ -18,12 +18,18 @@
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand" href="/">Mercury Sample Manager</a>
+        <div class="navbar-brand">{% if current_user.is_authenticated %}| {{ current_user.username }}{% endif %}</div> <!-- TODO: make this look better -->
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="/allsamples">All Samples</a></li>
+        {% if current_user.is_authenticated and current_user.is_admin %}<li><a href="/allsamples">All Samples</a></li>{% endif %}
         <li><a href="/settings/overview">Settings</a></li>
         <li><a href="#">Profile</a></li>
+          {% if current_user.is_authenticated %}
+          <li><a href="{{ url_for('auth.logout') }}">Sign Out</a></li>
+          {% else %}
+          <li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
+          {% endif %}
         <li><a href="#">Help</a></li>
       </ul>
       <form class="navbar-form navbar-right">

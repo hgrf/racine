@@ -101,7 +101,7 @@
 
 {% block scripts %}
 {{ super() }}
-<script src="//cdnjs.cloudflare.com/ajax/libs/ckeditor/4.0.1/ckeditor.js"></script>
+<script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
 <script src="{{ url_for('static', filename='jquery.jeditable.js') }}"></script>
 <script src="{{ url_for('static', filename='jquery.generateId.js') }}"></script>
 <script src="{{ url_for('static', filename='jquery.jeditable.ckeditor.js') }}"></script>
@@ -229,8 +229,9 @@ $(function() {
     $.ajax({
       url: "/sample/"+id,
       data: { "editorframe": true },
-      success: function( data ) {
+      success: function( data, id ) {
         $( "#editor-frame" ).html(data);
+          window.history.pushState({"html": data, "pageTitle": data.pageTitle}, "", "/sample/"+ $('#sampleid').text());
         init_editables();
 
 

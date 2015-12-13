@@ -4,7 +4,7 @@
 
 {% block styles %}
 {{super()}}
-<link rel="stylesheet" href="{{url_for('.static', filename='list.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='list.css')}}">
 {% endblock %}
 
 {% macro menu_entry(name, title) %}

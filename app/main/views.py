@@ -6,6 +6,7 @@ from ..models import SampleType
 from ..models import Action
 from ..models import ActionType
 from ..models import User
+from ..models import Share
 from ..models import SAMPLE_NAME_LENGTH   # <-- sort this out
 from . import main
 from forms import NewSampleForm, NewActionForm, NewMatrixForm
@@ -54,6 +55,18 @@ def sampleeditor(sampleid):
             return render_template('editor.html', samples=samples, sample=sample, actions=sample.actions,
                                    form=form, sampletypes=SampleType.query.all(), actiontypes=ActionType.query.all())
 
+
+@main.route('/sharesample', methods=['POST'])
+@login_required
+def sharesample():
+    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    user = User.query.filter_by(id=int(request.form.get("sharewith"))).first()
+    if sample == None or sample.owner != current_user:
+        return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
+    share = Share(sample = sample, user = user)
+    db.session.add(share)
+    db.session.commit()
+    return jsonify(code=0, username=user.username)
 
 @main.route('/changesamplename', methods=['POST'])
 @login_required

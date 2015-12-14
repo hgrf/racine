@@ -346,6 +346,17 @@ $(function() {
            url: "/userlist",
            success: function( data ){
                $("#userbrowser-frame").html(data);
+
+               $('.user').dblclick( function( event ) {
+                  $.ajax({
+                      url: "/sharesample",
+                      type: "post",
+                      data: { "id": $('#sampleid').text(), "sharewith": $(this).attr('id') },
+                      success: function( data ) {
+                          $('#sharelist').append(data.username);
+                      }
+                  }); // what if we drag parent to child?
+               });
            }
         });
     });

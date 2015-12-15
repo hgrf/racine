@@ -16,9 +16,10 @@ from datetime import date, datetime
 @main.route('/')
 @login_required
 def index():
-    samples=Sample.query.filter_by(owner=current_user)
+    samples = Sample.query.filter_by(owner=current_user)
+    myshares = Share.query.filter_by(user=current_user)
     return render_template('editor.html', samples=samples, sampletypes=SampleType.query.all(),
-                           actiontypes=ActionType.query.all())
+                           actiontypes=ActionType.query.all(), myshares=myshares)
 
 @main.route('/userlist', methods=['POST'])
 @login_required
@@ -51,9 +52,12 @@ def allsamples():
 @login_required
 def sampleeditor(sampleid):
     sample = Sample.query.get(sampleid)
-    samples = Sample.query.filter_by(owner=current_user)
-    shares = Share.query.filter_by(sample=sample)
-    if sample == None or sample.owner != current_user:
+    samples = Sample.query.filter_by(owner=current_user).all()
+    shares = Share.query.filter_by(sample=sample).all()
+    myshares = Share.query.filter_by(user=current_user).all()
+
+    print sample.name
+    if sample == None or (sample.owner != current_user and current_user not in [share.user for share in shares]):
         return render_template('404.html'), 404
     else:
         form = NewActionForm()
@@ -63,10 +67,10 @@ def sampleeditor(sampleid):
         if (request.args.get("editorframe") == "true"):
             return render_template('editorframe.html', samples=samples, sample=sample,
                                    actions=sample.actions, form=form, sampletypes=SampleType.query.all(),
-                                   actiontypes=ActionType.query.all(), shares=shares)
+                                   actiontypes=ActionType.query.all(), shares=shares, myshares=myshares)
         else:
             return render_template('editor.html', samples=samples, sample=sample, actions=sample.actions,
-                                   form=form, sampletypes=SampleType.query.all(), actiontypes=ActionType.query.all(), shares=shares)
+                                   form=form, sampletypes=SampleType.query.all(), actiontypes=ActionType.query.all(), shares=shares, myshares=myshares)
 
 
 @main.route('/sharesample', methods=['POST'])

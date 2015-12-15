@@ -27,6 +27,14 @@
     <div id="root">
     {{ render_branch(0) }}
     </div>
+  <div class="row nav-entry" id="0" style="padding-left:5px">Shares:</div>
+    {% for s in myshares %}
+        <div class="row nav-entry" id="{{ s.sample.id }}">
+          <div class="nav-entry-name">{{ s.sample.name }}</div>
+          <div class="nav-entry-type">{{ s.sample.sampletype.name }}</div>
+          <div class="nav-entry-owner">{{ s.sample.owner.username }}</div>
+      </div>
+      {% endfor %}
     <div class="row nav-entry" id="0" style="padding-left:10px"><a href="/newsample">+ New Sample</a></div>
   </div>
 </div>

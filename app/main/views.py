@@ -5,6 +5,8 @@ from ..models import Sample
 from ..models import SampleType
 from ..models import Action
 from ..models import ActionType
+from ..models import User
+from ..models import Share
 from ..models import SAMPLE_NAME_LENGTH   # <-- sort this out
 from . import main
 from forms import NewSampleForm, NewActionForm, NewMatrixForm
@@ -14,10 +16,28 @@ from datetime import date, datetime
 @main.route('/')
 @login_required
 def index():
-    samples=Sample.query.filter_by(owner=current_user)
+    samples = Sample.query.filter_by(owner=current_user)
+    myshares = Share.query.filter_by(user=current_user)
     return render_template('editor.html', samples=samples, sampletypes=SampleType.query.all(),
-                           actiontypes=ActionType.query.all())
+                           actiontypes=ActionType.query.all(), myshares=myshares)
 
+@main.route('/userlist', methods=['POST'])
+@login_required
+def userlist():
+    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    users = User.query.all()
+    sharers = [share.user for share in sample.shares]
+    sharers.append(sample.owner)
+
+    return render_template('userlist.html', users=[user for user in users if user not in sharers])
+
+@main.route('/sharerlist', methods=['POST'])
+@login_required
+def sharerlist():
+    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    sharers = [share.user for share in sample.shares]
+
+    return jsonify(sharers=sharers)
 
 @main.route('/allsamples')
 @login_required
@@ -32,8 +52,12 @@ def allsamples():
 @login_required
 def sampleeditor(sampleid):
     sample = Sample.query.get(sampleid)
-    samples = Sample.query.filter_by(owner=current_user)
-    if sample == None or sample.owner != current_user:
+    samples = Sample.query.filter_by(owner=current_user).all()
+    shares = Share.query.filter_by(sample=sample).all()
+    myshares = Share.query.filter_by(user=current_user).all()
+
+    print sample.name
+    if sample == None or (sample.owner != current_user and current_user not in [share.user for share in shares]):
         return render_template('404.html'), 404
     else:
         form = NewActionForm()
@@ -43,10 +67,33 @@ def sampleeditor(sampleid):
         if (request.args.get("editorframe") == "true"):
             return render_template('editorframe.html', samples=samples, sample=sample,
                                    actions=sample.actions, form=form, sampletypes=SampleType.query.all(),
-                                   actiontypes=ActionType.query.all())
+                                   actiontypes=ActionType.query.all(), shares=shares, myshares=myshares)
         else:
             return render_template('editor.html', samples=samples, sample=sample, actions=sample.actions,
-                                   form=form, sampletypes=SampleType.query.all(), actiontypes=ActionType.query.all())
+                                   form=form, sampletypes=SampleType.query.all(), actiontypes=ActionType.query.all(), shares=shares, myshares=myshares)
+
+
+@main.route('/sharesample', methods=['POST'])
+@login_required
+def sharesample():
+    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    user = User.query.filter_by(id=int(request.form.get("sharewith"))).first()
+    if sample == None or sample.owner != current_user:
+        return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
+    share = Share(sample = sample, user = user)
+    db.session.add(share)
+    db.session.commit()
+    return jsonify(code=0, username=user.username, userid=user.id)
+
+@main.route('/removeshare', methods=['POST'])
+@login_required
+def removeshare():
+    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    sharer = User.query.filter_by(id=int(request.form.get("sharer"))).first()
+    share = Share.query.filter_by(user=sharer, sample=sample).first()
+    db.session.delete(share)
+    db.session.commit()
+    return jsonify(code=0, userid=share.user.id)
 
 
 @main.route('/changesamplename', methods=['POST'])

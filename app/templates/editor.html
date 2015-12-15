@@ -27,6 +27,14 @@
     <div id="root">
     {{ render_branch(0) }}
     </div>
+  <div class="row nav-entry" id="0" style="padding-left:5px">Shares:</div>
+    {% for s in myshares %}
+        <div class="row nav-entry" id="{{ s.sample.id }}">
+          <div class="nav-entry-name">{{ s.sample.name }}</div>
+          <div class="nav-entry-type">{{ s.sample.sampletype.name }}</div>
+          <div class="nav-entry-owner">{{ s.sample.owner.username }}</div>
+      </div>
+      {% endfor %}
     <div class="row nav-entry" id="0" style="padding-left:10px"><a href="/newsample">+ New Sample</a></div>
   </div>
 </div>
@@ -80,7 +88,7 @@
     </div>
 </div>
 
-    <div class="modal fade" id="childbrowser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="childbrowser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -90,6 +98,24 @@
             <div class="modal-body">
               Select please:
                 <div id="childbrowser-frame"></div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="userbrowser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="myModalLabel">Browser</h4>
+            </div>
+            <div class="modal-body">
+              Select a user, please:
+                <div id="userbrowser-frame"></div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -233,6 +259,7 @@ $(function() {
         $( "#editor-frame" ).html(data);
           window.history.pushState({"html": data, "pageTitle": data.pageTitle}, "", "/sample/"+ $('#sampleid').text());
         init_editables();
+          init_sharelist();
 
 
           $('#matrixviewbutton').click(function() {
@@ -263,6 +290,19 @@ $(function() {
       });
   }
 
+    function init_sharelist() {
+        $(".removeshare").click(function(event) {
+            $.ajax({
+              url: "/removeshare",
+              type: "post",
+              data: { "id": $('#sampleid').text(), "sharer": $(this).attr('id') },
+              success: function( data ) {
+                $('#sharelistentry'+data.userid).remove();
+              }
+            }); // what if we drag parent to child?
+        });
+    }
+
   $.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer
 
   $(document).ready(function() {
@@ -273,6 +313,7 @@ $(function() {
   
     {% if sample is defined %}
     init_editables();
+        init_sharelist();
     CKEDITOR.replace( 'description', ckeditorconfig);
     {% endif %}
     
@@ -322,7 +363,33 @@ $(function() {
       $(this).find('.btn-ok').data('type', $(e.relatedTarget).data('type'));
       $('.debug-id').html('Delete <strong>'+$(e.relatedTarget).data('type')+'</strong> ID: <strong>' + $(this).find('.btn-ok').attr('id') + '</strong>');
     });
-    
+
+
+    $('#userbrowser').on('show.bs.modal', function(e) {
+        $.ajax({
+           url: "/userlist",
+            type: "post",
+            data: { "id": $('#sampleid').text() },
+           success: function( data ){
+               $("#userbrowser-frame").html(data);
+
+               $('.user').dblclick( function( event ) {
+                  $.ajax({
+                      url: "/sharesample",
+                      type: "post",
+                      data: { "id": $('#sampleid').text(), "sharewith": $(this).attr('id') },
+                      success: function( data ) {
+                          $('#sharelist').append('<div class="row" id="sharelistentry'+data.userid+'"><div class="col-md-10">'+data.username+'</div><div class="col-md-2"><button class="removeshare btn btn-danger" id="'+data.userid+'">X</button></div></div>');
+                          $('#userbrowser').modal('hide');
+
+                          init_sharelist();
+                      }
+                  }); // what if we drag parent to child?
+               });
+           }
+        });
+    });
+
     $('#browser').on('show.bs.modal', function(e) {
       function load_address(address) {
         $.ajax({

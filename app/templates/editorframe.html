@@ -1,31 +1,55 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 <div id="sampleid" style="display: none">{{ sample.id }}</div>
-<h1 class="page-header">Actions: Sample <b id="{{ sample.id }}" class="editsamplename" style="display: inline">{{ sample.name }}</b> | Type: <b id="{{ sample.id }}" class="selectsampletype" style="display: inline">{{ sample.sampletype.name }}</b><button class="btn btn-default" data-href="/delsample/{{ sample.id }}" style="margin-left:5em" data-type="sample" data-id="{{ sample.id }}" data-toggle="modal" data-target="#confirm-delete">Delete</button></h1>
-<img id="sampleimage" src="{{ sample.image }}" width="200px" height="200px"><button class="btn btn-default" data-toggle="modal" data-target="#browser">Browse</button>
-<button id="matrixviewbutton">Matrix View</button>
+<h1 class="page-header">
+    Actions: Sample <b id="{{ sample.id }}" class="editsamplename" style="display: inline">{{ sample.name }}</b> | Type: <b id="{{ sample.id }}" class="selectsampletype" style="display: inline">{{ sample.sampletype.name }}</b>
+    <button class="btn btn-default" data-href="/delsample/{{ sample.id }}" style="margin-left:5em" data-type="sample" data-id="{{ sample.id }}" data-toggle="modal" data-target="#confirm-delete">Delete</button>
+    <button class="btn btn-default" id="matrixviewbutton">Matrix View</button>
+</h1>
 <div class="container-fluid">
-  <div class="row list-header">
-    <div class="col-md-2">Date</div>
-    <div class="col-md-2">Type</div>
-    <div class="col-md-8">Description</div>
-  </div>
-  {% for action in actions %}
-  <div class="row list-entry" id="{{ action.id }}">
-    <div id="{{ action.id }}" class="col-md-2 editactiondate">{{ action.timestamp }}</div>
-    <div id="{{ action.id }}" class="col-md-2 selectactiontype" style="display: inline">{{ action.actiontype.name }}</div>
-    <div id="{{ action.id }}" class="col-md-7 editactiondescription">{{ action.description|safe }}</div>
-    <div class="col-md-1"><button class="btn btn-default" data-type="action" data-id="{{ action.id }}" data-toggle="modal" data-target="#confirm-delete">Delete</button></div>
-  </div>
-  {% endfor %}
-  <div class="row list-entry">
-    <form id="newactionform">
-      {{ form.hidden_tag() }}
-      <div class="col-md-2">{{ wtf.form_field(form.timestamp) }}</div>
-      <div class="col-md-2">{{ wtf.form_field(form.actiontype) }}</div>
-      <div class="col-md-7">{{ wtf.form_field(form.description) }}</div>
-      <div class="col-md-1">{{ wtf.form_field(form.submit) }}</div>
-    </form>
-  </div>
+    <div class="row">
+        <div class="col-md-3">
+            <img id="sampleimage" src="{{ sample.image }}" width="100%"><button class="btn btn-default" data-toggle="modal" data-target="#browser">Browse</button>
+        </div>
+        <div class="col-md-6">
+            Sample description:
+        </div>
+        <div class="col-md-3">
+            <strong>Shared with:</strong><p>&nbsp;</p>
+            <div class="container-fluid" id="sharelist">
+                {% for share in shares %}
+                    <div class="row" id="sharelistentry{{ share.user.id }}">
+                        <div class="col-md-10">{{ share.user.username }}</div><div class="col-md-2"><button class="removeshare btn btn-danger" id="{{ share.user.id }}">X</button></div>
+                    </div>
+                {% endfor %}
+            </div><p>&nbsp;</p>
+            <button class="btn btn-default" data-toggle="modal" data-target="#userbrowser">Add share</button>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row list-header">
+        <div class="col-md-2">Date</div>
+        <div class="col-md-2">Type</div>
+        <div class="col-md-8">Description</div>
+    </div>
+    {% for action in actions %}
+    <div class="row list-entry" id="{{ action.id }}">
+        <div id="{{ action.id }}" class="col-md-2 editactiondate">{{ action.timestamp }}</div>
+        <div id="{{ action.id }}" class="col-md-2 selectactiontype" style="display: inline">{{ action.actiontype.name }}</div>
+        <div id="{{ action.id }}" class="col-md-7 editactiondescription">{{ action.description|safe }}</div>
+        <div class="col-md-1"><button class="btn btn-default" data-type="action" data-id="{{ action.id }}" data-toggle="modal" data-target="#confirm-delete">Delete</button></div>
+    </div>
+    {% endfor %}
+    <div class="row list-entry">
+        <form id="newactionform">
+            {{ form.hidden_tag() }}
+            <div class="col-md-2">{{ wtf.form_field(form.timestamp) }}</div>
+            <div class="col-md-2">{{ wtf.form_field(form.actiontype) }}</div>
+            <div class="col-md-7">{{ wtf.form_field(form.description) }}</div>
+            <div class="col-md-1">{{ wtf.form_field(form.submit) }}</div>
+        </form>
+    </div>
 </div>
 

@@ -14,6 +14,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean())
     samples = db.relationship('Sample', backref='owner')
+    shares = db.relationship('Share', backref='user')
 
     @property
     def password(self):
@@ -56,6 +57,7 @@ class Sample(db.Model):
     my = db.Column(db.Integer)  # matrix y position (for parent)
 
     children = db.relationship('Sample', backref=db.backref('parent', remote_side=[id]))
+    shares = db.relationship('Share', backref='sample')
     actions = db.relationship('Action', backref='sample', cascade="delete")
 
     def __repr__(self):
@@ -96,3 +98,12 @@ class SMBResource(db.Model):
 
     def __repr__(self):
         return '<SMBResource %r>' % self.id
+
+class Share(db.Model):
+    __tablename__ = 'shares'
+    id = db.Column(db.Integer, primary_key=True)
+    sample_id = db.Column(db.Integer, db.ForeignKey('samples.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    def __repr__(self):
+        return '<Share %r>' % self.id

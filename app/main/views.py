@@ -20,11 +20,23 @@ def index():
     return render_template('editor.html', samples=samples, sampletypes=SampleType.query.all(),
                            actiontypes=ActionType.query.all())
 
-@main.route('/userlist')
+@main.route('/userlist', methods=['POST'])
 @login_required
 def userlist():
-    return render_template('userlist.html', users=User.query.all())
+    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    users = User.query.all()
+    sharers = [share.user for share in sample.shares]
+    sharers.append(sample.owner)
 
+    return render_template('userlist.html', users=[user for user in users if user not in sharers])
+
+@main.route('/sharerlist', methods=['POST'])
+@login_required
+def sharerlist():
+    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    sharers = [share.user for share in sample.shares]
+
+    return jsonify(sharers=sharers)
 
 @main.route('/allsamples')
 @login_required
@@ -40,6 +52,7 @@ def allsamples():
 def sampleeditor(sampleid):
     sample = Sample.query.get(sampleid)
     samples = Sample.query.filter_by(owner=current_user)
+    shares = Share.query.filter_by(sample=sample)
     if sample == None or sample.owner != current_user:
         return render_template('404.html'), 404
     else:
@@ -50,10 +63,10 @@ def sampleeditor(sampleid):
         if (request.args.get("editorframe") == "true"):
             return render_template('editorframe.html', samples=samples, sample=sample,
                                    actions=sample.actions, form=form, sampletypes=SampleType.query.all(),
-                                   actiontypes=ActionType.query.all())
+                                   actiontypes=ActionType.query.all(), shares=shares)
         else:
             return render_template('editor.html', samples=samples, sample=sample, actions=sample.actions,
-                                   form=form, sampletypes=SampleType.query.all(), actiontypes=ActionType.query.all())
+                                   form=form, sampletypes=SampleType.query.all(), actiontypes=ActionType.query.all(), shares=shares)
 
 
 @main.route('/sharesample', methods=['POST'])
@@ -66,7 +79,18 @@ def sharesample():
     share = Share(sample = sample, user = user)
     db.session.add(share)
     db.session.commit()
-    return jsonify(code=0, username=user.username)
+    return jsonify(code=0, username=user.username, userid=user.id)
+
+@main.route('/removeshare', methods=['POST'])
+@login_required
+def removeshare():
+    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    sharer = User.query.filter_by(id=int(request.form.get("sharer"))).first()
+    share = Share.query.filter_by(user=sharer, sample=sample).first()
+    db.session.delete(share)
+    db.session.commit()
+    return jsonify(code=0, userid=share.user.id)
+
 
 @main.route('/changesamplename', methods=['POST'])
 @login_required

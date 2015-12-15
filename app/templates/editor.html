@@ -281,6 +281,19 @@ $(function() {
       });
   }
 
+    function init_sharelist() {
+        $(".removeshare").click(function(event) {
+            $.ajax({
+              url: "/removeshare",
+              type: "post",
+              data: { "id": $('#sampleid').text(), "sharer": $(this).attr('id') },
+              success: function( data ) {
+                $('#sharelistentry'+data.userid).remove();
+              }
+            }); // what if we drag parent to child?
+        });
+    }
+
   $.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer
 
   $(document).ready(function() {
@@ -291,6 +304,7 @@ $(function() {
   
     {% if sample is defined %}
     init_editables();
+        init_sharelist();
     CKEDITOR.replace( 'description', ckeditorconfig);
     {% endif %}
     
@@ -341,9 +355,12 @@ $(function() {
       $('.debug-id').html('Delete <strong>'+$(e.relatedTarget).data('type')+'</strong> ID: <strong>' + $(this).find('.btn-ok').attr('id') + '</strong>');
     });
 
+
     $('#userbrowser').on('show.bs.modal', function(e) {
         $.ajax({
            url: "/userlist",
+            type: "post",
+            data: { "id": $('#sampleid').text() },
            success: function( data ){
                $("#userbrowser-frame").html(data);
 
@@ -353,7 +370,10 @@ $(function() {
                       type: "post",
                       data: { "id": $('#sampleid').text(), "sharewith": $(this).attr('id') },
                       success: function( data ) {
-                          $('#sharelist').append(data.username);
+                          $('#sharelist').append('<div class="row" id="sharelistentry'+data.userid+'"><div class="col-md-10">'+data.username+'</div><div class="col-md-2"><button class="removeshare btn btn-danger" id="'+data.userid+'">X</button></div></div>');
+                          $('#userbrowser').modal('hide');
+
+                          init_sharelist();
                       }
                   }); // what if we drag parent to child?
                });

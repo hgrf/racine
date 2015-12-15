@@ -1,5 +1,6 @@
 from flask import render_template, redirect, request, url_for
 from .. import db
+from ..decorators import admin_required
 from ..models import SampleType
 from ..models import ActionType
 from ..models import SMBResource
@@ -18,11 +19,14 @@ def shutdown_server():
 
 @settings.route('/overview')
 @login_required
+@admin_required
 def set_overview():
     return render_template('settings/overview.html')
 
 
 @settings.route('/sampletypes', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def sampletypes():
     form = NewTypeForm()
     if form.validate_on_submit():
@@ -33,6 +37,8 @@ def sampletypes():
 
 
 @settings.route('/actiontypes', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def actiontypes():
     form = NewTypeForm()
     if form.validate_on_submit():
@@ -43,6 +49,8 @@ def actiontypes():
 
 
 @settings.route('/shutdown', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def shutdown():
     form = ShutdownForm()
     if form.validate_on_submit():
@@ -52,6 +60,8 @@ def shutdown():
 
 
 @settings.route('/smbresources', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def smbresources():
     if request.args.get("delete"):
         resource = SMBResource.query.filter_by(id=int(request.args.get("delete"))).first()
@@ -74,6 +84,8 @@ def smbresources():
 
 
 @settings.route('/users', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def users():
     form = NewUserForm()
     if form.validate_on_submit():

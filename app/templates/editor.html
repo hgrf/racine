@@ -251,6 +251,7 @@ $(function() {
         $( "#editor-frame" ).html(data);
           window.history.pushState({"html": data, "pageTitle": data.pageTitle}, "", "/sample/"+ $('#sampleid').text());
         init_editables();
+          init_sharelist();
 
 
           $('#matrixviewbutton').click(function() {

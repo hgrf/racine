@@ -9,7 +9,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-3">
-            <img id="sampleimage" src="{{ sample.image }}" width="100%"><button class="btn btn-default" data-toggle="modal" data-target="#browser">Browse</button>
+            <img id="sampleimage" src="{% if sample.image != None %}{{ sample.image }}{% endif %}" width="100%"><button class="btn btn-default" data-toggle="modal" data-target="#browser">Browse</button>
         </div>
         <div class="col-md-6">
             Sample description:

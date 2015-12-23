@@ -138,6 +138,11 @@
                     init_matrix_view();
                 });
 
+                //$('#'+$('#sampleid').text()+".nav-entry").css("background-color", "#BBBBFF");
+                // TODO: this would be nice, but have to find a way to change color of previously open
+                // sample back to normal
+
+
                 CKEDITOR.replace( 'description', ckeditorconfig);
                 // CAUTION! this solution might fill the RAM in the long term
                 // (because we recreate callback functions and stuff everytime we open a different sample)

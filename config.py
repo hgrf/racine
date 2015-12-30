@@ -6,6 +6,7 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    BOOTSTRAP_SERVE_LOCAL = True        # don't use CDN for Bootstrap resources (so app will work without Internet access)
 
     @staticmethod
     def init_app(app):

@@ -83,6 +83,14 @@
             }
         });
 
+        $('.editsampledescription').editable('/changesampledesc', {
+            type: 'ckeditor',
+            submit: 'OK',
+            cancel: 'Cancel',
+            onblur: "ignore",
+            ckeditor: ckeditorconfig
+        });
+
         $('.editactiondate').editable('/changeactiondate', {
             style: 'inherit',
             submit: 'OK',

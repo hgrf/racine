@@ -127,6 +127,16 @@ def changesampletype():
     db.session.commit()
     return sample.sampletype.name
 
+@main.route('/changesampledesc', methods=['POST'])
+@login_required
+def changesampledesc():
+    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    if sample == None or sample.owner != current_user:
+        return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
+    sample.description = request.form.get('value')
+    db.session.commit()
+    return sample.description
+
 
 @main.route('/changesampleimage', methods=['POST'])
 @login_required
@@ -226,7 +236,7 @@ def newsample():
     form.sampletype.choices = [(sampletype.id, sampletype.name) for sampletype in SampleType.query.order_by('name')]
     form.parent.choices = [(0, "/")] + [(sample.id, sample.name) for sample in Sample.query.order_by('name')]
     if form.validate_on_submit():
-        sample = Sample(owner=current_user, name=form.name.data, sampletype_id=form.sampletype.data, parent_id=form.parent.data)
+        sample = Sample(owner=current_user, name=form.name.data, sampletype_id=form.sampletype.data, parent_id=form.parent.data, description=form.description.data)
         db.session.add(sample)
         db.session.commit()
         return redirect("/sample/" + str(sample.id))

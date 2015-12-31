@@ -12,7 +12,8 @@
             <img id="sampleimage" src="{% if sample.image != None %}{{ sample.image }}{% endif %}" width="100%">{% if sample.owner == current_user %}<button class="btn btn-default" data-toggle="modal" data-target="#browser">Browse</button>{% endif %}
         </div>
         <div class="col-md-6">
-            Sample description:
+            <strong>Sample description:</strong>
+            <div id="{{ sample.id }}" class="{% if sample.owner == current_user %}editsampledescription {% endif %}">{{ sample.description|safe }}</div>
         </div>
         <div class="col-md-3">
             <strong>Shared with:</strong><p>&nbsp;</p>

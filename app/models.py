@@ -51,6 +51,7 @@ class Sample(db.Model):
     parent_id = db.Column(db.Integer, db.ForeignKey('samples.id'))
     sampletype_id = db.Column(db.Integer, db.ForeignKey('sampletypes.id'))
     image = db.Column(db.String(300))  # <----------- a changer
+    description = db.Column(db.UnicodeText)
 
     mwidth = db.Column(db.Integer)  # matrix width (for children)
     mheight = db.Column(db.Integer)  # matrix height (for children)

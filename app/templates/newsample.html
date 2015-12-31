@@ -2,5 +2,25 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block page_content %}
-{{ wtf.quick_form(form) }}
+    {{ wtf.quick_form(form) }}
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
+    <script>
+        (function($) {
+            var ckeditorconfig = {
+                toolbar:
+                [
+                    ['Bold', 'Italic', 'Underline','Subscript','Superscript', 'Format', 'Styles', '-', 'NumberedList', 'BulletedList', 'HorizontalRule', '-', 'Link', 'Unlink', '-', 'Image', 'Table', 'SpecialChar', '-', 'Maximize'],
+                    ['UIColor']
+                ]
+            };
+
+            $(document).ready(function() {
+                CKEDITOR.replace( 'description', ckeditorconfig);
+            });
+        })(jQuery);
+    </script>
 {% endblock %}

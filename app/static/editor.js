@@ -123,6 +123,9 @@
     }
 
     function load_sample(id) {
+        if($('#sampleid').text() != "")
+            $('#'+$('#sampleid').text()+".nav-entry").css("background-color", "transparent");
+
         $.ajax({
             url: "/sample/"+id,
             data: { "editorframe": true },
@@ -138,10 +141,7 @@
                     init_matrix_view();
                 });
 
-                //$('#'+$('#sampleid').text()+".nav-entry").css("background-color", "#BBBBFF");
-                // TODO: this would be nice, but have to find a way to change color of previously open
-                // sample back to normal
-
+                $('#'+$('#sampleid').text()+".nav-entry").css("background-color", "#BBBBFF");
 
                 CKEDITOR.replace( 'description', ckeditorconfig);
                 // CAUTION! this solution might fill the RAM in the long term

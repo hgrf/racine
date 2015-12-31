@@ -62,7 +62,7 @@ def imagebrowser(address):
 
     files = sorted(files, key=lambda f: f.name)
     folders = sorted(folders, key=lambda f: f.name)
-    return render_template('browserframe.html', files=files, folders=folders, resources=[] address=address)
+    return render_template('browserframe.html', files=files, folders=folders, resources=[], address=address)
 
 
 @browser.route('/img/<path:image>')

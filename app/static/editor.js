@@ -64,16 +64,17 @@
             style: 'inherit',
             callback : function(value, settings) {
                 var json = $.parseJSON(value);
-                $( "#"+json.id+".editsamplename" ).html(json.name);
-                $( "#navname"+json.id ).html(json.name);
-                if(json.code != 0) {
-                    $( "#flashmessages" ).append("{{ begin_flashmsg|safe }}"+json.error+"{{ end_flashmsg|safe }}");
+                $( ".editsamplename" ).html(json.name);
+                if(json.code == 0) {
+                    $("#navname" + json.id).html(json.name);
+                } else {
+                    $( "#flashmessages" ).append(begin_flashmsg+json.error+end_flashmsg);
                 }
             }
         });
 
         $('.selectsampletype').editable('/changesampletype', {
-            data   : "{ {% for sampletype in sampletypes %} {{ sampletype.id }}:'{{ sampletype.name }}', {% endfor %} }",
+            data   : sampletypes,
             style  : 'inherit',
             type   : 'select',
             submit : 'OK',
@@ -84,17 +85,18 @@
 
         $('.editactiondate').editable('/changeactiondate', {
             style: 'inherit',
+            submit: 'OK',
             callback : function(value, settings) {
                 var json = $.parseJSON(value);
-                $( "#"+json.id ).html(json.date);
+                $( "#"+json.id+".editactiondate" ).html(json.date);
                 if(json.code != 0) {
-                    $( "#flashmessages" ).append("{{ begin_flashmsg|safe }}"+json.error+"{{ end_flashmsg|safe }}");
+                    $( "#flashmessages" ).append(begin_flashmsg+json.error+end_flashmsg);
                 }
             }
         });
 
         $('.selectactiontype').editable('/changeactiontype', {
-            data   : "{ {% for actiontype in actiontypes %} {{ actiontype.id }}:'{{ actiontype.name }}', {% endfor %} }",
+            data   : actiontypes,
             style  : 'inherit',
             type   : 'select',
             submit : 'OK'
@@ -173,6 +175,9 @@
                 type: "post",
                 data: { "id": $('#sampleid').text(), "sharer": $(this).attr('id') },
                 success: function( data ) {
+                    if(data.code == 2) {        // if the user removed himself from the sharer list
+                        location.href = "/";
+                    }
                     $('#sharelistentry'+data.userid).remove();
                 }
             }); // what if we drag parent to child?

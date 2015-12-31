@@ -89,10 +89,15 @@ def sharesample():
 @login_required
 def removeshare():
     sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    if sample == None or sample.owner != current_user:
+        if current_user.id != int(request.form.get("sharer")):  # if the user wants to remove himself from sharer list
+            return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
     sharer = User.query.filter_by(id=int(request.form.get("sharer"))).first()
     share = Share.query.filter_by(user=sharer, sample=sample).first()
     db.session.delete(share)
     db.session.commit()
+    if current_user.id == int(request.form.get("sharer")):
+        return jsonify(code=2) # tell JS to reload everything (sample no longer exists for this user)
     return jsonify(code=0, userid=share.user.id)
 
 
@@ -139,7 +144,7 @@ def changesampleimage():
 @login_required
 def changeactiondate():
     action = Action.query.filter_by(id=int(request.form.get("id"))).first()
-    if action == None or action.sample.owner != current_user:
+    if action == None or action.owner != current_user:
         return jsonify(code=1, error="Action does not exist or you do not have the right to access it")
     try:
         action.timestamp = datetime.strptime(request.form.get('value'), '%Y-%m-%d')
@@ -153,7 +158,7 @@ def changeactiondate():
 @login_required
 def changeactiontype():
     action = Action.query.filter_by(id=int(request.form.get("id"))).first()
-    if action == None or action.sample.owner != current_user:
+    if action == None or action.owner != current_user:
         return jsonify(code=1, error="Action does not exist or you do not have the right to access it")
     action.actiontype_id = request.form.get('value')
     db.session.commit()
@@ -164,7 +169,7 @@ def changeactiontype():
 @login_required
 def changeactiondesc():
     action = Action.query.filter_by(id=int(request.form.get("id"))).first()
-    if action == None or action.sample.owner != current_user:
+    if action == None or action.owner != current_user:
         return jsonify(code=1, error="Action does not exist or you do not have the right to access it")
     action.description = request.form.get('value')
     db.session.commit()
@@ -175,7 +180,7 @@ def changeactiondesc():
 @login_required
 def deleteaction(actionid):
     action = Action.query.filter_by(id=int(actionid)).first()
-    if action == None or action.sample.owner != current_user:
+    if action == None or action.owner != current_user:
         return render_template('404.html'), 404
     sampleid = action.sample_id
     db.session.delete(action)
@@ -233,16 +238,16 @@ def newsample():
 @login_required
 def newaction(sampleid):
     sample = Sample.query.filter_by(id=int(sampleid)).first()
-    if sample == None or sample.owner != current_user:
+    if sample == None or (sample.owner != current_user and not sample.is_shared_with(current_user)):
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
 
     form = NewActionForm()
     form.actiontype.choices = [(actiontype.id, actiontype.name) for actiontype in ActionType.query.order_by('name')]
-    if form.validate_on_submit():  # what about CSRF protection?? (see http://flask-wtf.readthedocs.org/en/latest/csrf.html)
+    if form.validate_on_submit():
         print form.timestamp.data
         print form.actiontype.data
         print form.description.data
-        db.session.add(Action(timestamp=form.timestamp.data, sample_id=sampleid, actiontype_id=form.actiontype.data,
+        db.session.add(Action(timestamp=form.timestamp.data, owner=current_user, sample_id=sampleid, actiontype_id=form.actiontype.data,
                               description=form.description.data))
         db.session.commit()
     return ""

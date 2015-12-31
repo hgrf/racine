@@ -127,11 +127,17 @@
 
 {% block scripts %}
 {{ super() }}
-<script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
-<script src="{{ url_for('static', filename='jquery.jeditable.js') }}"></script>
-<script src="{{ url_for('static', filename='jquery.generateId.js') }}"></script>
-<script src="{{ url_for('static', filename='jquery.jeditable.ckeditor.js') }}"></script>
-<script src="{{ url_for('static', filename='editor.js') }}"></script>
+    <script>// because Jinja does not work in the JS files
+        var sampletypes = "{ {% for sampletype in sampletypes %} {{ sampletype.id }}:'{{ sampletype.name }}', {% endfor %} }";
+        var actiontypes = "{ {% for actiontype in actiontypes %} {{ actiontype.id }}:'{{ actiontype.name }}', {% endfor %} }";
+        var begin_flashmsg = "{{ begin_flashmsg|safe }}";
+        var end_flashmsg = "{{ end_flashmsg|safe }}";
+    </script>
+    <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery.jeditable.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery.generateId.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery.jeditable.ckeditor.js') }}"></script>
+    <script src="{{ url_for('static', filename='editor.js') }}"></script>
 {% endblock %}
 
 

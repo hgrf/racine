@@ -14,6 +14,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean())
     samples = db.relationship('Sample', backref='owner')
+    actions = db.relationship('Action', backref='owner')
     shares = db.relationship('Share', backref='user')
 
     @property
@@ -63,6 +64,9 @@ class Sample(db.Model):
     def __repr__(self):
         return '<Sample %r>' % self.name
 
+    def is_shared_with(self, user):
+        return user in [share.user for share in self.shares]
+
 
 class ActionType(db.Model):
     __tablename__ = 'actiontypes'
@@ -77,6 +81,7 @@ class ActionType(db.Model):
 class Action(db.Model):
     __tablename__ = 'actions'
     id = db.Column(db.Integer, primary_key=True)
+    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     timestamp = db.Column(db.Date)
     sample_id = db.Column(db.Integer, db.ForeignKey('samples.id'))
     actiontype_id = db.Column(db.Integer, db.ForeignKey('actiontypes.id'))

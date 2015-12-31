@@ -56,7 +56,6 @@ def sampleeditor(sampleid):
     shares = Share.query.filter_by(sample=sample).all()
     myshares = Share.query.filter_by(user=current_user).all()
 
-    print sample.name
     if sample == None or (sample.owner != current_user and current_user not in [share.user for share in shares]):
         return render_template('404.html'), 404
     else:

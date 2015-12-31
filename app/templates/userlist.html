@@ -1,3 +1,8 @@
 {% for user in users %}
-    {% if not user.id == current_user.id %}<div class="list-entry user" id="{{ user.id }}">{{ user.username }}</div>{% endif %}
+    {% if not user.id == current_user.id %}
+    <div>
+    <img src="{{ url_for('static', filename='user.png') }}" class="user" id="{{ user.id }}" width="100px" height="100px">
+    {{ user.username }}
+    </div>
+    {% endif %}
 {% endfor %}

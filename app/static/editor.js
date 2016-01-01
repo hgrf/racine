@@ -1,5 +1,8 @@
 (function($) {
     var ckeditorconfig = {
+        filebrowserBrowseUrl : '/browser',
+        filebrowserWindowWidth  : 800,
+        filebrowserWindowHeight : 500,
         toolbar:
         [
             ['Bold', 'Italic', 'Underline','Subscript','Superscript', 'Format', 'Styles', '-', 'NumberedList', 'BulletedList', 'HorizontalRule', '-', 'Link', 'Unlink', '-', 'Image', 'Table', 'SpecialChar', '-', 'Maximize'],

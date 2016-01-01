@@ -9,28 +9,28 @@
 {% endblock %}
 
 {% block scripts %}
-{{ super() }}
-<script type="text/javascript" charset="utf-8">
-$(function() {
-  $(document).ready(function() {
-    function init_browser() {
-    $('.folder').dblclick( function( event ) {
-      $.ajax({
-        url: "/browser/"+$(this).data('url'),
-        data: { "browserframe": true },
-        success: function( data ) {
-          $( "#browser-frame" ).html(data);
-          init_browser();
-          // CAUTION! this solution might fill the RAM in the long term
-          // (because we recreate callback functions and stuff everytime we open a different folder)
-        }
-      });
-      event.preventDefault();
+    {{ super() }}
+    <script type="text/javascript" charset="utf-8">
+    $(function() {
+        $(document).ready(function() {
+            function load_address(address) {
+                location.href = "/browser"+address+"?CKEditorFuncNum="+{{ callback }};
+            }
+
+            function init_browser() {
+                $('.folder').dblclick( function( event ) {
+                    load_address("/"+$(this).data('url'));
+                    event.preventDefault();
+                });
+
+                $('.file').dblclick( function( event ) {
+                    window.opener.CKEDITOR.tools.callFunction({{ callback }},$(this).attr("src"));
+                    window.close();
+                });
+            }
+
+            init_browser();         // TODO: is this line necessary? (see load_address)
+        });
     });
-    }
-    
-    init_browser();
-  });
-});
-</script>
+    </script>
 {% endblock %}

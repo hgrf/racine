@@ -1,4 +1,4 @@
-from flask import render_template, send_file
+from flask import render_template, send_file, request
 from smb.SMBConnection import SMBConnection
 from ..models import SMBResource
 import socket
@@ -19,16 +19,16 @@ class FileTile:
 def imagebrowser(address):
     # TODO: make sure resource names do not contain / or are .. or stuff like that
     address = address.rstrip('/')
-    print address
     resourcetable = SMBResource.query.all()
     resources=[]
+    template = 'browserframe.html' if request.args.get('CKEditorFuncNum') == None else 'browser.html'
     if(address == ""):  # in this case we need to present choice of servers
         for i in resourcetable:
             f = FileTile()
             f.name = i.name
             f.image = "/static/resource.png"
             resources.append(f)
-        return render_template('browserframe.html', files=[], folders=[], resources=resources)
+        return render_template(template, files=[], folders=[], resources=resources, callback=request.args.get('CKEditorFuncNum'))
 
     resource = SMBResource.query.filter_by(name=address.split("/")[0]).first()
     address_on_server = "" if address.find("/") == -1 else address[address.find("/")+1:]
@@ -62,7 +62,7 @@ def imagebrowser(address):
 
     files = sorted(files, key=lambda f: f.name)
     folders = sorted(folders, key=lambda f: f.name)
-    return render_template('browserframe.html', files=files, folders=folders, resources=[], address=address)
+    return render_template(template, files=files, folders=folders, resources=[], address=address, callback=request.args.get('CKEditorFuncNum'))
 
 
 @browser.route('/img/<path:image>')

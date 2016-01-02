@@ -1,6 +1,6 @@
 (function($) {
     var ckeditorconfig = {
-        filebrowserBrowseUrl : '/browser',
+        filebrowserImageBrowseUrl : '/browser',
         filebrowserWindowWidth  : 800,
         filebrowserWindowHeight : 500,
         toolbar:
@@ -65,6 +65,7 @@
     function init_editables() {
         $('.editsamplename').editable('/changesamplename', {
             style: 'inherit',
+            event     : "dblclick",
             callback : function(value, settings) {
                 var json = $.parseJSON(value);
                 $( ".editsamplename" ).html(json.name);
@@ -81,6 +82,7 @@
             style  : 'inherit',
             type   : 'select',
             submit : 'OK',
+            event     : "dblclick",
             callback : function(value, settings) {
                 $( "#navtype"+$('#sampleid').text() ).html(value);
             }
@@ -91,12 +93,14 @@
             submit: 'OK',
             cancel: 'Cancel',
             onblur: "ignore",
+            event     : "dblclick",
             ckeditor: ckeditorconfig
         });
 
         $('.editactiondate').editable('/changeactiondate', {
             style: 'inherit',
             submit: 'OK',
+            event     : "dblclick",
             callback : function(value, settings) {
                 var json = $.parseJSON(value);
                 $( "#"+json.id+".editactiondate" ).html(json.date);
@@ -110,7 +114,8 @@
             data   : actiontypes,
             style  : 'inherit',
             type   : 'select',
-            submit : 'OK'
+            submit : 'OK',
+            event     : "dblclick"
         });
 
         $(".editactiondescription").editable('/changeactiondesc', {
@@ -118,6 +123,7 @@
             submit : 'OK',
             cancel : 'Cancel',
             onblur: "ignore",
+            event     : "dblclick",
             ckeditor : ckeditorconfig
         });
 
@@ -217,7 +223,8 @@
         // sample drag and drop in navigation bar
         $('.nav-entry').on({
             dragstart: function(event) {
-                event.dataTransfer.setData('text', event.target.id);
+                event.dataTransfer.setData('sampleid', event.target.id);
+                event.dataTransfer.setData('text/html', '<a href="/sample/'+event.target.id+'">'+$(event.target).data('name')+'</a> ');
             },
             dragenter: function(event) {
                 event.preventDefault();
@@ -230,7 +237,7 @@
                 $(this).css("background-color", "transparent");
             },
             drop: function(event) {
-                var draggedId = event.dataTransfer.getData('text');
+                var draggedId = event.dataTransfer.getData('sampleid');
                 var parentId = $(this).attr('id');
                 if(draggedId == parentId) return;
                 event.preventDefault();

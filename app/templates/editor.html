@@ -9,7 +9,7 @@
   {% for s in samples %}
     {% if s.parent_id == parent %}
       <div class="nav-container" id="{{ s.id }}">
-      <div class="row nav-entry"  data-toggle="collapse" data-target="#children{{ s.id }}" id="{{ s.id }}" draggable="true">
+      <div class="row nav-entry"  data-toggle="collapse" data-target="#children{{ s.id }}" id="{{ s.id }}" draggable="true" data-name="{{ s.name }}">
           <div class="nav-entry-name" id="navname{{ s.id }}">{{ s.name }}</div>
           <div class="nav-entry-type" id="navtype{{ s.id }}">{{ s.sampletype.name }}</div>
       </div>

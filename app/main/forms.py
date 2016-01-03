@@ -1,5 +1,6 @@
 from flask.ext.wtf import Form
-from wtforms import SelectField, SubmitField, TextAreaField, StringField
+from wtforms import SelectField, SubmitField, TextAreaField, StringField, PasswordField
+from wtforms.validators import Required, EqualTo
 from wtforms.fields.html5 import DateField
 
 
@@ -21,4 +22,11 @@ class NewSampleForm(Form):
 class NewMatrixForm(Form):
     height = StringField('Height:')  # use some sort of integer field here!
     width = StringField('Width:')  # use some sort of integer field here!
+    submit = SubmitField('Submit')
+
+
+class ChangePasswordForm(Form):
+    oldpassword = PasswordField('Old password')
+    password = PasswordField('New password', validators=[Required(), EqualTo('password2', message='Passwords must match.')])
+    password2 = PasswordField('Confirm new password', validators=[Required()])
     submit = SubmitField('Submit')

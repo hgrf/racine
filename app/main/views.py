@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, jsonify, send_file
+from flask import render_template, redirect, request, jsonify, send_file, flash
 from flask.ext.login import current_user, login_required
 from .. import db
 from ..models import Sample
@@ -9,7 +9,7 @@ from ..models import User
 from ..models import Share
 from ..models import SAMPLE_NAME_LENGTH   # <-- sort this out
 from . import main
-from forms import NewSampleForm, NewActionForm, NewMatrixForm
+from forms import NewSampleForm, NewActionForm, NewMatrixForm, ChangePasswordForm
 from datetime import date, datetime
 
 
@@ -20,6 +20,25 @@ def index():
     myshares = Share.query.filter_by(user=current_user)
     return render_template('editor.html', samples=samples, sampletypes=SampleType.query.all(),
                            actiontypes=ActionType.query.all(), myshares=myshares)
+
+@main.route('/help')
+@login_required
+def help():
+    return render_template('help.html')
+
+@main.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
+        user = current_user
+        if(user.verify_password(form.oldpassword.data)):
+            user.password = form.password.data
+            db.session.commit()
+            return redirect('/')
+        else:
+            flash('Password incorrect.')
+    return render_template('profile.html', form=form)
 
 @main.route('/userlist', methods=['POST'])
 @login_required

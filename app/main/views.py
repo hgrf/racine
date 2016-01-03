@@ -18,8 +18,9 @@ from datetime import date, datetime
 def index():
     samples = Sample.query.filter_by(owner=current_user)
     myshares = Share.query.filter_by(user=current_user)
+    showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
     return render_template('editor.html', samples=samples, sampletypes=SampleType.query.all(),
-                           actiontypes=ActionType.query.all(), myshares=myshares)
+                           actiontypes=ActionType.query.all(), myshares=myshares, showarchived=showarchived)
 
 @main.route('/help')
 @login_required
@@ -74,6 +75,7 @@ def sampleeditor(sampleid):
     samples = Sample.query.filter_by(owner=current_user).all()
     shares = Share.query.filter_by(sample=sample).all()
     myshares = Share.query.filter_by(user=current_user).all()
+    showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
 
     if sample == None or (sample.owner != current_user and current_user not in [share.user for share in shares]):
         return render_template('404.html'), 404
@@ -85,11 +87,21 @@ def sampleeditor(sampleid):
         if (request.args.get("editorframe") == "true"):
             return render_template('editorframe.html', samples=samples, sample=sample,
                                    actions=sample.actions, form=form, sampletypes=SampleType.query.all(),
-                                   actiontypes=ActionType.query.all(), shares=shares, myshares=myshares)
+                                   actiontypes=ActionType.query.all(), shares=shares, myshares=myshares, showarchived=showarchived)
         else:
             return render_template('editor.html', samples=samples, sample=sample, actions=sample.actions,
-                                   form=form, sampletypes=SampleType.query.all(), actiontypes=ActionType.query.all(), shares=shares, myshares=myshares)
+                                   form=form, sampletypes=SampleType.query.all(), actiontypes=ActionType.query.all(), shares=shares, myshares=myshares, showarchived=showarchived)
 
+
+@main.route('/togglearchived', methods=['POST'])
+@login_required
+def togglearchived():
+    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    if sample == None or sample.owner != current_user:
+        return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
+    sample.isarchived = not sample.isarchived
+    db.session.commit()
+    return jsonify(code=0, isarchived=sample.isarchived)
 
 @main.route('/sharesample', methods=['POST'])
 @login_required

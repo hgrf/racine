@@ -160,6 +160,21 @@
                     init_matrix_view();
                 });
 
+                $( "#archive").click(function() {
+                    $.ajax({
+                        url: "/togglearchived",
+                        type: "post",
+                        data: { "id": $('#sampleid').text() },
+                        success: function( data ) {
+                            if(data.isarchived) {
+                                $("#archive").text("De-archive");
+                            } else {
+                                $("#archive").text("Archive");
+                            }
+                        }
+                    });
+                });
+
                 $('#'+$('#sampleid').text()+".nav-entry").css("background-color", "#BBBBFF");
 
                 ckeditorconfig.filebrowserImageBrowseUrl = '/browser?sample='+$("#sampleid").text();

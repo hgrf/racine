@@ -7,9 +7,9 @@
 
 {% macro render_branch(parent, level=0) %}
   {% for s in samples %}
-    {% if s.parent_id == parent %}
+    {% if s.parent_id == parent and (not s.isarchived or showarchived) %}
       <div class="nav-container" id="{{ s.id }}">
-      <div class="row nav-entry"  data-toggle="collapse" data-target="#children{{ s.id }}" id="{{ s.id }}" draggable="true" data-name="{{ s.name }}">
+      <div class="row nav-entry {% if s.isarchived %}nav-entry-archived{% endif %}"  data-toggle="collapse" data-target="#children{{ s.id }}" id="{{ s.id }}" draggable="true" data-name="{{ s.name }}">
           <div class="nav-entry-name" id="navname{{ s.id }}">{{ s.name }}</div>
           <div class="nav-entry-type" id="navtype{{ s.id }}">{{ s.sampletype.name }}</div>
       </div>
@@ -36,6 +36,7 @@
       </div>
       {% endfor %}
     <div class="row nav-entry" id="0" style="padding-left:10px"><a href="/newsample">+ New Sample</a></div>
+    <div class="row nav-entry" style="padding-left:10px"><a href="?showarchived={% if showarchived %}0{% else %}1{% endif %}">{% if showarchived %}Hide{% else %}Show{% endif %} archived</a></div>
   </div>
 </div>
 {% endblock %}

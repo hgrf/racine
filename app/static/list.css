@@ -31,6 +31,10 @@
   padding-left: 10px;
 }
 
+.nav-entry-archived {
+  color: #999999;
+}
+
 .nav-entry:hover {
   background-color: #CCCCEE !important;
 }

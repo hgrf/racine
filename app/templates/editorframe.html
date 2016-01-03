@@ -4,6 +4,7 @@
 <h1 class="page-header">
     Actions: Sample <b id="{{ sample.id }}" class="{% if sample.owner == current_user %}editsamplename{% endif %}" style="display: inline">{{ sample.name }}</b> | Type: <b id="{{ sample.id }}" class="{% if sample.owner == current_user %}selectsampletype{% endif %}" style="display: inline">{{ sample.sampletype.name }}</b>
     {% if sample.owner == current_user %}<button class="btn btn-default" data-href="/delsample/{{ sample.id }}" style="margin-left:5em" data-type="sample" data-id="{{ sample.id }}" data-toggle="modal" data-target="#confirm-delete">Delete</button>{% endif %}
+    {% if sample.owner == current_user %}<button class="btn btn-default" id="archive">{% if sample.isarchived %}De-archive{% else %}Archive{% endif %}</button>{% endif %}
     <button class="btn btn-default" id="matrixviewbutton">Matrix View</button>
 </h1>
 <div class="container-fluid">

@@ -65,19 +65,20 @@ def shutdown():
 def smbresources():
     if request.args.get("delete"):
         resource = SMBResource.query.filter_by(id=int(request.args.get("delete"))).first()
-        db.session.delete(resource)  # delete cascade automatically deletes associated actions
+        db.session.delete(resource)
         db.session.commit()
         return redirect('/settings/smbresources')
     form = NewSMBResourceForm()
     if form.validate_on_submit():
         db.session.add(
             SMBResource(name=form.name.data, servername=form.servername.data, serveraddr=form.serveraddr.data,
-                        sharename=form.sharename.data, userid=form.userid.data, password=form.password.data))
+                        sharename=form.sharename.data, path=form.path.data, userid=form.userid.data, password=form.password.data))
         db.session.commit()
         form.name.data = ''
         form.servername.data = ''
         form.serveraddr.data = ''
         form.sharename.data = ''
+        form.path.data = ''
         form.userid.data = ''
         form.password.data = ''
     return render_template('settings/smbresources.html', smbresources=SMBResource.query.all(), form=form)

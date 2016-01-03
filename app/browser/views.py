@@ -1,6 +1,6 @@
 from flask import render_template, send_file, request
 from smb.SMBConnection import SMBConnection
-from ..models import SMBResource
+from ..models import SMBResource, Sample
 import socket
 import tempfile
 import os
@@ -13,33 +13,74 @@ class FileTile:
     ext = ""
     image = ""
 
+class ResourceTile:
+    name = ""
+    hasuserfolder = False
+    hassamplefolder = False
+
+def connect_to_SMBResource(resource):
+    # set up SMB connection
+    client_machine_name = "SampleManagerWeb"
+    server_ip = socket.gethostbyname(resource.serveraddr)
+    # need to convert unicode -> string apparently... (checked with print type(resource.servername))
+    conn = SMBConnection(str(resource.userid), str(resource.password), client_machine_name, str(resource.servername), use_ntlm_v2=True)
+    assert conn.connect(server_ip, 139)
+    return conn
+
+def assemble_path(items):
+    path = ""
+    for item in items:
+        if item == None or item == "" or item == "/":
+            continue
+        path = path+item+"/"
+    return path.rstrip('/')
+
 
 @browser.route('/', defaults={'address': ''})
 @browser.route('/<path:address>')
 def imagebrowser(address):
     # TODO: make sure resource names do not contain / or are .. or stuff like that
-    address = address.rstrip('/')
-    resourcetable = SMBResource.query.all()
-    resources=[]
-    template = 'browserframe.html' if request.args.get('CKEditorFuncNum') == None else 'browser.html'
-    if(address == ""):  # in this case we need to present choice of servers
-        for i in resourcetable:
-            f = FileTile()
-            f.name = i.name
-            f.image = "/static/resource.png"
-            resources.append(f)
-        return render_template(template, files=[], folders=[], resources=resources, callback=request.args.get('CKEditorFuncNum'))
 
-    resource = SMBResource.query.filter_by(name=address.split("/")[0]).first()
-    address_on_server = "" if address.find("/") == -1 else address[address.find("/")+1:]
-    client_machine_name = "SampleManagerWeb"
-    server_ip = socket.gethostbyname(resource.serveraddr)
+    # basic config stuff
     image_extensions = [".jpg", ".jpeg", ".png"]
-    # need to convert unicode -> string apparently... (checked with print type(resource.servername))
-    conn = SMBConnection(str(resource.userid), str(resource.password), client_machine_name, str(resource.servername),
-                         use_ntlm_v2=True)
-    assert conn.connect(server_ip, 139)
 
+    # find out from which sample the browser was opened
+    sample = Sample.query.filter_by(id=int(request.args.get("sample"))).first()
+
+    # process address (1)
+    address = address.rstrip('/')
+
+    # decide which template to use
+    template = 'browserframe.html' if request.args.get('CKEditorFuncNum') == None else 'browser.html'
+
+    if(address == ""):  # in this case we need to present choice of resources
+        resources=[]
+        resourcetable = SMBResource.query.all()
+        for resource in resourcetable:
+            r = ResourceTile()
+            r.name = resource.name
+            conn = connect_to_SMBResource(resource)
+            for i in conn.listPath(resource.sharename, resource.path if resource.path != None else ""):
+                if i.isDirectory and i.filename == sample.owner.username:
+                    r.hasuserfolder = True
+                    for j in conn.listPath(resource.sharename, assemble_path([resource.path, i.filename])):
+                        if j.isDirectory and j.filename == sample.name:
+                            r.hassamplefolder = True
+                            break
+                    break
+            conn.close()
+            resources.append(r)
+        return render_template(template, files=[], folders=[], resources=resources, sample=sample, callback=request.args.get('CKEditorFuncNum'))
+
+    # process address (2)
+    resource = SMBResource.query.filter_by(name=address.split("/")[0]).first()
+    address_prefix = "" if resource.path == None else resource.path
+    address_in_resource = "" if address.find("/") == -1 else address[address.find("/")+1:]
+    address_on_server = address_prefix + ("/" if address_prefix != "" and address_in_resource != "" else "") + address_in_resource
+
+    conn = connect_to_SMBResource(resource)
+
+    # list files and folders in current path
     files = []
     folders = []
     for i in conn.listPath(resource.sharename, address_on_server):
@@ -62,13 +103,17 @@ def imagebrowser(address):
 
     files = sorted(files, key=lambda f: f.name)
     folders = sorted(folders, key=lambda f: f.name)
-    return render_template(template, files=files, folders=folders, resources=[], address=address, callback=request.args.get('CKEditorFuncNum'))
+    return render_template(template, files=files, folders=folders, resources=[], sample=sample, address=address, callback=request.args.get('CKEditorFuncNum'))
 
 
 @browser.route('/img/<path:image>')
 def browserimage(image):
     resource = SMBResource.query.filter_by(name=image.split("/")[0]).first()
-    address_on_server = image[image.find("/")+1:]
+
+    address_prefix = "" if resource.path == None else resource.path
+    address_in_resource = image[image.find("/")+1:]
+    address_on_server = address_prefix + ("/" if address_prefix != "" else "") + address_in_resource
+
     client_machine_name = "SampleManagerWeb"
     server_ip = socket.gethostbyname(resource.serveraddr)
     image_extensions = [".jpg", ".jpeg", ".png"]

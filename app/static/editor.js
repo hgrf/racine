@@ -162,6 +162,7 @@
 
                 $('#'+$('#sampleid').text()+".nav-entry").css("background-color", "#BBBBFF");
 
+                ckeditorconfig.filebrowserImageBrowseUrl = '/browser?sample='+$("#sampleid").text();
                 CKEDITOR.replace( 'description', ckeditorconfig);
                 // CAUTION! this solution might fill the RAM in the long term
                 // (because we recreate callback functions and stuff everytime we open a different sample)
@@ -216,6 +217,7 @@
         {
             init_editables();
             init_sharelist();
+            ckeditorconfig.filebrowserImageBrowseUrl = '/browser?sample='+$("#sampleid").text();
             CKEDITOR.replace( 'description', ckeditorconfig);
         }
 
@@ -314,7 +316,7 @@
         $('#browser').on('show.bs.modal', function(e) {
             function load_address(address) {
                 $.ajax({
-                    url: "/browser"+address,
+                    url: "/browser"+address+"?sample="+$("#sampleid").text(),
                     success: function( data ) {
                         $( "#browser-frame" ).html(data);
                         init_browser();

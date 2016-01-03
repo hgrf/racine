@@ -14,6 +14,7 @@ class NewSMBResourceForm(Form):
     servername = StringField('Server name (NetBIOS):')
     serveraddr = StringField('Server address:')
     sharename = StringField('Share name:')
+    path = StringField('Path:')
     userid = StringField('User name:')
     password = StringField('Password:')
     submit = SubmitField('Submit')

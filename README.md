@@ -1,6 +1,6 @@
-# SampleManagerWeb
+# Mercury Sample Manager
 
-This is SampleManagerWeb (for now... for the lack of a better name), a sample management tool that enables researchers
+This is Mercury Sample Manager (for now... for the lack of a better name), a sample management tool that enables researchers
 to keep track of their samples from any PC in a laboratory. The programme is a Flask-based web service that runs on a
 central server on the local network of your research institute and that can be accessed from all other computers on the
 same network using the normal web browser (should be a recent browser though).

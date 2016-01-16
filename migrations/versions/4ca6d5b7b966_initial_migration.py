@@ -12,6 +12,7 @@ down_revision = None
 
 from alembic import op
 import sqlalchemy as sa
+from werkzeug.security import generate_password_hash
 
 
 def upgrade():
@@ -85,6 +86,9 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     ### end Alembic commands ###
+    op.execute(
+        'INSERT INTO "users"(email, username, password_hash, is_admin) VALUES ("admin@admin.com", "admin", "'+generate_password_hash('admin')+'", 1);'
+    )
 
 
 def downgrade():

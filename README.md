@@ -29,12 +29,16 @@ Now you enter this directory and you create a virtual environment for python - a
 Finally, all that remains to do is to install the required python packages:
 
     $ pip install -r requirements.txt
+    
+Now you have to initialise the database by running:
+
+    $ python manage.py db upgrade
+
+This will also create the admin user that you will use for your first login (admin@admin.com, password is admin).
 
 You can start the development server by simply executing the "run script":
 
     $ ./run
-
-TODO: explain how to initialise the DB
 
 # Deployment with gunicorn and nginx
 

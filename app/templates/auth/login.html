@@ -4,9 +4,36 @@
 {% block title %}Sample Manager - Login{% endblock %}
 
 {% block page_content %}
-<div class="page-header">
-<h1>Login</h1>
-</div>
-<div class="col-md-4">
-{{ wtf.quick_form(form) }}
+    <div class="page-header">
+    <h1>Login</h1>
+    </div>
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            {{ wtf.quick_form(form) }}
+        </div>
+        <div class="col-md-6">
+            {% for user in users %}
+                <div>
+                    <img src="{{ url_for('static', filename='user.png') }}" class="user" data-email="{{ user.email }}" width="50px" height="50px">
+                    {{ user.username }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript" charset="utf-8">
+    $(function() {
+        $(document).ready(function() {
+            $(".user").dblclick(function( event )  {
+                $("#email").val($(this).data("email"));
+                $("#password").focus();
+                event.preventDefault();
+            });
+        });
+    });
+    </script>
 {% endblock %}

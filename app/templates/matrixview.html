@@ -24,12 +24,12 @@ Matrix dimensions: {{ sample.mheight }}x{{ sample.mwidth }}
           {% set vars={'found': False} %}
           {% for child in sample.children %}
             {% if child.mx==x and child.my==y %}
-              <img id="{{ child.id }}" src="{{ child.image }}" width="100px" height="100px">
+              <a href="{{ child.image }}" data-lightbox="{{ x }}-{{ y }}"><img id="{{ child.id }}" src="{{ child.image }}" width="100px" height="100px"></a>
               <p>{{ child.name }}</p>
               {% if vars.update({'found': True}) %}{% endif %} <!-- workaround because Jinja does not let me change variable from loop -->
             {% endif %}
           {% endfor %}
-          {% if not vars.found %}{{ found }}<img src="" width="100px" height="100px"><p></p>{% endif %}
+          {% if not vars.found %}{{ found }}<a href="" data-lightbox="{{ x }}-{{ y }}"><img src="" width="100px" height="100px"></a></p>{% endif %}
         </div>
       </td>
     {% endfor %}

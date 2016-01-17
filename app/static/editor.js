@@ -33,6 +33,7 @@
         // when user chooses image in childbrowser, we have to update the corresponding element
         // of the matrix and tell the server via AJAX that the matrix was modified
         $('.childimage').dblclick( function( event ) {
+            $('#childbrowser').data('target').find('a').attr('href', $(this).attr('src'));
             $('#childbrowser').data('target').find('img').attr('src', $(this).attr('src'));
             $('#childbrowser').data('target').find('p').html($(this).data('name'));
 
@@ -62,7 +63,27 @@
         });
     }
 
-    function init_editables() {
+    function init_editor() {
+        $('#matrixviewbutton').click(function() {
+            load_matrix_view($('#sampleid').text());
+            init_matrix_view();
+        });
+
+        $( "#archive").click(function() {
+            $.ajax({
+                url: "/togglearchived",
+                type: "post",
+                data: { "id": $('#sampleid').text() },
+                success: function( data ) {
+                    if(data.isarchived) {
+                        $("#archive").text("De-archive");
+                    } else {
+                        $("#archive").text("Archive");
+                    }
+                }
+            });
+        });
+
         $('.editsamplename').editable('/changesamplename', {
             style: 'inherit',
             event     : "dblclick",
@@ -151,29 +172,8 @@
             success: function( data, id ) {
                 $( "#editor-frame" ).html(data);
                 window.history.pushState({"html": data, "pageTitle": data.pageTitle}, "", "/sample/"+ $('#sampleid').text());
-                init_editables();
+                init_editor();
                 init_sharelist();
-
-
-                $('#matrixviewbutton').click(function() {
-                    load_matrix_view($('#sampleid').text());
-                    init_matrix_view();
-                });
-
-                $( "#archive").click(function() {
-                    $.ajax({
-                        url: "/togglearchived",
-                        type: "post",
-                        data: { "id": $('#sampleid').text() },
-                        success: function( data ) {
-                            if(data.isarchived) {
-                                $("#archive").text("De-archive");
-                            } else {
-                                $("#archive").text("Archive");
-                            }
-                        }
-                    });
-                });
 
                 $('#'+$('#sampleid').text()+".nav-entry").css("background-color", "#BBBBFF");
 
@@ -230,7 +230,7 @@
         // initialise editor if sample is loaded
         if($("#sampleid").text() != "")
         {
-            init_editables();
+            init_editor();
             init_sharelist();
             ckeditorconfig.filebrowserImageBrowseUrl = '/browser?sample='+$("#sampleid").text();
             CKEDITOR.replace( 'description', ckeditorconfig);

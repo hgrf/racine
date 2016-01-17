@@ -3,6 +3,7 @@
 {% block styles %}
 {{super()}}
 <link rel="stylesheet" href="{{url_for('static', filename='list.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='lightbox2-master/src/css/lightbox.css')}}">
 {% endblock %}
 
 {% macro render_branch(parent, level=0) %}
@@ -139,6 +140,7 @@
     <script src="{{ url_for('static', filename='jquery.generateId.js') }}"></script>
     <script src="{{ url_for('static', filename='jquery.jeditable.ckeditor.js') }}"></script>
     <script src="{{ url_for('static', filename='editor.js') }}"></script>
+    <script src="{{ url_for('static', filename='lightbox2-master/src/js/lightbox.js') }}"></script>
 {% endblock %}
 
 

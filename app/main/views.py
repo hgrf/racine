@@ -9,7 +9,7 @@ from ..models import User
 from ..models import Share
 from ..models import SAMPLE_NAME_LENGTH   # <-- sort this out
 from . import main
-from forms import NewSampleForm, NewActionForm, NewMatrixForm, ChangePasswordForm
+from forms import NewSampleForm, NewActionForm, NewMatrixForm
 from datetime import date, datetime
 
 
@@ -26,20 +26,6 @@ def index():
 @login_required
 def help():
     return render_template('help.html')
-
-@main.route('/profile', methods=['GET', 'POST'])
-@login_required
-def profile():
-    form = ChangePasswordForm()
-    if form.validate_on_submit():
-        user = current_user
-        if(user.verify_password(form.oldpassword.data)):
-            user.password = form.password.data
-            db.session.commit()
-            return redirect('/')
-        else:
-            flash('Password incorrect.')
-    return render_template('profile.html', form=form)
 
 @main.route('/userlist', methods=['POST'])
 @login_required

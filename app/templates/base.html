@@ -26,7 +26,7 @@
             <li><a href="/allsamples">All Samples</a></li>
             <li><a href="/settings/overview">Settings</a></li>
         {% endif %}
-        <li><a href="/profile">Profile</a></li>
+        <li><a href="/profile/overview">Profile</a></li>
           {% if current_user.is_authenticated %}
           <li><a href="{{ url_for('auth.logout') }}">Sign Out</a></li>
           {% else %}

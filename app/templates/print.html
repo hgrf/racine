@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('static', filename='list.css')}}">
+{% endblock %}
+
+{% block sidebarnav %}
+<div class="col-sm-3 col-md-2 sidebar">
+    {{ wtf.quick_form(form) }}
+    <button type="button" class="btn btn-default" onclick="printActionList()">Print</button>
+</div>
+{% endblock %}
+
+{% block page_content %}
+    <div id="printArea">
+        <div class="container-fluid">
+            <div class="row list-header">
+                <div class="col-md-2">Date</div>
+                <div class="col-md-10">Description</div>
+            </div>
+            {% for action in actions %}
+            <div class="row list-entry" id="{{ action.id }}">
+                <div class="col-md-2">
+                    <div>{{ action.timestamp }}</div>
+                    <div style="font-style: italic">{{ action.owner.username }}</div>
+                    <div style="display: inline">{{ action.actiontype.name }}</div>
+                </div>
+                <div class="col-md-10">{{ action.description|safe }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+    <script>
+        function printActionList() {
+             var printContents = document.getElementById("printArea").innerHTML;
+             var originalContents = document.body.innerHTML;
+
+             document.body.innerHTML = printContents;
+
+             window.print();
+
+             document.body.innerHTML = originalContents;
+        }
+    </script>
+{% endblock %}

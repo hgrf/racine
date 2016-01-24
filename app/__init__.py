@@ -27,10 +27,12 @@ def create_app(config_name):
     from .browser import browser as browser_blueprint
     from .settings import settings as settings_blueprint
     from .profile import profile as profile_blueprint
+    from .printdata import printdata as printdata_blueprint
     app.register_blueprint(main_blueprint)
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
     app.register_blueprint(browser_blueprint, url_prefix='/browser')
     app.register_blueprint(settings_blueprint, url_prefix='/settings')
     app.register_blueprint(profile_blueprint, url_prefix='/profile')
+    app.register_blueprint(printdata_blueprint, url_prefix='/print')
 
     return app

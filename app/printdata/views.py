@@ -15,5 +15,5 @@ def overview():
     form = RequestActionsForm()
     actions = []
     if form.validate_on_submit():
-        actions = Action.query.join(Action.sample).filter(Action.timestamp >= form.datefrom.data, Action.timestamp <= form.dateto.data, Sample.owner == current_user)
+        actions = Action.query.join(Action.sample).filter(Action.timestamp >= form.datefrom.data, Action.timestamp <= form.dateto.data, Sample.owner == current_user).order_by(Action.sample_id)
     return render_template('print.html', form=form, actions=actions)

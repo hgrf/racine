@@ -270,9 +270,6 @@ def newaction(sampleid):
     form = NewActionForm()
     form.actiontype.choices = [(actiontype.id, actiontype.name) for actiontype in ActionType.query.order_by('name')]
     if form.validate_on_submit():
-        print form.timestamp.data
-        print form.actiontype.data
-        print form.description.data
         db.session.add(Action(timestamp=form.timestamp.data, owner=current_user, sample_id=sampleid, actiontype_id=form.actiontype.data,
                               description=form.description.data))
         db.session.commit()

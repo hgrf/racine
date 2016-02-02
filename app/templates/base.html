@@ -29,12 +29,14 @@
             <li><a href="/allsamples">All Samples</a></li>
             <li><a href="/settings/overview">Settings</a></li>
         {% endif %}
+        {% if current_user.is_authenticated %}
         <li><a href="/profile/overview">Profile</a></li>
-          {% if current_user.is_authenticated %}
-          <li><a href="{{ url_for('auth.logout') }}">Sign Out</a></li>
-          {% else %}
-          <li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
-          {% endif %}
+        {% endif %}
+        {% if current_user.is_authenticated %}
+        <li><a href="{{ url_for('auth.logout') }}">Sign Out</a></li>
+        {% else %}
+        <li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
+        {% endif %}
         <li><a href="/help">Help</a></li>
       </ul>
       <form class="navbar-form navbar-right">

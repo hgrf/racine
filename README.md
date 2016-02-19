@@ -92,11 +92,11 @@ You then want to configure your nginx server. Create a file "msm" in /etc/nginx/
     
         location / {
         include proxy_params;
-          proxy_pass http://unix:/home/holger/PycharmProjects/SampleManagerWeb/msm.sock;
+          proxy_pass http://unix:[path]/SampleManagerWeb/msm.sock;
         }
     }
 
-Then create a symbolic link to this file in /etc/nginx/sites-enabled and delete the default entry:
+Where - again - you have to replace [path] by the path to the application's directory. Then create a symbolic link to this file in /etc/nginx/sites-enabled and delete the default entry:
 
     $ sudo ln -s /etc/nginx/sites-available/msm /etc/nginx/sites-enabled
     $ sudo rm /etc/nginx/sites-enabled/default

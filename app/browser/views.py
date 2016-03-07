@@ -127,7 +127,11 @@ def browserimage(image):
     assert conn.connect(server_ip, 139)
 
     file_obj = tempfile.NamedTemporaryFile()
-    file_attributes, filesize = conn.retrieveFile(resource.sharename, address_on_server, file_obj)
+    try:
+        file_attributes, filesize = conn.retrieveFile(resource.sharename, address_on_server, file_obj)
+    except: # if we have any problem retrieving the file
+        app.logger.error("Could not retrieve file: "+resource.sharename+'/'+address_on_server)
+        return ''
 
     file_obj.seek(0)
     image_binary = file_obj.read()

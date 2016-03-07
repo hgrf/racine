@@ -1,12 +1,16 @@
-from flask import render_template, send_file, request
+from flask import render_template, send_file, request, redirect, url_for, send_from_directory
+from flask_login import current_user
+from flask import current_app as app
 from smb.SMBConnection import SMBConnection
-from ..models import SMBResource, Sample
+from .. import db
+from ..models import SMBResource, Sample, Upload
 import socket
 import tempfile
 import os
 import io
 from . import browser
 
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
 class FileTile:
     name = ""
@@ -131,3 +135,28 @@ def browserimage(image):
     file_obj.close()
 
     return send_file(io.BytesIO(image_binary))
+
+@browser.route('/ulimg/<image>')
+def uploadedimage(image):
+    dbentry = Upload.query.filter_by(id=image).first()
+    return send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext)
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def get_extension(filename):
+    return filename.rsplit('.', 1)[1].lower()
+
+@browser.route('/upload', methods=['POST'])
+def uploadfile():
+    sample=Sample.query.filter_by(id=int(request.args.get("sample"))).first()
+    file = request.files['file']
+    if file and allowed_file(file.filename):
+        dbentry = Upload(user=current_user, source='ul:'+file.filename, ext=get_extension(file.filename))
+        db.session.add(dbentry)
+        db.session.commit()
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext))
+        uploadurl = url_for('.uploadedimage', image=str(dbentry.id))
+        return render_template('browser.html', files=[], folders=[], resources=[], sample=sample, callback=request.args.get('CKEditorFuncNum'), uploadurl=uploadurl)
+
+    return redirect(url_for('browser'))

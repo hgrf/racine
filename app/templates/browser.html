@@ -4,6 +4,13 @@
 
 {% block content %}
 <div id="browser-frame">
+    <div>
+        <form method="post" style="margin:0;padding:0;" action="/browser/upload?sample={{ sample.id }}&CKEditorFuncNum={{ callback }}" enctype="multipart/form-data">
+            <img class="upload" src="/static/upload.png" width="100px" height="100px">
+            Upload an image:<input style="display:inline;" type="file" name="file" id="file">
+            <input style="display:inline;" type="submit" value="OK">
+        </form>
+    </div>
   {% include 'browserframe.html' %}
 </div>
 {% endblock %}
@@ -18,6 +25,11 @@
             }
 
             function init_browser() {
+                {% if uploadurl is defined %}
+                    window.opener.CKEDITOR.tools.callFunction({{ callback }},"{{ uploadurl }}")
+                    window.close();
+                {% endif %}
+
                 $('.folder').dblclick( function( event ) {
                     load_address("/"+$(this).data('url'));
                     event.preventDefault();

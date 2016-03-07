@@ -1,4 +1,5 @@
 import os
+import logging
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -11,7 +12,10 @@ class Config:
 
     @staticmethod
     def init_app(app):
-        pass
+        file_handler = logging.handlers.RotatingFileHandler(os.path.join(basedir, 'msm.log'), maxBytes=10000)
+        file_handler.setLevel(logging.WARNING)
+        app.logger.addHandler(file_handler)
+        #pass
 
 
 class DevelopmentConfig(Config):

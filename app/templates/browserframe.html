@@ -1,8 +1,12 @@
 <div id="address"><strong>Path: </strong>{{ address }}</div>
 
+{% if notconnected %}
+    Could not connect to resource
+{% endif %}
+
 {% for resource in resources %}
     <div>
-    <img src="{{ url_for('static', filename='resource.png') }}" class="folder" data-url="{{ resource.name }}" width="100px" height="100px">
+    <img src="{{ url_for('static', filename='resource.png') }}" {% if resource.available %}class="folder"{% endif %} data-url="{{ resource.name }}" width="100px" height="100px">
     {{ resource.name }}
     {% if resource.hasuserfolder %}
         <img src="{{ url_for('static', filename='user.png') }}" class="folder" data-url="{{ resource.name+"/"+sample.owner.username }}" width="100px" height="100px">

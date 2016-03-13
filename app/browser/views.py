@@ -19,6 +19,7 @@ class FileTile:
 
 class ResourceTile:
     name = ""
+    available = True        # set to false if connection to resource cannot be established
     hasuserfolder = False
     hassamplefolder = False
 
@@ -28,8 +29,8 @@ def connect_to_SMBResource(resource):
     server_ip = socket.gethostbyname(resource.serveraddr)
     # need to convert unicode -> string apparently... (checked with print type(resource.servername))
     conn = SMBConnection(str(resource.userid), str(resource.password), client_machine_name, str(resource.servername), use_ntlm_v2=True)
-    assert conn.connect(server_ip, 139)
-    return conn
+    connected = conn.connect(server_ip, 139)
+    return conn, connected
 
 def assemble_path(items):
     path = ""
@@ -63,7 +64,13 @@ def imagebrowser(address):
         for resource in resourcetable:
             r = ResourceTile()
             r.name = resource.name
-            conn = connect_to_SMBResource(resource)
+            conn, connected = connect_to_SMBResource(resource)
+            if not connected:
+                r.name += " (N/A)"
+                r.available = False
+                resources.append(r)
+                continue
+            # find user/sample folders
             for i in conn.listPath(resource.sharename, resource.path if resource.path != None else ""):
                 if i.isDirectory and i.filename == sample.owner.username:
                     r.hasuserfolder = True
@@ -82,7 +89,9 @@ def imagebrowser(address):
     address_in_resource = "" if address.find("/") == -1 else address[address.find("/")+1:]
     address_on_server = address_prefix + ("/" if address_prefix != "" and address_in_resource != "" else "") + address_in_resource
 
-    conn = connect_to_SMBResource(resource)
+    conn, connected = connect_to_SMBResource(resource)
+    if not connected:
+        return render_template(template, notconnected=True)
 
     # list files and folders in current path
     files = []
@@ -118,19 +127,16 @@ def browserimage(image):
     address_in_resource = image[image.find("/")+1:]
     address_on_server = address_prefix + ("/" if address_prefix != "" else "") + address_in_resource
 
-    client_machine_name = "SampleManagerWeb"
-    server_ip = socket.gethostbyname(resource.serveraddr)
-    image_extensions = [".jpg", ".jpeg", ".png"]
-    # need to convert unicode -> string apparently... (checked with print type(resource.servername))
-    conn = SMBConnection(str(resource.userid), str(resource.password), client_machine_name, str(resource.servername),
-                         use_ntlm_v2=True)
-    assert conn.connect(server_ip, 139)
+    conn, connected = connect_to_SMBResource(resource)
+    if not connected:
+        app.logger.error("Could not connect to SMBResource: "+resource.name)
+        return ''
 
     file_obj = tempfile.NamedTemporaryFile()
     try:
         file_attributes, filesize = conn.retrieveFile(resource.sharename, address_on_server, file_obj)
     except: # if we have any problem retrieving the file
-        app.logger.error("Could not retrieve file: "+resource.sharename+'/'+address_on_server)
+        app.logger.error("Could not retrieve file: "+resource.name+'/'+address_on_server)
         return ''
 
     file_obj.seek(0)

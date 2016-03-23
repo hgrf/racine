@@ -5,7 +5,11 @@
 {% block content %}
 <div id="browser-frame">
     <div>
+        {% if sample is none %}
+        <form method="post" style="margin:0;padding:0;" action="/browser/upload?CKEditorFuncNum={{ callback }}" enctype="multipart/form-data">
+        {% else %}
         <form method="post" style="margin:0;padding:0;" action="/browser/upload?sample={{ sample.id }}&CKEditorFuncNum={{ callback }}" enctype="multipart/form-data">
+        {% endif %}
             <img class="upload" src="/static/upload.png" width="100px" height="100px">
             Upload an image:<input style="display:inline;" type="file" name="file" id="file">
             <input style="display:inline;" type="submit" value="OK">
@@ -21,7 +25,11 @@
     $(function() {
         $(document).ready(function() {
             function load_address(address) {
-                location.href = "/browser"+address+"?sample="+{{ sample.id }}+"&CKEditorFuncNum="+{{ callback }};
+                {% if sample is none %}
+                    location.href = "/browser"+address+"?CKEditorFuncNum="+{{ callback }};
+                {% else %}
+                    location.href = "/browser"+address+"?sample="+{{ sample.id }}+"&CKEditorFuncNum="+{{ callback }};
+                {% endif %}
             }
 
             function init_browser() {

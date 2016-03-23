@@ -50,7 +50,10 @@ def imagebrowser(address):
     image_extensions = [".jpg", ".jpeg", ".png"]
 
     # find out from which sample the browser was opened
-    sample = Sample.query.filter_by(id=int(request.args.get("sample"))).first()
+    if request.args.get("sample") is None:
+        sample = None
+    else:
+        sample = Sample.query.filter_by(id=int(request.args.get("sample"))).first()
 
     # process address (1)
     address = address.rstrip('/')
@@ -71,14 +74,15 @@ def imagebrowser(address):
                 resources.append(r)
                 continue
             # find user/sample folders
-            for i in conn.listPath(resource.sharename, resource.path if resource.path != None else ""):
-                if i.isDirectory and i.filename == sample.owner.username:
-                    r.hasuserfolder = True
-                    for j in conn.listPath(resource.sharename, assemble_path([resource.path, i.filename])):
-                        if j.isDirectory and j.filename == sample.name:
-                            r.hassamplefolder = True
-                            break
-                    break
+            if sample is not None:
+                for i in conn.listPath(resource.sharename, resource.path if resource.path != None else ""):
+                    if i.isDirectory and i.filename == sample.owner.username:
+                        r.hasuserfolder = True
+                        for j in conn.listPath(resource.sharename, assemble_path([resource.path, i.filename])):
+                            if j.isDirectory and j.filename == sample.name:
+                                r.hassamplefolder = True
+                                break
+                        break
             conn.close()
             resources.append(r)
         return render_template(template, files=[], folders=[], resources=resources, sample=sample, callback=request.args.get('CKEditorFuncNum'))
@@ -159,7 +163,11 @@ def get_extension(filename):
 
 @browser.route('/upload', methods=['POST'])
 def uploadfile():
-    sample=Sample.query.filter_by(id=int(request.args.get("sample"))).first()
+    if request.args.get("sample") is None:
+        sample=None
+    else:
+        sample=Sample.query.filter_by(id=int(request.args.get("sample"))).first()
+
     file = request.files['file']
     if file and allowed_file(file.filename):
         dbentry = Upload(user=current_user, source='ul:'+file.filename, ext=get_extension(file.filename))

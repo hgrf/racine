@@ -12,15 +12,23 @@ from . import main
 from forms import NewSampleForm, NewActionForm, NewMatrixForm
 from datetime import date, datetime
 
+import git
+from config import basedir
 
 @main.route('/')
 @login_required
 def index():
+    repo = git.Repo(basedir)                        # get Sample Manager git repo
+    remote = git.remote.Remote(repo, 'origin')      # remote repo
+    info = remote.fetch()[0]                        # fetch changes
+    remote_revision = info.commit                     # latest remote commit
+    local_revision = repo.rev_parse('HEAD')
+
     samples = Sample.query.filter_by(owner=current_user).all()
     myshares = Share.query.filter_by(user=current_user).all()
     showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
     return render_template('editor.html', samples=samples, sampletypes=SampleType.query.all(),
-                           actiontypes=ActionType.query.all(), myshares=myshares, showarchived=showarchived)
+                           actiontypes=ActionType.query.all(), myshares=myshares, showarchived=showarchived, local_rev=local_revision, remote_rev=remote_revision)
 
 @main.route('/help')
 @login_required

@@ -5,6 +5,8 @@
 {% block styles %}
 {{super()}}
 <link rel="stylesheet" href="{{url_for('static', filename='dashboard.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='jquery-ui.min.css') }}">
+<link rel="stylesheet" href="{{url_for('static', filename='autocomplete-bootstrap.css') }}">
 {% endblock %}
 
 {% block navbar %}
@@ -40,7 +42,7 @@
         <li><a href="/help">Help</a></li>
       </ul>
       <form class="navbar-form navbar-right">
-        <input type="text" class="form-control" placeholder="Search...">
+        <input type="text" class="form-control searchfield" placeholder="Search...">
       </form>
     </div>
   </div>
@@ -65,4 +67,31 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+    <script src="{{ url_for('static', filename='jquery-ui.min.js') }}"></script>
+    <script>
+        (function($) {
+            $( ".searchfield" ).autocomplete({
+              source: function(request, response) {
+                  $.getJSON("/search", {
+                      term: request.term, // in flask, "term" will be the argument to look for using request.args
+                  }, function (data) {
+                      response(data.results); // results from jsonify
+                  });
+              },
+              select: function( event, ui ) {
+                  event.preventDefault();
+                  $(this).val(ui.item.label);
+                  location.href="/sample/"+ui.item.value;
+              },
+              focus: function(event, ui) {
+                  event.preventDefault();
+                  $(this).val(ui.item.label);
+              }
+            });
+        })(jQuery);
+    </script>
 {% endblock %}

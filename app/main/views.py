@@ -27,6 +27,13 @@ def index():
 def help():
     return render_template('help.html')
 
+@main.route('/search', methods=['GET'])
+@login_required
+def search():
+    keyword = request.args.get("term")
+    samples = Sample.query.filter(Sample.name.ilike('%'+keyword+'%')).limit(10).all()   # max 10 items
+    return jsonify(results=[{"label": s.name, "value": s.id} for s in samples])
+
 @main.route('/userlist', methods=['POST'])
 @login_required
 def userlist():

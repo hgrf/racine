@@ -21,14 +21,22 @@ def index():
     repo = git.Repo(basedir)                        # get Sample Manager git repo
     remote = git.remote.Remote(repo, 'origin')      # remote repo
     info = remote.fetch()[0]                        # fetch changes
-    remote_revision = info.commit                     # latest remote commit
+    remote_revision = info.commit                   # latest remote commit
     local_revision = repo.rev_parse('HEAD')
+
+    recent_changes = []
+    maxc = 10
+    for c in repo.iter_commits():
+        recent_changes.append(c)
+        maxc = maxc-1
+        if not maxc:
+            break
 
     samples = Sample.query.filter_by(owner=current_user).all()
     myshares = Share.query.filter_by(user=current_user).all()
     showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
     return render_template('editor.html', samples=samples, sampletypes=SampleType.query.all(),
-                           actiontypes=ActionType.query.all(), myshares=myshares, showarchived=showarchived, local_rev=local_revision, remote_rev=remote_revision)
+                           actiontypes=ActionType.query.all(), myshares=myshares, showarchived=showarchived, local_rev=local_revision, remote_rev=remote_revision, recent_changes=recent_changes)
 
 @main.route('/help')
 @login_required

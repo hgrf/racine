@@ -48,6 +48,8 @@
     {% include 'editorframe.html' %}
 {% else %}
     <h1>Welcome</h1>
+    <h2>Revision:</h2>
+    <p>
     running MSM revision: {{ local_rev }} <br>
     MSM revision on GitHub: {{ remote_rev }} <br>
     {% if local_rev != remote_rev %}
@@ -55,6 +57,13 @@
     {% else %}
         <font color="#00FF00">You are using the GitHub revision of MSM.</font>
     {% endif %}
+    </p>
+    <h3>Recent modifications (running revision):</h3>
+    <table>
+    {% for c in recent_changes %}
+        <tr><td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;">{{ c.hexsha }}</td><td>{{ c.message }}</td>
+    {% endfor %}
+    </table>
 {% endif %}
 </div>
 

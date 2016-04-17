@@ -160,6 +160,21 @@
             });
             event.preventDefault();
         });
+
+        $('.swapaction').click( function(event) {
+            sampleid = $('#sampleid').text();
+            actionid = $(this).data('id');
+            swapid = $(this).data('swapid');
+            $.ajax({
+                url: "/swapactionorder",
+                type: "post",
+                data: { "actionid": actionid,
+                        "swapid": swapid },
+                success: function( data ) {
+                    load_sample(sampleid);
+                }
+            });
+        });
     }
 
     function load_sample(id) {

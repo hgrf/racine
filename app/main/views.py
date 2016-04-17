@@ -70,12 +70,13 @@ def sampleeditor(sampleid):
         form.actiontype.choices = [(actiontype.id, actiontype.name) for actiontype in ActionType.query.order_by('name')]
         form.description.data = ''
         form.timestamp.data = date.today()
+        actions = Action.query.filter_by(sample=sample).order_by(Action.ordnum).all()
         if (request.args.get("editorframe") == "true"):
             return render_template('editorframe.html', samples=samples, sample=sample,
-                                   actions=sample.actions, form=form, sampletypes=SampleType.query.all(),
+                                   actions=actions, form=form, sampletypes=SampleType.query.all(),
                                    actiontypes=ActionType.query.all(), shares=shares, myshares=myshares, showarchived=showarchived)
         else:
-            return render_template('editor.html', samples=samples, sample=sample, actions=sample.actions,
+            return render_template('editor.html', samples=samples, sample=sample, actions=actions,
                                    form=form, sampletypes=SampleType.query.all(), actiontypes=ActionType.query.all(), shares=shares, myshares=myshares, showarchived=showarchived)
 
 
@@ -270,9 +271,23 @@ def newaction(sampleid):
     form = NewActionForm()
     form.actiontype.choices = [(actiontype.id, actiontype.name) for actiontype in ActionType.query.order_by('name')]
     if form.validate_on_submit():
-        db.session.add(Action(timestamp=form.timestamp.data, owner=current_user, sample_id=sampleid, actiontype_id=form.actiontype.data,
-                              description=form.description.data))
+        a = Action(datecreated=date.today(), timestamp=form.timestamp.data, owner=current_user, sample_id=sampleid, actiontype_id=form.actiontype.data,
+                              description=form.description.data)
+        db.session.add(a)
         db.session.commit()
+        a.ordnum = a.id         # add ID as order number (maybe there is a more elegant way to do this?)
+        db.session.commit()
+    return ""
+
+@main.route('/swapactionorder', methods=['POST'])
+@login_required
+def swapactionorder():          # TODO: sort out permissions for this (e.g. who has the right to change order?)
+    action = Action.query.filter_by(id = int(request.form.get('actionid'))).first()
+    swapaction = Action.query.filter_by(id = int(request.form.get('swapid'))).first()
+    ordnum = action.ordnum
+    action.ordnum = swapaction.ordnum
+    swapaction.ordnum = ordnum
+    db.session.commit()
     return ""
 
 

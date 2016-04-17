@@ -84,6 +84,8 @@ class ActionType(db.Model):
 class Action(db.Model):
     __tablename__ = 'actions'
     id = db.Column(db.Integer, primary_key=True)
+    ordnum = db.Column(db.Integer)      # used to manipulate order of actions without modifying IDs
+    datecreated = db.Column(db.Date)    # used to keep track of when actions are created (user cannot modify this)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     timestamp = db.Column(db.Date)
     sample_id = db.Column(db.Integer, db.ForeignKey('samples.id'))

@@ -16,8 +16,8 @@ from datetime import date, datetime
 @main.route('/')
 @login_required
 def index():
-    samples = Sample.query.filter_by(owner=current_user)
-    myshares = Share.query.filter_by(user=current_user)
+    samples = Sample.query.filter_by(owner=current_user).all()
+    myshares = Share.query.filter_by(user=current_user).all()
     showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
     return render_template('editor.html', samples=samples, sampletypes=SampleType.query.all(),
                            actiontypes=ActionType.query.all(), myshares=myshares, showarchived=showarchived)

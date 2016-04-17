@@ -61,7 +61,7 @@ class Sample(db.Model):
     my = db.Column(db.Integer)  # matrix y position (for parent)
 
     children = db.relationship('Sample', backref=db.backref('parent', remote_side=[id]))
-    shares = db.relationship('Share', backref='sample')
+    shares = db.relationship('Share', backref='sample', cascade="delete")
     actions = db.relationship('Action', backref='sample', cascade="delete")
 
     def __repr__(self):

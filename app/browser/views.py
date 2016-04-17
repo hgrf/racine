@@ -29,7 +29,7 @@ def connect_to_SMBResource(resource):
     server_ip = socket.gethostbyname(resource.serveraddr)
     # need to convert unicode -> string apparently... (checked with print type(resource.servername))
     conn = SMBConnection(str(resource.userid), str(resource.password), client_machine_name, str(resource.servername), use_ntlm_v2=True)
-    connected = conn.connect(server_ip, 139)
+    connected = conn.connect(server_ip, 139, timeout=1) # 1 second timeout
     return conn, connected
 
 def assemble_path(items):

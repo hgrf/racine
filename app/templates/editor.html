@@ -51,11 +51,13 @@
     <h2>Revision:</h2>
     <p>
     running MSM revision: {{ local_rev }} <br>
-    MSM revision on GitHub: {{ remote_rev }} <br>
-    {% if local_rev != remote_rev %}
-        <font color="#FF0000">The running MSM revision is newer or older than the GitHub revision.</font>
-    {% else %}
-        <font color="#00FF00">You are using the GitHub revision of MSM.</font>
+    MSM revision on GitHub: {{ remote_rev if remote_rev != 0 else 'could not retrieve' }} <br>
+    {% if remote_rev != 0 %}
+      {% if local_rev != remote_rev %}
+          <font color="#FF0000">The running MSM revision is newer or older than the GitHub revision.</font>
+      {% else %}
+          <font color="#00FF00">You are using the GitHub revision of MSM.</font>
+      {% endif %}
     {% endif %}
     </p>
     <h3>Recent modifications (running revision):</h3>

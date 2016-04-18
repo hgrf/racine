@@ -54,11 +54,11 @@ the file /etc/init/msm.conf and copying the following code into it:
     setuid [user name]
     setgid www-data
     
-    env PATH=[path]/SampleManagerWeb/venv/bin
+    env PATH=[path]/SampleManagerWeb/venv/bin:/usr/bin
     chdir [path]/SampleManagerWeb
     exec gunicorn --workers 4 --bind unix:msm.sock -m 007 manage:app
 
-Where you will have to replace [user name] by your user name and [path] by the path where you installed the programme.
+Where you will have to replace [user name] by your user name and [path] by the path where you installed the programme. The second path (/usr/bin) is where you should have installed the git executable.
 
 Now install nginx:
 

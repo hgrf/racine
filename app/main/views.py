@@ -35,6 +35,12 @@ def index():
                 break       
     except Exception as inst:
         app.logger.error("Could not retrieve local git information:"+str(type(inst))+str(inst.args))
+
+    # Getting remote info fails if this is run on production server, probably due to a
+    # problem getting the right SSH key (and especially getting it unlocked).
+    # There are several ways to solve this (e.g. using an open repository, using an SSH
+    # key without passphrase or just ignoring this problem and moving all this Git
+    # stuff to the admin section).
     try:
         remote = git.remote.Remote(repo, 'origin')      # remote repo
         info = remote.fetch()[0]                        # fetch changes

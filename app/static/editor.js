@@ -84,6 +84,11 @@
             });
         });
 
+        // image browser (open in new window)
+        $('#browser').click(function(event) {
+            window.open("/browser?sample="+$("#sampleid").text(), 'Browser', 'height=500, width=800, scrollbars=yes')
+        });
+
         $('.editsamplename').editable('/changesamplename', {
             style: 'inherit',
             event     : "dblclick",
@@ -340,11 +345,6 @@
                     });
                 }
             });
-        });
-
-        // image browser (open in new window)
-        $('#browser').click(function(event) {
-            window.open("/browser?sample="+$("#sampleid").text(), 'Browser', 'height=500, width=800, scrollbars=yes')
         });
     });
 })(jQuery);

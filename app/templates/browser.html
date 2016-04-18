@@ -5,17 +5,51 @@
 {% block content %}
 <div id="browser-frame">
     <div>
-        {% if sample is none %}
-        <form method="post" style="margin:0;padding:0;" action="/browser/upload?CKEditorFuncNum={{ callback }}" enctype="multipart/form-data">
+        {% if callback is none %}
+            <form method="post" style="margin:0;padding:0;" action="/browser/upload?sample={{ sample.id }}" enctype="multipart/form-data">
         {% else %}
-        <form method="post" style="margin:0;padding:0;" action="/browser/upload?sample={{ sample.id }}&CKEditorFuncNum={{ callback }}" enctype="multipart/form-data">
+            {% if sample is none %}
+            <form method="post" style="margin:0;padding:0;" action="/browser/upload?CKEditorFuncNum={{ callback }}" enctype="multipart/form-data">
+            {% else %}
+            <form method="post" style="margin:0;padding:0;" action="/browser/upload?sample={{ sample.id }}&CKEditorFuncNum={{ callback }}" enctype="multipart/form-data">
+            {% endif %}
         {% endif %}
             <img class="upload" src="/static/upload.png" width="100px" height="100px">
             Upload an image:<input style="display:inline;" type="file" name="file" id="file">
             <input style="display:inline;" type="submit" value="OK">
         </form>
     </div>
-  {% include 'browserframe.html' %}
+    <div id="address"><strong>Path: </strong>{{ address }}</div>
+
+    {% if notconnected %}
+        Could not connect to resource
+    {% endif %}
+
+    {% for resource in resources %}
+        <div>
+        <img src="{{ url_for('static', filename='resource.png') }}" {% if resource.available %}class="folder"{% endif %} data-url="{{ resource.name }}" width="100px" height="100px">
+        {{ resource.name }}
+        {% if resource.hasuserfolder %}
+            <img src="{{ url_for('static', filename='user.png') }}" class="folder" data-url="{{ resource.name+"/"+sample.owner.username }}" width="100px" height="100px">
+        {% endif %}
+        {% if resource.hassamplefolder %}
+            <img src="{{ url_for('static', filename='sample.png') }}" class="folder" data-url="{{ resource.name+"/"+sample.owner.username+"/"+sample.name }}" width="100px" height="100px">
+            <!-- TODO: what if sample, resource or user name contains space? -->
+        {% endif %}
+        </div>
+    {% endfor %}
+    {% for folder in folders %}
+        <div>
+        <img src="{{ folder.image }}" class="folder" data-url="{{ address }}{% if address!='' %}/{% endif %}{{ folder.name }}{{ folder.ext }}" width="100px" height="100px">
+        {{ folder.name }}{{ folder.ext }}
+        </div>
+    {% endfor %}
+    {% for file in files %}
+        <div>
+        <img class="file" src="{{ file.image }}" width="100px" height="100px">
+        {{ file.name }}{{ file.ext }}
+        </div>
+    {% endfor %}
 </div>
 {% endblock %}
 
@@ -25,16 +59,29 @@
     $(function() {
         $(document).ready(function() {
             function load_address(address) {
-                {% if sample is none %}
-                    location.href = "/browser"+address+"?CKEditorFuncNum="+{{ callback }};
+                {% if callback is none %}
+                    location.href = "/browser"+address+"?sample="+{{ sample.id }};
                 {% else %}
-                    location.href = "/browser"+address+"?sample="+{{ sample.id }}+"&CKEditorFuncNum="+{{ callback }};
+                    {% if sample is none %}
+                        location.href = "/browser"+address+"?CKEditorFuncNum="+{{ callback }};
+                    {% else %}
+                        location.href = "/browser"+address+"?sample="+{{ sample.id }}+"&CKEditorFuncNum="+{{ callback }};
+                    {% endif %}
                 {% endif %}
             }
 
             function init_browser() {
                 {% if uploadurl is defined %}
-                    window.opener.CKEDITOR.tools.callFunction({{ callback }},"{{ uploadurl }}")
+                    {% if callback is none %}
+                        $.ajax({
+                            url: "/changesampleimage",
+                            type: "post",
+                            data: { "id": {{ sample.id }}, "value": "{{ uploadurl }}" }
+                        });
+                        window.opener.location.href = "/sample/"+{{ sample.id }};
+                    {% else %}
+                        window.opener.CKEDITOR.tools.callFunction({{ callback }},"{{ uploadurl }}");
+                    {% endif %}
                     window.close();
                 {% endif %}
 
@@ -44,7 +91,16 @@
                 });
 
                 $('.file').dblclick( function( event ) {
-                    window.opener.CKEDITOR.tools.callFunction({{ callback }},$(this).attr("src"));
+                    {% if callback is none %}
+                        $.ajax({
+                            url: "/changesampleimage",
+                            type: "post",
+                            data: { "id": {{ sample.id }}, "value": $(this).attr("src") }
+                        });
+                        window.opener.location.href = "/sample/"+{{ sample.id }};
+                    {% else %}
+                        window.opener.CKEDITOR.tools.callFunction({{ callback }},$(this).attr("src"));
+                    {% endif %}
                     window.close();
                 });
             }

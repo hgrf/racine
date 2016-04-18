@@ -193,6 +193,7 @@ def changesampledesc():
 @login_required
 def changesampleimage():
     sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    print "request to change sample image, sample ", sample.id, " image ", request.form.get('value')
     if sample == None or sample.owner != current_user:
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
     sample.image = request.form.get('value')

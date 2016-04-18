@@ -342,41 +342,9 @@
             });
         });
 
-        // image browser
-        $('#browser').on('show.bs.modal', function(e) {
-            function load_address(address) {
-                $.ajax({
-                    url: "/browser"+address+"?sample="+$("#sampleid").text(),
-                    success: function( data ) {
-                        $( "#browser-frame" ).html(data);
-                        init_browser();
-                        // CAUTION! this solution might fill the RAM in the long term
-                        // (because we recreate callback functions and stuff everytime we open a different folder)
-                    }
-                });
-            }
-
-            function init_browser() {
-                $('.folder').dblclick( function( event ) {
-                    load_address("/"+$(this).data('url'));
-                    event.preventDefault();
-                });
-
-                $('.file').dblclick( function( event ) {
-                    $('#sampleimage').attr("src", $(this).attr("src"));
-
-                    $.ajax({
-                        url: "/changesampleimage",
-                        type: "post",
-                        data: { "id": $('#sampleid').text(), "value": $(this).attr("src") }
-                    });
-
-                    $('#browser').modal('hide');
-                });
-            }
-
-            load_address("");
-            init_browser();         // TODO: is this line necessary? (see load_address)
+        // image browser (open in new window)
+        $('#browser').click(function(event) {
+            window.open("/browser?sample="+$("#sampleid").text(), 'Browser', 'height=500, width=800, scrollbars=yes')
         });
     });
 })(jQuery);

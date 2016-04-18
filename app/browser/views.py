@@ -58,9 +58,6 @@ def imagebrowser(address):
     # process address (1)
     address = address.rstrip('/')
 
-    # decide which template to use
-    template = 'browserframe.html' if request.args.get('CKEditorFuncNum') == None else 'browser.html'
-
     if(address == ""):  # in this case we need to present choice of resources
         resources=[]
         resourcetable = SMBResource.query.all()
@@ -85,7 +82,7 @@ def imagebrowser(address):
                         break
             conn.close()
             resources.append(r)
-        return render_template(template, files=[], folders=[], resources=resources, sample=sample, callback=request.args.get('CKEditorFuncNum'))
+        return render_template('browser.html', files=[], folders=[], resources=resources, sample=sample, callback=request.args.get('CKEditorFuncNum'))
 
     # process address (2)
     resource = SMBResource.query.filter_by(name=address.split("/")[0]).first()
@@ -120,7 +117,7 @@ def imagebrowser(address):
 
     files = sorted(files, key=lambda f: f.name)
     folders = sorted(folders, key=lambda f: f.name)
-    return render_template(template, files=files, folders=folders, resources=[], sample=sample, address=address, callback=request.args.get('CKEditorFuncNum'))
+    return render_template('browser.html', files=files, folders=folders, resources=[], sample=sample, address=address, callback=request.args.get('CKEditorFuncNum'))
 
 
 @browser.route('/img/<path:image>')

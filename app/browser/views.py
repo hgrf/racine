@@ -26,10 +26,16 @@ class ResourceTile:
 def connect_to_SMBResource(resource):
     # set up SMB connection
     client_machine_name = "SampleManagerWeb"
-    server_ip = socket.gethostbyname(resource.serveraddr)
+    try:
+        server_ip = socket.gethostbyname(resource.serveraddr)
+    except:     # if host unknown
+        return None, False
     # need to convert unicode -> string apparently... (checked with print type(resource.servername))
     conn = SMBConnection(str(resource.userid), str(resource.password), client_machine_name, str(resource.servername), use_ntlm_v2=True)
-    connected = conn.connect(server_ip, 139, timeout=1) # 1 second timeout
+    try:
+        connected = conn.connect(server_ip, 139, timeout=1) # 1 second timeout
+    except:
+        connected = False
     return conn, connected
 
 def assemble_path(items):

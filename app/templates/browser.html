@@ -76,13 +76,16 @@
                         $.ajax({
                             url: "/changesampleimage",
                             type: "post",
-                            data: { "id": {{ sample.id }}, "value": "{{ uploadurl }}" }
+                            data: { "id": {{ sample.id }}, "value": "{{ uploadurl }}" },
+                            success: function( data ) {
+                                window.opener.location.href = "/sample/"+{{ sample.id }};
+                                window.close();
+                            }
                         });
-                        window.opener.location.href = "/sample/"+{{ sample.id }};
                     {% else %}
                         window.opener.CKEDITOR.tools.callFunction({{ callback }},"{{ uploadurl }}");
+                        window.close();
                     {% endif %}
-                    window.close();
                 {% endif %}
 
                 $('.folder').dblclick( function( event ) {
@@ -91,17 +94,27 @@
                 });
 
                 $('.file').dblclick( function( event ) {
-                    {% if callback is none %}
-                        $.ajax({
-                            url: "/changesampleimage",
-                            type: "post",
-                            data: { "id": {{ sample.id }}, "value": $(this).attr("src") }
-                        });
-                        window.opener.location.href = "/sample/"+{{ sample.id }};
-                    {% else %}
-                        window.opener.CKEDITOR.tools.callFunction({{ callback }},$(this).attr("src"));
-                    {% endif %}
-                    window.close();
+                    $.ajax({
+                        url: "/browser/savefromsmb",
+                        type: "post",
+                        data: { "src": $(this).attr("src") },
+                        success: function( data ) {
+                            {% if callback is none %}
+                                $.ajax({
+                                    url: "/changesampleimage",
+                                    type: "post",
+                                    data: { "id": {{ sample.id }}, "value": data.uploadurl },
+                                    success: function( data ) {
+                                        window.opener.location.href = "/sample/"+{{ sample.id }};
+                                        window.close();
+                                    }
+                                });
+                            {% else %}
+                                window.opener.CKEDITOR.tools.callFunction({{ callback }}, data.uploadurl);
+                                window.close();
+                            {% endif %}
+                        }
+                    });
                 });
             }
 

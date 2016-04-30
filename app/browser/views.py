@@ -1,4 +1,4 @@
-from flask import render_template, send_file, request, redirect, url_for, send_from_directory
+from flask import render_template, send_file, request, redirect, url_for, send_from_directory, jsonify
 from flask_login import current_user
 from flask import current_app as app
 from smb.SMBConnection import SMBConnection
@@ -98,7 +98,7 @@ def imagebrowser(address):
 
     conn, connected = connect_to_SMBResource(resource)
     if not connected:
-        return render_template(template, notconnected=True)
+        return render_template('browser.html', notconnected=True)
 
     # list files and folders in current path
     files = []
@@ -128,6 +128,9 @@ def imagebrowser(address):
 
 @browser.route('/img/<path:image>')
 def browserimage(image):
+    '''
+    This function will become obsolete once all images from SMB resources have been uploaded to MSM server.
+    '''
     resource = SMBResource.query.filter_by(name=image.split("/")[0]).first()
 
     address_prefix = "" if resource.path == None else resource.path
@@ -181,3 +184,41 @@ def uploadfile():
         return render_template('browser.html', files=[], folders=[], resources=[], sample=sample, callback=request.args.get('CKEditorFuncNum'), uploadurl=uploadurl)
 
     return redirect(url_for('browser'))
+
+@browser.route('/savefromsmb', methods=['POST'])
+def savefromsmb():
+    src = request.form.get('src')
+
+    # get rid of /browser/img/
+    if not src[:13] == '/browser/img/':
+        return jsonify(code=1)
+    src = src[13:]
+
+    # process path of SMB resource
+    resource = SMBResource.query.filter_by(name=src.split("/")[0]).first()
+    address_prefix = "" if resource.path == None else resource.path
+    address_in_resource = src[src.find("/")+1:]
+    address_on_server = address_prefix + ("/" if address_prefix != "" else "") + address_in_resource
+    filename = address_in_resource.split("/")[-1]
+
+    if allowed_file(filename):
+        dbentry = Upload(user=current_user, source='smb:'+src, ext=get_extension(filename))
+        db.session.add(dbentry)
+        db.session.commit()
+
+        conn, connected = connect_to_SMBResource(resource)
+        if not connected:
+            app.logger.error("Could not connect to SMBResource: "+resource.name)
+            return ''
+
+        file_obj = open(os.path.join(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext), 'wb')
+        try:
+            file_attributes, filesize = conn.retrieveFile(resource.sharename, address_on_server, file_obj)
+        except: # if we have any problem retrieving the file
+            app.logger.error("Could not retrieve file: "+resource.name+'/'+address_on_server)
+            return ''
+
+        uploadurl = url_for('.uploadedimage', image=str(dbentry.id))
+        return jsonify(code=0, uploadurl=uploadurl)
+
+    return jsonify(code=1)

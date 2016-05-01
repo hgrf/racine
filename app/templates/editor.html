@@ -48,6 +48,14 @@
     {% include 'editorframe.html' %}
 {% else %}
     <h1>Welcome</h1>
+    {% if current_user.is_admin %}
+    <h2>Recently added actions (last 7 days):</h2>
+    <table>
+    {% for n in newactions %}
+        <tr><td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;">{{ n[0].username }}</td><td style="padding-bottom: 10px; vertical-align: top;">{{ n[1] if n[1] else 0 }}</td></tr>
+    {% endfor %}
+    </table>
+    {% endif %}
     <h2>Revision:</h2>
     <p>
     running MSM revision: {{ local_rev }} <br>

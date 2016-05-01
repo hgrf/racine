@@ -10,7 +10,9 @@ from ..models import Share
 from ..models import SAMPLE_NAME_LENGTH   # <-- sort this out
 from . import main
 from forms import NewSampleForm, NewActionForm, NewMatrixForm
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
+
+from sqlalchemy.sql import func
 
 import git
 from config import basedir
@@ -20,6 +22,11 @@ from flask import current_app as app
 @main.route('/')
 @login_required
 def index():
+    aweekago = date.today()-timedelta(weeks=1)
+
+    stmt = db.session.query(Action.owner_id, func.count('*').label('action_count')).filter(Action.datecreated > aweekago).group_by(Action.owner_id).subquery()
+    newactions = db.session.query(User, stmt.c.action_count).outerjoin(stmt, User.id==stmt.c.owner_id).order_by(User.id).all()
+
     recent_changes = []
     remote_revision = 0
     local_revision = 0
@@ -52,7 +59,9 @@ def index():
     myshares = Share.query.filter_by(user=current_user).all()
     showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
     return render_template('editor.html', samples=samples, sampletypes=SampleType.query.all(),
-                           actiontypes=ActionType.query.all(), myshares=myshares, showarchived=showarchived, local_rev=local_revision, remote_rev=remote_revision, recent_changes=recent_changes)
+                           actiontypes=ActionType.query.all(), myshares=myshares, showarchived=showarchived,
+                           local_rev=local_revision, remote_rev=remote_revision, recent_changes=recent_changes,
+                           newactions=newactions)
 
 @main.route('/help')
 @login_required

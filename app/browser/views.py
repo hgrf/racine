@@ -126,36 +126,6 @@ def imagebrowser(address):
     return render_template('browser.html', files=files, folders=folders, resources=[], sample=sample, address=address, callback=request.args.get('CKEditorFuncNum'))
 
 
-@browser.route('/img/<path:image>')
-def browserimage(image):
-    '''
-    This function will become obsolete once all images from SMB resources have been uploaded to MSM server.
-    '''
-    resource = SMBResource.query.filter_by(name=image.split("/")[0]).first()
-
-    address_prefix = "" if resource.path == None else resource.path
-    address_in_resource = image[image.find("/")+1:]
-    address_on_server = address_prefix + ("/" if address_prefix != "" else "") + address_in_resource
-
-    conn, connected = connect_to_SMBResource(resource)
-    if not connected:
-        app.logger.error("Could not connect to SMBResource: "+resource.name)
-        return ''
-
-    file_obj = tempfile.NamedTemporaryFile()
-    try:
-        file_attributes, filesize = conn.retrieveFile(resource.sharename, address_on_server, file_obj)
-    except: # if we have any problem retrieving the file
-        app.logger.error("Could not retrieve file: "+resource.name+'/'+address_on_server)
-        return ''
-
-    file_obj.seek(0)
-    image_binary = file_obj.read()
-
-    file_obj.close()
-
-    return send_file(io.BytesIO(image_binary))
-
 @browser.route('/ulimg/<image>')
 def uploadedimage(image):
     dbentry = Upload.query.filter_by(id=image).first()

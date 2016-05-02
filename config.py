@@ -1,5 +1,6 @@
 import os
 import logging.handlers
+from logging import Formatter
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -12,8 +13,8 @@ class Config:
 
     @staticmethod
     def init_app(app):
-        logging.basicConfig(format='%(asctime)-15s %(message)s')
         file_handler = logging.handlers.RotatingFileHandler(os.path.join(basedir, 'msm.log'), maxBytes=10000)
+        file_handler.setFormatter(Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
         file_handler.setLevel(logging.WARNING)
         app.logger.addHandler(file_handler)
 

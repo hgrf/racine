@@ -1,6 +1,6 @@
 # Mercury Sample Manager
 
-This is Mercury Sample Manager (for now... for the lack of a better name), a sample management tool that enables researchers
+This is Mercury Sample Manager, a sample management tool that enables researchers
 to keep track of their samples from any PC in a laboratory. The programme is a Flask-based web service that runs on a
 central server on the local network of your research institute and that can be accessed from all other computers on the
 same network using the normal web browser (should be a recent browser though).
@@ -18,11 +18,11 @@ You should have python 2.x and pip installed on your system. From there on it's 
 installs virtualenv for python. This is not absolutely necessary, but I recommend it. You can now create a folder somewhere
 and clone the git repository:
 
-    $ git clone git@github.com:green-mercury/SampleManagerWeb.git
+    $ git clone git@github.com:green-mercury/MSM.git
 
 Now you enter this directory and you create a virtual environment for python - and activate it:
 
-    $ cd SampleManagerWeb
+    $ cd MSM
     $ virtualenv venv
     $ . venv/bin/activate
 
@@ -54,8 +54,8 @@ the file /etc/init/msm.conf and copying the following code into it:
     setuid [user name]
     setgid www-data
     
-    env PATH=[path]/SampleManagerWeb/venv/bin:/usr/bin
-    chdir [path]/SampleManagerWeb
+    env PATH=[path]/MSM/venv/bin:/usr/bin
+    chdir [path]/MSM
     exec gunicorn --workers 4 --bind unix:msm.sock -m 007 manage:app
 
 Where you will have to replace [user name] by your user name and [path] by the path where you installed the programme. The second path (/usr/bin) is where you should have installed the git executable.
@@ -92,7 +92,7 @@ You then want to configure your nginx server. Create a file "msm" in /etc/nginx/
     
         location / {
         include proxy_params;
-          proxy_pass http://unix:[path]/SampleManagerWeb/msm.sock;
+          proxy_pass http://unix:[path]/MSM/msm.sock;
         }
     }
 

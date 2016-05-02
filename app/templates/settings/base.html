@@ -13,14 +13,15 @@
 
 {% block sidebarnav %}
 <div class="col-sm-3 col-md-2 sidebar">
-  <ul class="nav nav-sidebar">
-    {{ menu_entry("overview", "Overview") }}
-    {{ menu_entry("sampletypes", "Sample types") }}
-    {{ menu_entry("actiontypes", "Action types") }}
-      {{ menu_entry("smbresources", "SMB resources") }}
-      {{ menu_entry("users", "Users") }}
-    {{ menu_entry("shutdown", "Shutdown") }}
-  </ul>
+    <ul class="nav nav-sidebar">
+        {{ menu_entry("overview", "Overview") }}
+        {{ menu_entry("revision", "Revision") }}
+        {{ menu_entry("sampletypes", "Sample types") }}
+        {{ menu_entry("actiontypes", "Action types") }}
+        {{ menu_entry("smbresources", "SMB resources") }}
+        {{ menu_entry("users", "Users") }}
+        {{ menu_entry("shutdown", "Shutdown") }}
+    </ul>
 </div>
 {% endblock %}
 

@@ -5,9 +5,7 @@ from smb.SMBConnection import SMBConnection
 from .. import db
 from ..models import SMBResource, Sample, Upload
 import socket
-import tempfile
 import os
-import io
 from . import browser
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])

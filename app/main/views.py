@@ -14,53 +14,19 @@ from datetime import date, datetime, timedelta
 
 from sqlalchemy.sql import func
 
-import git
-from config import basedir
-
-from flask import current_app as app
 
 @main.route('/')
 @login_required
 def index():
     aweekago = date.today()-timedelta(weeks=1)
-
     stmt = db.session.query(Action.owner_id, func.count('*').label('action_count')).filter(Action.datecreated > aweekago).group_by(Action.owner_id).subquery()
     newactions = db.session.query(User, stmt.c.action_count).outerjoin(stmt, User.id==stmt.c.owner_id).order_by(User.id).all()
-
-    recent_changes = []
-    remote_revision = 0
-    local_revision = 0
-    try:
-        repo = git.Repo(basedir)                        # get Sample Manager git repo
-        local_revision = repo.rev_parse('HEAD')
-        
-        maxc = 10
-        for c in repo.iter_commits():
-            recent_changes.append(c)
-            maxc = maxc-1
-            if not maxc:
-                break       
-    except Exception as inst:
-        app.logger.error("Could not retrieve local git information:"+str(type(inst))+str(inst.args))
-
-    # Getting remote info fails if this is run on production server, probably due to a
-    # problem getting the right SSH key (and especially getting it unlocked).
-    # There are several ways to solve this (e.g. using an open repository, using an SSH
-    # key without passphrase or just ignoring this problem and moving all this Git
-    # stuff to the admin section).
-    try:
-        remote = git.remote.Remote(repo, 'origin')      # remote repo
-        info = remote.fetch()[0]                        # fetch changes
-        remote_revision = info.commit                   # latest remote commit
-    except Exception as inst:
-        app.logger.error("Could not retrieve remote git information:"+str(type(inst))+str(inst.args))
 
     samples = Sample.query.filter_by(owner=current_user).all()
     myshares = Share.query.filter_by(user=current_user).all()
     showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
     return render_template('editor.html', samples=samples, sampletypes=SampleType.query.all(),
                            actiontypes=ActionType.query.all(), myshares=myshares, showarchived=showarchived,
-                           local_rev=local_revision, remote_rev=remote_revision, recent_changes=recent_changes,
                            newactions=newactions)
 
 @main.route('/help')

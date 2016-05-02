@@ -8,7 +8,9 @@ from ..models import User
 from forms import NewSMBResourceForm, NewTypeForm, ShutdownForm, NewUserForm
 from . import settings
 from flask.ext.login import login_required
-
+import git
+from config import basedir
+from flask import current_app as app
 
 # see http://flask.pocoo.org/snippets/67/
 def shutdown_server():
@@ -95,3 +97,38 @@ def users():
         db.session.commit()
         return redirect(url_for('settings.users'))
     return render_template('settings/users.html', users=User.query.all(), form=form)
+
+
+@settings.route('/revision', methods=['GET'])
+@login_required
+@admin_required
+def revision():
+    recent_changes = []
+    remote_revision = 0
+    local_revision = 0
+    try:
+        repo = git.Repo(basedir)  # get Sample Manager git repo
+        local_revision = repo.rev_parse('HEAD')
+
+        maxc = 10
+        for c in repo.iter_commits():
+            recent_changes.append(c)
+            maxc = maxc - 1
+            if not maxc:
+                break
+    except Exception as inst:
+        app.logger.error("Could not retrieve local git information:" + str(type(inst)) + str(inst.args))
+
+    # Getting remote info fails if this is run on production server, probably due to a
+    # problem getting the right SSH key (and especially getting it unlocked).
+    # There are several ways to solve this (e.g. using an open repository, using an SSH
+    # key without passphrase or just ignoring this problem and moving all this Git
+    # stuff to the admin section).
+    try:
+        remote = git.remote.Remote(repo, 'origin')  # remote repo
+        info = remote.fetch()[0]  # fetch changes
+        remote_revision = info.commit  # latest remote commit
+    except Exception as inst:
+        app.logger.error("Could not retrieve remote git information:" + str(type(inst)) + str(inst.args))
+
+    return render_template('settings/revision.html', local_rev=local_revision, remote_rev=remote_revision, recent_changes=recent_changes)

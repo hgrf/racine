@@ -18,16 +18,28 @@ from sqlalchemy.sql import func
 @main.route('/')
 @login_required
 def index():
+    # get user activity for all users (only admin will see this)
     aweekago = date.today()-timedelta(weeks=1)
     stmt = db.session.query(Action.owner_id, func.count('*').label('action_count')).filter(Action.datecreated > aweekago).group_by(Action.owner_id).subquery()
-    newactions = db.session.query(User, stmt.c.action_count).outerjoin(stmt, User.id==stmt.c.owner_id).order_by(User.id).all()
+    newactionsallusers = db.session.query(User, stmt.c.action_count).outerjoin(stmt, User.id==stmt.c.owner_id).order_by(User.id).all()
+    maxcountallusers = 0
+    for n in newactionsallusers: maxcountallusers = max(maxcountallusers, n[1])
 
+    # get user activity only for current user (every user will see this for his samples)
+    stmt = db.session.query(Action.sample_id, func.count('*').label('action_count')).filter(Action.owner_id == current_user.id).filter(Action.datecreated > aweekago).group_by(Action.sample_id).subquery()
+    newactions = db.session.query(Sample, stmt.c.action_count).outerjoin(stmt, Sample.id == stmt.c.sample_id).order_by(Sample.id).all()
+    maxcount = 0
+    for n in newactions: maxcount = max(maxcount, n[1])
+
+    # get samples and shares for current user
     samples = Sample.query.filter_by(owner=current_user).all()
     myshares = Share.query.filter_by(user=current_user).all()
     showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
+
     return render_template('editor.html', samples=samples, sampletypes=SampleType.query.all(),
                            actiontypes=ActionType.query.all(), myshares=myshares, showarchived=showarchived,
-                           newactions=newactions)
+                           newactions=newactions, maxcount=maxcount, newactionsallusers=newactionsallusers,
+                           maxcountallusers=maxcountallusers)
 
 @main.route('/help')
 @login_required

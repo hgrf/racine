@@ -43,7 +43,7 @@
             <div id="{{ action.id }}" style="font-style: italic">{{ action.owner.username }}</div>
             <div id="{{ action.id }}" class="{% if action.owner == current_user %}selectactiontype{% endif %}" style="display: inline">{{ action.actiontype.name }}</div>
         </div>
-        <div id="{{ action.id }}" class="col-md-8 {% if action.owner == current_user %}editactiondescription {% endif %}">{{ action.description|safe }}</div>
+        <div id="{{ action.id }}" class="col-md-8 actiondescription {% if action.owner == current_user %}editactiondescription {% endif %}">{{ action.description|safe }}</div>
         <div class="col-md-2">
             {% if action.owner == current_user %}
                 <img style="cursor: pointer; float: left; display: inline;" width="32" height="32" src="{{ url_for('static', filename='delete.png') }}" data-type="action" data-id="{{ action.id }}" data-toggle="modal" data-target="#confirm-delete">

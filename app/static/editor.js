@@ -150,7 +150,15 @@
             cancel : 'Cancel',
             onblur: "ignore",
             event     : "dblclick",
-            ckeditor : ckeditorconfig
+            ckeditor : ckeditorconfig,
+            data: function(value) {                         // need to remove lightbox link from images
+                $val = $('<div>'+value+'</div>');
+                $val.find('img').unwrap();
+                return $val.html();
+            },
+            callback: function() {                          // put back lightbox link around images
+                $(this).find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
+            }
         });
 
         $('#submit').click( function(event) {
@@ -180,6 +188,9 @@
                 }
             });
         });
+
+        // put lightbox link around images
+        $('.actiondescription').find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
     }
 
     function load_sample(id) {

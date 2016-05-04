@@ -7,6 +7,8 @@ from ..models import SMBResource, Sample, Upload
 import socket
 import os
 from . import browser
+import tempfile
+import io
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 

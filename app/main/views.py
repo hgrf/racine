@@ -126,23 +126,7 @@ def sharesample():
     share = Share(sample = sample, user = user)
     db.session.add(share)
     db.session.commit()
-    return jsonify(code=0, username=user.username, userid=user.id)
-
-@main.route('/removeshare', methods=['POST'])
-@login_required
-def removeshare():
-    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
-    if sample == None or sample.owner != current_user:
-        if current_user.id != int(request.form.get("sharer")):  # if the user wants to remove himself from sharer list
-            return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
-    sharer = User.query.filter_by(id=int(request.form.get("sharer"))).first()
-    share = Share.query.filter_by(user=sharer, sample=sample).first()
-    db.session.delete(share)
-    db.session.commit()
-    if current_user.id == int(request.form.get("sharer")):
-        return jsonify(code=2) # tell JS to reload everything (sample no longer exists for this user)
-    return jsonify(code=0, userid=share.user.id)
-
+    return jsonify(code=0, username=user.username, userid=user.id, shareid=share.id)
 
 @main.route('/changesamplename', methods=['POST'])
 @login_required
@@ -251,6 +235,27 @@ def deletesample(sampleid):
     db.session.delete(sample)  # delete cascade automatically deletes associated actions
     db.session.commit()
     return redirect("/")
+
+@main.route('/delshare/<shareid>', methods=['GET', 'POST'])
+@login_required
+def deleteshare(shareid):
+    share = Share.query.filter_by(id=int(shareid)).first()
+
+    if share is None or share.sample is None:
+        return jsonify(code=1, error="Share or sample does not exist")
+
+    if share.sample.owner != current_user and share.user != current_user:
+        return jsonify(code=1, error="You do not have the right to perform this operation")
+
+    user = share.user
+
+    db.session.delete(share)
+    db.session.commit()
+
+    if user == current_user:      # in this case the sample does not exist anymore for this user
+        return jsonify(code=2)
+
+    return jsonify(code=0, shareid=share.id)
 
 
 @main.route('/changeparent', methods=['POST'])

@@ -20,8 +20,8 @@
             <strong>Shared with:</strong><p>&nbsp;</p>
             <div class="container-fluid" id="sharelist">
                 {% for share in shares %}
-                    <div class="row" id="sharelistentry{{ share.user.id }}">
-                        <div class="col-md-10">{{ share.user.username }}</div><div class="col-md-2">{% if sample.owner == current_user or share.user == current_user %}<button class="removeshare btn btn-danger" id="{{ share.user.id }}">X</button>{% endif %}</div>
+                    <div class="row" id="sharelistentry{{ share.id }}">
+                        <div class="col-md-10">{{ share.user.username }}</div><div class="col-md-2">{% if sample.owner == current_user or share.user == current_user %}<img style="cursor: pointer; float: left; display: inline;" width="32" height="32" src="{{ url_for('static', filename='delete.png') }}" data-type="share" data-id="{{ share.id }}" data-toggle="modal" data-target="#confirm-delete">{% endif %}</div>
                     </div>
                 {% endfor %}
             </div><p>&nbsp;</p>

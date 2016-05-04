@@ -225,7 +225,6 @@
                 $( "#editor-frame" ).html(data);
                 window.history.pushState({"html": data, "pageTitle": data.pageTitle}, "", "/sample/"+ $('#sampleid').text());
                 init_editor();
-                init_sharelist();
 
                 $('#'+$('#sampleid').text()+".nav-entry").css("background-color", "#BBBBFF");
 
@@ -254,22 +253,6 @@
         });
     }
 
-    function init_sharelist() {
-        $(".removeshare").click(function(event) {
-            $.ajax({
-                url: "/removeshare",
-                type: "post",
-                data: { "id": $('#sampleid').text(), "sharer": $(this).attr('id') },
-                success: function( data ) {
-                    if(data.code == 2) {        // if the user removed himself from the sharer list
-                        location.href = "/";
-                    }
-                    $('#sharelistentry'+data.userid).remove();
-                }
-            }); // what if we drag parent to child?
-        });
-    }
-
     $.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer
 
     $(document).ready(function() {
@@ -284,7 +267,6 @@
         if($("#sampleid").text() != "")
         {
             init_editor();
-            init_sharelist();
             ckeditorconfig.filebrowserImageBrowseUrl = '/browser?sample='+$("#sampleid").text();
             CKEDITOR.replace( 'description', ckeditorconfig);
             window.addEventListener('beforeunload', beforeunload_handler2);
@@ -350,6 +332,11 @@
                         location.href = "/";
                     if(type=="action")
                         $('#'+id+'.list-entry').remove();
+                    if(type=="share") {
+                        if(data.code==2) // if the user removed himself from the sharer list
+                            location.href = "/";
+                        $('#sharelistentry'+data.shareid).remove();
+                    }
                     $('#confirm-delete').modal('hide');
                 }
             });
@@ -370,10 +357,8 @@
                             type: "post",
                             data: { "id": $('#sampleid').text(), "sharewith": $(this).attr('id') },
                             success: function( data ) {
-                                $('#sharelist').append('<div class="row" id="sharelistentry'+data.userid+'"><div class="col-md-10">'+data.username+'</div><div class="col-md-2"><button class="removeshare btn btn-danger" id="'+data.userid+'">X</button></div></div>');
+                                $('#sharelist').append('<div class="row" id="sharelistentry'+data.shareid+'"><div class="col-md-10">'+data.username+'</div><div class="col-md-2"><img style="cursor: pointer; float: left; display: inline;" width="32" height="32" src="/static/delete.png" data-type="share" data-id="'+data.shareid+'" data-toggle="modal" data-target="#confirm-delete"></div></div>');
                                 $('#userbrowser').modal('hide');
-
-                                init_sharelist();
                             }
                         }); // what if we drag parent to child?
                     });

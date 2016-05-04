@@ -9,6 +9,7 @@ import os
 from . import browser
 import tempfile
 import io
+import hashlib
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
@@ -177,9 +178,16 @@ def uploadfile():
     file = request.files['file']
     if file and allowed_file(file.filename):
         dbentry = Upload(user=current_user, source='ul:'+file.filename, ext=get_extension(file.filename))
+
         db.session.add(dbentry)
         db.session.commit()
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext))
+
+        file_obj = open(os.path.join(app.config['UPLOAD_FOLDER'], str(dbentry.id) + '.' + dbentry.ext), 'rb')
+        dbentry.hash = hashlib.sha256(file_obj.read()).hexdigest()
+        db.session.commit()
+        file_obj.close()
+
         uploadurl = url_for('.uploadedimage', image=str(dbentry.id))
         return render_template('browser.html', files=[], folders=[], resources=[], sample=sample, callback=request.args.get('CKEditorFuncNum'), uploadurl=uploadurl)
 
@@ -217,6 +225,11 @@ def savefromsmb():
         except: # if we have any problem retrieving the file
             app.logger.error("Could not retrieve file: "+resource.name+'/'+address_on_server)
             return ''
+
+        file_obj = open(os.path.join(app.config['UPLOAD_FOLDER'], str(dbentry.id) + '.' + dbentry.ext), 'rb')
+        dbentry.hash = hashlib.sha256(file_obj.read()).hexdigest()
+        db.session.commit()
+        file_obj.close()
 
         uploadurl = url_for('.uploadedimage', image=str(dbentry.id))
         return jsonify(code=0, uploadurl=uploadurl)

@@ -15,6 +15,26 @@ def make_shell_context():
 manager.add_command("shell", Shell(make_context=make_shell_context))
 manager.add_command('db', MigrateCommand)
 
+##### TEMPORARY MODIFICATION TO CALCULATE SHA-256 HASHS FOR ALL PREVIOUSLY UPLOADED FILES
+from app.models import Upload
+import hashlib
+
+@manager.command
+def calcuploadhashs():
+    uploads = Upload.query.all()
+    for u in uploads:
+        try:
+            file_obj = open(os.path.join(app.config['UPLOAD_FOLDER'], str(u.id) + '.' + u.ext), 'rb')
+            u.hash = hashlib.sha256(file_obj.read()).hexdigest()
+            db.session.commit()
+            file_obj.close()
+        except IOError:
+            print "File not found. Removing upload ID=", u.id, " source=", u.source
+            db.session.delete(u)
+            db.session.commit()
+
+##### END OF TEMPORARY MODIFICATION
+
 
 if __name__ == '__main__':
     manager.run()

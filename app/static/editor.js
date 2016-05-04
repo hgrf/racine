@@ -144,6 +144,12 @@
             event     : "dblclick"
         });
 
+        function beforeunload_handler(e) {
+            confirmationMessage = "Are you sure you want to leave before saving modifications?";
+            e.returnValue = confirmationMessage;     // Gecko, Trident, Chrome 34+
+            return confirmationMessage;              // Gecko, WebKit, Chrome <34
+        }
+
         $(".editactiondescription").editable('/changeactiondesc', {
             type   : 'ckeditor',
             submit : 'OK',
@@ -151,13 +157,20 @@
             onblur: "ignore",
             event     : "dblclick",
             ckeditor : ckeditorconfig,
-            data: function(value) {                         // need to remove lightbox link from images
+            data: function(value) {
+                window.addEventListener('beforeunload', beforeunload_handler);
+
+                // need to remove lightbox link from images
                 $val = $('<div>'+value+'</div>');
                 $val.find('img').unwrap();
                 return $val.html();
             },
             callback: function() {                          // put back lightbox link around images
                 $(this).find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
+                window.removeEventListener('beforeunload', beforeunload_handler);
+            },
+            onreset: function() {
+                window.removeEventListener('beforeunload', beforeunload_handler);
             }
         });
 
@@ -193,6 +206,14 @@
         $('.actiondescription').find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
     }
 
+    function beforeunload_handler2(e) {
+        if(CKEDITOR.instances.description.checkDirty()) {
+            confirmationMessage = "Are you sure you want to leave before saving modifications?";
+            e.returnValue = confirmationMessage;     // Gecko, Trident, Chrome 34+
+            return confirmationMessage;              // Gecko, WebKit, Chrome <34
+        }
+    }
+
     function load_sample(id) {
         if($('#sampleid').text() != "")
             $('#'+$('#sampleid').text()+".nav-entry").css("background-color", "transparent");
@@ -210,6 +231,7 @@
 
                 ckeditorconfig.filebrowserImageBrowseUrl = '/browser?sample='+$("#sampleid").text();
                 CKEDITOR.replace( 'description', ckeditorconfig);
+                window.addEventListener('beforeunload', beforeunload_handler2);
                 // CAUTION! this solution might fill the RAM in the long term
                 // (because we recreate callback functions and stuff everytime we open a different sample)
             }
@@ -265,6 +287,7 @@
             init_sharelist();
             ckeditorconfig.filebrowserImageBrowseUrl = '/browser?sample='+$("#sampleid").text();
             CKEDITOR.replace( 'description', ckeditorconfig);
+            window.addEventListener('beforeunload', beforeunload_handler2);
         }
 
 

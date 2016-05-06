@@ -1,12 +1,7 @@
 from flask import render_template, redirect, request, jsonify, send_file, flash
 from flask.ext.login import current_user, login_required
 from .. import db
-from ..models import Sample
-from ..models import SampleType
-from ..models import Action
-from ..models import ActionType
-from ..models import User
-from ..models import Share
+from ..models import Sample, SampleType, Action, ActionType, User, Share, Upload
 from ..models import SAMPLE_NAME_LENGTH   # <-- sort this out
 from . import main
 from forms import NewSampleForm, NewActionForm, NewMatrixForm
@@ -25,6 +20,12 @@ def index():
     maxcountallusers = 0
     for n in newactionsallusers: maxcountallusers = max(maxcountallusers, n[1])
 
+    # get per user upload volume for all users (only admin will see this)
+    stmt = db.session.query(Upload.user_id, func.sum(Upload.size).label('upload_volume')).group_by(Upload.user_id).subquery()
+    uploadvols = db.session.query(User, stmt.c.upload_volume).outerjoin(stmt, User.id==stmt.c.user_id).order_by(User.id).all()
+    maxuploadvol = 0
+    for u in uploadvols: maxuploadvol = max(maxuploadvol, u[1])
+
     # get user activity only for current user (every user will see this for his samples)
     stmt = db.session.query(Action.sample_id, func.count('*').label('action_count')).filter(Action.owner_id == current_user.id).filter(Action.datecreated > aweekago).group_by(Action.sample_id).subquery()
     newactions = db.session.query(Sample, stmt.c.action_count).outerjoin(stmt, Sample.id == stmt.c.sample_id).order_by(Sample.id).all()
@@ -39,7 +40,7 @@ def index():
     return render_template('editor.html', samples=samples, sampletypes=SampleType.query.all(),
                            actiontypes=ActionType.query.all(), myshares=myshares, showarchived=showarchived,
                            newactions=newactions, maxcount=maxcount, newactionsallusers=newactionsallusers,
-                           maxcountallusers=maxcountallusers)
+                           maxcountallusers=maxcountallusers, uploadvols=uploadvols, maxuploadvol=maxuploadvol)
 
 @main.route('/help')
 @login_required

@@ -49,6 +49,25 @@
 {% else %}
     <h1>Welcome</h1>
     {% if current_user.is_admin %}
+        <h2>Upload volume per user</h2>
+        <table>
+        {% for u in uploadvols %}
+            {% if u[1] %}
+                <tr>
+                    <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="{{ url_for('static', filename='user.png') }}" width="40">{{ u[0].username }}</td>
+                    <td style="padding-top: 10px;">
+                        <div class="progress" style="width: 200px;">
+                            <div class="progress-bar" role="progressbar" style="width:{{ u[1]/maxuploadvol*100 }}%;color:#000000";>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="padding-bottom: 10px;padding-left:20px;">
+                        {{ u[1]|filesizeformat }}
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </table>
         <h2>Recent activity per user (actions added in the last 7 days):</h2>
         <table>
         {% for n in newactionsallusers %}

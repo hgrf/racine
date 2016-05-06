@@ -125,6 +125,7 @@ class Upload(db.Model):
     ext = db.Column(db.String(10))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     source = db.Column(db.String(256))
+    size = db.Column(db.Integer)
     hash = db.Column(db.String(64))
 
     def __repr__(self):

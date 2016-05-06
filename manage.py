@@ -15,6 +15,18 @@ def make_shell_context():
 manager.add_command("shell", Shell(make_context=make_shell_context))
 manager.add_command('db', MigrateCommand)
 
+@manager.command
+def uploadsizes():
+    '''
+    Puts filesizes of previous uploads in database.
+    '''
+    from app.models import Upload
+
+    uploads = Upload.query.all()
+    for u in uploads:
+        u.size = os.stat(os.path.join(app.config['UPLOAD_FOLDER'], str(u.id) + '.' + u.ext)).st_size
+        db.session.commit()
+
 
 if __name__ == '__main__':
     manager.run()

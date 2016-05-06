@@ -183,6 +183,7 @@ def uploadfile():
         db.session.commit()
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext))
 
+        dbentry.size = os.stat(os.path.join(app.config['UPLOAD_FOLDER'], str(dbentry.id) + '.' + dbentry.ext)).st_size
         file_obj = open(os.path.join(app.config['UPLOAD_FOLDER'], str(dbentry.id) + '.' + dbentry.ext), 'rb')
         dbentry.hash = hashlib.sha256(file_obj.read()).hexdigest()
         db.session.commit()
@@ -228,6 +229,7 @@ def savefromsmb():
 
         file_obj = open(os.path.join(app.config['UPLOAD_FOLDER'], str(dbentry.id) + '.' + dbentry.ext), 'rb')
         dbentry.hash = hashlib.sha256(file_obj.read()).hexdigest()
+        dbentry.size = filesize
         db.session.commit()
         file_obj.close()
 

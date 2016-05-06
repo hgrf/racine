@@ -1,0 +1,56 @@
+{% set active = "uploads" %}
+{% extends "settings/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+<h1 class="page-header">Uploads</h1>
+<h2>Empty files</h2>
+<div class="container-fluid">
+  <div class="row list-header">
+    <div class="col-md-1">#</div>
+    <div class="col-md-1">User</div>
+    <div class="col-md-10">Source</div>
+  </div>
+{% for e in emptyfiles %}
+  <div class="row list-entry">
+    <div class="col-md-1">{{ e.id }}</div>
+    <div class="col-md-1">{{ e.user.username }}</div>
+    <div class="col-md-10">{{ e.source }}</div>
+  </div>
+{% endfor %}
+</div>
+<h2>Duplicates</h2>
+<div class="container-fluid">
+  <div class="row list-header">
+    <div class="col-md-1">#</div>
+    <div class="col-md-1">Dup#</div>
+    <div class="col-md-1">User (1st)</div>
+    <div class="col-md-8">Source (1st)</div>
+    <div class="col-md-1">2nd ident.</div>
+  </div>
+{% for d in duplicates %}
+  <div class="row list-entry">
+    <div class="col-md-1">{{ d[0].id }}</div>
+    <div class="col-md-1">{{ d[1].id }}</div>
+    <div class="col-md-1">{{ d[0].user.username }}</div>
+    <div class="col-md-8">{{ d[0].source }}</div>
+    <div class="col-md-1">{{ d[0].source == d[1].source and d[0].user.id == d[1].user.id }}</div>
+  </div>
+{% endfor %}
+</div>
+<h2>Unused uploads</h2>
+<div class="container-fluid">
+  <div class="row list-header">
+    <div class="col-md-1">#</div>
+    <div class="col-md-1">User</div>
+    <div class="col-md-10">Source</div>
+  </div>
+{% for u in unused %}
+  <div class="row list-entry">
+    <div class="col-md-1">{{ u.id }}</div>
+    <div class="col-md-1">{{ u.user.username }}</div>
+    <div class="col-md-10">{{ u.source }}</div>
+  </div>
+{% endfor %}
+</div>
+{% endblock %}

@@ -89,6 +89,7 @@ def sampleeditor(sampleid):
     shares = Share.query.filter_by(sample=sample).all()
     myshares = Share.query.filter_by(user=current_user).all()
     showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
+    hideparentactions = True if request.args.get('hideparentactions') != None and int(request.args.get('hideparentactions')) else False
 
     if sample == None or (sample.owner != current_user and current_user not in [share.user for share in shares]):
         return render_template('404.html'), 404
@@ -97,14 +98,24 @@ def sampleeditor(sampleid):
         form.actiontype.choices = [(actiontype.id, actiontype.name) for actiontype in ActionType.query.order_by('name')]
         form.description.data = ''
         form.timestamp.data = date.today()
-        actions = Action.query.filter_by(sample=sample).order_by(Action.ordnum).all()
+
+        ##### get actions for this sample and all parent samples and order them by ordnum
+        actions = []
+        s = sample
+        while s is not None:
+            print s.id, "going up"
+            actions.extend(Action.query.filter_by(sample=s).order_by(Action.ordnum).all())
+            s = s.parent
+            if hideparentactions: break
+        actions = sorted(actions, key=lambda a: a.ordnum)
+
         if (request.args.get("editorframe") == "true"):
             return render_template('editorframe.html', samples=samples, sample=sample,
                                    actions=actions, form=form, sampletypes=SampleType.query.all(),
-                                   actiontypes=ActionType.query.all(), shares=shares, myshares=myshares, showarchived=showarchived)
+                                   actiontypes=ActionType.query.all(), shares=shares, myshares=myshares, showarchived=showarchived, hideparentactions=hideparentactions)
         else:
             return render_template('editor.html', samples=samples, sample=sample, actions=actions,
-                                   form=form, sampletypes=SampleType.query.all(), actiontypes=ActionType.query.all(), shares=shares, myshares=myshares, showarchived=showarchived)
+                                   form=form, sampletypes=SampleType.query.all(), actiontypes=ActionType.query.all(), shares=shares, myshares=myshares, showarchived=showarchived, hideparentactions=hideparentactions)
 
 
 @main.route('/togglearchived', methods=['POST'])

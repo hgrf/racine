@@ -69,16 +69,18 @@
             init_matrix_view();
         });
 
-        $( "#archive").click(function() {
+        $('#archive').click(function() {
             $.ajax({
                 url: "/togglearchived",
                 type: "post",
                 data: { "id": $('#sampleid').text() },
                 success: function( data ) {
                     if(data.isarchived) {
-                        $("#archive").text("De-archive");
+                        $('#archive').attr('title', 'De-archive');
+                        $('#archive').attr('src', '/static/dearchive.png');
                     } else {
-                        $("#archive").text("Archive");
+                        $('#archive').attr('title', 'Archive');
+                        $('#archive').attr('src', '/static/archive.png');
                     }
                 }
             });
@@ -215,11 +217,13 @@
     }
 
     function load_sample(id) {
+        hideparentactions = ($('#parentactions').text().split(' ')[0] == 'Show');           // that's a kind of ugly workaround to read out the current status
+        
         if($('#sampleid').text() != "")
             $('#'+$('#sampleid').text()+".nav-entry").css("background-color", "transparent");
 
         $.ajax({
-            url: "/sample/"+id,
+            url: "/sample/"+id+(hideparentactions ? "?hideparentactions=1" : ""),
             data: { "editorframe": true },
             success: function( data, id ) {
                 $( "#editor-frame" ).html(data);
@@ -357,7 +361,7 @@
                             type: "post",
                             data: { "id": $('#sampleid').text(), "sharewith": $(this).attr('id') },
                             success: function( data ) {
-                                $('#sharelist').append('<div class="row" id="sharelistentry'+data.shareid+'"><div class="col-md-10">'+data.username+'</div><div class="col-md-2"><img style="cursor: pointer; float: left; display: inline;" width="32" height="32" src="/static/delete.png" data-type="share" data-id="'+data.shareid+'" data-toggle="modal" data-target="#confirm-delete"></div></div>');
+                                $('#sharelist').append('<div class="row sharelistentry" id="sharelistentry'+data.shareid+'">'+data.username+'<img style="cursor: pointer; float: left; display: inline;" width="32" height="32" src="/static/delete.png" data-type="share" data-id="'+data.shareid+'" data-toggle="modal" data-target="#confirm-delete"></div>');
                                 $('#userbrowser').modal('hide');
                             }
                         }); // what if we drag parent to child?

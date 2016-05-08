@@ -28,7 +28,6 @@
             <li><a href="/print">Print</a></li>
         {% endif %}
         {% if current_user.is_authenticated and current_user.is_admin %}
-            <li><a href="/allsamples">All Samples</a></li>
             <li><a href="/settings/overview">Settings</a></li>
         {% endif %}
         {% if current_user.is_authenticated %}

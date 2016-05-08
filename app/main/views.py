@@ -72,15 +72,6 @@ def sharerlist():
 
     return jsonify(sharers=sharers)
 
-@main.route('/allsamples')
-@login_required
-def allsamples():
-    if current_user.is_admin:
-        return render_template('allsamples.html', samples=Sample.query.all())
-    else:
-        return render_template('404.html'), 404
-
-
 @main.route('/sample/<sampleid>', methods=['GET', 'POST'])
 @login_required
 def sampleeditor(sampleid):

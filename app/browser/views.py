@@ -129,9 +129,6 @@ def imagebrowser(address):
 
 @browser.route('/img/<path:image>')
 def browserimage(image):
-    '''
-    This function will become obsolete once all images from SMB resources have been uploaded to MSM server.
-    '''
     resource = SMBResource.query.filter_by(name=image.split("/")[0]).first()
 
     address_prefix = "" if resource.path == None else resource.path
@@ -168,6 +165,29 @@ def allowed_file(filename):
 def get_extension(filename):
     return filename.rsplit('.', 1)[1].lower()
 
+def check_stored_file(upload):
+    # read file name from database
+    filename = os.path.join(app.config['UPLOAD_FOLDER'], str(upload.id) + '.' + upload.ext)
+    # check file size and store in database entry
+    upload.size = os.stat(filename).st_size
+    # calculate SHA-256 hash for file and store in DB entry
+    file_obj = open(filename, 'rb')
+    upload.hash = hashlib.sha256(file_obj.read()).hexdigest()
+    db.session.commit()
+    file_obj.close()
+
+    # check if upload already exists
+    identicals = Upload.query.filter_by(hash = upload.hash).all()
+    for i in identicals:
+        if i.id != upload.id:
+            # found different upload with same hash, need to delete file that was just uploaded and
+            # also the corresponding database entry
+            os.remove(filename)
+            db.session.delete(upload)
+            return i
+
+    return upload
+
 @browser.route('/upload', methods=['POST'])
 def uploadfile():
     if request.args.get("sample") is None:
@@ -177,19 +197,18 @@ def uploadfile():
 
     file = request.files['file']
     if file and allowed_file(file.filename):
-        dbentry = Upload(user=current_user, source='ul:'+file.filename, ext=get_extension(file.filename))
-
-        db.session.add(dbentry)
+        # create database entry for upload
+        upload = Upload(user=current_user, source='ul:'+file.filename, ext=get_extension(file.filename))
+        db.session.add(upload)
         db.session.commit()
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext))
 
-        dbentry.size = os.stat(os.path.join(app.config['UPLOAD_FOLDER'], str(dbentry.id) + '.' + dbentry.ext)).st_size
-        file_obj = open(os.path.join(app.config['UPLOAD_FOLDER'], str(dbentry.id) + '.' + dbentry.ext), 'rb')
-        dbentry.hash = hashlib.sha256(file_obj.read()).hexdigest()
-        db.session.commit()
-        file_obj.close()
+        # save uploaded file
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], str(upload.id)+'.'+upload.ext))
 
-        uploadurl = url_for('.uploadedimage', image=str(dbentry.id))
+        # get filesize, SHA-256 hash and check for duplicates
+        upload = check_stored_file(upload)
+
+        uploadurl = url_for('.uploadedimage', image=str(upload.id))
         return render_template('browser.html', files=[], folders=[], resources=[], sample=sample, callback=request.args.get('CKEditorFuncNum'), uploadurl=uploadurl)
 
     return redirect(url_for('browser'))
@@ -211,8 +230,9 @@ def savefromsmb():
     filename = address_in_resource.split("/")[-1]
 
     if allowed_file(filename):
-        dbentry = Upload(user=current_user, source='smb:'+src, ext=get_extension(filename))
-        db.session.add(dbentry)
+        # create database entry for upload
+        upload = Upload(user=current_user, source='smb:'+src, ext=get_extension(filename))
+        db.session.add(upload)
         db.session.commit()
 
         conn, connected = connect_to_SMBResource(resource)
@@ -220,20 +240,17 @@ def savefromsmb():
             app.logger.error("Could not connect to SMBResource: "+resource.name)
             return ''
 
-        file_obj = open(os.path.join(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext), 'wb')
+        file_obj = open(os.path.join(app.config['UPLOAD_FOLDER'], str(upload.id)+'.'+upload.ext), 'wb')
         try:
             file_attributes, filesize = conn.retrieveFile(resource.sharename, address_on_server, file_obj)
+
+            # get filesize, SHA-256 hash and check for duplicates
+            upload = check_stored_file(upload)
+
+            uploadurl = url_for('.uploadedimage', image=str(upload.id))
+            return jsonify(code=0, uploadurl=uploadurl)
         except: # if we have any problem retrieving the file
             app.logger.error("Could not retrieve file: "+resource.name+'/'+address_on_server)
             return ''
-
-        file_obj = open(os.path.join(app.config['UPLOAD_FOLDER'], str(dbentry.id) + '.' + dbentry.ext), 'rb')
-        dbentry.hash = hashlib.sha256(file_obj.read()).hexdigest()
-        dbentry.size = filesize
-        db.session.commit()
-        file_obj.close()
-
-        uploadurl = url_for('.uploadedimage', image=str(dbentry.id))
-        return jsonify(code=0, uploadurl=uploadurl)
 
     return jsonify(code=1)

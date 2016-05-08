@@ -103,7 +103,6 @@ def sampleeditor(sampleid):
         actions = []
         s = sample
         while s is not None:
-            print s.id, "going up"
             actions.extend(Action.query.filter_by(sample=s).order_by(Action.ordnum).all())
             s = s.parent
             if hideparentactions: break

@@ -74,6 +74,11 @@ div.sampleimage button {
   padding-left: 10px;
 }
 
+.nav-entry .glyphicon {
+  margin-left: -20px;
+  float: left;
+}
+
 .nav-entry-archived {
   color: #999999;
 }

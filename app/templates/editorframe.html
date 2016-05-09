@@ -37,7 +37,7 @@
     <div class="row list-header">
         <div class="col-md-2">Date</div>
         <div class="col-md-8">Description</div>
-        <div class="col-md-2"><a class="btn btn-default" id="parentactions" href="?hideparentactions={% if not hideparentactions %}1{% else %}0{% endif %}" style="background: #DDFFDD;">{% if not hideparentactions %}Hide{% else %}Show{% endif %} parent actions</a></div>
+        <div class="col-md-2"><a class="btn btn-default" id="parentactions" href="?hideparentactions={% if not hideparentactions %}1{% else %}0{% endif %}" style="background: #DDFFDD; float: right;">{% if not hideparentactions %}Hide{% else %}Show{% endif %} parent actions</a></div>
     </div>
     {% for i in range(actions|length)%}
     {% set action=actions[i] %}

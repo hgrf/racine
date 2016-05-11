@@ -43,7 +43,8 @@ You can start the development server by simply executing the "run script":
 # Deployment with gunicorn and nginx
 
 Carry out the steps described above in order to set up the development server. Then configure gunicorn by creating
-the file /etc/init/msm.conf and copying the following code into it:
+the file /etc/init/msm.conf and copying the following code into it (this is an Upstart configuration file, you should
+have upstart installed on your server or use a different init daemon):
  
     description "Gunicorn application server running Mercury Sample Manager"
     
@@ -96,10 +97,17 @@ You then want to configure your nginx server. Create a file "msm" in /etc/nginx/
         }
     }
 
-Where - again - you have to replace [path] by the path to the application's directory. Then create a symbolic link to this file in /etc/nginx/sites-enabled and delete the default entry:
+Where - again - you have to replace [path] by the path to the application's directory. Then create a symbolic link to
+this file in /etc/nginx/sites-enabled and delete the default entry:
 
     $ sudo ln -s /etc/nginx/sites-available/msm /etc/nginx/sites-enabled
     $ sudo rm /etc/nginx/sites-enabled/default
+
+If you want your server to support large file uploads, you have to change /etc/nginx/nginx.conf and add the following
+line to the http context to increase the size limit (in this example 5 Megabytes):
+
+    # set client body size to 5M #
+    client_max_body_size 5M;
 
 You can now start your server by executing:
  

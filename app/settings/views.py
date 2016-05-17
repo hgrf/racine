@@ -168,11 +168,16 @@ def uploads():
     # could probably do this much better with an elegant DB query
     uploads = Upload.query.all()
     emptyfiles = []
+    nofiles = []
     duplicates = []
     for i1 in range(len(uploads)):
         u1 = uploads[i1]
         # check file size
-        stat = os.stat(os.path.join(app.config['UPLOAD_FOLDER'], str(u1.id) + '.' + u1.ext))
+        try:
+            stat = os.stat(os.path.join(app.config['UPLOAD_FOLDER'], str(u1.id) + '.' + u1.ext))
+        except:
+            nofiles.append(u1)
+            continue
         if stat.st_size == 0:
             #print "Upload ID {} is an empty file.".format(u1.id)
             emptyfiles.append(u1)
@@ -208,4 +213,4 @@ def uploads():
             #print "Unused upload: ", u.id
             unused.append(u)
 
-    return render_template('settings/uploads.html', emptyfiles=emptyfiles, duplicates=duplicates, unused=unused)
+    return render_template('settings/uploads.html', emptyfiles=emptyfiles, nofiles=nofiles, duplicates=duplicates, unused=unused)

@@ -4,6 +4,20 @@
 
 {% block page_content %}
 <h1 class="page-header">Uploads</h1>
+<h2>Files not found</h2>
+<div class="container-fluid">
+  <div class="row list-header">
+    <div class="col-md-1">#</div>
+    <div class="col-md-1">User</div>
+    <div class="col-md-10">Source</div>
+  </div>
+{% for n in nofiles %}
+  <div class="row list-entry">
+    <div class="col-md-1">{{ n.id }}</div>
+    <div class="col-md-1">{{ n.user.username }}</div>
+    <div class="col-md-10">{{ n.source }}</div>
+  </div>
+{% endfor %}
 <h2>Empty files</h2>
 <div class="container-fluid">
   <div class="row list-header">

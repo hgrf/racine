@@ -48,6 +48,10 @@
     {% include 'editorframe.html' %}
 {% else %}
     <h1>Welcome</h1>
+    {% for p in plugins %}
+        <h2>{{ p.title }}</h2>
+        {{ p.display()|safe }}
+    {% endfor %}
     {% if current_user.is_admin %}
         <h2>Upload volume per user</h2>
         <table>

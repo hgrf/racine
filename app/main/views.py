@@ -1,6 +1,7 @@
 from flask import render_template, redirect, request, jsonify, send_file, flash
 from flask.ext.login import current_user, login_required
 from .. import db
+from .. import plugins
 from ..models import Sample, SampleType, Action, ActionType, User, Share, Upload
 from ..models import SAMPLE_NAME_LENGTH   # <-- sort this out
 from . import main
@@ -40,7 +41,7 @@ def index():
     return render_template('editor.html', samples=samples, sampletypes=SampleType.query.all(),
                            actiontypes=ActionType.query.all(), myshares=myshares, showarchived=showarchived,
                            newactions=newactions, maxcount=maxcount, newactionsallusers=newactionsallusers,
-                           maxcountallusers=maxcountallusers, uploadvols=uploadvols, maxuploadvol=maxuploadvol)
+                           maxcountallusers=maxcountallusers, uploadvols=uploadvols, maxuploadvol=maxuploadvol, plugins=plugins)
 
 @main.route('/help')
 @login_required

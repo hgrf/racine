@@ -117,3 +117,11 @@ You can now start your server by executing:
 The server will now automatically - i.e. also after a reboot - be available on localhost.
 
 More details: https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-14-04
+
+# Installing the SauvLPA backup status plugin
+In order to see the SauvLPA backup status on the welcome page, navigate to the MSM/plugins directory and type
+
+    $ git clone git@github.com:green-mercury/MSM-plugin-SauvLPA.git sauvlpa
+
+You will then need to modify the line in sauvlpa.py that tells the plugin where to search for the backup history.
+   

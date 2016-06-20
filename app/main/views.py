@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, jsonify, send_file, flash
+from flask import render_template, redirect, request, jsonify, send_file, flash, send_from_directory
 from flask.ext.login import current_user, login_required
 from .. import db
 from .. import plugins
@@ -365,3 +365,7 @@ def setmatrixcoords(sampleid):
     sample.my = int(request.form.get('my'))
     db.session.commit()
     return ""
+
+@main.route('/plugins/<path:path>')
+def static_file(path):
+    return send_file('../plugins/'+path)

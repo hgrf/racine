@@ -40,7 +40,7 @@ def create_app(config_name):
     app.register_blueprint(printdata_blueprint, url_prefix='/print')
 
     # look for plugins
-    plugin_files = glob('plugins/*.py')
+    plugin_files = glob('plugins/*/*.py')
     print "Plugins found: ", plugin_files
     for f in plugin_files:
         p = imp.load_source(f[8:-3], f)

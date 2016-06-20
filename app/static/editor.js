@@ -264,7 +264,14 @@
 
         // initialise sample navigation bar
         $('.nav-entry').dblclick( function( event ) {
-            load_sample($(this).attr('id'));
+            // this is a bit redundant with the TWO other page unload handlers, maybe want to tidy that shit up
+            if(CKEDITOR.instances.description.checkDirty()) {
+                if (confirm('Are you sure you want to navigate away from this page? Press OK to continue, or Cancel to stay on the current page.')) {
+                    load_sample($(this).attr('id'));
+                }
+            } else {
+                load_sample($(this).attr('id'));
+            }
             event.preventDefault();
         });
 

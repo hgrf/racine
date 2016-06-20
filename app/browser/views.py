@@ -243,6 +243,7 @@ def savefromsmb():
         file_obj = open(os.path.join(app.config['UPLOAD_FOLDER'], str(upload.id)+'.'+upload.ext), 'wb')
         try:
             file_attributes, filesize = conn.retrieveFile(resource.sharename, address_on_server, file_obj)
+            file_obj.close()
 
             # get filesize, SHA-256 hash and check for duplicates
             upload = check_stored_file(upload)

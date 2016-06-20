@@ -23,11 +23,13 @@ class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'database/data-dev.sqlite')
+    LOG_EXCEPTIONS = False          # do not catch and log exceptions (Flask development server provides info in browser)
 
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'database/data.sqlite')
+    LOG_EXCEPTIONS = True
 
 
 config = {

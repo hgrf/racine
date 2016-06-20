@@ -184,6 +184,7 @@ def check_stored_file(upload):
             # also the corresponding database entry
             os.remove(filename)
             db.session.delete(upload)
+            db.session.commit()
             return i
 
     return upload

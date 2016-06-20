@@ -55,6 +55,7 @@ have upstart installed on your server or use a different init daemon):
     setuid [user name]
     setgid www-data
     
+    env FLASK_CONFIG=production
     env PATH=[path]/MSM/venv/bin:/usr/bin
     chdir [path]/MSM
     exec gunicorn --workers 4 --bind unix:msm.sock -m 007 manage:app

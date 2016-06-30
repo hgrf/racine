@@ -11,7 +11,7 @@ import tempfile
 import io
 import hashlib
 
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'bmp', 'tif', 'tiff'])
 
 class FileTile:
     name = ""
@@ -54,7 +54,7 @@ def imagebrowser(address):
     # TODO: make sure resource names do not contain / or are .. or stuff like that
 
     # basic config stuff
-    image_extensions = [".jpg", ".jpeg", ".png"]
+    image_extensions = [".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff"]
 
     # find out from which sample the browser was opened
     if request.args.get("sample") is None:

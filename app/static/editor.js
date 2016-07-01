@@ -158,23 +158,17 @@
             return confirmationMessage;              // Gecko, WebKit, Chrome <34
         }
 
-        // TODO: better way to solve problem with images and latex would be to just re-load the action from the server
-        // before editing
         $(".editactiondescription").editable('/changeactiondesc', {
             type   : 'ckeditor',
-            submit : '<button type="submit" class="ok">OK</button><button type="submit" class="precancel">Cancel</button>',
-            //cancel : 'Cancel',
-            cancel:  '<button type="submit" class="cancel" style="display:None;"></button>',
+            submit : 'OK',
+            cancel:  'Cancel',
             onblur: "ignore",
-            event     : "edit",
+            event     : "dblclick",
+            loadurl: '/getactiondesc',
             ckeditor : ckeditorconfig,
             data: function(value) {
                 window.addEventListener('beforeunload', beforeunload_handler);
-
-                // need to remove lightbox link from images
-                $val = $('<div>'+value+'</div>');
-                $val.find('img').unwrap();
-                return $val.html();
+                return value;
             },
             callback: function() {
                 // typeset all equations in this action
@@ -189,44 +183,6 @@
                 window.removeEventListener('beforeunload', beforeunload_handler);
             }
         });
-
-        $(".editactiondescription").dblclick( function(event) {
-            // see https://github.com/mathjax/mathjax-docs/wiki/Obtaining-the-original-TeX-from-a-rendered-page
-            var HTML = MathJax.HTML, jax = MathJax.Hub.getAllJax($(this).get());
-            for (var i = 0, m = jax.length; i < m; i++) {
-                var script = jax[i].SourceElement(), tex = jax[i].originalText;
-                if (script.type.match(/display/)) {
-                    tex = "\\[" + tex + "\\]"
-                } else {
-                    tex = "\\(" + tex + "\\)"
-                }
-                jax[i].Remove();
-                var preview = script.previousSibling;
-                if (preview && preview.className === "MathJax_Preview") {
-                    preview.parentNode.removeChild(preview);
-                }
-                preview = HTML.Element("span", {className: "MathJax_Preview"}, [tex]);
-                script.parentNode.insertBefore(preview, script);
-            }
-
-            // trigger the jEditable
-            $(this).trigger("edit");
-
-            // prepare the handler for the cancel event (the "precancel" is needed so that we can execute mathjax stuff
-            // after the jEditable has put the original div back)
-            $(".precancel").click(function (event) {
-                event.preventDefault();
-
-                // yet another trick to get the ID of the modified action
-                actionid = $(this).parent().parent().attr('id');
-
-                // execute the "cancel" handler of the jEditable
-                $(this).parent().find('.cancel').trigger('click');
-
-                // typeset only this action
-                MathJax.Hub.Queue(["Typeset",MathJax.Hub, $("div#"+actionid+".editactiondescription").get()]);
-            });
-        })
 
         $('#submit').click( function(event) {
             for ( instance in CKEDITOR.instances ) CKEDITOR.instances[instance].updateElement(); // otherwise content of editor is not transmitted

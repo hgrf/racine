@@ -206,6 +206,14 @@ def changeactiontype():
     return action.actiontype.name
 
 
+@main.route('/getactiondesc', methods=['GET'])
+@login_required
+def getactiondesc():
+    action = Action.query.filter_by(id=int(request.args.get("id"))).first()
+    if action == None or action.owner != current_user:
+        return jsonify(code=1, error="Action does not exist or you do not have the right to access it")
+    return action.description
+
 @main.route('/changeactiondesc', methods=['POST'])
 @login_required
 def changeactiondesc():

@@ -1,4 +1,10 @@
 (function($) {
+    // tell MathJax to align left even if it's not loaded yet
+    window.MathJax = {
+        displayAlign: "left"
+    };
+
+    // configure the CKEditor
     var ckeditorconfig = {
         filebrowserImageBrowseUrl : '/browser',
         filebrowserWindowWidth  : 800,
@@ -152,12 +158,15 @@
             return confirmationMessage;              // Gecko, WebKit, Chrome <34
         }
 
+        // TODO: better way to solve problem with images and latex would be to just re-load the action from the server
+        // before editing
         $(".editactiondescription").editable('/changeactiondesc', {
             type   : 'ckeditor',
-            submit : 'OK',
-            cancel : 'Cancel',
+            submit : '<button type="submit" class="ok">OK</button><button type="submit" class="precancel">Cancel</button>',
+            //cancel : 'Cancel',
+            cancel:  '<button type="submit" class="cancel" style="display:None;"></button>',
             onblur: "ignore",
-            event     : "dblclick",
+            event     : "edit",
             ckeditor : ckeditorconfig,
             data: function(value) {
                 window.addEventListener('beforeunload', beforeunload_handler);
@@ -167,14 +176,57 @@
                 $val.find('img').unwrap();
                 return $val.html();
             },
-            callback: function() {                          // put back lightbox link around images
+            callback: function() {
+                // typeset all equations in this action
+                MathJax.Hub.Queue(["Typeset",MathJax.Hub,$(this).get()]);
+
+                // put back lightbox link around images
                 $(this).find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
+
                 window.removeEventListener('beforeunload', beforeunload_handler);
             },
             onreset: function() {
                 window.removeEventListener('beforeunload', beforeunload_handler);
             }
         });
+
+        $(".editactiondescription").dblclick( function(event) {
+            // see https://github.com/mathjax/mathjax-docs/wiki/Obtaining-the-original-TeX-from-a-rendered-page
+            var HTML = MathJax.HTML, jax = MathJax.Hub.getAllJax($(this).get());
+            for (var i = 0, m = jax.length; i < m; i++) {
+                var script = jax[i].SourceElement(), tex = jax[i].originalText;
+                if (script.type.match(/display/)) {
+                    tex = "\\[" + tex + "\\]"
+                } else {
+                    tex = "\\(" + tex + "\\)"
+                }
+                jax[i].Remove();
+                var preview = script.previousSibling;
+                if (preview && preview.className === "MathJax_Preview") {
+                    preview.parentNode.removeChild(preview);
+                }
+                preview = HTML.Element("span", {className: "MathJax_Preview"}, [tex]);
+                script.parentNode.insertBefore(preview, script);
+            }
+
+            // trigger the jEditable
+            $(this).trigger("edit");
+
+            // prepare the handler for the cancel event (the "precancel" is needed so that we can execute mathjax stuff
+            // after the jEditable has put the original div back)
+            $(".precancel").click(function (event) {
+                event.preventDefault();
+
+                // yet another trick to get the ID of the modified action
+                actionid = $(this).parent().parent().attr('id');
+
+                // execute the "cancel" handler of the jEditable
+                $(this).parent().find('.cancel').trigger('click');
+
+                // typeset only this action
+                MathJax.Hub.Queue(["Typeset",MathJax.Hub, $("div#"+actionid+".editactiondescription").get()]);
+            });
+        })
 
         $('#submit').click( function(event) {
             for ( instance in CKEDITOR.instances ) CKEDITOR.instances[instance].updateElement(); // otherwise content of editor is not transmitted
@@ -207,6 +259,9 @@
         // put lightbox link around images
         $('.actiondescription').find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
         $('#sampleimage').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
+
+        // typeset all equations
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
     }
 
     function beforeunload_handler2(e) {

@@ -217,7 +217,8 @@
         $('#sampleimage').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
 
         // typeset all equations
-        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+        if(MathJax.isReady)
+            MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
     }
 
     function beforeunload_handler2(e) {

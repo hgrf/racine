@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('static', filename='lightbox2-master/src/css/lightbox.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='editor.css')}}">
+{% endblock %}
+
+{% macro render_branch(parent, level=0) %}
+  {% for s in samples %}
+    {% if s.parent_id == parent and (not s.isarchived or showarchived) %}
+      <div class="nav-container" id="{{ s.id }}">
+      <div class="row nav-entry {% if s.isarchived %}nav-entry-archived{% endif %}"  data-toggle="collapse" data-target="#children{{ s.id }}" id="{{ s.id }}" draggable="true" data-name="{{ s.name }}">
+          <div class="nav-entry-name" id="navname{{ s.id }}">{{ s.name }}</div>
+          <div class="nav-entry-type" id="navtype{{ s.id }}">{{ s.sampletype.name }}</div>
+      </div>
+      <div id="children{{ s.id }}" class="row-fluid collapse out" style="padding-left: 10px">
+        {{ render_branch(s.id, level+1) }}
+      </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+{% endmacro %}
+
+{% block sidebarnav %}
+<div class="col-sm-3 col-md-2 sidebar">
+  <div class="container-fluid">
+    <div id="root">
+    {{ render_branch(0) }}
+    </div>
+  <div class="row nav-entry" id="0" style="padding-left:5px">Shares:</div>
+    {% for s in myshares %}
+        <div class="row nav-entry" id="{{ s.sample.id }}">
+          <div class="nav-entry-name">{{ s.sample.name }}</div>
+          <div class="nav-entry-type">{{ s.sample.sampletype.name }}</div>
+          <div class="nav-entry-owner">{{ s.sample.owner.username }}</div>
+      </div>
+      {% endfor %}
+    <div class="row nav-entry" id="0" style="padding-left:10px"><a href="/newsample">+ New Sample</a></div>
+    <div class="row nav-entry" style="padding-left:10px"><a href="?showarchived={% if showarchived %}0{% else %}1{% endif %}">{% if showarchived %}Hide{% else %}Show{% endif %} archived</a></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block page_content %}
+<div id="editor-frame">
+{% if sample is not defined %}
+    <h1>Welcome</h1>
+    {% for p in plugins %}
+        <h2>{{ p.title }}</h2>
+        {{ p.display()|safe }}
+    {% endfor %}
+    {% if current_user.is_admin %}
+        <h2>Upload volume per user</h2>
+        <table>
+        {% for u in uploadvols %}
+            {% if u[1] %}
+                <tr>
+                    <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="{{ url_for('static', filename='user.png') }}" width="40">{{ u[0].username }}</td>
+                    <td style="padding-top: 10px;">
+                        <div class="progress" style="width: 200px;">
+                            <div class="progress-bar" role="progressbar" style="width:{{ u[1]/maxuploadvol*100 }}%;color:#000000";>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="padding-bottom: 10px;padding-left:20px;">
+                        {{ u[1]|filesizeformat }}
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </table>
+        <h2>Recent activity per user (actions added in the last 7 days):</h2>
+        <table>
+        {% for n in newactionsallusers %}
+            {% if n[1] %}
+                <tr>
+                    <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="{{ url_for('static', filename='user.png') }}" width="40">{{ n[0].username }}</td>
+                    <td style="padding-top: 10px;">
+                        <div class="progress" style="width: 200px;">
+                            <div class="progress-bar" role="progressbar" style="width:{{ n[1]/maxcountallusers*100 }}%;">
+                                {{ n[1] }}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </table>
+    {% endif %}
+    <h2>Recent activity (actions added in the last 7 days):</h2>
+    <table>
+    {% for n in newactions %}
+        {% if n[1] %}
+            <tr>
+                <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="{{ url_for('static', filename='sample.png') }}" width="40">{{ n[0].name }}</td>
+                <td style="padding-top: 10px;">
+                    <div class="progress" style="width: 200px">
+                        <div class="progress-bar" role="progressbar" style="width:{{ n[1]/maxcount*100 }}%">
+                            {{ n[1] }}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+    </table>
+{% endif %}
+</div>
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+            </div>
+            <div class="modal-body">
+              <p>You are about to delete an item, this procedure is irreversible.</p>
+              <p>Do you want to proceed?</p>
+              <p class="debug-id"></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <a class="btn btn-danger btn-ok">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="childbrowser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="myModalLabel">Browser</h4>
+            </div>
+            <div class="modal-body">
+              Select please:
+                <div id="childbrowser-frame"></div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="userbrowser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="myModalLabel">Browser</h4>
+            </div>
+            <div class="modal-body">
+              Select a user, please:
+                <div id="userbrowser-frame"></div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+    <script>// because Jinja does not work in the JS files
+        {% if sample is defined %}
+            var sample = {{ sample.id }};
+        {% endif %}
+        var hideparentactions = {% if hideparentactions %}1{% else %}0{% endif %};
+        var sampletypes = "{ {% for sampletype in sampletypes %} {{ sampletype.id }}:'{{ sampletype.name }}', {% endfor %} }";
+        var actiontypes = "{ {% for actiontype in actiontypes %} {{ actiontype.id }}:'{{ actiontype.name }}', {% endfor %} }";
+        var begin_flashmsg = "{{ begin_flashmsg|safe }}";
+        var end_flashmsg = "{{ end_flashmsg|safe }}";
+    </script>
+    <script async src="{{ url_for('static', filename='mathjax/MathJax.js') }}?config=TeX-MML-AM_CHTML"></script>
+    <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery.jeditable.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery.generateId.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery.jeditable.ckeditor.js') }}"></script>
+    <script src="{{ url_for('static', filename='editor.js') }}"></script>
+    <script src="{{ url_for('static', filename='matrixview.js') }}"></script>
+    <script src="{{ url_for('static', filename='navbar.js') }}"></script>
+    <script src="{{ url_for('static', filename='lightbox2-master/src/js/lightbox.js') }}"></script>
+{% endblock %}
+
+

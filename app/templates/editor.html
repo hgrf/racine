@@ -1,189 +1,77 @@
-{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
-{% block styles %}
-{{super()}}
-<link rel="stylesheet" href="{{url_for('static', filename='lightbox2-master/src/css/lightbox.css')}}">
-<link rel="stylesheet" href="{{url_for('static', filename='editor.css')}}">
-{% endblock %}
-
-{% macro render_branch(parent, level=0) %}
-  {% for s in samples %}
-    {% if s.parent_id == parent and (not s.isarchived or showarchived) %}
-      <div class="nav-container" id="{{ s.id }}">
-      <div class="row nav-entry {% if s.isarchived %}nav-entry-archived{% endif %}"  data-toggle="collapse" data-target="#children{{ s.id }}" id="{{ s.id }}" draggable="true" data-name="{{ s.name }}">
-          <div class="nav-entry-name" id="navname{{ s.id }}">{{ s.name }}</div>
-          <div class="nav-entry-type" id="navtype{{ s.id }}">{{ s.sampletype.name }}</div>
-      </div>
-      <div id="children{{ s.id }}" class="row-fluid collapse out" style="padding-left: 10px">
-        {{ render_branch(s.id, level+1) }}
-      </div>
-      </div>
-    {% endif %}
-  {% endfor %}
-{% endmacro %}
-
-{% block sidebarnav %}
-<div class="col-sm-3 col-md-2 sidebar">
-  <div class="container-fluid">
-    <div id="root">
-    {{ render_branch(0) }}
-    </div>
-  <div class="row nav-entry" id="0" style="padding-left:5px">Shares:</div>
-    {% for s in myshares %}
-        <div class="row nav-entry" id="{{ s.sample.id }}">
-          <div class="nav-entry-name">{{ s.sample.name }}</div>
-          <div class="nav-entry-type">{{ s.sample.sampletype.name }}</div>
-          <div class="nav-entry-owner">{{ s.sample.owner.username }}</div>
-      </div>
-      {% endfor %}
-    <div class="row nav-entry" id="0" style="padding-left:10px"><a href="/newsample">+ New Sample</a></div>
-    <div class="row nav-entry" style="padding-left:10px"><a href="?showarchived={% if showarchived %}0{% else %}1{% endif %}">{% if showarchived %}Hide{% else %}Show{% endif %} archived</a></div>
-  </div>
-</div>
-{% endblock %}
-
-{% block page_content %}
-<div id="editor-frame">
-{% if sample is defined %}
-    {% include 'editorframe.html' %}
-{% else %}
-    <h1>Welcome</h1>
-    {% for p in plugins %}
-        <h2>{{ p.title }}</h2>
-        {{ p.display()|safe }}
-    {% endfor %}
-    {% if current_user.is_admin %}
-        <h2>Upload volume per user</h2>
-        <table>
-        {% for u in uploadvols %}
-            {% if u[1] %}
-                <tr>
-                    <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="{{ url_for('static', filename='user.png') }}" width="40">{{ u[0].username }}</td>
-                    <td style="padding-top: 10px;">
-                        <div class="progress" style="width: 200px;">
-                            <div class="progress-bar" role="progressbar" style="width:{{ u[1]/maxuploadvol*100 }}%;color:#000000";>
-                            </div>
-                        </div>
-                    </td>
-                    <td style="padding-bottom: 10px;padding-left:20px;">
-                        {{ u[1]|filesizeformat }}
-                    </td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-        </table>
-        <h2>Recent activity per user (actions added in the last 7 days):</h2>
-        <table>
-        {% for n in newactionsallusers %}
-            {% if n[1] %}
-                <tr>
-                    <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="{{ url_for('static', filename='user.png') }}" width="40">{{ n[0].username }}</td>
-                    <td style="padding-top: 10px;">
-                        <div class="progress" style="width: 200px;">
-                            <div class="progress-bar" role="progressbar" style="width:{{ n[1]/maxcountallusers*100 }}%;">
-                                {{ n[1] }}
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-        </table>
-    {% endif %}
-    <h2>Recent activity (actions added in the last 7 days):</h2>
-    <table>
-    {% for n in newactions %}
-        {% if n[1] %}
-            <tr>
-                <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="{{ url_for('static', filename='sample.png') }}" width="40">{{ n[0].name }}</td>
-                <td style="padding-top: 10px;">
-                    <div class="progress" style="width: 200px">
-                        <div class="progress-bar" role="progressbar" style="width:{{ n[1]/maxcount*100 }}%">
-                            {{ n[1] }}
-                        </div>
+<div id="sampleid" style="display: none">{{ sample.id }}</div>
+<h1 class="page-header">
+    Sample <b id="{{ sample.id }}" class="{% if sample.owner == current_user %}editsamplename{% endif %}" style="display: inline">{{ sample.name }}</b> | Type: <b id="{{ sample.id }}" class="{% if sample.owner == current_user %}selectsampletype{% endif %}" style="display: inline">{{ sample.sampletype.name }}</b>
+    {% if sample.owner == current_user %}<img title="Delete sample" style="cursor: pointer; float: right; margin-right: 15px;" width="32" height="32" src="{{ url_for('static', filename='delete.png') }}" data-href="/delsample/{{ sample.id }}" data-type="sample" data-id="{{ sample.id }}" data-toggle="modal" data-target="#confirm-delete">{% endif %}
+    {% if sample.owner == current_user %}<img title="{% if sample.isarchived %}De-archive{% else %}Archive{% endif %}" style="cursor: pointer; float: right; margin-right: 10px;" id="archive" width="32" height="32" src="{% if sample.isarchived %}{{ url_for('static', filename='dearchive.png') }}{% else %}{{ url_for('static', filename='archive.png') }}{% endif %}">{% endif %}
+    <img title="Switch to matrix view" style="cursor: pointer; float: right; margin-right: 10px;" id="matrixviewbutton" width="32" height="32" src="{{ url_for('static', filename='matrixview.png') }}">
+</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 sampleimage">
+            <img id="sampleimage" src="{% if sample.image == None %}{{ url_for('static', filename='sample.png') }}{% else %}{{ sample.image }}{% endif %}" width="100%">{% if sample.owner == current_user %}<button id="changesampleimage" class="btn btn-default">Change</button>{% endif %}
+        </div>
+        <div class="col-md-5">
+            <strong>Sample description:</strong>
+            <div id="{{ sample.id }}" class="{% if sample.owner == current_user %}editsampledescription {% endif %}">{{ sample.description|safe }}</div>
+        </div>
+        <div class="col-md-3">
+            <strong>Shared with:</strong>
+            <div class="container-fluid" id="sharelist">
+                {% for share in shares %}
+                    <div class="row sharelistentry" id="sharelistentry{{ share.id }}">
+                        {{ share.user.username }}
+                            {% if sample.owner == current_user or share.user == current_user %}
+                                <img style="cursor: pointer; float: left; display: inline;" width="32" height="32" src="{{ url_for('static', filename='delete.png') }}" data-type="share" data-id="{{ share.id }}" data-toggle="modal" data-target="#confirm-delete">
+                            {% endif %}
                     </div>
-                </td>
-            </tr>
-        {% endif %}
+                {% endfor %}
+            </div>
+            {% if sample.owner == current_user %}<button class="btn btn-default" data-toggle="modal" data-target="#userbrowser">Add share</button>{% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row list-header">
+        <div class="col-md-2">Date</div>
+        <div class="col-md-8">Description</div>
+        <div class="col-md-2"><a class="btn btn-default" id="parentactions" href="?hideparentactions={% if not hideparentactions %}1{% else %}0{% endif %}" style="background: #DDFFDD; float: right;">{% if not hideparentactions %}Hide{% else %}Show{% endif %} parent actions</a></div>
+    </div>
+    {% for i in range(actions|length)%}
+    {% set action=actions[i] %}
+    <div class="row list-entry {% if action.sample != sample %}parentaction{% endif %}" id="{{ action.id }}" {% if action.sample != sample %}style="background: #DDFFDD;"{% endif %}>
+        <div class="col-md-2">
+            <div id="{{ action.id }}" class="{% if action.owner == current_user %}editactiondate{% endif %}">{{ action.timestamp }}</div>
+            <div id="{{ action.id }}" style="font-style: italic">{{ action.owner.username }}</div>
+            <div id="{{ action.id }}" class="{% if action.owner == current_user %}selectactiontype{% endif %}" style="display: inline">{{ action.actiontype.name }}</div>
+            {% if action.sample != sample %}<div style="font-style: italic;">{{ action.sample.name }}</div>{% endif %}
+        </div>
+        <div id="{{ action.id }}" class="col-md-8 actiondescription {% if action.owner == current_user %}editactiondescription {% endif %}">{{ action.description|safe }}</div>
+        <div class="col-md-2">
+            {% if action.owner == current_user %}
+                <img style="cursor: pointer; float: right; display: inline;" width="32" height="32" src="{{ url_for('static', filename='delete.png') }}" data-type="action" data-id="{{ action.id }}" data-toggle="modal" data-target="#confirm-delete">
+                {% if not i == 0 %} {# can  be moved up #}
+                    <img style="cursor: pointer; float: right; display: inline;" src="{{ url_for('static', filename='up.png') }}" class="swapaction" data-id="{{ action.id }}" data-swapid="{{ actions[i-1].id }}">
+                {% endif %}
+                {% if not (i+1) == actions|length %} {# can  be moved down #}
+                    <img style="cursor: pointer; float: right; display: inline;" src="{{ url_for('static', filename='down.png') }}" class="swapaction" data-id="{{ action.id }}" data-swapid="{{ actions[i+1].id }}">
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
     {% endfor %}
-    </table>
-{% endif %}
-</div>
-
-<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+    <div class="row list-entry">
+        <form id="newactionform">
+            {{ form.hidden_tag() }}
+            <div class="col-md-2">
+                {{ wtf.form_field(form.timestamp) }}
+                {{ wtf.form_field(form.actiontype) }}
             </div>
-            <div class="modal-body">
-              <p>You are about to delete an item, this procedure is irreversible.</p>
-              <p>Do you want to proceed?</p>
-              <p class="debug-id"></p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-              <a class="btn btn-danger btn-ok">Delete</a>
-            </div>
-        </div>
+            <div class="col-md-8">{{ wtf.form_field(form.description) }}</div>
+            <div class="col-md-2">{{ wtf.form_field(form.submit) }}</div>
+        </form>
     </div>
 </div>
-
-<div class="modal fade" id="childbrowser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" id="myModalLabel">Browser</h4>
-            </div>
-            <div class="modal-body">
-              Select please:
-                <div id="childbrowser-frame"></div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="userbrowser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" id="myModalLabel">Browser</h4>
-            </div>
-            <div class="modal-body">
-              Select a user, please:
-                <div id="userbrowser-frame"></div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock %}
-
-{% block scripts %}
-{{ super() }}
-    <script>// because Jinja does not work in the JS files
-        var sampletypes = "{ {% for sampletype in sampletypes %} {{ sampletype.id }}:'{{ sampletype.name }}', {% endfor %} }";
-        var actiontypes = "{ {% for actiontype in actiontypes %} {{ actiontype.id }}:'{{ actiontype.name }}', {% endfor %} }";
-        var begin_flashmsg = "{{ begin_flashmsg|safe }}";
-        var end_flashmsg = "{{ end_flashmsg|safe }}";
-    </script>
-    <script async src="{{ url_for('static', filename='mathjax/MathJax.js') }}?config=TeX-MML-AM_CHTML"></script>
-    <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
-    <script src="{{ url_for('static', filename='jquery.jeditable.js') }}"></script>
-    <script src="{{ url_for('static', filename='jquery.generateId.js') }}"></script>
-    <script src="{{ url_for('static', filename='jquery.jeditable.ckeditor.js') }}"></script>
-    <script src="{{ url_for('static', filename='editor.js') }}"></script>
-    <script src="{{ url_for('static', filename='matrixview.js') }}"></script>
-    <script src="{{ url_for('static', filename='navbar.js') }}"></script>
-    <script src="{{ url_for('static', filename='lightbox2-master/src/js/lightbox.js') }}"></script>
-{% endblock %}
-
 

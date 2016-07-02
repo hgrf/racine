@@ -38,10 +38,11 @@ def index():
     myshares = Share.query.filter_by(user=current_user).all()
     showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
 
-    return render_template('editor.html', samples=samples, sampletypes=SampleType.query.all(),
+    return render_template('main.html', samples=samples, sampletypes=SampleType.query.all(),
                            actiontypes=ActionType.query.all(), myshares=myshares, showarchived=showarchived,
                            newactions=newactions, maxcount=maxcount, newactionsallusers=newactionsallusers,
-                           maxcountallusers=maxcountallusers, uploadvols=uploadvols, maxuploadvol=maxuploadvol, plugins=plugins)
+                           maxcountallusers=maxcountallusers, uploadvols=uploadvols, maxuploadvol=maxuploadvol,
+                           plugins=plugins)
 
 @main.route('/help')
 @login_required
@@ -75,12 +76,20 @@ def sharerlist():
 
 @main.route('/sample/<sampleid>', methods=['GET', 'POST'])
 @login_required
-def sampleeditor(sampleid):
+def mainpage(sampleid):
     sample = Sample.query.get(sampleid)
     samples = Sample.query.filter_by(owner=current_user).all()
-    shares = Share.query.filter_by(sample=sample).all()
     myshares = Share.query.filter_by(user=current_user).all()
     showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
+    hideparentactions = True if request.args.get('hideparentactions') != None and int(request.args.get('hideparentactions')) else False
+
+    return render_template('main.html', samples=samples, sample=sample, sampletypes=SampleType.query.all(), actiontypes=ActionType.query.all(), myshares=myshares, showarchived=showarchived, hideparentactions=hideparentactions)
+
+@main.route('/editor/<sampleid>', methods=['GET', 'POST'])
+@login_required
+def editor(sampleid):
+    sample = Sample.query.get(sampleid)
+    shares = Share.query.filter_by(sample=sample).all()
     hideparentactions = True if request.args.get('hideparentactions') != None and int(request.args.get('hideparentactions')) else False
 
     if sample == None or (sample.owner != current_user and current_user not in [share.user for share in shares]):
@@ -100,13 +109,9 @@ def sampleeditor(sampleid):
             if hideparentactions: break
         actions = sorted(actions, key=lambda a: a.ordnum)
 
-        if (request.args.get("editorframe") == "true"):
-            return render_template('editorframe.html', samples=samples, sample=sample,
-                                   actions=actions, form=form, sampletypes=SampleType.query.all(),
-                                   actiontypes=ActionType.query.all(), shares=shares, myshares=myshares, showarchived=showarchived, hideparentactions=hideparentactions)
-        else:
-            return render_template('editor.html', samples=samples, sample=sample, actions=actions,
-                                   form=form, sampletypes=SampleType.query.all(), actiontypes=ActionType.query.all(), shares=shares, myshares=myshares, showarchived=showarchived, hideparentactions=hideparentactions)
+        return render_template('editor.html', sample=sample, actions=actions, form=form,
+                               sampletypes=SampleType.query.all(), actiontypes=ActionType.query.all(), shares=shares,
+                               hideparentactions=hideparentactions)
 
 
 @main.route('/togglearchived', methods=['POST'])

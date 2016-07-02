@@ -166,7 +166,7 @@ function init_editor() {
 
 function load_sample(id) {
     // a kind of ugly workaround to read out the current status of the "show parent actions" button
-    hideparentactions = ($('#parentactions').text().split(' ')[0] == 'Show');
+    //hideparentactions = ($('#parentactions').text().split(' ')[0] == 'Show');
 
     // if currently viewing a sample (not welcome page) then change the navbar background to transparent before loading
     // the new sample
@@ -175,8 +175,7 @@ function load_sample(id) {
 
     // load the sample data and re-initialise the editor
     $.ajax({
-        url: "/sample/"+id+(hideparentactions ? "?hideparentactions=1" : ""),
-        data: { "editorframe": true },
+        url: "/editor/"+id+(hideparentactions ? "?hideparentactions=1" : ""),
         success: function( data, id ) {
             $( "#editor-frame" ).html(data);
             window.history.pushState({"html": data, "pageTitle": data.pageTitle}, "", "/sample/"+ $('#sampleid').text());
@@ -188,9 +187,9 @@ function load_sample(id) {
 }
 
 $(document).ready(function() {
-    // initialise editor if sample is loaded (i.e. if we're not on welcome page)
-    if($("#sampleid").text() != "") {
-        init_editor();
+    // load sample if we're not on welcome page
+    if(typeof sample != "undefined") {
+        load_sample(sample);
     }
 
     // add window unload handler (which asks the user to confirm leaving the page when one of the CKEditor instances

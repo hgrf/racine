@@ -10,7 +10,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-4 sampleimage">
-            <img id="sampleimage" src="{% if sample.image == None %}{{ url_for('static', filename='sample.png') }}{% else %}{{ sample.image }}{% endif %}" width="100%">{% if sample.owner == current_user %}<button id="browser" class="btn btn-default">Change</button>{% endif %}
+            <img id="sampleimage" src="{% if sample.image == None %}{{ url_for('static', filename='sample.png') }}{% else %}{{ sample.image }}{% endif %}" width="100%">{% if sample.owner == current_user %}<button id="changesampleimage" class="btn btn-default">Change</button>{% endif %}
         </div>
         <div class="col-md-5">
             <strong>Sample description:</strong>

@@ -5,9 +5,9 @@ External sources:
 
 app/static:
 |
-|- resource.png, sample.png, user.png, file.png and folder.png were taken from Open Icon Library
-|    Standard version 0.11 (mixed licenses)
-|- jquery-1.11.3.min.js is intellectual property of the jQuery Foundation and released
+|- archive.png, dearchive.png, delete.png, down.png, file.png, folder.png, matrixview.png, resource.png, sample.png, up.png,
+|    upload.png, user.png were taken from Open Icon Library Standard (mixed licenses)
+|- jquery-1.11.3.min.js and jquery-ui.min.css are intellectual property of the jQuery Foundation and released
 |    under the MIT license
 |- jquery.jeditable.js is intellectual property of Mika Tuupola and Dylan Verheul and
 |    released under the MIT license
@@ -16,3 +16,5 @@ app/static:
 |- ckeditor/* is intellectual property of Frederico Knabben and released under the GPL,
 |    LGPL or MPL license (see ckeditor/LICENSE.md)
 |- lightbox2-master/* is interllectual property of Lokesh Dhakar and released under the MIT license
+|- mathjax/* is intellectual property of the MathJax Consortium, which "is a joint venture of the American Mathematical Society
+|   (AMS) and the Society for Industrial and Applied Mathematics (SIAM)"; it is released under the Apache Licence version 2.0

@@ -1,5 +1,5 @@
 from flask import render_template, redirect, request, jsonify, send_file, flash, send_from_directory
-from flask.ext.login import current_user, login_required
+from flask.ext.login import current_user, login_required, login_user, logout_user
 from .. import db
 from .. import plugins
 from ..models import Sample, SampleType, Action, ActionType, User, Share, Upload
@@ -36,13 +36,14 @@ def index():
     # get samples and shares for current user
     samples = Sample.query.filter_by(owner=current_user).all()
     myshares = Share.query.filter_by(user=current_user).all()
+    myinheritance = User.query.filter_by(heir=current_user).all()
     showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
 
     return render_template('main.html', samples=samples, sampletypes=SampleType.query.all(),
-                           actiontypes=ActionType.query.all(), myshares=myshares, showarchived=showarchived,
-                           newactions=newactions, maxcount=maxcount, newactionsallusers=newactionsallusers,
-                           maxcountallusers=maxcountallusers, uploadvols=uploadvols, maxuploadvol=maxuploadvol,
-                           plugins=plugins)
+                           actiontypes=ActionType.query.all(), myshares=myshares, myinheritance=myinheritance,
+                           showarchived=showarchived, newactions=newactions, maxcount=maxcount,
+                           newactionsallusers=newactionsallusers, maxcountallusers=maxcountallusers,
+                           uploadvols=uploadvols, maxuploadvol=maxuploadvol, plugins=plugins)
 
 @main.route('/help')
 @login_required
@@ -74,16 +75,28 @@ def sharerlist():
 
     return jsonify(sharers=sharers)
 
+@main.route('/inheritance', methods=['GET'])
+@login_required
+def inheritance():
+    user = User.query.filter_by(id=int(request.args.get("userid"))).first()
+    logout_user()
+    login_user(user)
+
+    return redirect("/")
+
 @main.route('/sample/<sampleid>', methods=['GET', 'POST'])
 @login_required
 def mainpage(sampleid):
     sample = Sample.query.get(sampleid)
     samples = Sample.query.filter_by(owner=current_user).all()
     myshares = Share.query.filter_by(user=current_user).all()
+    myinheritance = User.query.filter_by(heir=current_user).all()
     showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
     hideparentactions = True if request.args.get('hideparentactions') != None and int(request.args.get('hideparentactions')) else False
 
-    return render_template('main.html', samples=samples, sample=sample, sampletypes=SampleType.query.all(), actiontypes=ActionType.query.all(), myshares=myshares, showarchived=showarchived, hideparentactions=hideparentactions)
+    return render_template('main.html', samples=samples, sample=sample, sampletypes=SampleType.query.all(),
+                           actiontypes=ActionType.query.all(), myshares=myshares, myinheritance=myinheritance,
+                           showarchived=showarchived, hideparentactions=hideparentactions)
 
 @main.route('/editor/<sampleid>', methods=['GET', 'POST'])
 @login_required

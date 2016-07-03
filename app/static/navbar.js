@@ -100,4 +100,8 @@ $(document).ready(function() {
             $(this).css("background-color", "transparent");
         }
     });
+
+    $(".inheritance").dblclick(function() {
+       location.href = "/inheritance?userid="+$(this).data('userid');
+    });
 });

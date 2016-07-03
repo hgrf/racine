@@ -1,0 +1,69 @@
+{% set active = "leave" %}
+{% extends "profile/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+    <h1 class="page-header">Leaving the laboratory</h1>
+    {% if current_user.heir is none %}
+        <p>
+            When you are leaving your laboratory, it is a good idea to designate someone who will have access
+            to your data. Typically, this will be your supervisor or one of your colleagues. The person you designate will
+            then see your name in his/her navigation bar and can log in to your account and see all your samples and
+            actions.
+        </p>
+        <p><b>
+            Once you have confirmed that you are leaving, your name will disappear from the user list on the
+            login page. You will still be able to log in by typing your email address manually.
+        </b></p>
+        {% if user is none %}
+            <p><b>
+                Please double-click on the user that you would like to inherit your data.
+            </b></p>
+            <div class="container-fluid">
+            <div class="row">
+                {% for user in users %}
+                    {% if user != current_user and user.heir is none %}
+                    <div>
+                        <img src="{{ url_for('static', filename='user.png') }}" class="user" data-userid="{{ user.id }}" width="50px" height="50px">
+                        {{ user.username }}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            </div>
+        {% else %}
+            <p><b>
+                Please confirm that you want to leave and pass your data on to: {{ user.username }}
+                <button id="confirm" data-userid="{{ user.id }}">Confirm</button>
+            </b></p>
+        {% endif %}
+    {% else %}
+        <p>
+            You have left the laboratory and your data has been passed on to: <b>{{ current_user.heir.username }}</b><br>
+            Would you like to re-activate your account?
+            <button id="reactivate">OK</button>
+        </p>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript" charset="utf-8">
+    $(function() {
+        $(document).ready(function() {
+            $(".user").dblclick(function( event )  {
+                location.href = "/profile/leave?userid="+$(this).data("userid");
+                event.preventDefault();
+            });
+
+            $("#confirm").click(function( event ) {
+                location.href = "/profile/leave?userid="+$(this).data("userid")+"&confirm=1";
+            });
+
+            $("#reactivate").click(function ( event ) {
+               location.href = "/profile/leave?reactivate=1";
+            });
+        });
+    });
+    </script>
+{% endblock %}

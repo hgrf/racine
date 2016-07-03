@@ -14,10 +14,12 @@
         </div>
         <div class="col-md-6">
             {% for user in users %}
+                {% if user.heir is none %}
                 <div>
                     <img src="{{ url_for('static', filename='user.png') }}" class="user" data-email="{{ user.email }}" width="50px" height="50px">
                     {{ user.username }}
                 </div>
+                {% endif %}
             {% endfor %}
         </div>
     </div>

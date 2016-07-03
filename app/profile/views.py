@@ -3,6 +3,7 @@ from . import profile
 from .. import db
 from flask.ext.login import login_required, current_user
 from forms import ChangePasswordForm, ChangeDetailsForm
+from ..models import User
 
 @profile.route('/overview')
 @login_required
@@ -38,3 +39,22 @@ def changepassword():
         else:
             flash('Password incorrect.')
     return render_template('profile/changepassword.html', form=form)
+
+
+@profile.route('/leave', methods=['GET'])
+@login_required
+def leave():
+    users = User.query.all()
+    user = User.query.filter_by(id=request.args.get("userid")).first()
+    confirm = request.args.get("confirm")
+    reactivate = request.args.get("reactivate")
+
+    if reactivate == "1":
+        current_user.heir = None
+        db.session.commit()
+
+    if confirm == "1" and user is not None:
+        current_user.heir = user
+        db.session.commit()
+
+    return render_template('profile/leave.html', users=users, user=user)

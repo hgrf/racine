@@ -17,6 +17,12 @@ class User(UserMixin, db.Model):
     actions = db.relationship('Action', backref='owner')
     shares = db.relationship('Share', backref='user')
     uploads = db.relationship('Upload', backref='user')
+    heir_id = db.Column(db.Integer, db.ForeignKey('users.id'))      # ID of the user who inherits this users data
+
+    inheritance = db.relationship('User', backref=db.backref('heir', remote_side=[id])) # Users who gave their data to this one
+
+    def __repr__(self):
+        return '<User %r>' % self.username
 
     @property
     def password(self):

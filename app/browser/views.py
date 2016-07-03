@@ -1,5 +1,5 @@
 from flask import render_template, send_file, request, redirect, url_for, send_from_directory, jsonify
-from flask_login import current_user
+from flask_login import current_user, login_required
 from flask import current_app as app
 from smb.SMBConnection import SMBConnection
 from .. import db
@@ -50,6 +50,7 @@ def assemble_path(items):
 
 @browser.route('/', defaults={'address': ''})
 @browser.route('/<path:address>')
+@login_required
 def imagebrowser(address):
     # TODO: make sure resource names do not contain / or are .. or stuff like that
 
@@ -78,18 +79,19 @@ def imagebrowser(address):
                 resources.append(r)
                 continue
             # find user/sample folders
-            if sample is not None:
-                for i in conn.listPath(resource.sharename, resource.path if resource.path != None else ""):
-                    if i.isDirectory and i.filename == sample.owner.username:
-                        r.hasuserfolder = True
-                        for j in conn.listPath(resource.sharename, assemble_path([resource.path, i.filename])):
-                            if j.isDirectory and j.filename == sample.name:
-                                r.hassamplefolder = True
-                                break
-                        break
+            for i in conn.listPath(resource.sharename, resource.path if resource.path != None else ""):
+                if i.isDirectory and i.filename == (sample.owner.username if sample is not None else current_user.username):
+                    r.hasuserfolder = True
+                    for j in conn.listPath(resource.sharename, assemble_path([resource.path, i.filename])):
+                        if j.isDirectory and sample is not None and j.filename == sample.name:
+                            r.hassamplefolder = True
+                            break
+                    break
             conn.close()
             resources.append(r)
-        return render_template('browser.html', files=[], folders=[], resources=resources, sample=sample, callback=request.args.get('CKEditorFuncNum'))
+        return render_template('browser.html', files=[], folders=[], resources=resources, sample=sample,
+                               owner=sample.owner if sample is not None else current_user,
+                               callback=request.args.get('CKEditorFuncNum'))
 
     # process address (2)
     resource = SMBResource.query.filter_by(name=address.split("/")[0]).first()

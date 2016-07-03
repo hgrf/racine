@@ -30,10 +30,10 @@
         <img src="{{ url_for('static', filename='resource.png') }}" {% if resource.available %}class="folder"{% endif %} data-url="{{ resource.name }}" width="100px" height="100px">
         {{ resource.name }}
         {% if resource.hasuserfolder %}
-            <img src="{{ url_for('static', filename='user.png') }}" class="folder" data-url="{{ resource.name+"/"+sample.owner.username }}" width="100px" height="100px">
+            <img src="{{ url_for('static', filename='user.png') }}" class="folder" data-url="{{ resource.name+"/"+owner.username }}" width="100px" height="100px">
         {% endif %}
         {% if resource.hassamplefolder %}
-            <img src="{{ url_for('static', filename='sample.png') }}" class="folder" data-url="{{ resource.name+"/"+sample.owner.username+"/"+sample.name }}" width="100px" height="100px">
+            <img src="{{ url_for('static', filename='sample.png') }}" class="folder" data-url="{{ resource.name+"/"+owner.username+"/"+sample.name }}" width="100px" height="100px">
             <!-- TODO: what if sample, resource or user name contains space? -->
         {% endif %}
         </div>

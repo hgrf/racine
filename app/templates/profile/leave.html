@@ -35,6 +35,9 @@
             <p><b>
                 Please confirm that you want to leave and pass your data on to: {{ user.username }}
                 <button id="confirm" data-userid="{{ user.id }}">Confirm</button>
+                <br>N.B.: If any other user has passed his/her data on to you in the past, this data will also be
+                passed on to the person you designated. If you decide to reactivate your account in the future,
+                this data will stay with your designated person.
             </b></p>
         {% endif %}
     {% else %}

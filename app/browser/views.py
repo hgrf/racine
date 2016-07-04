@@ -1,7 +1,7 @@
 from flask import render_template, send_file, request, redirect, url_for, send_from_directory, jsonify
 from flask_login import current_user, login_required
 from flask import current_app as app
-from smb.SMBConnection import SMBConnection
+from smb.SMBConnection import SMBConnection, OperationFailure
 from .. import db
 from ..models import SMBResource, Sample, Upload
 import socket
@@ -79,14 +79,20 @@ def imagebrowser(address):
                 resources.append(r)
                 continue
             # find user/sample folders
-            for i in conn.listPath(resource.sharename, resource.path if resource.path != None else ""):
-                if i.isDirectory and i.filename == (sample.owner.username if sample is not None else current_user.username):
-                    r.hasuserfolder = True
-                    for j in conn.listPath(resource.sharename, assemble_path([resource.path, i.filename])):
-                        if j.isDirectory and sample is not None and j.filename == sample.name:
-                            r.hassamplefolder = True
-                            break
-                    break
+            try:
+                for i in conn.listPath(resource.sharename, resource.path if resource.path != None else ""):
+                    if i.isDirectory and i.filename == (sample.owner.username if sample is not None else current_user.username):
+                        r.hasuserfolder = True
+                        for j in conn.listPath(resource.sharename, assemble_path([resource.path, i.filename])):
+                            if j.isDirectory and sample is not None and j.filename == sample.name:
+                                r.hassamplefolder = True
+                                break
+                        break
+            except OperationFailure:
+                r.name += " (N/A)"
+                r.available = False
+                resources.append(r)
+                continue
             conn.close()
             resources.append(r)
         return render_template('browser.html', files=[], folders=[], resources=resources, sample=sample,

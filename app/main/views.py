@@ -158,7 +158,7 @@ def changesamplename():
     newname = request.form.get('value')
     if len(newname) > SAMPLE_NAME_LENGTH:
         return jsonify(code=1, error="Name too long", name=sample.name)
-    if (Sample.query.filter_by(name=newname).first() == None):
+    if (Sample.query.filter_by(owner=current_user, name=newname).first() == None):
         sample.name = newname
         db.session.commit()
         return jsonify(code=0, name=newname, id=sample.id)
@@ -315,6 +315,9 @@ def newsample():
     form.sampletype.choices = [(sampletype.id, sampletype.name) for sampletype in SampleType.query.order_by('name')]
     form.parent.choices = [(0, "/")] + [(sample.id, sample.name) for sample in Sample.query.filter(Sample.owner == current_user).order_by('name')]
     if form.validate_on_submit():
+        if Sample.query.filter_by(owner=current_user, name=form.name.data).all():
+            flash("You already have a sample with this name: "+form.name.data+". Please choose a different name.")
+            return render_template('newsample.html', form=form)
         sample = Sample(owner=current_user, name=form.name.data, sampletype_id=form.sampletype.data, parent_id=form.parent.data, description=form.description.data)
         db.session.add(sample)
         db.session.commit()

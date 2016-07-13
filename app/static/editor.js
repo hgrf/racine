@@ -33,9 +33,11 @@ function init_editor() {
                 if(data.isarchived) {
                     $('#archive').attr('title', 'De-archive');
                     $('#archive').attr('src', '/static/dearchive.png');
+                    $('#'+$('#sampleid').text()+'.nav-entry').addClass('nav-entry-archived');
                 } else {
                     $('#archive').attr('title', 'Archive');
                     $('#archive').attr('src', '/static/archive.png');
+                    $('#'+$('#sampleid').text()+'.nav-entry').removeClass('nav-entry-archived');
                 }
             }
         });

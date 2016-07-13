@@ -397,6 +397,14 @@ def childbrowser(sampleid):
 @main.route('/setmatrixcoords/<sampleid>', methods=['POST'])
 def setmatrixcoords(sampleid):
     sample = Sample.query.filter_by(id=int(sampleid)).first()
+
+    # check if any sibling has these coords already and remove them if it's the case
+    for c in sample.parent.children:
+        if c.mx == int(request.form.get('mx')) and c.my == int(request.form.get('my')):
+            c.mx = None
+            c.my = None
+
+    # set new coords
     sample.mx = int(request.form.get('mx'))
     sample.my = int(request.form.get('my'))
     db.session.commit()

@@ -1,6 +1,11 @@
+div.sampleimage
+{
+  position:relative;
+}
+
 div.sampleimage:hover button
 {
-  display: block;
+  display:block;
 }
 
 div.sampleimage button {

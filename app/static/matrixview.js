@@ -11,8 +11,8 @@ function init_matrix_view() {
         event.preventDefault();
     });
 
-    $('.matrixcell').dblclick(function (event) {
-        $('#childbrowser').data('target', $(this));
+    $('.changesample').click(function (event) {
+        $('#childbrowser').data('target', $(this).closest('.matrixcell'));
         $('#childbrowser').modal('show');
 
         event.preventDefault();
@@ -21,14 +21,15 @@ function init_matrix_view() {
     // when user chooses image in childbrowser, we have to update the corresponding element
     // of the matrix and tell the server via AJAX that the matrix was modified
     $('.childimage').dblclick(function (event) {
+        // update the matrix cell that this browser was opened from
         $('#childbrowser').data('target').find('a').attr('href', $(this).attr('src'));
         $('#childbrowser').data('target').find('img').attr('src', $(this).attr('src'));
         $('#childbrowser').data('target').find('p').html($(this).data('name'));
-
         $('#childbrowser').modal('hide');
 
         id = $(this).data('id');
 
+        // check if this sample is already attributed to some other matrix cell and remove if it's the case
         $('.matrixcell').each(function () {
             if ($(this).find('img').attr('id') == id) {
                 $(this).find('img').attr('id', '');
@@ -37,8 +38,10 @@ function init_matrix_view() {
             }
         });
 
+        // now update the ID of the image in the matrix cell that the browser was opened from
         $('#childbrowser').data('target').find('img').attr('id', id);
 
+        // finally, let the server know about the changed coords
         $.ajax({
             url: "/setmatrixcoords/" + id,
             type: "post",

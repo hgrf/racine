@@ -341,7 +341,14 @@ def newaction(sampleid):
         db.session.commit()
         a.ordnum = a.id         # add ID as order number (maybe there is a more elegant way to do this?)
         db.session.commit()
-    return ""
+    # if form was submitted but failed validation, show again to user
+    # this is very important for the case where form is not validated because the
+    # CSRF token passed its time limit (typically 3600s) -> users lose everything they
+    # wrote otherwise (also happens when user enters invalid date)
+    elif form.is_submitted():
+        return jsonify(code=1, actiontype=form.actiontype.data, description=form.description.data)
+
+    return jsonify(code=0)
 
 @main.route('/swapactionorder', methods=['POST'])
 @login_required

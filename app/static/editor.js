@@ -54,7 +54,19 @@ function init_editor() {
             type: "post",
             data: $('#newactionform').serialize(),
             success: function( data ) {
-                load_sample($('#sampleid').text());
+                if(data.code == 0) {
+                    load_sample($('#sampleid').text());
+                }
+                else {      // form failed validation; because of invalid data or expired CSRF token
+                    $(document).on("editor_initialised", data, function(event) {
+                        CKEDITOR.instances.description.setData(event.data.description);
+                        $("#actiontype").val(event.data.actiontype);
+                        $("#errordialog").find(".modal-body").text("Form is not valid. Either you entered an invalid date or the session has expired. Try submitting again.");
+                        $("#errordialog").modal("show");
+                        $(document).off("editor_initialised");
+                    });
+                    load_sample($('#sampleid').text());
+                }
             }
         });
         event.preventDefault();
@@ -162,6 +174,8 @@ function init_editor() {
             }
         });
     });
+
+    $(document).trigger("editor_initialised");
 }
 
 function load_sample(id) {

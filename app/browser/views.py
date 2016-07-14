@@ -95,9 +95,11 @@ def imagebrowser(address):
                 continue
             conn.close()
             resources.append(r)
+
         return render_template('browser.html', files=[], folders=[], resources=resources, sample=sample,
                                owner=sample.owner if sample is not None else current_user,
-                               callback=request.args.get('CKEditorFuncNum'))
+                               callback=request.args.get('CKEditorFuncNum'), uploadfailed=request.args.get('uploadfailed'),
+                               extensions=', '.join(image_extensions))
 
     # process address (2)
     resource = SMBResource.query.filter_by(name=address.split("/")[0]).first()
@@ -132,7 +134,9 @@ def imagebrowser(address):
 
     files = sorted(files, key=lambda f: f.name)
     folders = sorted(folders, key=lambda f: f.name)
-    return render_template('browser.html', files=files, folders=folders, resources=[], sample=sample, address=address, callback=request.args.get('CKEditorFuncNum'))
+    return render_template('browser.html', files=files, folders=folders, resources=[], sample=sample,
+                           address=address, callback=request.args.get('CKEditorFuncNum'),
+                           uploadfailed=request.args.get('uploadfailed'), extensions=', '.join(image_extensions))
 
 
 @browser.route('/img/<path:image>')
@@ -218,9 +222,9 @@ def uploadfile():
         upload = check_stored_file(upload)
 
         uploadurl = url_for('.uploadedimage', image=str(upload.id))
-        return render_template('browser.html', files=[], folders=[], resources=[], sample=sample, callback=request.args.get('CKEditorFuncNum'), uploadurl=uploadurl)
+        return render_template('browser.html', files=[], folders=[], resources=[], sample=sample, callback=request.args.get('CKEditorFuncNum'), uploadurl=uploadurl, uploadfailed=False)
 
-    return redirect(url_for('browser'))
+    return redirect(url_for('.imagebrowser', sample=sample.id if sample is not None else None, CKEditorFuncNum=request.args.get('CKEditorFuncNum'), uploadfailed=True))
 
 @browser.route('/savefromsmb', methods=['POST'])
 def savefromsmb():

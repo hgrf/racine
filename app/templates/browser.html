@@ -1,5 +1,64 @@
 {% extends "bootstrap/base.html" %}
 
+{% block styles %}
+{{super()}}
+<style>
+.folders {
+    float: left;
+    width: 200px;
+}
+.files {
+    display: block;
+}
+.folder {
+    padding-left:48px;
+    padding-top:10px;
+    position:relative;
+    min-height:48px;
+        overflow: hidden;
+    text-overflow: ellipsis;
+}
+.folder img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width: 48px;
+    height: 48px;
+}
+.folder span {
+    font-size:12px;
+}
+.folder:hover {
+    cursor:pointer;
+    background-color: #CCCCEE;
+}
+.file {
+    vertical-align: top;
+    display: inline-block;
+    text-align: center;
+    width: 140px;
+    padding: 5px;
+}
+.file img {
+    width: 120px;
+}
+.file span {
+    display: block;
+    width: 100%;
+    font-size: 12px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+.file:hover {
+    cursor:pointer;
+    background-color: #CCCCEE;
+}
+#address {
+    margin-bottom:20px;
+}
+</style>
+{% endblock %}
+
 {% block title %}Browser{% endblock %}
 
 {% block content %}
@@ -14,12 +73,13 @@
             <form method="post" style="margin:0;padding:0;" action="/browser/upload?sample={{ sample.id }}&CKEditorFuncNum={{ callback }}" enctype="multipart/form-data">
             {% endif %}
         {% endif %}
-            <img class="upload" src="/static/upload.png" width="100px" height="100px">
-            Upload an image:<input style="display:inline;" type="file" name="file" id="file">
+            <img class="upload" src="/static/upload.png" width="48px" height="48px">
+            <strong>Upload an image:&nbsp;&nbsp;&nbsp;&nbsp;</strong><input style="display:inline;" type="file" name="file" id="file">
             <input style="display:inline;" type="submit" value="OK">
         </form>
     </div>
-    <div id="address"><strong>Path: </strong>{{ address }}</div>
+    <hr>
+    <div id="address"><strong>Network shares | Path: </strong>{{ address }}</div>
 
     {% if notconnected %}
         Could not connect to resource
@@ -27,29 +87,35 @@
 
     {% for resource in resources %}
         <div>
-        <img src="{{ url_for('static', filename='resource.png') }}" {% if resource.available %}class="folder"{% endif %} data-url="{{ resource.name }}" width="100px" height="100px">
+        <img src="{{ url_for('static', filename='resource.png') }}" {% if resource.available %}class="folder"{% endif %} data-url="{{ resource.name }}" width="48px" height="48px">
         {{ resource.name }}
         {% if resource.hasuserfolder %}
-            <img src="{{ url_for('static', filename='user.png') }}" class="folder" data-url="{{ resource.name+"/"+owner.username }}" width="100px" height="100px">
+            <img src="{{ url_for('static', filename='user.png') }}" class="folder" data-url="{{ resource.name+"/"+owner.username }}" width="48px" height="48px">
         {% endif %}
         {% if resource.hassamplefolder %}
-            <img src="{{ url_for('static', filename='sample.png') }}" class="folder" data-url="{{ resource.name+"/"+owner.username+"/"+sample.name }}" width="100px" height="100px">
+            <img src="{{ url_for('static', filename='sample.png') }}" class="folder" data-url="{{ resource.name+"/"+owner.username+"/"+sample.name }}" width="48px" height="48px">
             <!-- TODO: what if sample, resource or user name contains space? -->
         {% endif %}
         </div>
     {% endfor %}
-    {% for folder in folders %}
-        <div>
-        <img src="{{ folder.image }}" class="folder" data-url="{{ address }}{% if address!='' %}/{% endif %}{{ folder.name }}{{ folder.ext }}" width="100px" height="100px">
-        {{ folder.name }}{{ folder.ext }}
+    <div>
+        <div class="folders">
+            {% for folder in folders %}
+                <div class="folder" data-url="{{ address }}{% if address!='' %}/{% endif %}{{ folder.name }}{{ folder.ext }}">
+                    <img src="{{ folder.image }}">
+                    <span>{{ folder.name }}{{ folder.ext }}</span>
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
-    {% for file in files %}
-        <div>
-        <img class="file" src="{{ file.image }}" width="100px" height="100px">
-        {{ file.name }}{{ file.ext }}
+        <div class="files">
+            {% for file in files %}
+                <div class="file">
+                <img src="{{ file.image }}">
+                <span>{{ file.name }}{{ file.ext }}</span>
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
+    </div>
 </div>
 {% endblock %}
 
@@ -58,6 +124,10 @@
     <script type="text/javascript" charset="utf-8">
     $(function() {
         $(document).ready(function() {
+            {% if uploadfailed is not none and uploadfailed %}
+                alert("Please choose a file for upload. The following extensions are accepted: {{ extensions }}");
+            {% endif %}
+
             function load_address(address) {
                 {% if callback is none %}
                     location.href = "/browser"+address+"?sample="+{{ sample.id }};
@@ -88,16 +158,20 @@
                     {% endif %}
                 {% endif %}
 
-                $('.folder').dblclick( function( event ) {
+                $('.folder').click( function( event ) {
                     load_address("/"+$(this).data('url'));
                     event.preventDefault();
                 });
 
-                $('.file').dblclick( function( event ) {
+                $('.file').click( function( event ) {
+                    if($(this).find('img').attr('src') == '/static/file.png') {
+                        alert('Please choose a file with a valid extension.');
+                        return;
+                    }
                     $.ajax({
                         url: "/browser/savefromsmb",
                         type: "post",
-                        data: { "src": $(this).attr("src") },
+                        data: { "src": $(this).find('img').attr("src") },
                         success: function( data ) {
                             {% if callback is none %}
                                 $.ajax({

@@ -77,7 +77,7 @@ $(document).ready(function() {
                 type: "post",
                 data: { "id": draggedId, "parent": parentId },
                 success: function( data ) {
-                    if(data == "") {
+                    if(data.code==0) {
                         var draggedItem = $( "#"+draggedId+".nav-container" );
                         if(parentId != 0) {
                             if($("#children"+parentId).children().length == 0) {
@@ -93,7 +93,7 @@ $(document).ready(function() {
                             draggedItem.appendTo("#root");
                         }
                     } else {
-                        $( "#flashmessages" ).append("{{ begin_flashmsg|safe }}"+data+"{{ end_flashmsg|safe }}");
+                        $( "#flashmessages" ).append(begin_flashmsg+data.error+end_flashmsg);
                     }
                 }
             }); // what if we drag parent to child?

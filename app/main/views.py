@@ -300,12 +300,15 @@ def changeparent():
         p = Sample.query.filter_by(id=parentid).first()
         while (p.parent_id != 0):
             if (p.parent_id == sample.id):
-                return "Can't move item"
+                return jsonify(code=1, error="Cannot move sample")
             p = p.parent
 
+    # change parent ID and remove matrix coords
     sample.parent_id = parentid
+    sample.mx = None
+    sample.my = None
     db.session.commit()
-    return ""
+    return jsonify(code=0)
 
 
 @main.route('/newsample', methods=['GET', 'POST'])

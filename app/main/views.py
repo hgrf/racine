@@ -12,8 +12,24 @@ from sqlalchemy.sql import func
 
 
 @main.route('/')
+@main.route('/sample/<sampleid>')
 @login_required
-def index():
+def mainpage(sampleid=0):
+    sample = Sample.query.get(sampleid)
+    samples = Sample.query.filter_by(owner=current_user).all()
+    myshares = Share.query.filter_by(user=current_user).all()
+    myinheritance = User.query.filter_by(heir=current_user).all()
+    showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
+    hideparentactions = True if request.args.get('hideparentactions') != None and int(request.args.get('hideparentactions')) else False
+
+    return render_template('main.html', samples=samples, sample=sample, sampletypes=SampleType.query.all(),
+                           actiontypes=ActionType.query.all(), myshares=myshares, myinheritance=myinheritance,
+                           showarchived=showarchived, hideparentactions=hideparentactions)
+
+
+@main.route('/welcome')
+@login_required
+def welcome():
     # get user activity for all users (only admin will see this)
     aweekago = date.today()-timedelta(weeks=1)
     stmt = db.session.query(Action.owner_id, func.count('*').label('action_count')).filter(Action.datecreated > aweekago).group_by(Action.owner_id).subquery()
@@ -33,70 +49,10 @@ def index():
     maxcount = 0
     for n in newactions: maxcount = max(maxcount, n[1])
 
-    # get samples and shares for current user
-    samples = Sample.query.filter_by(owner=current_user).all()
-    myshares = Share.query.filter_by(user=current_user).all()
-    myinheritance = User.query.filter_by(heir=current_user).all()
-    showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
-
-    return render_template('main.html', samples=samples, sampletypes=SampleType.query.all(),
-                           actiontypes=ActionType.query.all(), myshares=myshares, myinheritance=myinheritance,
-                           showarchived=showarchived, newactions=newactions, maxcount=maxcount,
+    return render_template('welcome.html', newactions=newactions, maxcount=maxcount,
                            newactionsallusers=newactionsallusers, maxcountallusers=maxcountallusers,
                            uploadvols=uploadvols, maxuploadvol=maxuploadvol, plugins=plugins)
 
-@main.route('/help')
-@login_required
-def help():
-    return render_template('help.html')
-
-@main.route('/search', methods=['GET'])
-@login_required
-def search():
-    keyword = request.args.get("term")
-    samples = Sample.query.filter_by(owner=current_user).filter(Sample.name.ilike('%'+keyword+'%')).limit(10).all()   # max 10 items
-    return jsonify(results=[{"label": s.name, "value": s.id} for s in samples])
-
-@main.route('/userlist', methods=['POST'])
-@login_required
-def userlist():
-    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
-    users = User.query.all()
-    sharers = [share.user for share in sample.shares]
-    sharers.append(sample.owner)
-
-    return render_template('userlist.html', users=[user for user in users if user not in sharers])
-
-@main.route('/sharerlist', methods=['POST'])
-@login_required
-def sharerlist():
-    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
-    sharers = [share.user for share in sample.shares]
-
-    return jsonify(sharers=sharers)
-
-@main.route('/inheritance', methods=['GET'])
-@login_required
-def inheritance():
-    user = User.query.filter_by(id=int(request.args.get("userid"))).first()
-    logout_user()
-    login_user(user)
-
-    return redirect("/")
-
-@main.route('/sample/<sampleid>', methods=['GET', 'POST'])
-@login_required
-def mainpage(sampleid):
-    sample = Sample.query.get(sampleid)
-    samples = Sample.query.filter_by(owner=current_user).all()
-    myshares = Share.query.filter_by(user=current_user).all()
-    myinheritance = User.query.filter_by(heir=current_user).all()
-    showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
-    hideparentactions = True if request.args.get('hideparentactions') != None and int(request.args.get('hideparentactions')) else False
-
-    return render_template('main.html', samples=samples, sample=sample, sampletypes=SampleType.query.all(),
-                           actiontypes=ActionType.query.all(), myshares=myshares, myinheritance=myinheritance,
-                           showarchived=showarchived, hideparentactions=hideparentactions)
 
 @main.route('/editor/<sampleid>', methods=['GET', 'POST'])
 @login_required
@@ -127,6 +83,50 @@ def editor(sampleid):
                                hideparentactions=hideparentactions)
 
 
+@main.route('/help')
+@login_required
+def help():
+    return render_template('help.html')
+
+
+@main.route('/search', methods=['GET'])
+@login_required
+def search():
+    keyword = request.args.get("term")
+    samples = Sample.query.filter_by(owner=current_user).filter(Sample.name.ilike('%'+keyword+'%')).limit(10).all()   # max 10 items
+    return jsonify(results=[{"label": s.name, "value": s.id} for s in samples])
+
+
+@main.route('/userlist', methods=['POST'])
+@login_required
+def userlist():
+    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    users = User.query.all()
+    sharers = [share.user for share in sample.shares]
+    sharers.append(sample.owner)
+
+    return render_template('userlist.html', users=[user for user in users if user not in sharers])
+
+
+@main.route('/sharerlist', methods=['POST'])
+@login_required
+def sharerlist():
+    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    sharers = [share.user for share in sample.shares]
+
+    return jsonify(sharers=sharers)
+
+
+@main.route('/inheritance', methods=['GET'])
+@login_required
+def inheritance():
+    user = User.query.filter_by(id=int(request.args.get("userid"))).first()
+    logout_user()
+    login_user(user)
+
+    return redirect("/")
+
+
 @main.route('/togglearchived', methods=['POST'])
 @login_required
 def togglearchived():
@@ -136,6 +136,7 @@ def togglearchived():
     sample.isarchived = not sample.isarchived
     db.session.commit()
     return jsonify(code=0, isarchived=sample.isarchived)
+
 
 @main.route('/sharesample', methods=['POST'])
 @login_required
@@ -148,6 +149,7 @@ def sharesample():
     db.session.add(share)
     db.session.commit()
     return jsonify(code=0, username=user.username, userid=user.id, shareid=share.id)
+
 
 @main.route('/changesamplename', methods=['POST'])
 @login_required
@@ -175,6 +177,7 @@ def changesampletype():
     sample.sampletype_id = int(request.form.get('value'))
     db.session.commit()
     return sample.sampletype.name
+
 
 @main.route('/changesampledesc', methods=['POST'])
 @login_required
@@ -232,6 +235,7 @@ def getactiondesc():
         return jsonify(code=1, error="Action does not exist or you do not have the right to access it")
     return action.description
 
+
 @main.route('/changeactiondesc', methods=['POST'])
 @login_required
 def changeactiondesc():
@@ -264,6 +268,7 @@ def deletesample(sampleid):
     db.session.delete(sample)  # delete cascade automatically deletes associated actions
     db.session.commit()
     return redirect("/")
+
 
 @main.route('/delshare/<shareid>', methods=['GET', 'POST'])
 @login_required
@@ -353,6 +358,7 @@ def newaction(sampleid):
 
     return jsonify(code=0)
 
+
 @main.route('/swapactionorder', methods=['POST'])
 @login_required
 def swapactionorder():          # TODO: sort out permissions for this (e.g. who has the right to change order?)
@@ -376,6 +382,7 @@ def resetmatrix(sampleid):
         c.my = None
 
     return jsonify(code=0)
+
 
 @main.route('/matrixview/<sampleid>', methods=['GET', 'POST'])
 @login_required
@@ -424,6 +431,7 @@ def setmatrixcoords(sampleid):
     sample.my = int(request.form.get('my'))
     db.session.commit()
     return ""
+
 
 @main.route('/plugins/<path:path>')
 def static_file(path):

@@ -204,9 +204,19 @@ function load_sample(id) {
 
 $(document).ready(function() {
     // load sample if we're not on welcome page
-    if(typeof sample != "undefined") {
+    if(typeof sample == "undefined") {
+        $.ajax({
+            url: "/welcome",
+            success: function(data) {
+                $("#editor-frame").html(data);
+            }
+        });
+    } else {
         load_sample(sample);
     }
+
+
+
 
     // add window unload handler (which asks the user to confirm leaving the page when one of the CKEditor instances
     // has been modified

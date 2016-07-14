@@ -153,3 +153,8 @@ table#matrix, table#matrix th, table#matrix td {
 .nav-entry-owner {
   font-style: italic;
 }
+
+div.user:hover {
+  background-color: #CCCCEE;
+  cursor: pointer;
+}

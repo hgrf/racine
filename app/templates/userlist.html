@@ -1,7 +1,7 @@
 {% for user in users %}
     {% if not user.id == current_user.id %}
-    <div>
-    <img src="{{ url_for('static', filename='user.png') }}" class="user" id="{{ user.id }}" width="100px" height="100px">
+    <div class="user" id="{{ user.id }}">
+    <img src="{{ url_for('static', filename='user.png') }}" width="48px" height="48px">
     {{ user.username }}
     </div>
     {% endif %}

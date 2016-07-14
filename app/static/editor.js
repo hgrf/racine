@@ -289,7 +289,7 @@ $(document).ready(function() {
             success: function( data ){
                 $("#userbrowser-frame").html(data);
 
-                $('.user').dblclick( function( event ) {
+                $('.user').click( function( event ) {
                     $.ajax({
                         url: "/sharesample",
                         type: "post",

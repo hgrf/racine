@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 
-<!-- see http://damienfremont.com/2014/12/19/how-to-expandcollapse-table-rows-with-bootstrap/ -->
-
 {% block styles %}
 {{super()}}
-<link rel="stylesheet" href="{{url_for('static', filename='list.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='editor.css')}}">
 {% endblock %}
 
 {% macro menu_entry(name, title) %}

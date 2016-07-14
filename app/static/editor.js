@@ -181,9 +181,6 @@ function init_editor() {
 }
 
 function load_sample(id) {
-    // a kind of ugly workaround to read out the current status of the "show parent actions" button
-    //hideparentactions = ($('#parentactions').text().split(' ')[0] == 'Show');
-
     // if currently viewing a sample (not welcome page) then change the navbar background to transparent before loading
     // the new sample
     if($('#sampleid').text() != "")
@@ -214,9 +211,6 @@ $(document).ready(function() {
     } else {
         load_sample(sample);
     }
-
-
-
 
     // add window unload handler (which asks the user to confirm leaving the page when one of the CKEditor instances
     // has been modified

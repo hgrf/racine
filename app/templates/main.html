@@ -132,7 +132,7 @@
 {% block scripts %}
 {{ super() }}
     <script>// because Jinja does not work in the JS files
-        {% if sample is defined %}
+        {% if sample is not none %}
             var sample = {{ sample.id }};
         {% endif %}
         var hideparentactions = {% if hideparentactions %}1{% else %}0{% endif %};

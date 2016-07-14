@@ -180,18 +180,22 @@ function init_editor() {
     $(document).trigger("editor_initialised");
 }
 
-function load_sample(id) {
+function load_sample(id, pushstate) {
+    var pushstate = typeof pushstate !== 'undefined' ?  pushstate : true;
+
     // if currently viewing a sample (not welcome page) then change the navbar background to transparent before loading
     // the new sample
     if($('#sampleid').text() != "")
-        $('#'+$('#sampleid').text()+".nav-entry").css("background-color", "transparent");
+        $('#' + $('#sampleid').text() + ".nav-entry").css("background-color", "transparent");
 
     // load the sample data and re-initialise the editor
     $.ajax({
         url: "/editor/"+id+(hideparentactions ? "?hideparentactions=1" : ""),
-        success: function( data, id ) {
+        pushstate: pushstate,
+        success: function( data ) {
             $( "#editor-frame" ).html(data);
-            window.history.pushState({"html": data, "pageTitle": data.pageTitle}, "", "/sample/"+ $('#sampleid').text());
+            if(this.pushstate)
+                window.history.pushState({"id": $('#sampleid').text(), "pageTitle": data.pageTitle}, "", "/sample/"+ $('#sampleid').text());
             init_editor();
 
             $('#'+$('#sampleid').text()+".nav-entry").css("background-color", "#BBBBFF");
@@ -200,6 +204,13 @@ function load_sample(id) {
 }
 
 $(document).ready(function() {
+    window.addEventListener("popstate", function(e) {
+        if(e.state != null)
+            load_sample(e.state.id, false);
+        else
+            location.href = "/";
+    });
+
     // load sample if we're not on welcome page
     if(typeof sample == "undefined") {
         $.ajax({

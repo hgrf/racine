@@ -3,7 +3,8 @@ div.sampleimage {
 }
 
 div.sampleimage:hover {
-  background-color:#EEEEEE;
+  background: rgb(238, 238, 238); /* fall-back for browsers that don't support rgba */
+  background-color: rgba(238, 238, 238, 0.4);
 }
 
 div.sampleimage:hover #changesampleimage {
@@ -33,8 +34,8 @@ div.sampleimage #changesampleimage {
 }
 
 .editable:hover {
-  color:#777777;
-  background-color:#EEEEEE;
+  background: rgb(238, 238, 238); /* fall-back for browsers that don't support rgba */
+  background-color: rgba(238, 238, 238, 0.4);
 }
 
 .editable img.edittrigger {

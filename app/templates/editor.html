@@ -39,11 +39,11 @@
     <div class="row list-header">
         <div class="col-md-2">Date</div>
         <div class="col-md-8">Description</div>
-        <div class="col-md-2"><a class="btn btn-default" id="hideparentactions" style="background: #DDFFDD; float: right;">{% if not hideparentactions %}Hide{% else %}Show{% endif %} parent actions</a></div>
+        <div class="col-md-2"><a class="btn btn-default" id="hideparentactions" style="background: #F0FFF0; float: right;">{% if not hideparentactions %}Hide{% else %}Show{% endif %} parent actions</a></div>
     </div>
     {% for i in range(actions|length)%}
     {% set action=actions[i] %}
-    <div class="row list-entry {% if action.sample != sample %}parentaction{% endif %}" id="{{ action.id }}" {% if action.sample != sample %}style="background: #DDFFDD;"{% endif %}>
+    <div class="row list-entry {% if action.sample != sample %}parentaction{% endif %}" id="{{ action.id }}" {% if action.sample != sample %}style="background: #F0FFF0;"{% endif %}>
         <div class="col-md-2">
             <div class="{% if action.owner == current_user %}editable{% endif %}"><div id="{{ action.id }}" class="editactiondate" style="display:inline;">{{ action.timestamp }}</div></div>
             {% if action.owner != current_user %}<div style="font-style: italic">{{ action.owner.username }}</div>{% endif %}

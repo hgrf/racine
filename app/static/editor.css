@@ -3,7 +3,7 @@ div.sampleimage {
 }
 
 div.sampleimage:hover {
-    background-color:#EEEEEE;
+  background-color:#EEEEEE;
 }
 
 div.sampleimage:hover #changesampleimage {

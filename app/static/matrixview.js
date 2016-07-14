@@ -34,7 +34,7 @@ function init_matrix_view() {
     $('.childimage').dblclick(function (event) {
         // update the matrix cell that this browser was opened from
         $('#childbrowser').data('target').find('a').attr('href', $(this).attr('src'));
-        $('#childbrowser').data('target').find('img').attr('src', $(this).attr('src'));
+        $('#childbrowser').data('target').find('img.sample').attr('src', $(this).attr('src'));
         $('#childbrowser').data('target').find('p').html($(this).data('name'));
         $('#childbrowser').data('target').find('.sampledescription').html($(this).data('description'));
         $('#childbrowser').modal('hide');
@@ -43,16 +43,16 @@ function init_matrix_view() {
 
         // check if this sample is already attributed to some other matrix cell and remove if it's the case
         $('.matrixcell').each(function () {
-            if ($(this).find('img').attr('id') == id) {
-                $(this).find('img').attr('id', '');
-                $(this).find('img').attr('src', '');
+            if ($(this).find('img.sample').attr('id') == id) {
+                $(this).find('img.sample').attr('id', '');
+                $(this).find('img.sample').attr('src', '');
                 $(this).find('p').html('');
                 $(this).find('.sampledescription').html('');
             }
         });
 
         // now update the ID of the image in the matrix cell that the browser was opened from
-        $('#childbrowser').data('target').find('img').attr('id', id);
+        $('#childbrowser').data('target').find('img.sample').attr('id', id);
 
         // finally, let the server know about the changed coords
         $.ajax({

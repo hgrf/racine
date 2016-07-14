@@ -37,10 +37,10 @@ Matrix dimensions: {{ sample.mheight }}x{{ sample.mwidth }}
             {% if child.mx==x and child.my==y %}
               <div class="sampleimage" style="width:50%;float:left;">
                   <a href="{{ child.image }}" data-lightbox="{{ x }}-{{ y }}">
-                      <img id="{{ child.id }}" src="{{ child.image }}" width="100%">
+                      <img class="sample" id="{{ child.id }}" src="{{ child.image }}" width="100%">
                   </a>
                   <p>{{ child.name }}</p>
-                  <button class="btn btn-default changesample">Change</button>
+                  <img id="changesampleimage" class="changesample" src="{{ url_for('static', filename='sample.png') }}">
               </div>
               <div class="sampledescription" style="width:50%;float:left;">{{ child.description|safe }}</div>
               {% if vars.update({'found': True}) %}{% endif %} <!-- workaround because Jinja does not let me change variable from loop -->
@@ -49,10 +49,10 @@ Matrix dimensions: {{ sample.mheight }}x{{ sample.mwidth }}
           {% if not vars.found %}{{ found }}
               <div class="sampleimage" style="width:50%;float:left;">
                   <a href="" data-lightbox="{{ x }}-{{ y }}">
-                      <img src="" width="100%">
+                      <img class="sample" src="" width="100%">
                   </a>
                   <p></p>
-                  <button class="btn btn-default changesample">Change</button>
+                  <img id="changesampleimage" class="changesample" src="{{ url_for('static', filename='sample.png') }}">
               </div>
               <div class="sampledescription" style="width:50%;float:left;"></div>
           {% endif %}

@@ -20,11 +20,10 @@ def mainpage(sampleid=0):
     myshares = Share.query.filter_by(user=current_user).all()
     myinheritance = User.query.filter_by(heir=current_user).all()
     showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
-    hideparentactions = True if request.args.get('hideparentactions') != None and int(request.args.get('hideparentactions')) else False
 
     return render_template('main.html', samples=samples, sample=sample, sampletypes=SampleType.query.all(),
                            actiontypes=ActionType.query.all(), myshares=myshares, myinheritance=myinheritance,
-                           showarchived=showarchived, hideparentactions=hideparentactions)
+                           showarchived=showarchived)
 
 
 @main.route('/welcome')

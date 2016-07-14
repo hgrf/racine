@@ -135,7 +135,6 @@
         {% if sample is not none %}
             var sample = {{ sample.id }};
         {% endif %}
-        var hideparentactions = {% if hideparentactions %}1{% else %}0{% endif %};
         var sampletypes = "{ {% for sampletype in sampletypes %} {{ sampletype.id }}:'{{ sampletype.name }}', {% endfor %} }";
         var actiontypes = "{ {% for actiontype in actiontypes %} {{ actiontype.id }}:'{{ actiontype.name }}', {% endfor %} }";
         var begin_flashmsg = "{{ begin_flashmsg|safe }}";

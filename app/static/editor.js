@@ -3,6 +3,8 @@ window.MathJax = {
     displayAlign: "left"
 };
 
+var hideparentactions = false;
+
 // configure the CKEditor
 var ckeditorconfig = {
     filebrowserImageBrowseUrl : '/browser',
@@ -41,6 +43,11 @@ function init_editor() {
                 }
             }
         });
+    });
+
+    $('#hideparentactions').click(function() {
+        hideparentactions = !hideparentactions; // toggle
+        load_sample($('#sampleid').text());
     });
 
     // handler for button that changes sample image

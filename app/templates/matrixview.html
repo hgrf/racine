@@ -22,15 +22,14 @@
         to the corresponding matrix positions.
     </p>
 {% else %}
-Matrix dimensions: {{ sample.mheight }}x{{ sample.mwidth }}
-<button id="resetmatrix" class="btn btn-default">Reset</button>
-<table style="width: 100%; border-style: solid; border-width: 1px">
+<p>Matrix dimensions: {{ sample.mheight }}x{{ sample.mwidth }}
+<button id="resetmatrix" class="btn btn-default">Reset</button></p>
+<table id="matrix" style="width:100%;">
   {% for yinv in range(sample.mheight) %}
   <tr>
     {% set y=sample.mheight-yinv %}
-    <td width="5%">{{ y }}</td> <!-- header y axis -->
     {% for x in range(1,sample.mwidth+1) %}
-      <td width="{{ 95/sample.mwidth }}%">
+      <td width="{{ 100/sample.mwidth }}%">
         <div class="matrixcell" data-mx="{{ x }}" data-my="{{ y }}" style="width:100%;">
           {% set vars={'found': False} %}
           {% for child in sample.children %}
@@ -42,7 +41,7 @@ Matrix dimensions: {{ sample.mheight }}x{{ sample.mwidth }}
                   <p>{{ child.name }}</p>
                   <img id="changesampleimage" class="changesample" src="{{ url_for('static', filename='sample.png') }}">
               </div>
-              <div class="sampledescription" style="width:50%;float:left;">{{ child.description|safe }}</div>
+              <div class="sampledescription" style="width:50%;float:left;padding:10px;">{{ child.description|safe }}</div>
               {% if vars.update({'found': True}) %}{% endif %} <!-- workaround because Jinja does not let me change variable from loop -->
             {% endif %}
           {% endfor %}
@@ -54,18 +53,13 @@ Matrix dimensions: {{ sample.mheight }}x{{ sample.mwidth }}
                   <p></p>
                   <img id="changesampleimage" class="changesample" src="{{ url_for('static', filename='sample.png') }}">
               </div>
-              <div class="sampledescription" style="width:50%;float:left;"></div>
+              <div class="sampledescription" style="width:50%;float:left;padding:10px;"></div>
           {% endif %}
         </div>
       </td>
     {% endfor %}
   </tr>
   {% endfor %}
-  <tr>
-    <td>
-    </td>
-    {% for x in range(1,sample.mwidth+1) %}<td>{{ x }}</td>{% endfor %}   <!-- header x axis -->
-  </tr>
 </table>
 {% endif %}
 </div>

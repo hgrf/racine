@@ -93,6 +93,13 @@ div.sampleimage #changesampleimage {
   margin-top: 20px;
 }
 
+table#matrix, table#matrix th, table#matrix td {
+  border-style: solid;
+  border-width: 1px;
+  border-color: #CCCCCC;
+  padding: 5px;
+}
+
 /* WORKAROUND TO "PULL DOWN" (BOTTOM ALIGN) COLUMN CONTENT OF LIST HEADER */
 .list-header {
     font-size: 0;

@@ -14,7 +14,7 @@ from sqlalchemy.sql import func
 @main.route('/')
 @main.route('/sample/<sampleid>')
 @login_required
-def mainpage(sampleid=0):
+def index(sampleid=0):
     sample = Sample.query.get(sampleid)
     samples = Sample.query.filter_by(owner=current_user).all()
     myshares = Share.query.filter_by(user=current_user).all()

@@ -5,7 +5,7 @@ External sources:
 
 app/static:
 |
-|- archive.png, dearchive.png, delete.png, down.png, file.png, folder.png, matrixview.png, resource.png, sample.png, up.png,
+|- archive.png, dearchive.png, delete.png, down.png, edit.png, file.png, folder.png, insertimage.png, matrixview.png, resource.png, sample.png, up.png,
 |    upload.png, user.png were taken from Open Icon Library Standard (mixed licenses)
 |- jquery-1.11.3.min.js and jquery-ui.min.css are intellectual property of the jQuery Foundation and released
 |    under the MIT license

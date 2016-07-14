@@ -2,7 +2,8 @@
 
 <div id="sampleid" style="display: none">{{ sample.id }}</div>
 <h1 class="page-header">
-    Sample <b id="{{ sample.id }}" class="{% if sample.owner == current_user %}editsamplename{% endif %}" style="display: inline">{{ sample.name }}</b> | Type: <b id="{{ sample.id }}" class="{% if sample.owner == current_user %}selectsampletype{% endif %}" style="display: inline">{{ sample.sampletype.name }}</b>
+    Sample <div class="{% if sample.owner == current_user %}editable{% endif %}" style="display:inline;font-weight:bold;"><div id="{{ sample.id }}" class="editsamplename" style="display:inline;">{{ sample.name }}</div></div>
+    | Type: <div class="{% if sample.owner == current_user %}editable{% endif %}" style="display:inline;font-weight:bold;"><div id="{{ sample.id }}" class="selectsampletype" style="display:inline">{{ sample.sampletype.name }}</div></div>
     {% if sample.owner == current_user %}<img title="Delete sample" style="cursor: pointer; float: right; margin-right: 15px;" width="32" height="32" src="{{ url_for('static', filename='delete.png') }}" data-href="/delsample/{{ sample.id }}" data-type="sample" data-id="{{ sample.id }}" data-toggle="modal" data-target="#confirm-delete">{% endif %}
     {% if sample.owner == current_user %}<img title="{% if sample.isarchived %}De-archive{% else %}Archive{% endif %}" style="cursor: pointer; float: right; margin-right: 10px;" id="archive" width="32" height="32" src="{% if sample.isarchived %}{{ url_for('static', filename='dearchive.png') }}{% else %}{{ url_for('static', filename='archive.png') }}{% endif %}">{% endif %}
     <img title="Switch to matrix view" style="cursor: pointer; float: right; margin-right: 10px;" id="matrixviewbutton" width="32" height="32" src="{{ url_for('static', filename='matrixview.png') }}">
@@ -10,11 +11,12 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-4 sampleimage">
-            <img id="sampleimage" src="{% if sample.image == None %}{{ url_for('static', filename='sample.png') }}{% else %}{{ sample.image }}{% endif %}" width="100%">{% if sample.owner == current_user %}<button id="changesampleimage" class="btn btn-default">Change</button>{% endif %}
+            <img id="sampleimage" src="{% if sample.image == None %}{{ url_for('static', filename='sample.png') }}{% else %}{{ sample.image }}{% endif %}">
+            {% if sample.owner == current_user %}<img id="changesampleimage" src="{{ url_for('static', filename='insertimage.png') }}">{% endif %}
         </div>
         <div class="col-md-5">
             <strong>Sample description:</strong>
-            <div id="{{ sample.id }}" class="{% if sample.owner == current_user %}editsampledescription {% endif %}">{{ sample.description|safe }}</div>
+            <div class="{% if sample.owner == current_user %}editable{% endif %}"><div id="{{ sample.id }}" class="editsampledescription">{{ sample.description|safe }}</div></div>
         </div>
         <div class="col-md-3">
             <strong>Shared with:</strong>
@@ -43,12 +45,12 @@
     {% set action=actions[i] %}
     <div class="row list-entry {% if action.sample != sample %}parentaction{% endif %}" id="{{ action.id }}" {% if action.sample != sample %}style="background: #DDFFDD;"{% endif %}>
         <div class="col-md-2">
-            <div id="{{ action.id }}" class="{% if action.owner == current_user %}editactiondate{% endif %}">{{ action.timestamp }}</div>
-            <div id="{{ action.id }}" style="font-style: italic">{{ action.owner.username }}</div>
-            <div id="{{ action.id }}" class="{% if action.owner == current_user %}selectactiontype{% endif %}" style="display: inline">{{ action.actiontype.name }}</div>
+            <div class="{% if action.owner == current_user %}editable{% endif %}"><div id="{{ action.id }}" class="editactiondate" style="display:inline;">{{ action.timestamp }}</div></div>
+            {% if action.owner != current_user %}<div style="font-style: italic">{{ action.owner.username }}</div>{% endif %}
+            <div class="{% if action.owner == current_user %}editable{% endif %}"><div id="{{ action.id }}" class="selectactiontype" style="display: inline">{{ action.actiontype.name }}</div></div>
             {% if action.sample != sample %}<div style="font-style: italic;">{{ action.sample.name }}</div>{% endif %}
         </div>
-        <div id="{{ action.id }}" class="col-md-8 actiondescription {% if action.owner == current_user %}editactiondescription {% endif %}">{{ action.description|safe }}</div>
+        <div class="col-md-8 {% if action.owner == current_user %}editable{% endif %}"><div id="{{ action.id }}" class="editactiondescription">{{ action.description|safe }}</div></div>
         <div class="col-md-2">
             {% if action.owner == current_user %}
                 <img style="cursor: pointer; float: right; display: inline;" width="32" height="32" src="{{ url_for('static', filename='delete.png') }}" data-type="action" data-id="{{ action.id }}" data-toggle="modal" data-target="#confirm-delete">

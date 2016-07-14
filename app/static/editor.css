@@ -1,18 +1,65 @@
-div.sampleimage
-{
+div.sampleimage {
   position:relative;
 }
 
-div.sampleimage:hover button
-{
+div.sampleimage:hover {
+    background-color:#EEEEEE;
+}
+
+div.sampleimage:hover #changesampleimage {
+  display:block;
+  cursor:pointer;
+}
+
+div.sampleimage #changesampleimage {
+  position:absolute;
+  top:5px;
+  right:5px;
+  width:48px;
+  height:48px;
+  display:none;
+}
+
+.editable {
+  position:relative;
+}
+
+.editable:hover img.edittrigger {
   display:block;
 }
 
-div.sampleimage button {
+.editable img.edittrigger:hover {
+  cursor:pointer;
+}
+
+.editable:hover {
+  color:#777777;
+  background-color:#EEEEEE;
+}
+
+.editable img.edittrigger {
   position:absolute;
-  top:10px;
-  left:25px;
+  right:2px;
+  top:0.2em;
   display:none;
+  height:1em;
+  max-height:25px;
+}
+
+.editabling img.edittrigger {
+  display:none;
+}
+
+.sampleimage {
+  min-height: 15em;
+}
+
+#sampleimage {
+  max-width:100%;
+}
+
+.editsampledescription {
+  min-height:15em;
 }
 
 .sharelistentry {
@@ -33,10 +80,6 @@ div.sampleimage button {
   padding-bottom: 20px;
   border-bottom-style: solid;
   border-bottom-width: 1px;
-}
-
-.list-entry:hover {
-  background-color: #EEEEEE;
 }
 
 .list-header {

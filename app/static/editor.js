@@ -82,7 +82,7 @@ function init_editor() {
     });
 
     // put lightbox link around images
-    $('.actiondescription').find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
+    $('.editactiondescription').find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
     $('#sampleimage').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
 
     // typeset all equations
@@ -95,16 +95,27 @@ function init_editor() {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // handlers for fields that modify sample information (jEditables)
+    $('.editable').append('<img class="edittrigger" src="/static/edit.png">');
+    $('.editable').find('img.edittrigger').click(function(event) {
+        $(this).closest('.editable').addClass('editabling');
+        $(this).closest('.editable').removeClass('editable');
+        $(this).prev('div').trigger('edit');
+        $(this).closest('.editabling').find('form').on('remove', function(event) {
+            $(this).closest('.editabling').addClass('editable');
+            $(this).closest('.editabling').removeClass('editabling');
+        });
+    });
+
     $('.editsamplename').editable('/changesamplename', {
-        style: 'inherit',
-        event     : "dblclick",
+        style : 'inherit',
+        event : 'edit',
         callback : function(value, settings) {
             var json = $.parseJSON(value);
-            $( ".editsamplename" ).html(json.name);
-            if(json.code == 0) {
+            $(".editsamplename").html(json.name);
+            if (json.code == 0) {
                 $("#navname" + json.id).html(json.name);
             } else {
-                $( "#flashmessages" ).append(begin_flashmsg+json.error+end_flashmsg);
+                $("#flashmessages").append(begin_flashmsg + json.error + end_flashmsg);
             }
         }
     });
@@ -114,27 +125,27 @@ function init_editor() {
         style  : 'inherit',
         type   : 'select',
         submit : 'OK',
-        event     : "dblclick",
+        event  : 'edit',
         callback : function(value, settings) {
             $( "#navtype"+$('#sampleid').text() ).html(value);
         }
     });
 
     $('.editsampledescription').editable('/changesampledesc', {
-        type: 'ckeditor',
-        submit: 'OK',
-        cancel: 'Cancel',
-        onblur: "ignore",
-        event     : "dblclick",
-        ckeditor: ckeditorconfig
+        type   : 'ckeditor',
+        submit : 'OK',
+        cancel : 'Cancel',
+        onblur : 'ignore',
+        event  : 'edit',
+        ckeditor : ckeditorconfig
     });
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // handlers for fields that modify action information (jEditables and the order buttons)
     $('.editactiondate').editable('/changeactiondate', {
-        style: 'inherit',
-        submit: 'OK',
-        event     : "dblclick",
+        submit : 'OK',
+        event  : 'edit',
+        width  : '10ex',
         callback : function(value, settings) {
             var json = $.parseJSON(value);
             $( "#"+json.id+".editactiondate" ).html(json.date);
@@ -149,16 +160,16 @@ function init_editor() {
         style  : 'inherit',
         type   : 'select',
         submit : 'OK',
-        event     : "dblclick"
+        event  : 'edit'
     });
 
-    $(".editactiondescription").editable('/changeactiondesc', {
+    $('.editactiondescription').editable('/changeactiondesc', {
         type   : 'ckeditor',
         submit : 'OK',
-        cancel:  'Cancel',
-        onblur: "ignore",
-        event     : "dblclick",
-        loadurl: '/getactiondesc',
+        cancel : 'Cancel',
+        onblur : 'ignore',
+        event  : 'edit',
+        loadurl  : '/getactiondesc',
         ckeditor : ckeditorconfig,
         callback: function() {
             // typeset all equations in this action

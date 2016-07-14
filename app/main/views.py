@@ -365,8 +365,20 @@ def swapactionorder():          # TODO: sort out permissions for this (e.g. who 
     return ""
 
 
+@main.route('/resetmatrix/<sampleid>', methods=['POST'])
+@login_required
+def resetmatrix(sampleid):
+    sample = Sample.query.filter_by(id=int(sampleid)).first()
+    sample.mwidth = None
+    sample.mheight = None
+    for c in sample.children:
+        c.mx = None
+        c.my = None
+
+    return jsonify(code=0)
 
 @main.route('/matrixview/<sampleid>', methods=['GET', 'POST'])
+@login_required
 def matrixview(sampleid):
     sample = Sample.query.filter_by(id=int(sampleid)).first()
     form = NewMatrixForm()

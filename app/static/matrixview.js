@@ -11,6 +11,17 @@ function init_matrix_view() {
         event.preventDefault();
     });
 
+    $('#resetmatrix').click(function(event) {
+        $.ajax({
+           url: "/resetmatrix/" + $('#sampleid').text(),
+           type: "post",
+           success: function(data) {
+               load_matrix_view($('#sampleid').text());
+           }
+        });
+        event.preventDefault();
+    });
+
     $('.changesample').click(function (event) {
         $('#childbrowser').data('target', $(this).closest('.matrixcell'));
         $('#childbrowser').modal('show');
@@ -25,6 +36,7 @@ function init_matrix_view() {
         $('#childbrowser').data('target').find('a').attr('href', $(this).attr('src'));
         $('#childbrowser').data('target').find('img').attr('src', $(this).attr('src'));
         $('#childbrowser').data('target').find('p').html($(this).data('name'));
+        $('#childbrowser').data('target').find('.sampledescription').html($(this).data('description'));
         $('#childbrowser').modal('hide');
 
         id = $(this).data('id');
@@ -35,6 +47,7 @@ function init_matrix_view() {
                 $(this).find('img').attr('id', '');
                 $(this).find('img').attr('src', '');
                 $(this).find('p').html('');
+                $(this).find('.sampledescription').html('');
             }
         });
 
@@ -48,8 +61,6 @@ function init_matrix_view() {
             data: {
                 "mx": $('#childbrowser').data('target').data('mx'),
                 "my": $('#childbrowser').data('target').data('my')
-            },
-            success: function (data) {
             }
         });
 

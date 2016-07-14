@@ -4,15 +4,26 @@
 <div id="matrixview-frame">
 <h1>Sample {{ sample.name }}</h1>
 {% if sample.mheight == None %}
-No matrix defined.
-<form id="newmatrixform">
-  {{ form.hidden_tag() }}
-  <div class="col-md-2">{{ wtf.form_field(form.height) }}</div>
-  <div class="col-md-2">{{ wtf.form_field(form.width) }}</div>
-  <div class="col-md-1">{{ wtf.form_field(form.submit) }}</div>
-</form>
+    <p><b>No matrix defined.</b></p>
+    <div class="row">
+        <form id="newmatrixform">
+          {{ form.hidden_tag() }}
+          <div class="col-md-2">{{ wtf.form_field(form.height) }}</div>
+          <div class="col-md-2">{{ wtf.form_field(form.width) }}</div>
+          <div class="col-md-1">{{ wtf.form_field(form.submit) }}</div>
+        </form>
+    </div>
+    <h2>Help</h2>
+    <p style="max-width:600px;">
+        The matrix view is a different way of displaying information about a sample that contains other samples.
+        Imagine for example you have a chip that contains 9 devices in a 3x3 matrix. Maybe you want to have a
+        possibility to quickly see a picture and the description of all the subordinate samples. In this case,
+        just define the matrix on the parent sample (using the above form). Then assign the subordinate samples
+        to the corresponding matrix positions.
+    </p>
 {% else %}
 Matrix dimensions: {{ sample.mheight }}x{{ sample.mwidth }}
+<button id="resetmatrix" class="btn btn-default">Reset</button>
 <table style="width: 100%; border-style: solid; border-width: 1px">
   {% for yinv in range(sample.mheight) %}
   <tr>
@@ -20,16 +31,31 @@ Matrix dimensions: {{ sample.mheight }}x{{ sample.mwidth }}
     <td width="5%">{{ y }}</td> <!-- header y axis -->
     {% for x in range(1,sample.mwidth+1) %}
       <td width="{{ 95/sample.mwidth }}%">
-        <div class="matrixcell" data-mx="{{ x }}" data-my="{{ y }}">
+        <div class="matrixcell" data-mx="{{ x }}" data-my="{{ y }}" style="width:100%;">
           {% set vars={'found': False} %}
           {% for child in sample.children %}
             {% if child.mx==x and child.my==y %}
-              <div class="sampleimage"><a href="{{ child.image }}" data-lightbox="{{ x }}-{{ y }}"><img id="{{ child.id }}" src="{{ child.image }}" width="50%"></a><button class="btn btn-default changesample">Change</button></div>
-              <p>{{ child.name }}</p>
+              <div class="sampleimage" style="width:50%;float:left;">
+                  <a href="{{ child.image }}" data-lightbox="{{ x }}-{{ y }}">
+                      <img id="{{ child.id }}" src="{{ child.image }}" width="100%">
+                  </a>
+                  <p>{{ child.name }}</p>
+                  <button class="btn btn-default changesample">Change</button>
+              </div>
+              <div class="sampledescription" style="width:50%;float:left;">{{ child.description|safe }}</div>
               {% if vars.update({'found': True}) %}{% endif %} <!-- workaround because Jinja does not let me change variable from loop -->
             {% endif %}
           {% endfor %}
-          {% if not vars.found %}{{ found }}<div class="sampleimage"><a href="" data-lightbox="{{ x }}-{{ y }}"><img src="" width="50%"></a><button class="btn btn-default changesample">Change</button></div><p></p>{% endif %}
+          {% if not vars.found %}{{ found }}
+              <div class="sampleimage" style="width:50%;float:left;">
+                  <a href="" data-lightbox="{{ x }}-{{ y }}">
+                      <img src="" width="100%">
+                  </a>
+                  <p></p>
+                  <button class="btn btn-default changesample">Change</button>
+              </div>
+              <div class="sampledescription" style="width:50%;float:left;"></div>
+          {% endif %}
         </div>
       </td>
     {% endfor %}

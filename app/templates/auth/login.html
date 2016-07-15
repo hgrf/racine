@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block styles %}
+{{super()}}
+<style>
+.user:hover {
+    cursor:pointer;
+    background-color: #CCCCEE;
+}
+</style>
+{% endblock %}
+
 {% block title %}Sample Manager - Login{% endblock %}
 
 {% block page_content %}
@@ -15,8 +25,8 @@
         <div class="col-md-6">
             {% for user in users %}
                 {% if user.heir is none %}
-                <div>
-                    <img src="{{ url_for('static', filename='user.png') }}" class="user" data-email="{{ user.email }}" width="50px" height="50px">
+                <div class="user" data-email="{{ user.email }}" >
+                    <img src="{{ url_for('static', filename='user.png') }}" width="50px" height="50px">
                     {{ user.username }}
                 </div>
                 {% endif %}
@@ -30,7 +40,7 @@
     <script type="text/javascript" charset="utf-8">
     $(function() {
         $(document).ready(function() {
-            $(".user").dblclick(function( event )  {
+            $(".user").click(function( event )  {
                 $("#email").val($(this).data("email"));
                 $("#password").focus();
                 event.preventDefault();

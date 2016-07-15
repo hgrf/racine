@@ -4,18 +4,21 @@
 {{super()}}
 <style>
 .folders {
-    float: left;
-    width: 200px;
+    display:inline-block;
+    vertical-align:top;
+    width:20%;
 }
 .files {
-    display: block;
+    display:inline-block;
+    vertical-align:top;
+    width:75%;
 }
 div.folder {    /* need to be specific for this one, otherwise will disturb resource view */
     padding-left:48px;
     padding-top:10px;
     position:relative;
     min-height:48px;
-        overflow: hidden;
+    overflow: hidden;
     text-overflow: ellipsis;
 }
 .folder img {

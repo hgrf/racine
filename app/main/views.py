@@ -83,9 +83,9 @@ def editor(sampleid):
 
 
 @main.route('/help')
-@login_required
 def help():
-    return render_template('help.html')
+    admin = User.query.filter_by(is_admin=True).first()
+    return render_template('help.html', admin=admin)
 
 
 @main.route('/search', methods=['GET'])

@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 
 {% block page_content %}
+    {% if current_user.is_anonymous %}
+    <h1 class="page-header">Help</h1>
+    If you wish to have an account on this server, please contact {{ admin.email }}.
+    {% else %}
     <h1 class="page-header">Help</h1>
     For help, please send an email describing your issue to holger.graef [AT] lpa.ens.fr
+    {% endif %}
 {% endblock %}
 

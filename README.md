@@ -87,6 +87,12 @@ Create the file /lib/systemd/system/msm.service and copy the following code into
 
 Where you will have to replace [user name] by your user name and [path] by the path where you installed the programme. The second path (/usr/bin) is where you should have installed the git executable.
 
+Now activate autostart:
+
+    sudo systemctl enable msm
+
+## in both cases, continue here:
+
 Now install nginx:
 
     $ sudo apt-get install nginx
@@ -139,6 +145,11 @@ You can now start your server by executing:
  
     $ sudo start msm
     $ sudo service nginx restart
+    
+If you use upstart, for systemd type:
+
+    $ sudo systemctl start msm
+    $ sudo systemctl restart nginx
 
 The server will now automatically - i.e. also after a reboot - be available on localhost.
 

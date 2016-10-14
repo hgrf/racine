@@ -42,9 +42,12 @@ You can start the development server by simply executing the "run script":
 
 # Deployment with gunicorn and nginx
 
-Carry out the steps described above in order to set up the development server. Then configure gunicorn by creating
-the file /etc/init/msm.conf and copying the following code into it (this is an Upstart configuration file, you should
-have upstart installed on your server or use a different init daemon):
+Carry out the steps described above in order to set up the development server. Then configure gunicorn autostart
+by setting up a corresponding autostart file. This is explained below either for upstart or for systemd.
+
+## For upstart
+
+Create the file /etc/init/msm.conf and copy the following code into it:
  
     description "Gunicorn application server running Mercury Sample Manager"
     
@@ -59,6 +62,28 @@ have upstart installed on your server or use a different init daemon):
     env PATH=[path]/MSM/venv/bin:/usr/bin
     chdir [path]/MSM
     exec gunicorn --workers 4 --bind unix:msm.sock -m 007 manage:app
+
+Where you will have to replace [user name] by your user name and [path] by the path where you installed the programme. The second path (/usr/bin) is where you should have installed the git executable.
+
+## For systemd
+
+Create the file /lib/systemd/system/msm.service and copy the following code into it:
+
+    [Unit]
+    Description=Gunicorn application server running Mercury Sample Manager
+
+    [Service]
+    Restart=on-failure
+    User=[user name]
+    Group=www-data
+
+    Environment=FLASK_CONFIG=production
+    Environment=PATH=[path]/MSM/venv/bin:/usr/bin
+    WorkingDirectory=[path]/MSM
+    ExecStart=[path]/MSM/venv/bin/gunicorn --workers 4 --bind unix:msm.sock -m 007 manage:app
+
+    [Install]
+    WantedBy=multi-user.target
 
 Where you will have to replace [user name] by your user name and [path] by the path where you installed the programme. The second path (/usr/bin) is where you should have installed the git executable.
 

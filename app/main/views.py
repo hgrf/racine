@@ -226,6 +226,14 @@ def changeactiontype():
     return action.actiontype.name
 
 
+@main.route('/getsampledesc', methods=['GET'])
+@login_required
+def getsampledesc():
+    sample = Sample.query.filter_by(id=int(request.args.get("id"))).first()
+    if sample == None or sample.owner != current_user:
+        return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
+    return sample.description
+
 @main.route('/getactiondesc', methods=['GET'])
 @login_required
 def getactiondesc():

@@ -77,6 +77,7 @@ function init_editor() {
     });
 
     // put lightbox link around images
+    $('.editsampledescription').find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
     $('.editactiondescription').find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
     $('#sampleimage').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
 
@@ -132,7 +133,15 @@ function init_editor() {
         cancel : 'Cancel',
         onblur : 'ignore',
         event  : 'edit',
-        ckeditor : ckeditorconfig
+        loadurl : '/getsampledesc',
+        ckeditor : ckeditorconfig,
+        callback: function() {
+            // typeset all equations in this action
+            MathJax.Hub.Queue(["Typeset",MathJax.Hub,$(this).get()]);
+
+            // put back lightbox link around images
+            $(this).find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
+        }
     });
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

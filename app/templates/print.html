@@ -42,6 +42,15 @@
 
 {% block scripts %}
 {{ super() }}
+    <script type="text/x-mathjax-config">
+        // tell MathJax to align left even if it's not loaded yet
+        // this _has_ to be executed before MathJax is loaded (that's why it's not in editor.js anymore)
+        MathJax.Hub.Config({
+            displayAlign: "left"
+        });
+    </script>
+    <script async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script>window.MathJax || document.write('<script async src="{{ url_for('static', filename='mathjax/MathJax.js') }}?config=TeX-MML-AM_CHTML">\x3C/script>')</script>
     <script>
         function printActionList() {
              var printContents = document.getElementById("printArea").innerHTML;

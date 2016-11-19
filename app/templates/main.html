@@ -140,14 +140,15 @@
         var begin_flashmsg = "{{ begin_flashmsg|safe }}";
         var end_flashmsg = "{{ end_flashmsg|safe }}";
     </script>
-    <script>
+    <script type="text/x-mathjax-config">
         // tell MathJax to align left even if it's not loaded yet
         // this _has_ to be executed before MathJax is loaded (that's why it's not in editor.js anymore)
-        window.MathJax = {
+        MathJax.Hub.Config({
             displayAlign: "left"
-        };
+        });
     </script>
-    <script async src="{{ url_for('static', filename='mathjax/MathJax.js') }}?config=TeX-MML-AM_CHTML"></script>
+    <script async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script>window.MathJax || document.write('<script async src="{{ url_for('static', filename='mathjax/MathJax.js') }}?config=TeX-MML-AM_CHTML">\x3C/script>')</script>
     <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
     <script src="{{ url_for('static', filename='jquery.jeditable.js') }}"></script>
     <script src="{{ url_for('static', filename='jquery.generateId.js') }}"></script>

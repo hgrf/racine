@@ -1,8 +1,3 @@
-// tell MathJax to align left even if it's not loaded yet
-window.MathJax = {
-    displayAlign: "left"
-};
-
 var hideparentactions = false;
 
 // configure the CKEditor
@@ -86,7 +81,7 @@ function init_editor() {
     $('#sampleimage').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
 
     // typeset all equations
-    if(MathJax.isReady)
+    if(MathJax.isReady)         // if it is not ready now, it should typeset automatically once it is ready
         MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 
     // tell CKEditor browser to pass on sample ID

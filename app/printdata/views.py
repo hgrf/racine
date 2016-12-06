@@ -15,5 +15,16 @@ def overview():
     form = RequestActionsForm()
     actions = []
     if form.validate_on_submit():
-        actions = Action.query.join(Action.sample).filter(Action.timestamp >= form.datefrom.data, Action.timestamp <= form.dateto.data, Sample.owner == current_user).order_by(Action.sample_id)
+        try: datefrom = datetime.strptime(form.datefrom.data, "%Y-%m-%d")
+        except ValueError: datefrom = None
+        try: dateto = datetime.strptime(form.dateto.data, "%Y-%m-%d")
+        except ValueError: dateto = None
+        query = Action.query.join(Action.sample).filter(Sample.owner == current_user)
+        if datefrom:
+            query = query.filter(Action.timestamp >= datefrom)
+        if dateto:
+            query = query.filter(Action.timestamp <= dateto)
+        if form.sample.data:
+            query = query.filter(Sample.name == form.sample.data)
+        actions = query.order_by(Action.sample_id, Action.ordnum)
     return render_template('print.html', form=form, actions=actions)

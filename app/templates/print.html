@@ -3,40 +3,39 @@
 
 {% block styles %}
 {{super()}}
-<link rel="stylesheet" href="{{url_for('static', filename='editor.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='print.css')}}">
 {% endblock %}
 
 {% block sidebarnav %}
 <div class="col-sm-3 col-md-2 sidebar">
-    {{ wtf.quick_form(form) }}
-    <button type="button" class="btn btn-default" onclick="printActionList()">Print</button>
+    {{ wtf.quick_form(form, id="selectdataform") }}
+    <div class="checkbox"><label><input type="checkbox" id="chkreduce" onchange="onChkReduce()">Reduce image size</label></div>
+    <div class="checkbox"><label><input type="checkbox" id="chkshowuser" onchange="onChkShowUser()">Hide user names</label></div>
+    <div class="checkbox"><label><input type="checkbox" id="chkshowtype" onchange="onChkShowType()">Hide action types</label></div>
+    <button type="button" class="btn btn-default" id="btnprint">Print</button>
 </div>
 {% endblock %}
 
 {% block page_content %}
     <div id="printArea">
-        <div class="container-fluid">
-            <div class="row list-header">
-                <div class="col-md-2 col-xs-2">Date</div>
-                <div class="col-md-10 col-xs-10">Description</div>
-            </div>
-            {% for action in actions %}
-            {% if previous_sample != action.sample.id %}
-            <div class="row list-entry">
-                <div class="col-md-12 col-xs-12"><strong>Sample {{ action.sample.name }}</strong></div>
-            </div>
-            {% endif %}
-            {% set previous_sample = action.sample.id %}
-            <div class="row list-entry" id="{{ action.id }}">
-                <div class="col-md-2 col-xs-2">
-                    <div>{{ action.timestamp }}</div>
-                    <div style="font-style: italic">{{ action.owner.username }}</div>
-                    <div style="display: inline">{{ action.actiontype.name }}</div>
-                </div>
-                <div class="col-md-10 col-xs-10">{{ action.description|safe }}</div>
-            </div>
-            {% endfor %}
+        {% for action in actions %}
+        {% if previous_sample != action.sample.id %}
+        <div class="samplename">
+            Sample {{ action.sample.name }}
         </div>
+        {% endif %}
+        {% set previous_sample = action.sample.id %}
+        <div>
+            <div class="actionheader">
+                <span>
+                    <span class="date">{{ action.timestamp }}</span>
+                    <span class="username">{{ action.owner.username }}</span>
+                    <span class="actiontype">{{ action.actiontype.name }}</span>
+                </span>
+            </div>
+            <div class="actiondesc">{{ action.description|safe }}</div>
+        </div>
+        {% endfor %}
     </div>
 {% endblock %}
 
@@ -52,15 +51,76 @@
     <script async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <script>window.MathJax || document.write('<script async src="{{ url_for('static', filename='mathjax/MathJax.js') }}?config=TeX-MML-AM_CHTML">\x3C/script>')</script>
     <script>
-        function printActionList() {
-             var printContents = document.getElementById("printArea").innerHTML;
-             var originalContents = document.body.innerHTML;
-
-             document.body.innerHTML = printContents;
-
-             window.print();
-
-             document.body.innerHTML = originalContents;
+        function onChkReduce() {
+            var images = document.getElementsByTagName('img');
+            if(document.getElementById('chkreduce').checked) {
+                for(var i=0; i < images.length; i++) {
+                    images[i].orgwidth = images[i].style.width;
+                    images[i].orgheight = images[i].style.height;
+                    images[i].style.width = "20%";
+                    images[i].style.height = "auto";
+                }
+            } else {
+                for(var i=0; i < images.length; i++) {
+                    images[i].style.width = images[i].orgwidth;
+                    images[i].style.height = images[i].orgheight;
+                }
+            }
         }
+
+        function onChkShowUser() {
+            var spans = document.getElementsByClassName("username");
+            if(document.getElementById('chkshowuser').checked) {
+                for (var i = 0; i < spans.length; i++)
+                    spans[i].style.display = "none";
+            } else {
+                for (var i = 0; i < spans.length; i++)
+                    spans[i].style.display = "initial";
+            }
+        }
+
+        function onChkShowType() {
+            var spans = document.getElementsByClassName("actiontype");
+            if(document.getElementById('chkshowtype').checked) {
+                for (var i = 0; i < spans.length; i++)
+                    spans[i].style.display = "none";
+            } else {
+                for (var i = 0; i < spans.length; i++)
+                    spans[i].style.display = "initial";
+            }
+        }
+    </script>
+    <script>
+        (function($) {
+            $("#sample").autocomplete({
+                source: function (request, response) {
+                    $.getJSON("/search", {
+                        term: request.term, // in flask, "term" will be the argument to look for using request.args
+                    }, function (data) {
+                        response(data.results); // results from jsonify
+                    });
+                },
+                select: function (event, ui) {
+                    event.preventDefault();
+                    $(this).val(ui.item.label);
+                },
+                focus: function (event, ui) {
+                    event.preventDefault();
+                    $(this).val(ui.item.label);
+                }
+            });
+
+            $("#datefrom").attr("autocomplete", "off");
+            $("#datefrom").datepicker({dateFormat: "yy-mm-dd"});
+            $("#dateto").attr("autocomplete", "off");
+            $("#dateto").datepicker({dateFormat: "yy-mm-dd"});
+
+
+            $("#btnprint").click(function(){
+                $("body").append('<div id="printDestination">'+document.getElementById("printArea").innerHTML+'</div>');
+                window.print();
+                $("#printDestination").remove();
+            });
+        })(jQuery);
     </script>
 {% endblock %}

@@ -1,9 +1,8 @@
 from flask.ext.wtf import Form
-from wtforms import SubmitField
-from wtforms.fields.html5 import DateField
-
+from wtforms import SubmitField, StringField
 
 class RequestActionsForm(Form):
-    datefrom = DateField('From:')
-    dateto = DateField('To:')
+    datefrom = StringField('From:')
+    dateto = StringField('To:')
+    sample = StringField('Sample:')
     submit = SubmitField('Submit')

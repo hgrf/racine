@@ -9,9 +9,22 @@
 {% block sidebarnav %}
 <div class="col-sm-3 col-md-2 sidebar">
     {{ wtf.quick_form(form, id="selectdataform") }}
-    <div class="checkbox"><label><input type="checkbox" id="chkreduce" onchange="onChkReduce()">Reduce image size</label></div>
     <div class="checkbox"><label><input type="checkbox" id="chkshowuser" onchange="onChkShowUser()">Hide user names</label></div>
     <div class="checkbox"><label><input type="checkbox" id="chkshowtype" onchange="onChkShowType()">Hide action types</label></div>
+    <p>Reduce image size:</p>
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true">
+        Off
+        <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li><a href="#">Off</a></li>
+            <li><a href="#">20%</a></li>
+            <li><a href="#">35%</a></li>
+            <li><a href="#">50%</a></li>
+        </ul>
+    </div>
+    <p>&nbsp;</p>
     <button type="button" class="btn btn-default" id="btnprint">Print</button>
 </div>
 {% endblock %}
@@ -51,23 +64,7 @@
     <script async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <script>window.MathJax || document.write('<script async src="{{ url_for('static', filename='mathjax/MathJax.js') }}?config=TeX-MML-AM_CHTML">\x3C/script>')</script>
     <script>
-        function onChkReduce() {
-            var images = document.getElementsByTagName('img');
-            if(document.getElementById('chkreduce').checked) {
-                for(var i=0; i < images.length; i++) {
-                    images[i].orgwidth = images[i].style.width;
-                    images[i].orgheight = images[i].style.height;
-                    images[i].style.width = "20%";
-                    images[i].style.height = "auto";
-                }
-            } else {
-                for(var i=0; i < images.length; i++) {
-                    images[i].style.width = images[i].orgwidth;
-                    images[i].style.height = images[i].orgheight;
-                }
-            }
-        }
-
+        // could do this more efficiently with jQuery
         function onChkShowUser() {
             var spans = document.getElementsByClassName("username");
             if(document.getElementById('chkshowuser').checked) {
@@ -79,6 +76,7 @@
             }
         }
 
+        // could do this more efficiently with jQuery
         function onChkShowType() {
             var spans = document.getElementsByClassName("actiontype");
             if(document.getElementById('chkshowtype').checked) {
@@ -92,6 +90,27 @@
     </script>
     <script>
         (function($) {
+            var images = document.getElementsByTagName('img');
+            for(var i=0; i < images.length; i++) {
+                images[i].orgwidth = images[i].style.width;
+                images[i].orgheight = images[i].style.height;
+            }
+
+            $(".dropdown-menu li a").click(function(){
+              $(".btn:first-child").html($(this).text()+'<span class="caret"></span>');
+              if($(this).text() == "Off") {
+                for(var i=0; i < images.length; i++) {
+                    images[i].style.width = images[i].orgwidth;
+                    images[i].style.height = images[i].orgheight;
+                }
+              } else {
+                  for(var i=0; i < images.length; i++) {
+                      images[i].style.width = $(this).text();
+                      images[i].style.height = "auto";
+                  }
+              }
+            });
+
             $("#sample").autocomplete({
                 source: function (request, response) {
                     $.getJSON("/search", {

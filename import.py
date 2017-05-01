@@ -221,8 +221,10 @@ def execute():
         if sample.parent_id > 0:
             sample.parent_id = lookup(matched_samples, sample.parent_id)
 
-        # update sample image
-        # TODO
+        # upload sample image
+        if sample.image is not None:
+            toks = sample.image.split('/')  # toks[-1] will be the reference to the upload
+            sample.image = "/browser/ulimg/" + str(lookup(matched_uploads, int(toks[-1])))
 
         # update sample description (links and images)
         sample.description = update_html(sample.description, sample.id, matched_uploads, matched_samples)

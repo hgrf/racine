@@ -1,0 +1,59 @@
+.folders {
+    display:inline-block;
+    vertical-align:top;
+    width:20%;
+}
+.files {
+    display:inline-block;
+    vertical-align:top;
+    width:75%;
+}
+div.folder {    /* need to be specific for this one, otherwise will disturb resource view */
+    padding-left:48px;
+    padding-top:10px;
+    position:relative;
+    min-height:48px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.folder img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width: 48px;
+    height: 48px;
+}
+.folder span {
+    font-size:12px;
+}
+.folder:hover {
+    cursor:pointer;
+    background-color: #CCCCEE;
+}
+.file {
+    vertical-align: top;
+    display: inline-block;
+    text-align: center;
+    width: 140px;
+    padding: 5px;
+}
+.file img {
+    width: 120px;
+}
+.file span {
+    display: block;
+    width: 100%;
+    font-size: 12px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+.file:hover {
+    cursor:pointer;
+    background-color: #CCCCEE;
+}
+#address {
+    margin-bottom:20px;
+}
+#browser-frame {
+    padding:10px;
+}

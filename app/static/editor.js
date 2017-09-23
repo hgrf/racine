@@ -218,6 +218,7 @@ function load_sample(id, pushstate) {
             $( "#editor-frame" ).html(data);
             if(this.pushstate)
                 window.history.pushState({"id": $('#sampleid').text(), "pageTitle": data.pageTitle}, "", "/sample/"+ $('#sampleid').text());
+            document.title = "MSM - "+$('#samplename').text();
             init_editor();
 
             $('#'+$('#sampleid').text()+".nav-entry").css("background-color", "#BBBBFF");

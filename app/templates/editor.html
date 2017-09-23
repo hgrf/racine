@@ -1,6 +1,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 <div id="sampleid" style="display: none">{{ sample.id }}</div>
+<div id="samplename" style="display: none">{{ sample.name }}</div>
 <h1 class="page-header">
     Sample <div class="{% if sample.owner == current_user %}editable{% endif %}" style="display:inline;font-weight:bold;"><div id="{{ sample.id }}" class="editsamplename" style="display:inline;">{{ sample.name }}</div></div>
     | Type: <div class="{% if sample.owner == current_user %}editable{% endif %}" style="display:inline;font-weight:bold;"><div id="{{ sample.id }}" class="selectsampletype" style="display:inline">{{ sample.sampletype.name }}</div></div>

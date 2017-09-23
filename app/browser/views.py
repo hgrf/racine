@@ -278,7 +278,12 @@ def savefromsmb():
 @browser.route('/inspectresource', methods=['POST'])
 @login_required
 def inspectresource():
-    sample = Sample.query.get(request.form.get('sampleid'))
+    # if sample ID is provided, look up sample
+    if request.form.get('sampleid') is not None:
+        sample = Sample.query.get(request.form.get('sampleid'))
+    else:
+        sample = None
+
     resource = SMBResource.query.get(request.form.get('resourceid'))
     if resource is None:
         return jsonify(code=1, resourceid=request.form.get('resourceid'))

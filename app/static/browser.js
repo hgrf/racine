@@ -15,13 +15,16 @@ function update_sample_image_and_quit(uploadurl) {
 }
 
 function init_browser() {
+    // tell the upload form how to communicate with the server (this has to preserve the query string, so that
+    // sample and CKEditorFuncNum information is kept)
     $('#uploadform').attr('action', '/browser/upload?'+location.search.substr(1));
 
-
-    $('.folder').click( function(event) {
-        location.href = "/browser"+"/"+$(this).data('url')+'?'+location.search.substr(1);
+    function folderclickhandler(event) {
+        location.href = "/browser/" + $(this).data('url') + '?' + location.search.substr(1);
         event.preventDefault();
-    });
+    }
+
+    $('.folder').click(folderclickhandler);
 
     $('.file').click( function(event) {
         src = $(this).find('img').attr('src')
@@ -42,6 +45,36 @@ function init_browser() {
                 }
             }
         });
+    });
+
+    // check for each resource if it is available and if it has a user/sample folder
+    $('.resource').each(function(index, element) {
+       $.ajax({
+           url: "/browser/inspectresource",
+           type: "post",
+           data: { "sampleid": queryDict['sample'],
+                   "resourceid": $(this).data('id') },
+           success: function(data) {
+               resourcediv = $('#resource' + data.resourceid);
+               shortcutsdiv = $('#shortcuts' + data.resourceid);
+               shortcutsdiv.empty();
+               if(!data.code) {
+                   if(data.userfolder != '') {
+                       shortcutsdiv.append("<img class='shortcut' src='/static/user.png' data-url='"+data.userfolder+"'>");
+                   }
+                   if(data.samplefolder != '') {
+                       shortcutsdiv.append("<img class='shortcut' src='/static/sample.png' data-url='"+data.samplefolder+"'>");
+                   }
+                   resourcediv.addClass('available'); // for CSS :hover
+
+                   // add click handler for new elements
+                   resourcediv.click(folderclickhandler);
+                   shortcutsdiv.children('img').click(folderclickhandler);
+               } else {
+                   resourcediv.append(" (N/A)");
+               }
+           }
+       })
     });
 }
 

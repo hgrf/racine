@@ -12,6 +12,7 @@ from PIL import Image
 
 ALLOWED_EXTENSIONS = set(['.png', '.jpg', '.jpeg', '.bmp', '.tif', '.tiff'])
 CONVERSION_REQUIRED = set(['.tif', '.tiff'])
+THUMBNAIL_SIZE = [120, 120]
 
 ########################################################################################################################
 # Notes
@@ -40,13 +41,6 @@ class FileTile:
     name = ""
     ext = ""
     image = ""
-
-
-class ResourceTile:
-    name = ""
-    available = True        # set to false if connection to resource cannot be established
-    hasuserfolder = False
-    hassamplefolder = False
 
 
 ########################################################################################################################
@@ -145,45 +139,6 @@ def store_file(file_obj, source, ext):
 
     return upload, uploadurl
 
-def make_resource_list(sample):
-    """Makes a list of resource tiles by iterating through all of the available SMB resources.
-
-    Checks for every resource if it is online and if user/sample folders can be found.
-
-    Parameters
-    ----------
-    sample : Sample or None
-
-    Returns
-    -------
-    resources
-    """
-    resources = SMBResource.query.all()
-    for i,resource in enumerate(resources):
-        r = ResourceTile()
-        r.name = resource.name
-        r.available = True
-
-        # TODO: error handling for listpath and check what happens when it gets empty list
-        listpath = smbinterface.list_path(r.name)
-        if listpath:
-            # find user/sample folders
-            for item in listpath:
-                if item.isDirectory and item.filename == (sample.owner.username if sample is not None else current_user.username):
-                    r.hasuserfolder = True
-                    for subitem in smbinterface.list_path(resource.name+'/'+item.filename):
-                        if subitem.isDirectory and sample is not None and subitem.filename == sample.name:
-                            r.hassamplefolder = True
-                            break
-                    break
-        else:
-            r.available = False
-            r.name += " (N/A)"
-
-        resources[i] = r        # replace SQL row by ResourceTile
-
-    return resources
-
 
 ########################################################################################################################
 # View functions
@@ -230,49 +185,39 @@ def retrieve_smb_image(path):
 
     # convert the image to a thumbnail and store it in thumbnail JPEG format in memory before sending it to user
     image_binary = io.BytesIO()
-    image.thumbnail([140, 140])
+    image.thumbnail(THUMBNAIL_SIZE)
     image.save(image_binary, 'JPEG')
     image.close()
     image_binary.seek(0)        # need to go back to beginning of stream
     return send_file(image_binary)
 
 
-def render_browser_root(**kwargs):
-    # find out from which sample the browser was opened
-    if request.args.get("sample") is None:
-        sample = None
-    else:
-        sample = Sample.query.filter_by(id=int(request.args.get("sample"))).first()
-
-    # in the browser root we will show the file upload field and a list of available SMB resources
-    return render_template('browser.html', resources=make_resource_list(sample), sample=sample,
-                           owner=sample.owner if sample is not None else current_user, **kwargs)
-
-
-@browser.route('/', defaults={'address': ''})
-@browser.route('/<path:address>')
+@browser.route('/', defaults={'smb_path': ''})
+@browser.route('/<path:smb_path>')
 @login_required
-def imagebrowser(address):
+def imagebrowser(smb_path):
     # process address
-    resource, path_on_server = smbinterface.process_smb_path(address)
+    resource, path_on_server = smbinterface.process_smb_path(smb_path)
 
     if resource is None:
-        return render_browser_root()
+        # list resources
+        return render_template('browser.html', resources=SMBResource.query.all())
     else:
         # list files and folders in current path
         files = []
         folders = []
-        listpath = smbinterface.list_path(address)
-        # TODO: error handling for list path
-        for i in listpath:
-            if i.filename == '.':
+        listpath = smbinterface.list_path(smb_path)
+        if listpath is None:
+            abort(500)
+        for item in listpath:
+            # ignore . entry
+            if item.filename == '.':
                 continue
             f = FileTile()
-            f.name, f.ext = os.path.splitext(i.filename)
-            if not i.isDirectory:
+            f.name, f.ext = os.path.splitext(item.filename)
+            if not item.isDirectory:
                 if f.ext.lower() in ALLOWED_EXTENSIONS:
-                    f.image = "/browser/smbimg/" + address + (
-                        "" if address == "" else "/") + f.name + f.ext  # will at some point cause problems with big image files, consider caching compressed icons
+                    f.image = '/browser/smbimg/' + smb_path + ('' if smb_path == '' else '/') + f.name + f.ext
                 else:
                     f.image = "/static/file.png"
                 files.append(f)
@@ -280,9 +225,10 @@ def imagebrowser(address):
                 f.image = "/static/folder.png"
                 folders.append(f)
 
-        files = sorted(files, key=lambda f: f.name)
-        folders = sorted(folders, key=lambda f: f.name)
-        return render_template('browser.html', files=files, folders=folders, address=address)
+        # sort by name and return
+        files = sorted(files, key=lambda f: f.name.lower())
+        folders = sorted(folders, key=lambda f: f.name.lower())
+        return render_template('browser.html', files=files, folders=folders, smb_path=smb_path)
 
 
 @browser.route('/upload', methods=['POST'])
@@ -299,7 +245,8 @@ def uploadfile():
         return render_template('browser.html', uploadurl=uploadurl)
     else:
         # render browser root and notify of failed upload
-        return render_browser_root(uploadfailed=True, errormessage=uploadurl, extensions=', '.join(ALLOWED_EXTENSIONS))
+        return render_template('browser.html', resources=SMBResource.query.all(),
+                               uploadfailed=True, errormessage=uploadurl, extensions=', '.join(ALLOWED_EXTENSIONS))
 
 
 @browser.route('/savefromsmb', methods=['POST'])
@@ -326,3 +273,40 @@ def savefromsmb():
         return jsonify(code=0, uploadurl=uploadurl)
     else:
         return jsonify(code=1, message=uploadurl)
+
+
+@browser.route('/inspectresource', methods=['POST'])
+@login_required
+def inspectresource():
+    sample = Sample.query.get(request.form.get('sampleid'))
+    resource = SMBResource.query.get(request.form.get('resourceid'))
+    if resource is None:
+        return jsonify(code=1, resourceid=request.form.get('resourceid'))
+
+    # we want to display a shortcut either to the current user's or to the sample owner's folder in the resource
+    user = sample.owner if sample is not None else current_user
+
+    # initialise attributes to return
+    userfolder = ''
+    samplefolder = ''
+
+    listpath = smbinterface.list_path(resource.name)
+    if listpath is None:
+        return jsonify(code=2, resourceid=resource.id)  # resource not available / connection failed
+    for item in listpath:
+        if item.isDirectory and item.filename == user.username:
+            userfolder = resource.name+'/'+item.filename
+            # if a sample is given, let's browse this folder for a sample folder
+            if sample is not None:
+                listsubpath = smbinterface.list_path(userfolder)
+                if listsubpath is None:
+                    # something went wrong with resource, we can connect,
+                    # but maybe we have no right to access the userfolder
+                    return jsonify(code=0, resourceid=resource.id, userfolder='', samplefolder='')
+                for subitem in listsubpath:
+                    if subitem.isDirectory and subitem.filename == sample.name:
+                        samplefolder = userfolder+'/'+subitem.filename
+                        break
+            break
+
+    return jsonify(code=0, resourceid=resource.id, userfolder=userfolder, samplefolder=samplefolder)

@@ -8,7 +8,7 @@
     vertical-align:top;
     width:75%;
 }
-div.folder {    /* need to be specific for this one, otherwise will disturb resource view */
+.folder, .resource {
     padding-left:48px;
     padding-top:10px;
     position:relative;
@@ -16,19 +16,27 @@ div.folder {    /* need to be specific for this one, otherwise will disturb reso
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.folder img {
+.shortcut {
+    width: 48px;
+    height: 48px;
+}
+.resource {
+    margin-right: 30px;
+    float: left;
+}
+.folder img, .resource img {
     position:absolute;
     left:0px;
     top:0px;
     width: 48px;
     height: 48px;
 }
-.folder span {
-    font-size:12px;
-}
-.folder:hover {
+.folder:hover, .resource.available:hover, .shortcut:hover {
     cursor:pointer;
     background-color: #CCCCEE;
+}
+.folder span {
+    font-size:12px;
 }
 .file {
     vertical-align: top;
@@ -38,7 +46,8 @@ div.folder {    /* need to be specific for this one, otherwise will disturb reso
     padding: 5px;
 }
 .file img {
-    width: 120px;
+    max-width: 120px;
+    max-height: 120px;
 }
 .file span {
     display: block;
@@ -50,9 +59,6 @@ div.folder {    /* need to be specific for this one, otherwise will disturb reso
 .file:hover {
     cursor:pointer;
     background-color: #CCCCEE;
-}
-#address {
-    margin-bottom:20px;
 }
 #browser-frame {
     padding:10px;

@@ -7,6 +7,7 @@ from ..models import SAMPLE_NAME_LENGTH   # <-- sort this out
 from . import main
 from forms import NewSampleForm, NewActionForm, NewMatrixForm
 from datetime import date, datetime, timedelta
+from .. import smbinterface
 
 from sqlalchemy.sql import func
 
@@ -48,7 +49,7 @@ def welcome():
     maxcount = 0
     for n in newactions: maxcount = max(maxcount, n[1])
 
-    return render_template('welcome.html', newactions=newactions, maxcount=maxcount,
+    return render_template('welcome.html', conns=smbinterface.conns, newactions=newactions, maxcount=maxcount,
                            newactionsallusers=newactionsallusers, maxcountallusers=maxcountallusers,
                            uploadvols=uploadvols, maxuploadvol=maxuploadvol, plugins=plugins)
 

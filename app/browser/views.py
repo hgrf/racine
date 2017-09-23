@@ -1,16 +1,13 @@
 from flask import render_template, send_file, request, redirect, url_for, send_from_directory, jsonify, abort
 from flask_login import current_user, login_required
 from flask import current_app as app
-from smb.SMBConnection import SMBConnection, OperationFailure
 from .. import db
 from ..models import SMBResource, Sample, Upload
-import socket
 import os
 from . import browser
-import tempfile
 import io
 import hashlib
-import urllib
+from .. import smbinterface
 from PIL import Image
 
 ALLOWED_EXTENSIONS = set(['.png', '.jpg', '.jpeg', '.bmp', '.tif', '.tiff'])
@@ -35,9 +32,6 @@ In order to make sure that the JavaScript part knows the sample ID and the CKEdi
 these are always in the query string. This is taken care of by the JavaScript part.
 """
 
-# TODO: don't newly connect to the resources everytime, set up a connection and check if it's still open
-
-
 ########################################################################################################################
 # Classes that contain the file/folder or resource info for easy transfer to the template
 ########################################################################################################################
@@ -58,97 +52,6 @@ class ResourceTile:
 ########################################################################################################################
 # Helper functions
 ########################################################################################################################
-
-def connect_to_SMBResource(resource):
-    # set up SMB connection
-    client_machine_name = "MSM"
-    try:
-        server_ip = socket.gethostbyname(resource.serveraddr)
-    except:     # if host unknown
-        return None, False
-    # need to convert unicode -> string apparently...
-    conn = SMBConnection(str(resource.userid), str(resource.password),
-                         client_machine_name, str(resource.servername), use_ntlm_v2=True)
-    try:
-        connected = conn.connect(server_ip, 139, timeout=1) # 1 second timeout
-    except:
-        connected = False
-    return conn, connected
-
-
-def process_smb_path(path):
-    """Splits up the SMB path of type "/ResourceName/path_in_resource".
-
-    The path in the resource is not necessarily the same as the path on the server, because a resource can already
-    point to a subdirectory on the server. If the path is empty, this function will return None, ''. The same will
-    be returned if the requested resource does not exist.
-
-    Parameters
-    ----------
-    path: str
-
-    Returns
-    -------
-    resource : SMBResource
-    path_on_server : str
-    """
-
-    # we want to be as tolerant as possible and accept paths like "/ResourceName/path_in_resource", but also
-    # "ResourceName/path_in_resource" or "" or "/"
-    toks = path.strip('/').split('/')
-
-    # check if we have at least a resource name
-    if len(toks) == 0:
-        return None, ''         # no resource name given
-
-    resource = SMBResource.query.filter_by(name=toks[0]).first()
-    if resource is None:        # resource not found in database
-        return None, ''
-
-    path_in_resource = '' if len(toks) == 1 else '/'.join(toks[1:])
-
-    # make sure the path is constructed correctly even if resource.path or path_in_resource are empty or None
-    path_on_server = '/'.join(filter(None, [resource.path.strip('/'), path_in_resource]))
-
-    return resource, path_on_server
-
-
-def get_smb_file(path):
-    """Creates a temporary file object and reads the content of a remote SMB file into it.
-
-    Parameters
-    ----------
-    path : str
-        The path pointing to the SMB resource and location within the resource.
-
-    Returns
-    -------
-    file : file object
-        A file object.
-    """
-
-    # process the path and check if requested resource exists
-    resource, path_on_server = process_smb_path(path)
-    if resource is None:
-        abort(404)
-
-    # connect to SMB resource
-    conn, connected = connect_to_SMBResource(resource)
-    if not connected:
-        app.logger.error("Could not connect to SMBResource: "+resource.name)
-        abort(500)
-
-    # retrieve the requested file from the resource
-    file_obj = tempfile.NamedTemporaryFile()
-    try:
-        file_attributes, filesize = conn.retrieveFile(resource.sharename, path_on_server, file_obj)
-    except Exception: # if we have any problem retrieving the file
-        # TODO: specify exception
-        app.logger.error("Could not retrieve file: "+resource.name+'/'+path_on_server)
-        abort(500)
-
-    return file_obj
-
 
 def check_stored_file(upload):
     """Checks file size and SHA-256 hash for an upload and looks for duplicates in the database.
@@ -210,6 +113,8 @@ def store_file(file_obj, source, ext):
     """
 
     # check if file is OK and if extension is allowed
+    ext = ext.lower()
+
     if not file_obj:
         return None, "File could not be read."
     if not ext in ALLOWED_EXTENSIONS:
@@ -253,34 +158,29 @@ def make_resource_list(sample):
     -------
     resources
     """
-    resources = []
-    resourcetable = SMBResource.query.all()
-    for resource in resourcetable:
+    resources = SMBResource.query.all()
+    for i,resource in enumerate(resources):
         r = ResourceTile()
         r.name = resource.name
         r.available = True
-        conn, connected = connect_to_SMBResource(resource)
-        if connected:
+
+        # TODO: error handling for listpath and check what happens when it gets empty list
+        listpath = smbinterface.list_path(r.name)
+        if listpath:
             # find user/sample folders
-            try:
-                for i in conn.listPath(resource.sharename, resource.path if resource.path != None else ""):
-                    if i.isDirectory and i.filename == (sample.owner.username if sample is not None else current_user.username):
-                        r.hasuserfolder = True
-                        for j in conn.listPath(resource.sharename, '/'.join(filter(None, [resource.path.strip('/'), i.filename]))):
-                            if j.isDirectory and sample is not None and j.filename == sample.name:
-                                r.hassamplefolder = True
-                                break
-                        break
-            except OperationFailure:
-                r.available = False
-            conn.close()
+            for item in listpath:
+                if item.isDirectory and item.filename == (sample.owner.username if sample is not None else current_user.username):
+                    r.hasuserfolder = True
+                    for subitem in smbinterface.list_path(resource.name+'/'+item.filename):
+                        if subitem.isDirectory and sample is not None and subitem.filename == sample.name:
+                            r.hassamplefolder = True
+                            break
+                    break
         else:
             r.available = False
-
-        if not r.available:
             r.name += " (N/A)"
 
-        resources.append(r)
+        resources[i] = r        # replace SQL row by ResourceTile
 
     return resources
 
@@ -321,7 +221,8 @@ def retrieve_smb_image(path):
     """
 
     # get a file object for the requested path and try to open it with PIL
-    file_obj = get_smb_file(path)
+    # TODO: error handling for get_file
+    file_obj = smbinterface.get_file(path)
     try:
         image = Image.open(file_obj)
     except IOError:
@@ -353,20 +254,17 @@ def render_browser_root(**kwargs):
 @login_required
 def imagebrowser(address):
     # process address
-    resource, path_on_server = process_smb_path(address)
+    resource, path_on_server = smbinterface.process_smb_path(address)
 
     if resource is None:
         return render_browser_root()
     else:
-        # in this case we will show the content of the current SMB folder
-        conn, connected = connect_to_SMBResource(resource)
-        if not connected:
-            abort(500)
-
         # list files and folders in current path
         files = []
         folders = []
-        for i in conn.listPath(resource.sharename, path_on_server):
+        listpath = smbinterface.list_path(address)
+        # TODO: error handling for list path
+        for i in listpath:
             if i.filename == '.':
                 continue
             f = FileTile()
@@ -412,12 +310,14 @@ def savefromsmb():
 
     # get rid of '/browser/img/', if it's not there return error
     if not src[:16] == '/browser/smbimg/':
-        return jsonify(code=1)
+        return jsonify(code=1, message="File has to be in /browser/smbimg sub-path.")
     path = src[16:]
+    pathwithoutext, ext = os.path.splitext(path)
 
     # get a file object for the requested path
-    file_obj = get_smb_file(path)
-    pathwithoutext, ext = os.path.splitext(path)
+    file_obj = smbinterface.get_file(path)
+    if not file_obj:
+        return jsonify(code=1, message="File could not be retrieved from SMB resource.")
 
     # store the file
     upload, uploadurl = store_file(file_obj, 'smb:'+src, ext)

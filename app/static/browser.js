@@ -6,7 +6,7 @@ function update_sample_image_and_quit(uploadurl) {
     $.ajax({
         url: "/changesampleimage",
         type: "post",
-        data: { "id": queryDict['sample'], "value": data.uploadurl },
+        data: { "id": queryDict['sample'], "value": uploadurl },
             success: function(data) {
             window.opener.location.href = "/sample/"+queryDict['sample'];   // reload the sample page in the editor window
             window.close();     // close the browser window
@@ -34,7 +34,12 @@ function init_browser() {
             type: "post",
             data: { "src": src },
             success: function(data) {
-                terminate_browser(data.uploadurl)
+                if(data.code) {
+                    alert("Error: "+data.message);
+                }
+                else {
+                    terminate_browser(data.uploadurl)
+                }
             }
         });
     });

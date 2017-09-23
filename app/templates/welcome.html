@@ -4,6 +4,12 @@
     {{ p.display()|safe }}
 {% endfor %}
 {% if current_user.is_admin %}
+    <h2>Active SMB connections</h2>
+    <table>
+    {% for c in conns %}
+        <tr><td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="{{ url_for('static', filename='resource.png') }}" width="40">{{ c.resource }}, {{ "not" if not c.inuse else "" }} in use</td></tr>
+    {% endfor %}
+    </table>
     <h2>Upload volume per user</h2>
     <table>
     {% for u in uploadvols %}

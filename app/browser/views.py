@@ -10,7 +10,7 @@ import hashlib
 from .. import smbinterface
 from PIL import Image
 
-ALLOWED_EXTENSIONS = set(['.png', '.jpg', '.jpeg', '.bmp', '.tif', '.tiff'])
+IMAGE_EXTENSIONS = set(['.png', '.jpg', '.jpeg', '.bmp', '.tif', '.tiff'])
 CONVERSION_REQUIRED = set(['.tif', '.tiff'])
 THUMBNAIL_SIZE = [120, 120]
 
@@ -89,8 +89,46 @@ def check_stored_file(upload):
     return upload
 
 
-# TODO: rename this to store_image (to distinguish from the store_file we will have later for attachments)
-def store_file(file_obj, source, ext):
+def store_file(file_obj, source, ext, type):
+    """Stores a file in the upload database and saves it in the upload folder, checking for duplicates.
+
+    Parameters
+    ----------
+    file_obj : FileStorage or Image object, or any other object with save() function
+    source : str
+    ext : str
+    type : str
+        'img' or 'att'
+
+    Returns
+    -------
+    upload : Upload object or None
+    message : str
+        upload URL if upload succeeds or error message if it fails
+    """
+
+    if type not in ('img', 'att'):
+        return None, "Invalid upload type."
+
+    # create upload entry in database (in case upload fails, have to remove it later)
+    upload = Upload(user=current_user, source=source, ext=ext[1:])  # use extension without the dot
+    db.session.add(upload)
+    db.session.commit()
+
+    # save the file
+    # TODO: if anything goes wrong here, we should delete the reference in the upload database again
+    file_obj.save(os.path.join(app.config['UPLOAD_FOLDER'], str(upload.id) + '.' + upload.ext))
+
+    # calculate filesize, SHA-256 hash and check for duplicates
+    upload = check_stored_file(upload)
+
+    # make url for this upload
+    uploadurl = '/browser/ul'+type+'/'+str(upload.id)
+
+    return upload, uploadurl
+
+
+def store_image(file_obj, source, ext):
     """Stores an image file in the upload database and saves it in the upload folder, checking for duplicates.
 
     Parameters
@@ -111,7 +149,7 @@ def store_file(file_obj, source, ext):
 
     if not file_obj:
         return None, "File could not be read."
-    if not ext in ALLOWED_EXTENSIONS:
+    if not ext in IMAGE_EXTENSIONS:
         return None, "File extension is invalid."
 
     # check if image can be opened and if needs to be converted
@@ -122,45 +160,69 @@ def store_file(file_obj, source, ext):
     except IOError:
         return None, "Image file invalid."
 
-    # create upload entry in database (in case upload fails, have to remove it later)
-    upload = Upload(user=current_user, source=source, ext=ext)
-    db.session.add(upload)
-    db.session.commit()
+    return store_file(image, source, ext, 'img')
 
-    # save the file
-    # TODO: if anything goes wrong here, we should delete the reference in the upload database again
-    image.save(os.path.join(app.config['UPLOAD_FOLDER'], str(upload.id) + '.' + upload.ext))
 
-    # calculate filesize, SHA-256 hash and check for duplicates
-    upload = check_stored_file(upload)
+# TODO: implement this for SMB? (right now not possible, because no support for normal file object)
+def store_attachment(file_obj, source, ext):
+    """Stores an image file in the upload database and saves it in the upload folder, checking for duplicates.
 
-    # make url for this upload
-    uploadurl = url_for('.retrieve_image', image=str(upload.id))
+    Parameters
+    ----------
+    file_obj : FileStorage object or any other object with save() function
+    source : str
+    ext : str
 
-    return upload, uploadurl
+    Returns
+    -------
+    upload : Upload object or None
+    message : str
+        upload URL if upload succeeds or error message if it fails
+    """
 
+    return store_file(file_obj, source, ext, 'att')
 
 ########################################################################################################################
 # View functions
 ########################################################################################################################
 
-@browser.route('/ulimg/<image>')
+@browser.route('/ulimg/<upload_id>')
 @login_required
-def retrieve_image(image):
+def retrieve_image(upload_id):
     """Retrieves an image that was uploaded to the server,
 
     either by uploading through the browser or by transfer from a SMB resource.
 
     Parameters
     ----------
-    image : int
+    upload_id : int
         The ID of the image to be retrieved, corresponding to a row in the uploads database table.
     """
 
     # TODO: check that user has right to view the image (this might be tricky because the sample might be a shared one)
 
-    dbentry = Upload.query.filter_by(id=image).first()
+    dbentry = Upload.query.get(upload_id)
+
+    print app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext
     return send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext)
+
+
+@browser.route('/ulatt/<upload_id>')
+@login_required
+def retrieve_attachment(upload_id):
+    """Retrieves an attachment that was uploaded to the server.
+
+    Parameters
+    ----------
+    upload_id : int
+        The ID of the attachment to be retrieved, corresponding to a row in the uploads database table.
+    """
+
+    # TODO: check that user has right to view the attachment
+
+    dbentry = Upload.query.get(upload_id)
+    return send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext,
+                               as_attachment=True, attachment_filename=dbentry.source[3:])
 
 
 @browser.route('/smbimg/<path:path>')
@@ -216,7 +278,7 @@ def imagebrowser(smb_path):
             f = FileTile()
             f.name, f.ext = os.path.splitext(item.filename)
             if not item.isDirectory:
-                if f.ext.lower() in ALLOWED_EXTENSIONS:
+                if f.ext.lower() in IMAGE_EXTENSIONS:
                     f.image = '/browser/smbimg/' + smb_path + ('' if smb_path == '' else '/') + f.name + f.ext
                 else:
                     f.image = "/static/file.png"
@@ -230,23 +292,51 @@ def imagebrowser(smb_path):
         folders = sorted(folders, key=lambda f: f.name.lower())
         return render_template('browser.html', files=files, folders=folders, smb_path=smb_path)
 
-
+# TODO: TIF upload is messed up, because CKEditor uploads it as a "file" not as an image (i.e. the representation in the
+# editor looks wrong, but this has to be sorted out on the editor side
 @browser.route('/upload', methods=['POST'])
 @login_required
 def uploadfile():
-    file_obj = request.files['file']
+    # find out what kind of upload we are dealing with and who sent it
+    type = request.args.get('type')
+    caller = request.args.get('caller')
+    if type is None or not type in ('img', 'att') or caller is None or not caller in ('ckb', 'ckdd', 'msmb'):
+        return 'error'
+
+    # caller meaning:
+    #  ckb = CKEditor "browser"
+    #  ckdd = CKEditor drag/drop or copy/paste
+    #  msmb = MSM browser (normally to change sample image)
+
+    file_obj = request.files['upload']
     filename, ext = os.path.splitext(file_obj.filename)
 
-    # store the file
-    upload, uploadurl = store_file(file_obj, 'ul:'+file_obj.filename, ext)
-
-    if upload is not None:
-        # notify of successful upload
-        return render_template('browser.html', uploadurl=uploadurl)
+    if type == 'img':
+        upload, url = store_image(file_obj, 'ul:'+file_obj.filename, ext)
     else:
-        # render browser root and notify of failed upload
-        return render_template('browser.html', resources=SMBResource.query.all(),
-                               uploadfailed=True, errormessage=uploadurl, extensions=', '.join(ALLOWED_EXTENSIONS))
+        upload, url = store_attachment(file_obj, 'ul:' + file_obj.filename, ext)
+
+    uploaded = 0 if upload is None else 1
+    message = '' if uploaded else url
+
+    # send adapted response
+    if caller == 'ckb':
+        return "<script type='text/javascript'>window.parent.CKEDITOR.tools.callFunction("\
+               + request.args.get('CKEditorFuncNum')\
+               + ", '" + url + "', '" + message + "');</script>"
+
+    if caller == 'ckdd':
+        # TODO: can return width and height in json response, but need to calculate with correct aspect ratio
+        return jsonify(uploaded=uploaded, filename=filename+ext, url=url, message=message)
+
+    if caller == 'msmb':
+        if upload is not None:
+            # notify of successful upload
+            return render_template('browser.html', uploadurl=url)
+        else:
+            # render browser root and notify of failed upload
+            return render_template('browser.html', resources=SMBResource.query.all(),
+                                   uploadfailed=True, errormessage=message, extensions=", ".join(IMAGE_EXTENSIONS))
 
 
 @browser.route('/savefromsmb', methods=['POST'])
@@ -267,7 +357,7 @@ def savefromsmb():
         return jsonify(code=1, message="File could not be retrieved from SMB resource.")
 
     # store the file
-    upload, uploadurl = store_file(file_obj, 'smb:'+src, ext)
+    upload, uploadurl = store_image(file_obj, 'smb:'+src, ext)
 
     if upload is not None:
         return jsonify(code=0, uploadurl=uploadurl)

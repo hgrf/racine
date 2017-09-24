@@ -11,15 +11,19 @@
 <div id="browser-frame">
     {% if smb_path is not defined or smb_path == '' %}
         {# Display the upload section and the resource list #}
-        <div id="upload-frame">
-            <form method="post" action="#" style="margin:0;padding:0;" enctype="multipart/form-data" id="uploadform">
-                <img class="upload" src="{{url_for('static', filename='upload.png')}}" width="48px" height="48px">
-                <strong>Upload an image:&nbsp;&nbsp;&nbsp;&nbsp;</strong>
-                <input style="display:inline;" type="file" name="file" id="file">
-                <input style="display:inline;" type="submit" value="OK">
-            </form>
-        </div>
-        <hr>
+        {# upload section is only shown if we are using the browser to change the sample image - CKEditor has its own
+           upload function #}
+        {% if request.args.get('changesampleimage') %}
+            <div id="upload-frame">
+                <form method="post" action="#" style="margin:0;padding:0;" enctype="multipart/form-data" id="uploadform">
+                    <img class="upload" src="{{url_for('static', filename='upload.png')}}" width="48px" height="48px">
+                    <strong>Upload an image:&nbsp;&nbsp;&nbsp;&nbsp;</strong>
+                    <input style="display:inline;" type="file" name="upload" id="upload">
+                    <input style="display:inline;" type="submit" value="OK">
+                </form>
+            </div>
+            <hr>
+        {% endif %}
         <div style="margin-bottom:20px"><strong>Network shares:</strong></div>
         {% for resource in resources %}
             <div class="resource" data-url="{{ resource.name }}" data-id="{{ resource.id }}" id="resource{{ resource.id }}">
@@ -62,7 +66,8 @@
         $(function() { $(document).ready(function () {
             {# Check if an upload has failed. #}
             {% if uploadfailed is defined and uploadfailed %}
-                alert("Upload failed: {{ errormessage }}. The following extensions are accepted: {{ extensions }}");
+                init_browser();
+                alert("Upload failed: {{ errormessage }} The following extensions are accepted: {{ extensions }}");
             {% else %}
                 {# Check if an upload has succeeded #}
                 {% if uploadurl is defined %}

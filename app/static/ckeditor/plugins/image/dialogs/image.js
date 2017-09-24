@@ -1,9 +1,8 @@
 ﻿/**
- * @license Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  *
- * lines 226 ff.: hack added by Holger Graef in order to set a default image width
- * lines 384 ff.: hack added by Holger Graef in order to automatically open file browser
+ * lines 229 ff.: hack added by Holger Graef in order to set a default image width
  *
  */
 
@@ -111,7 +110,7 @@
 
 					var oImageOriginal = dialog.originalElement;
 
-					// Dialog may already closed. (#5505)
+					// Dialog may already closed. (http://dev.ckeditor.com/ticket/5505)
 					if ( !oImageOriginal )
 						return null;
 
@@ -250,7 +249,7 @@
 					this.firstLoad = false;
 					this.dontResetSize = false;
 
-					// Possible fix for #12818.
+					// Possible fix for http://dev.ckeditor.com/ticket/12818.
 					updatePreview( this );
 				};
 
@@ -287,7 +286,7 @@
 
 			return {
 				title: editor.lang.image[ dialogType == 'image' ? 'title' : 'titleButton' ],
-				minWidth: 420,
+				minWidth: ( CKEDITOR.skinName || editor.config.skin ) == 'moono-lisa' ? 500 : 420,
 				minHeight: 360,
 				onShow: function() {
 					this.imageElement = false;
@@ -327,7 +326,7 @@
 						this.linkEditMode = true;
 
 						// If there is an existing link, by default keep it (true).
-						// It will be removed if certain conditions are met and Link tab is enabled. (#13351)
+						// It will be removed if certain conditions are met and Link tab is enabled. (http://dev.ckeditor.com/ticket/13351)
 						this.addLink = true;
 
 						// Look for Image element.
@@ -380,12 +379,6 @@
 						this.preview.removeAttribute( 'src' );
 						this.preview.setStyle( 'display', 'none' );
 					}
-
-					// HACK (this has the disadvantage of triggering the popup blocker, might want to solve this by
-					// triggering the browser a level higher up - i.e. when the user clicks on the image button
-					// in the editor)
-					this.getContentElement('info', 'browse').click();
-					// END HACK
 				},
 				onOk: function() {
 					// Edit existing Image.
@@ -513,6 +506,7 @@
 							type: 'hbox',
 							widths: [ '280px', '110px' ],
 							align: 'right',
+							className: 'cke_dialog_image_url',
 							children: [ {
 								id: 'txtUrl',
 								type: 'text',
@@ -564,7 +558,7 @@
 										this.getDialog().dontResetSize = true;
 
 										field.setValue( url ); // And call this.onChange()
-										// Manually set the initial value.(#4191)
+										// Manually set the initial value.(http://dev.ckeditor.com/ticket/4191)
 										field.setInitValue();
 									}
 								},
@@ -715,6 +709,7 @@
 								{
 									id: 'ratioLock',
 									type: 'html',
+									className: 'cke_dialog_image_ratiolock',
 									style: 'margin-top:30px;width:40px;height:40px;',
 									onLoad: function() {
 										// Activate Reset button
@@ -1037,6 +1032,7 @@
 					{
 						type: 'button',
 						id: 'browse',
+						className: 'cke_dialog_image_browse',
 						filebrowser: {
 							action: 'Browse',
 							target: 'Link:txtUrl',

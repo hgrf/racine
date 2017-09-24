@@ -2,14 +2,29 @@ var hideparentactions = false;
 
 // configure the CKEditor
 var ckeditorconfig = {
-    filebrowserImageBrowseUrl : '/browser',
-    filebrowserWindowWidth  : 800,
-    filebrowserWindowHeight : 500,
-    toolbar:
-    [
-        ['Bold', 'Italic', 'Underline','Subscript','Superscript', 'Format', 'Styles', '-', 'NumberedList', 'BulletedList', 'HorizontalRule', '-', 'Link', 'Unlink', '-', 'Image', 'Table', 'SpecialChar', '-', 'Maximize'],
-        ['UIColor']
-    ]
+    imageUploadUrl: '/browser/upload?caller=ckdd&type=img',
+    uploadUrl: '/browser/upload?caller=ckdd&type=att',
+    filebrowserImageBrowseUrl: '/browser',
+    filebrowserImageUploadUrl: '/browser/upload?caller=ckb&type=img',
+    filebrowserLinkUploadUrl: '/browser/upload?caller=ckb&type=att',
+    filebrowserWindowWidth: 800,
+    filebrowserWindowHeight: 500,
+	toolbarGroups: [
+		{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+		{ name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+		{ name: 'forms', groups: [ 'forms' ] },
+		{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+		{ name: 'others', groups: [ 'others' ] },
+		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+		{ name: 'styles', groups: [ 'styles' ] },
+		{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+		{ name: 'links', groups: [ 'links' ] },
+		{ name: 'insert', groups: [ 'insert' ] },
+		{ name: 'colors', groups: [ 'colors' ] },
+		{ name: 'about', groups: [ 'about' ] },
+		{ name: 'tools', groups: [ 'tools' ] }
+	],
+    removeButtons: 'Cut,Copy,Paste,PasteText,PasteFromWord,Undo,Redo,BGColor,RemoveFormat,Outdent,Indent,Blockquote,About,Strike,Scayt,Anchor,Source'
 };
 
 $.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer
@@ -47,7 +62,7 @@ function init_editor() {
 
     // handler for button that changes sample image
     $('#changesampleimage').click(function(event) {
-        window.open("/browser?sample="+$("#sampleid").text(), 'Browser', 'height=500, width=800, scrollbars=yes')
+        window.open("/browser?changesampleimage=1&sample="+$("#sampleid").text(), 'Browser', 'height=500, width=800, scrollbars=yes')
     });
 
     // handler for new action submit button
@@ -87,7 +102,7 @@ function init_editor() {
 
     // tell CKEditor browser to pass on sample ID
     ckeditorconfig.filebrowserImageBrowseUrl = '/browser?sample='+$("#sampleid").text();
-    CKEDITOR.replace( 'description', ckeditorconfig);
+    CKEDITOR.replace('description', ckeditorconfig);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // handlers for fields that modify sample information (jEditables)

@@ -17,7 +17,7 @@ function update_sample_image_and_quit(uploadurl) {
 function init_browser() {
     // tell the upload form how to communicate with the server (this has to preserve the query string, so that
     // sample and CKEditorFuncNum information is kept)
-    $('#uploadform').attr('action', '/browser/upload?'+location.search.substr(1));
+    $('#uploadform').attr('action', '/browser/upload?caller=msmb&type=img&'+location.search.substr(1));
 
     function folderclickhandler(event) {
         location.href = "/browser/" + $(this).data('url') + '?' + location.search.substr(1);

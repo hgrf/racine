@@ -1,0 +1,65 @@
+.folders {
+    display:inline-block;
+    vertical-align:top;
+    width:20%;
+}
+.files {
+    display:inline-block;
+    vertical-align:top;
+    width:75%;
+}
+.folder, .resource {
+    padding-left:48px;
+    padding-top:10px;
+    position:relative;
+    min-height:48px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.shortcut {
+    width: 48px;
+    height: 48px;
+}
+.resource {
+    margin-right: 30px;
+    float: left;
+}
+.folder img, .resource img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width: 48px;
+    height: 48px;
+}
+.folder:hover, .resource.available:hover, .shortcut:hover {
+    cursor:pointer;
+    background-color: #CCCCEE;
+}
+.folder span {
+    font-size:12px;
+}
+.file {
+    vertical-align: top;
+    display: inline-block;
+    text-align: center;
+    width: 140px;
+    padding: 5px;
+}
+.file img {
+    max-width: 120px;
+    max-height: 120px;
+}
+.file span {
+    display: block;
+    width: 100%;
+    font-size: 12px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+.file:hover {
+    cursor:pointer;
+    background-color: #CCCCEE;
+}
+#browser-frame {
+    padding:10px;
+}

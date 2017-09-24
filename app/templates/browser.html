@@ -2,201 +2,75 @@
 
 {% block styles %}
 {{super()}}
-<style>
-.folders {
-    display:inline-block;
-    vertical-align:top;
-    width:20%;
-}
-.files {
-    display:inline-block;
-    vertical-align:top;
-    width:75%;
-}
-div.folder {    /* need to be specific for this one, otherwise will disturb resource view */
-    padding-left:48px;
-    padding-top:10px;
-    position:relative;
-    min-height:48px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.folder img {
-    position:absolute;
-    left:0px;
-    top:0px;
-    width: 48px;
-    height: 48px;
-}
-.folder span {
-    font-size:12px;
-}
-.folder:hover {
-    cursor:pointer;
-    background-color: #CCCCEE;
-}
-.file {
-    vertical-align: top;
-    display: inline-block;
-    text-align: center;
-    width: 140px;
-    padding: 5px;
-}
-.file img {
-    width: 120px;
-}
-.file span {
-    display: block;
-    width: 100%;
-    font-size: 12px;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-.file:hover {
-    cursor:pointer;
-    background-color: #CCCCEE;
-}
-#address {
-    margin-bottom:20px;
-}
-</style>
+<link rel="stylesheet" href="{{url_for('static', filename='browser.css')}}">
 {% endblock %}
 
 {% block title %}Browser{% endblock %}
 
 {% block content %}
 <div id="browser-frame">
-    <div>
-        {% if callback is none %}
-            <form method="post" style="margin:0;padding:0;" action="/browser/upload?sample={{ sample.id }}" enctype="multipart/form-data">
-        {% else %}
-            {% if sample is none %}
-            <form method="post" style="margin:0;padding:0;" action="/browser/upload?CKEditorFuncNum={{ callback }}" enctype="multipart/form-data">
-            {% else %}
-            <form method="post" style="margin:0;padding:0;" action="/browser/upload?sample={{ sample.id }}&CKEditorFuncNum={{ callback }}" enctype="multipart/form-data">
-            {% endif %}
-        {% endif %}
-            <img class="upload" src="/static/upload.png" width="48px" height="48px">
-            <strong>Upload an image:&nbsp;&nbsp;&nbsp;&nbsp;</strong><input style="display:inline;" type="file" name="file" id="file">
-            <input style="display:inline;" type="submit" value="OK">
-        </form>
-    </div>
-    <hr>
-    <div id="address"><strong>Network shares | Path: </strong>{{ address }}</div>
-
-    {% if notconnected %}
-        Could not connect to resource
-    {% endif %}
-
-    {% for resource in resources %}
+    {% if smb_path is not defined or smb_path == '' %}
+        {# Display the upload section and the resource list #}
+        <div id="upload-frame">
+            <form method="post" action="#" style="margin:0;padding:0;" enctype="multipart/form-data" id="uploadform">
+                <img class="upload" src="{{url_for('static', filename='upload.png')}}" width="48px" height="48px">
+                <strong>Upload an image:&nbsp;&nbsp;&nbsp;&nbsp;</strong>
+                <input style="display:inline;" type="file" name="file" id="file">
+                <input style="display:inline;" type="submit" value="OK">
+            </form>
+        </div>
+        <hr>
+        <div style="margin-bottom:20px"><strong>Network shares:</strong></div>
+        {% for resource in resources %}
+            <div class="resource" data-url="{{ resource.name }}" data-id="{{ resource.id }}" id="resource{{ resource.id }}">
+                <img src="{{ url_for('static', filename='resource.png') }}">
+                {{ resource.name }}
+            </div>
+            <div class="shortcuts" id="shortcuts{{ resource.id }}">
+                <img src="{{ url_for('static', filename='loader.gif') }}" width="48px" height="48px">
+            </div>
+        {% endfor %}
+    {% else %}
+        {# Display the folders and files in the current path #}
+        <div style="margin-bottom:20px"><strong>Path: </strong>{{ smb_path }}</div>
         <div>
-        <img src="{{ url_for('static', filename='resource.png') }}" {% if resource.available %}class="folder"{% endif %} data-url="{{ resource.name }}" width="48px" height="48px">
-        {{ resource.name }}
-        {% if resource.hasuserfolder %}
-            <img src="{{ url_for('static', filename='user.png') }}" class="folder" data-url="{{ resource.name+"/"+owner.username }}" width="48px" height="48px">
-        {% endif %}
-        {% if resource.hassamplefolder %}
-            <img src="{{ url_for('static', filename='sample.png') }}" class="folder" data-url="{{ resource.name+"/"+owner.username+"/"+sample.name }}" width="48px" height="48px">
-            <!-- TODO: what if sample, resource or user name contains space? -->
-        {% endif %}
+            <div class="folders">
+                {% for folder in folders %}
+                    <div class="folder" data-url="{{ smb_path }}/{{ folder.name }}{{ folder.ext }}">
+                        <img src="{{ folder.image }}">
+                        <span>{{ folder.name }}{{ folder.ext }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="files">
+                {% for file in files %}
+                    <div class="file">
+                    <img src="{{ file.image }}">
+                    <span>{{ file.name }}{{ file.ext }}</span>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
-    {% endfor %}
-    <div>
-        <div class="folders">
-            {% for folder in folders %}
-                <div class="folder" data-url="{{ address }}{% if address!='' %}/{% endif %}{{ folder.name }}{{ folder.ext }}">
-                    <img src="{{ folder.image }}">
-                    <span>{{ folder.name }}{{ folder.ext }}</span>
-                </div>
-            {% endfor %}
-        </div>
-        <div class="files">
-            {% for file in files %}
-                <div class="file">
-                <img src="{{ file.image }}">
-                <span>{{ file.name }}{{ file.ext }}</span>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
+    {% endif %}
 </div>
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
+    <script src="{{ url_for('static', filename='browser.js') }}"></script>
     <script type="text/javascript" charset="utf-8">
-    $(function() {
-        $(document).ready(function() {
-            {% if uploadfailed is not none and uploadfailed %}
-                alert("Please choose a file for upload. The following extensions are accepted: {{ extensions }}");
-            {% endif %}
-
-            function load_address(address) {
-                {% if callback is none %}
-                    location.href = "/browser"+address+"?sample="+{{ sample.id }};
-                {% else %}
-                    {% if sample is none %}
-                        location.href = "/browser"+address+"?CKEditorFuncNum="+{{ callback }};
-                    {% else %}
-                        location.href = "/browser"+address+"?sample="+{{ sample.id }}+"&CKEditorFuncNum="+{{ callback }};
-                    {% endif %}
-                {% endif %}
-            }
-
-            function init_browser() {
+        $(function() { $(document).ready(function () {
+            {# Check if an upload has failed. #}
+            {% if uploadfailed is defined and uploadfailed %}
+                alert("Upload failed: {{ errormessage }}. The following extensions are accepted: {{ extensions }}");
+            {% else %}
+                {# Check if an upload has succeeded #}
                 {% if uploadurl is defined %}
-                    {% if callback is none %}
-                        $.ajax({
-                            url: "/changesampleimage",
-                            type: "post",
-                            data: { "id": {{ sample.id }}, "value": "{{ uploadurl }}" },
-                            success: function( data ) {
-                                window.opener.location.href = "/sample/"+{{ sample.id }};
-                                window.close();
-                            }
-                        });
-                    {% else %}
-                        window.opener.CKEDITOR.tools.callFunction({{ callback }},"{{ uploadurl }}");
-                        window.close();
-                    {% endif %}
+                    terminate_browser("{{ uploadurl }}");
+                {% else %}
+                    init_browser();
                 {% endif %}
-
-                $('.folder').click( function( event ) {
-                    load_address("/"+$(this).data('url'));
-                    event.preventDefault();
-                });
-
-                $('.file').click( function( event ) {
-                    if($(this).find('img').attr('src') == '/static/file.png') {
-                        alert('Please choose a file with a valid extension.');
-                        return;
-                    }
-                    $.ajax({
-                        url: "/browser/savefromsmb",
-                        type: "post",
-                        data: { "src": $(this).find('img').attr("src") },
-                        success: function( data ) {
-                            {% if callback is none %}
-                                $.ajax({
-                                    url: "/changesampleimage",
-                                    type: "post",
-                                    data: { "id": {{ sample.id }}, "value": data.uploadurl },
-                                    success: function( data ) {
-                                        window.opener.location.href = "/sample/"+{{ sample.id }};
-                                        window.close();
-                                    }
-                                });
-                            {% else %}
-                                window.opener.CKEDITOR.tools.callFunction({{ callback }}, data.uploadurl);
-                                window.close();
-                            {% endif %}
-                        }
-                    });
-                });
-            }
-
-            init_browser();         // TODO: is this line necessary? (see load_address)
-        });
-    });
+            {% endif %}
+        });});
     </script>
 {% endblock %}

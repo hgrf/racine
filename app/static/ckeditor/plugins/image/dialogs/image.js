@@ -3,6 +3,7 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  *
  * lines 226 ff.: hack added by Holger Graef in order to set a default image width
+ * lines 384 ff.: hack added by Holger Graef in order to automatically open file browser
  *
  */
 
@@ -379,6 +380,12 @@
 						this.preview.removeAttribute( 'src' );
 						this.preview.setStyle( 'display', 'none' );
 					}
+
+					// HACK (this has the disadvantage of triggering the popup blocker, might want to solve this by
+					// triggering the browser a level higher up - i.e. when the user clicks on the image button
+					// in the editor)
+					this.getContentElement('info', 'browse').click();
+					// END HACK
 				},
 				onOk: function() {
 					// Edit existing Image.

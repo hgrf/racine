@@ -1,183 +1,70 @@
-from flask import render_template, send_file, request, redirect, url_for, send_from_directory, jsonify
+from flask import render_template, send_file, request, redirect, url_for, send_from_directory, jsonify, abort
 from flask_login import current_user, login_required
 from flask import current_app as app
-from smb.SMBConnection import SMBConnection, OperationFailure
 from .. import db
 from ..models import SMBResource, Sample, Upload
-import socket
 import os
 from . import browser
-import tempfile
 import io
 import hashlib
+from .. import smbinterface
+from PIL import Image
 
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'bmp'])
+ALLOWED_EXTENSIONS = set(['.png', '.jpg', '.jpeg', '.bmp', '.tif', '.tiff'])
+CONVERSION_REQUIRED = set(['.tif', '.tiff'])
+THUMBNAIL_SIZE = [120, 120]
+
+########################################################################################################################
+# Notes
+########################################################################################################################
+"""Possible scenarios:
+1) Browser was opened from CKEditor
+    In this case we always need to provide the browser with the callback number for the CKEditor.
+    1.1) Browser was opened from CKEditor in action editor
+        In this case we know which sample we are dealing with, so we can use it to find the sample folder within
+        SMB resources.
+    1.2) Browser was opened from CKEditor in new sample description editor
+        In this case we have no sample information for now.
+2) Browser was opened from editor page in order to find a new sample image.
+    In this case we have no callback function, but the browser will need to update the sample image when it is
+    closed.
+    
+In order to make sure that the JavaScript part knows the sample ID and the CKEditorFuncNum, we need to make sure that
+these are always in the query string. This is taken care of by the JavaScript part.
+"""
+
+########################################################################################################################
+# Classes that contain the file/folder or resource info for easy transfer to the template
+########################################################################################################################
 
 class FileTile:
     name = ""
     ext = ""
     image = ""
 
-class ResourceTile:
-    name = ""
-    available = True        # set to false if connection to resource cannot be established
-    hasuserfolder = False
-    hassamplefolder = False
 
-def connect_to_SMBResource(resource):
-    # set up SMB connection
-    client_machine_name = "SampleManagerWeb"
-    try:
-        server_ip = socket.gethostbyname(resource.serveraddr)
-    except:     # if host unknown
-        return None, False
-    # need to convert unicode -> string apparently... (checked with print type(resource.servername))
-    conn = SMBConnection(str(resource.userid), str(resource.password), client_machine_name, str(resource.servername), use_ntlm_v2=True)
-    try:
-        connected = conn.connect(server_ip, 139, timeout=1) # 1 second timeout
-    except:
-        connected = False
-    return conn, connected
-
-def assemble_path(items):
-    path = ""
-    for item in items:
-        if item == None or item == "" or item == "/":
-            continue
-        path = path+item+"/"
-    return path.rstrip('/')
-
-
-@browser.route('/', defaults={'address': ''})
-@browser.route('/<path:address>')
-@login_required
-def imagebrowser(address):
-    # TODO: make sure resource names do not contain / or are .. or stuff like that
-
-    # basic config stuff
-    image_extensions = [".jpg", ".jpeg", ".png", ".bmp"]
-
-    # find out from which sample the browser was opened
-    if request.args.get("sample") is None:
-        sample = None
-    else:
-        sample = Sample.query.filter_by(id=int(request.args.get("sample"))).first()
-
-    # process address (1)
-    address = address.rstrip('/')
-
-    if(address == ""):  # in this case we need to present choice of resources
-        resources=[]
-        resourcetable = SMBResource.query.all()
-        for resource in resourcetable:
-            r = ResourceTile()
-            r.name = resource.name
-            conn, connected = connect_to_SMBResource(resource)
-            if not connected:
-                r.name += " (N/A)"
-                r.available = False
-                resources.append(r)
-                continue
-            # find user/sample folders
-            try:
-                for i in conn.listPath(resource.sharename, resource.path if resource.path != None else ""):
-                    if i.isDirectory and i.filename == (sample.owner.username if sample is not None else current_user.username):
-                        r.hasuserfolder = True
-                        for j in conn.listPath(resource.sharename, assemble_path([resource.path, i.filename])):
-                            if j.isDirectory and sample is not None and j.filename == sample.name:
-                                r.hassamplefolder = True
-                                break
-                        break
-            except OperationFailure:
-                r.name += " (N/A)"
-                r.available = False
-                resources.append(r)
-                continue
-            conn.close()
-            resources.append(r)
-
-        return render_template('browser.html', files=[], folders=[], resources=resources, sample=sample,
-                               owner=sample.owner if sample is not None else current_user,
-                               callback=request.args.get('CKEditorFuncNum'), uploadfailed=request.args.get('uploadfailed'),
-                               extensions=', '.join(image_extensions))
-
-    # process address (2)
-    resource = SMBResource.query.filter_by(name=address.split("/")[0]).first()
-    address_prefix = "" if resource.path == None else resource.path
-    address_in_resource = "" if address.find("/") == -1 else address[address.find("/")+1:]
-    address_on_server = address_prefix + ("/" if address_prefix != "" and address_in_resource != "" else "") + address_in_resource
-
-    conn, connected = connect_to_SMBResource(resource)
-    if not connected:
-        return render_template('browser.html', notconnected=True)
-
-    # list files and folders in current path
-    files = []
-    folders = []
-    for i in conn.listPath(resource.sharename, address_on_server):
-        if i.filename == '.':
-            continue
-        #if i.filename == ".." and address == '': should not be problem anymore as we do resource navigation separately
-        #    continue
-        f = FileTile()
-        f.name, f.ext = os.path.splitext(i.filename)
-        if not i.isDirectory:
-            if f.ext.lower() in image_extensions:
-                f.image = "/browser/img/" + address + (
-                    "" if address == "" else "/") + f.name + f.ext  # will at some point cause problems with big image files, consider caching compressed icons
-            else:
-                f.image = "/static/file.png"
-            files.append(f)
-        else:
-            f.image = "/static/folder.png"
-            folders.append(f)
-
-    files = sorted(files, key=lambda f: f.name)
-    folders = sorted(folders, key=lambda f: f.name)
-    return render_template('browser.html', files=files, folders=folders, resources=[], sample=sample,
-                           address=address, callback=request.args.get('CKEditorFuncNum'),
-                           uploadfailed=request.args.get('uploadfailed'), extensions=', '.join(image_extensions))
-
-
-@browser.route('/img/<path:image>')
-def browserimage(image):
-    resource = SMBResource.query.filter_by(name=image.split("/")[0]).first()
-
-    address_prefix = "" if resource.path == None else resource.path
-    address_in_resource = image[image.find("/")+1:]
-    address_on_server = address_prefix + ("/" if address_prefix != "" else "") + address_in_resource
-
-    conn, connected = connect_to_SMBResource(resource)
-    if not connected:
-        app.logger.error("Could not connect to SMBResource: "+resource.name)
-        return ''
-
-    file_obj = tempfile.NamedTemporaryFile()
-    try:
-        file_attributes, filesize = conn.retrieveFile(resource.sharename, address_on_server, file_obj)
-    except: # if we have any problem retrieving the file
-        app.logger.error("Could not retrieve file: "+resource.name+'/'+address_on_server)
-        return ''
-
-    file_obj.seek(0)
-    image_binary = file_obj.read()
-
-    file_obj.close()
-
-    return send_file(io.BytesIO(image_binary))
-
-@browser.route('/ulimg/<image>')
-def uploadedimage(image):
-    dbentry = Upload.query.filter_by(id=image).first()
-    return send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext)
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-def get_extension(filename):
-    return filename.rsplit('.', 1)[1].lower()
+########################################################################################################################
+# Helper functions
+########################################################################################################################
 
 def check_stored_file(upload):
+    """Checks file size and SHA-256 hash for an upload and looks for duplicates in the database.
+
+    If a duplicate is found, delete this upload and return the duplicate.
+
+    This is separate from the store_file function, because store_file is specific to images right now and
+    we might want to use the duplicate check for other file types, too (in the future).
+
+    Parameters
+    ----------
+    upload : Upload
+
+    Returns
+    -------
+    upload : Upload
+        The upload or its duplicate.
+    """
+
     # read file name from database
     filename = os.path.join(app.config['UPLOAD_FOLDER'], str(upload.id) + '.' + upload.ext)
     # check file size and store in database entry
@@ -189,7 +76,7 @@ def check_stored_file(upload):
     file_obj.close()
 
     # check if upload already exists
-    identicals = Upload.query.filter_by(hash = upload.hash).all()
+    identicals = Upload.query.filter_by(hash=upload.hash).all()
     for i in identicals:
         if i.id != upload.id:
             # found different upload with same hash, need to delete file that was just uploaded and
@@ -201,70 +88,230 @@ def check_stored_file(upload):
 
     return upload
 
-@browser.route('/upload', methods=['POST'])
-def uploadfile():
-    if request.args.get("sample") is None:
-        sample=None
+
+# TODO: rename this to store_image (to distinguish from the store_file we will have later for attachments)
+def store_file(file_obj, source, ext):
+    """Stores an image file in the upload database and saves it in the upload folder, checking for duplicates.
+
+    Parameters
+    ----------
+    file_obj : file object
+    source : str
+    ext : str
+
+    Returns
+    -------
+    upload : Upload object or None
+    message : str
+        upload URL if upload succeeds or error message if it fails
+    """
+
+    # check if file is OK and if extension is allowed
+    ext = ext.lower()
+
+    if not file_obj:
+        return None, "File could not be read."
+    if not ext in ALLOWED_EXTENSIONS:
+        return None, "File extension is invalid."
+
+    # check if image can be opened and if needs to be converted
+    try:
+        image = Image.open(file_obj)
+        if ext in CONVERSION_REQUIRED:
+            ext = '.png'
+    except IOError:
+        return None, "Image file invalid."
+
+    # create upload entry in database (in case upload fails, have to remove it later)
+    upload = Upload(user=current_user, source=source, ext=ext)
+    db.session.add(upload)
+    db.session.commit()
+
+    # save the file
+    # TODO: if anything goes wrong here, we should delete the reference in the upload database again
+    image.save(os.path.join(app.config['UPLOAD_FOLDER'], str(upload.id) + '.' + upload.ext))
+
+    # calculate filesize, SHA-256 hash and check for duplicates
+    upload = check_stored_file(upload)
+
+    # make url for this upload
+    uploadurl = url_for('.retrieve_image', image=str(upload.id))
+
+    return upload, uploadurl
+
+
+########################################################################################################################
+# View functions
+########################################################################################################################
+
+@browser.route('/ulimg/<image>')
+@login_required
+def retrieve_image(image):
+    """Retrieves an image that was uploaded to the server,
+
+    either by uploading through the browser or by transfer from a SMB resource.
+
+    Parameters
+    ----------
+    image : int
+        The ID of the image to be retrieved, corresponding to a row in the uploads database table.
+    """
+
+    # TODO: check that user has right to view the image (this might be tricky because the sample might be a shared one)
+
+    dbentry = Upload.query.filter_by(id=image).first()
+    return send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext)
+
+
+@browser.route('/smbimg/<path:path>')
+@login_required
+def retrieve_smb_image(path):
+    """Retrieves an image from a SMB resource. This is only for the browser, so we will send back thumbnails to speed
+    up the communication a bit.
+
+    Parameters
+    ----------
+    path : str
+        The path to the image, consisting of the name of the SMB resource and the address within the resource.
+    """
+
+    # get a file object for the requested path and try to open it with PIL
+    # TODO: error handling for get_file
+    file_obj = smbinterface.get_file(path)
+    try:
+        image = Image.open(file_obj)
+    except IOError:
+        abort(500)
+
+    # convert the image to a thumbnail and store it in thumbnail JPEG format in memory before sending it to user
+    image_binary = io.BytesIO()
+    image.thumbnail(THUMBNAIL_SIZE)
+    image.save(image_binary, 'JPEG')
+    image.close()
+    image_binary.seek(0)        # need to go back to beginning of stream
+    return send_file(image_binary)
+
+
+@browser.route('/', defaults={'smb_path': ''})
+@browser.route('/<path:smb_path>')
+@login_required
+def imagebrowser(smb_path):
+    # process address
+    resource, path_on_server = smbinterface.process_smb_path(smb_path)
+
+    if resource is None:
+        # list resources
+        return render_template('browser.html', resources=SMBResource.query.all())
     else:
-        sample=Sample.query.filter_by(id=int(request.args.get("sample"))).first()
+        # list files and folders in current path
+        files = []
+        folders = []
+        listpath = smbinterface.list_path(smb_path)
+        if listpath is None:
+            abort(500)
+        for item in listpath:
+            # ignore . entry
+            if item.filename == '.':
+                continue
+            f = FileTile()
+            f.name, f.ext = os.path.splitext(item.filename)
+            if not item.isDirectory:
+                if f.ext.lower() in ALLOWED_EXTENSIONS:
+                    f.image = '/browser/smbimg/' + smb_path + ('' if smb_path == '' else '/') + f.name + f.ext
+                else:
+                    f.image = "/static/file.png"
+                files.append(f)
+            else:
+                f.image = "/static/folder.png"
+                folders.append(f)
 
-    file = request.files['file']
-    if file and allowed_file(file.filename):
-        # create database entry for upload
-        upload = Upload(user=current_user, source='ul:'+file.filename, ext=get_extension(file.filename))
-        db.session.add(upload)
-        db.session.commit()
+        # sort by name and return
+        files = sorted(files, key=lambda f: f.name.lower())
+        folders = sorted(folders, key=lambda f: f.name.lower())
+        return render_template('browser.html', files=files, folders=folders, smb_path=smb_path)
 
-        # save uploaded file
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], str(upload.id)+'.'+upload.ext))
 
-        # get filesize, SHA-256 hash and check for duplicates
-        upload = check_stored_file(upload)
+@browser.route('/upload', methods=['POST'])
+@login_required
+def uploadfile():
+    file_obj = request.files['file']
+    filename, ext = os.path.splitext(file_obj.filename)
 
-        uploadurl = url_for('.uploadedimage', image=str(upload.id))
-        return render_template('browser.html', files=[], folders=[], resources=[], sample=sample, callback=request.args.get('CKEditorFuncNum'), uploadurl=uploadurl, uploadfailed=False)
+    # store the file
+    upload, uploadurl = store_file(file_obj, 'ul:'+file_obj.filename, ext)
 
-    return redirect(url_for('.imagebrowser', sample=sample.id if sample is not None else None, CKEditorFuncNum=request.args.get('CKEditorFuncNum'), uploadfailed=True))
+    if upload is not None:
+        # notify of successful upload
+        return render_template('browser.html', uploadurl=uploadurl)
+    else:
+        # render browser root and notify of failed upload
+        return render_template('browser.html', resources=SMBResource.query.all(),
+                               uploadfailed=True, errormessage=uploadurl, extensions=', '.join(ALLOWED_EXTENSIONS))
+
 
 @browser.route('/savefromsmb', methods=['POST'])
+@login_required
 def savefromsmb():
+    # get img src string for the image (i.e. this will include the '/browser/img/' path)
     src = request.form.get('src')
 
-    # get rid of /browser/img/
-    if not src[:13] == '/browser/img/':
-        return jsonify(code=1)
-    src = src[13:]
+    # get rid of '/browser/img/', if it's not there return error
+    if not src[:16] == '/browser/smbimg/':
+        return jsonify(code=1, message="File has to be in /browser/smbimg sub-path.")
+    path = src[16:]
+    pathwithoutext, ext = os.path.splitext(path)
 
-    # process path of SMB resource
-    resource = SMBResource.query.filter_by(name=src.split("/")[0]).first()
-    address_prefix = "" if resource.path == None else resource.path
-    address_in_resource = src[src.find("/")+1:]
-    address_on_server = address_prefix + ("/" if address_prefix != "" else "") + address_in_resource
-    filename = address_in_resource.split("/")[-1]
+    # get a file object for the requested path
+    file_obj = smbinterface.get_file(path)
+    if not file_obj:
+        return jsonify(code=1, message="File could not be retrieved from SMB resource.")
 
-    if allowed_file(filename):
-        # create database entry for upload
-        upload = Upload(user=current_user, source='smb:'+src, ext=get_extension(filename))
-        db.session.add(upload)
-        db.session.commit()
+    # store the file
+    upload, uploadurl = store_file(file_obj, 'smb:'+src, ext)
 
-        conn, connected = connect_to_SMBResource(resource)
-        if not connected:
-            app.logger.error("Could not connect to SMBResource: "+resource.name)
-            return ''
+    if upload is not None:
+        return jsonify(code=0, uploadurl=uploadurl)
+    else:
+        return jsonify(code=1, message=uploadurl)
 
-        file_obj = open(os.path.join(app.config['UPLOAD_FOLDER'], str(upload.id)+'.'+upload.ext), 'wb')
-        try:
-            file_attributes, filesize = conn.retrieveFile(resource.sharename, address_on_server, file_obj)
-            file_obj.close()
 
-            # get filesize, SHA-256 hash and check for duplicates
-            upload = check_stored_file(upload)
+@browser.route('/inspectresource', methods=['POST'])
+@login_required
+def inspectresource():
+    # if sample ID is provided, look up sample
+    if request.form.get('sampleid') is not None:
+        sample = Sample.query.get(request.form.get('sampleid'))
+    else:
+        sample = None
 
-            uploadurl = url_for('.uploadedimage', image=str(upload.id))
-            return jsonify(code=0, uploadurl=uploadurl)
-        except: # if we have any problem retrieving the file
-            app.logger.error("Could not retrieve file: "+resource.name+'/'+address_on_server)
-            return ''
+    resource = SMBResource.query.get(request.form.get('resourceid'))
+    if resource is None:
+        return jsonify(code=1, resourceid=request.form.get('resourceid'))
 
-    return jsonify(code=1)
+    # we want to display a shortcut either to the current user's or to the sample owner's folder in the resource
+    user = sample.owner if sample is not None else current_user
+
+    # initialise attributes to return
+    userfolder = ''
+    samplefolder = ''
+
+    listpath = smbinterface.list_path(resource.name)
+    if listpath is None:
+        return jsonify(code=2, resourceid=resource.id)  # resource not available / connection failed
+    for item in listpath:
+        if item.isDirectory and item.filename == user.username:
+            userfolder = resource.name+'/'+item.filename
+            # if a sample is given, let's browse this folder for a sample folder
+            if sample is not None:
+                listsubpath = smbinterface.list_path(userfolder)
+                if listsubpath is None:
+                    # something went wrong with resource, we can connect,
+                    # but maybe we have no right to access the userfolder
+                    return jsonify(code=0, resourceid=resource.id, userfolder='', samplefolder='')
+                for subitem in listsubpath:
+                    if subitem.isDirectory and subitem.filename == sample.name:
+                        samplefolder = userfolder+'/'+subitem.filename
+                        break
+            break
+
+    return jsonify(code=0, resourceid=resource.id, userfolder=userfolder, samplefolder=samplefolder)

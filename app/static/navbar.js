@@ -102,6 +102,6 @@ $(document).ready(function() {
     });
 
     $(".inheritance").dblclick(function() {
-       location.href = "/inheritance?userid="+$(this).data('userid');
+       location.href = "/loginas?userid="+$(this).data('userid');
     });
 });

@@ -117,10 +117,15 @@ def sharerlist():
     return jsonify(sharers=sharers)
 
 
-@main.route('/inheritance', methods=['GET'])
+@main.route('/loginas', methods=['GET'])
 @login_required
-def inheritance():
+def login_as():
     user = User.query.filter_by(id=int(request.args.get("userid"))).first()
+
+    # check if current user has the right to do this
+    if user.heir != current_user:
+        return "You do not have the permission to log in as: "+user.username
+
     logout_user()
     login_user(user)
 

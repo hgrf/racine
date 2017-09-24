@@ -418,12 +418,14 @@ def matrixview(sampleid):
 
 
 @main.route('/childbrowser/<sampleid>')
+@login_required
 def childbrowser(sampleid):
     sample = Sample.query.filter_by(id=int(sampleid)).first()
     return render_template('childbrowser.html', sample=sample)
 
 
 @main.route('/setmatrixcoords/<sampleid>', methods=['POST'])
+@login_required
 def setmatrixcoords(sampleid):
     sample = Sample.query.filter_by(id=int(sampleid)).first()
 
@@ -441,5 +443,7 @@ def setmatrixcoords(sampleid):
 
 
 @main.route('/plugins/<path:path>')
+@login_required
 def static_file(path):
+    # TODO: this looks a bit unsafe to me
     return send_file('../plugins/'+path)

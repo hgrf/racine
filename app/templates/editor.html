@@ -3,7 +3,7 @@
 <div id="sampleid" style="display: none">{{ sample.id }}</div>
 <div id="samplename" style="display: none">{{ sample.name }}</div>
 <h1 class="page-header">
-    Sample <div id="samplename" class="{% if sample.owner == current_user %}editable{% endif %}" data-getter="/get/sample/name/{{ sample.id }}?plain" data-setter="/set/sample/name/{{ sample.id }}">{{ sample.name }}</div>
+    Sample <div id="samplename" class="{% if sample.owner == current_user %}editable{% endif %}" data-setter="/set/sample/name/{{ sample.id }}">{{ sample.name }}</div>
     | Type: <div id="sampletype" class="{% if sample.owner == current_user %}editable{% endif %}" data-setter="/set/sample/sampletype_id/{{ sample.id }}">{{ sample.sampletype.name }}</div>
     {% if sample.owner == current_user %}<img title="Delete sample" style="cursor: pointer; float: right; margin-right: 15px;" width="32" height="32" src="{{ url_for('static', filename='delete.png') }}" data-href="/delsample/{{ sample.id }}" data-type="sample" data-id="{{ sample.id }}" data-toggle="modal" data-target="#confirm-delete">{% endif %}
     {% if sample.owner == current_user %}<img title="{% if sample.isarchived %}De-archive{% else %}Archive{% endif %}" style="cursor: pointer; float: right; margin-right: 10px;" id="archive" width="32" height="32" src="{% if sample.isarchived %}{{ url_for('static', filename='dearchive.png') }}{% else %}{{ url_for('static', filename='archive.png') }}{% endif %}">{% endif %}
@@ -46,7 +46,7 @@
     {% set action=actions[i] %}
     <div class="row list-entry {% if action.sample != sample %}parentaction{% endif %}" id="{{ action.id }}" {% if action.sample != sample %}style="background: #F0FFF0;"{% endif %}>
         <div class="col-md-2">
-            <div class="actiondate{% if action.owner == current_user %} editable{% endif %}" data-getter="/get/action/timestamp/{{ action.id }}?plain" data-setter="/set/action/timestamp/{{ action.id }}">{{ action.timestamp }}</div>
+            <div class="actiondate{% if action.owner == current_user %} editable{% endif %}" data-setter="/set/action/timestamp/{{ action.id }}">{{ action.timestamp }}</div>
             {% if action.owner != current_user %}<div style="font-style: italic">{{ action.owner.username }}</div>{% endif %}
             <div class="actiontype{% if action.owner == current_user %} editable{% endif %}" data-setter="/set/action/actiontype_id/{{ action.id }}">{{ action.actiontype.name }}</div>
             {% if action.sample != sample %}<div style="font-style: italic;">{{ action.sample.name }}</div>{% endif %}

@@ -12,6 +12,10 @@
  * Based on editable by Dylan Verheul <dylan_at_dyve.net>:
  *    http://www.dyve.net/jquery/?editable
  *
+ *
+ * Modified by Holger Graef: added reset call back: since onreset is called before reset, I implemented another call
+ * back function that is run after the reset has taken place
+ *
  */
 
 /**
@@ -24,6 +28,7 @@
   * @param String  target             (POST) URL or function to send edited content to **
   * @param Hash    options            additional options 
   * @param String  options[method]    method to use to send edited content (POST or PUT) **
+  * @param Function options[resetcb]  Function to run after resetting edited content **
   * @param Function options[callback] Function to run after submitting edited content **
   * @param String  options[name]      POST parameter name of edited content
   * @param String  options[id]        POST parameter name of edited div id
@@ -91,6 +96,7 @@
         var reset    = $.editable.types[settings.type].reset 
                     || $.editable.types['defaults'].reset;
         var callback = settings.callback || function() { };
+        var resetcb  = settings.resetcb  || function() { };
         var onedit   = settings.onedit   || function() { }; 
         var onsubmit = settings.onsubmit || function() { };
         var onreset  = settings.onreset  || function() { };
@@ -390,6 +396,7 @@
                         if (settings.tooltip) {
                             $(self).attr('title', settings.tooltip);                
                         }
+                        resetcb.apply(self, [self.innerHTML, settings]);
                     }                    
                 }
             };            

@@ -112,7 +112,7 @@ function init_editor() {
     // set up editables (i.e. in-situ editors)
 
     // add a trigger image to all editables
-    $('.editable').add_trigger_image();
+    $('.editable').setup_triggers();
 
     // set up editors for sample and action descriptions (CKEditors)
     $('.ckeditable').ckeditable();

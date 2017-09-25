@@ -1,27 +1,4 @@
 (function($){
-    function on_trigger_image(event) {
-        field = $(this).parent();
-
-        field.addClass('editabling');
-        field.removeClass('editable');
-        field.trigger('dblclick');
-    }
-
-    $.fn.add_trigger_image = function() {
-        fields = $(this);
-
-        fields.append('<img class="edittrigger" src="/static/edit.png">');
-        fields.find('img.edittrigger').click(on_trigger_image);
-        fields.on('editableupdate', function (event) {
-            fields.addClass('editable');
-            fields.removeClass('editabling');
-            if(!fields.has('img.edittrigger').length)
-                fields.add_trigger_image();
-        });
-        return this;
-    };
-
-
     $.fn.texteditable = function() {
         // we need to iterate, because if we are given more than one field, the getter/setter functions
         // will be read only once otherwise
@@ -29,16 +6,19 @@
             field = $(field);
             field.editable(field.data('setter'), {
                 style: 'inherit',
-                event: 'dblclick',
-                width: '10ex',
-                loadurl: field.data('getter'),
+                event: 'edit',
+                width: '8ex',
                 callback: function (value, settings) {
                     var json = $.parseJSON(value);
                     field.html(json.value);
                     // display error message if error occured
                     if (json.code)
-                        $("#flashmessages").append(begin_flashmsg + data.message + end_flashmsg);
+                        $("#flashmessages").append(begin_flashmsg + json.message + end_flashmsg);
                     field.trigger('editableupdate', json);
+                    field.trigger('editabledone');
+                },
+                resetcb: function (value, settings) {
+                    field.trigger('editabledone');
                 }
             });
         });
@@ -54,7 +34,7 @@
                 style  : 'inherit',
                 type   : 'select',
                 submit : 'OK',
-                event  : 'dblclick',
+                event  : 'edit',
                 callback : function(value, settings) {
                     var json = $.parseJSON(value);
                     field.html(choice[json.value]);
@@ -62,6 +42,10 @@
                     if(json.code)
                         $( "#flashmessages" ).append(begin_flashmsg+data.message+end_flashmsg);
                     field.trigger('editableupdate', json);
+                    field.trigger('editabledone');
+                },
+                resetcb: function(value, settings) {
+                    field.trigger('editabledone');
                 }
             });
         });
@@ -69,6 +53,44 @@
 
     $.fn.ckeditable = function() {
         this.dblclick(ckeditable_activate);
+        return this;
+    };
+
+    function on_edit_requested(event) {
+        if($(this).is('img.edittrigger'))
+            field = $(this).parent();
+        else
+            field = $(this);
+
+        field.children('img.edittrigger').remove();
+        field.addClass('editabling');
+        field.removeClass('editable');
+        field.trigger('edit');
+    }
+
+    $.fn.setup_triggers = function() {
+        // add the double click handler
+        $(this).unbind("dblclick");
+        $(this).dblclick(on_edit_requested());
+
+        // add the edit trigger icon
+        $(this).each(function(index, field) {
+            field = $(field);
+            // we have to iterate because we could not do the if statement on a collection of fields
+            if(!field.has('img.edittrigger').length) {
+                field.append('<img class="edittrigger" src="/static/edit.png">');
+            }
+            // avoid accumulation of events
+            field.find('img.edittrigger').unbind('click');
+            field.unbind('editabledone');
+            // re-define events
+            field.find('img.edittrigger').click(on_edit_requested);
+            field.on('editabledone', function (event) {
+                field.addClass('editable');
+                field.removeClass('editabling');
+                field.setup_triggers();
+            });
+        });
         return this;
     };
 
@@ -83,7 +105,6 @@
         $.ajax({
             url: field.data('getter'),
             type: 'get',
-            indexvalue: $(this),            // a little trick to pass the element to the success function
             success: function( data ) {
                 // remove click handler from field
                 field.off('dblclick');
@@ -149,7 +170,8 @@
                 // put back lightbox link around images
                 field.find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+sample_id+'">'; });
 
-                field.trigger('editableupdate');
+                field.trigger('editableupdate', data);
+                field.trigger('editabledone');
             }
         });
     }

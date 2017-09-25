@@ -48,6 +48,10 @@ div.sampleimage #changesampleimage {
   min-height:15em;
 }
 
+.actiondate {
+  font-size:large;
+}
+
 .editable {
   position:relative;
 }

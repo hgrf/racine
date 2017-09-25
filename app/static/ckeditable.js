@@ -52,7 +52,7 @@
     };
 
     $.fn.ckeditable = function() {
-        this.dblclick(ckeditable_activate);
+        this.on('edit', ckeditable_activate);
         return this;
     };
 
@@ -71,7 +71,7 @@
     $.fn.setup_triggers = function() {
         // add the double click handler
         $(this).unbind("dblclick");
-        $(this).dblclick(on_edit_requested());
+        $(this).dblclick(on_edit_requested);
 
         // add the edit trigger icon
         $(this).each(function(index, field) {
@@ -106,9 +106,6 @@
             url: field.data('getter'),
             type: 'get',
             success: function( data ) {
-                // remove click handler from field
-                field.off('dblclick');
-
                 // prepare div content for editing
                 field.empty();
                 field.append(data.value);
@@ -155,9 +152,6 @@
             url: field.data('getter'),
             type: "get",
             success: function( data ) {
-                // but click handler back to field
-                field.dblclick(ckeditable_activate);
-
                 // prepare div content for editing
                 field.empty();
                 field.append(data.value);

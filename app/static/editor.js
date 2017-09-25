@@ -244,13 +244,14 @@ $(document).ready(function() {
             success: function( data ){
                 $("#userbrowser-frame").html(data);
 
-                $('.user').click( function( event ) {
+                // use .one to avoid multiple clicks and creation of multiple identical shares
+                $('.user').one('click', function( event ) {
                     $.ajax({
                         url: "/sharesample",
                         type: "post",
                         data: { "id": sample_id, "sharewith": $(this).attr('id') },
                         success: function( data ) {
-                            $('#sharelist').append('<div class="row sharelistentry" id="sharelistentry'+data.shareid+'">'+data.username+'<img style="cursor: pointer; float: left; display: inline;" width="32" height="32" src="/static/delete.png" data-type="share" data-id="'+data.shareid+'" data-toggle="modal" data-target="#confirm-delete"></div>');
+                            $('#sharelist').append('<div class="sharelistentry" id="sharelistentry'+data.shareid+'">'+data.username+'<a data-type="share" data-id="'+data.shareid+'" data-toggle="modal" data-target="#confirm-delete" href="">&times;</a></div>');
                             $('#userbrowser').modal('hide');
                         }
                     }); // what if we drag parent to child?

@@ -39,17 +39,20 @@ div.sampleimage #changesampleimage {
   font-weight:bold;
 }
 
-/* TODO: is this class used?? */
-.sampleimage {
-  min-height: 15em;
-}
-
 #sampledescription {
-  min-height:15em;
+  min-height:10em;
 }
 
 .actiondate {
   font-size:large;
+}
+
+.actionicon {
+  cursor: pointer;
+  float: right;
+  display: inline;
+  width: 24px;
+  height: 24px;
 }
 
 .editable {
@@ -87,23 +90,32 @@ div.sampleimage #changesampleimage {
 }
 
 .sharelistentry {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  position: relative;
+  display: inline;
+  float: left;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  margin-right: 1em;
 }
 
-.sharelistentry img {
-  position: absolute;
-  right: 0;
+.sharelistentry a {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.newsharelistentry {
+  clear: both;
+}
+
+.newsharelistentry a {
+  font-weight: bold;
 }
 
 .list-entry {
   padding-top: 20px;
   padding-bottom: 20px;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #CCCCCC;
 }
 
 .list-header {

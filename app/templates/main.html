@@ -105,8 +105,8 @@
         {% if sample is not none %}
             var sample = {{ sample.id }};
         {% endif %}
-        var sampletypes = "{ {% for sampletype in sampletypes %} {{ sampletype.id }}:'{{ sampletype.name }}', {% endfor %} }";
-        var actiontypes = "{ {% for actiontype in actiontypes %} {{ actiontype.id }}:'{{ actiontype.name }}', {% endfor %} }";
+        var sampletypes = { {% for sampletype in sampletypes %} {{ sampletype.id }}:'{{ sampletype.name }}', {% endfor %} };
+        var actiontypes = { {% for actiontype in actiontypes %} {{ actiontype.id }}:'{{ actiontype.name }}', {% endfor %} };
         var begin_flashmsg = "{{ begin_flashmsg|safe }}";
         var end_flashmsg = "{{ end_flashmsg|safe }}";
     </script>
@@ -121,8 +121,7 @@
     <script>window.MathJax || document.write('<script async src="{{ url_for('static', filename='mathjax/MathJax.js') }}?config=TeX-MML-AM_CHTML">\x3C/script>')</script>
     <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
     <script src="{{ url_for('static', filename='jquery.jeditable.js') }}"></script>
-    <script src="{{ url_for('static', filename='jquery.generateId.js') }}"></script>
-    <script src="{{ url_for('static', filename='jquery.jeditable.ckeditor.js') }}"></script>
+    <script src="{{ url_for('static', filename='ckeditable.js') }}"></script>
     <script src="{{ url_for('static', filename='editor.js') }}"></script>
     <script src="{{ url_for('static', filename='matrixview.js') }}"></script>
     <script src="{{ url_for('static', filename='navbar.js') }}"></script>

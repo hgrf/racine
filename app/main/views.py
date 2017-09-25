@@ -156,108 +156,15 @@ def sharesample():
     return jsonify(code=0, username=user.username, userid=user.id, shareid=share.id)
 
 
-@main.route('/changesamplename', methods=['POST'])
-@login_required
-def changesamplename():
-    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
-    if sample == None or sample.owner != current_user:
-        return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
-    newname = request.form.get('value')
-    if len(newname) > SAMPLE_NAME_LENGTH:
-        return jsonify(code=1, error="Name too long", name=sample.name)
-    if (Sample.query.filter_by(owner=current_user, name=newname).first() == None):
-        sample.name = newname
-        db.session.commit()
-        return jsonify(code=0, name=newname, id=sample.id)
-    else:
-        return jsonify(code=1, error="Name is already taken", name=sample.name)
-
-
-@main.route('/changesampletype', methods=['POST'])
-@login_required
-def changesampletype():
-    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
-    if sample == None or sample.owner != current_user:
-        return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
-    sample.sampletype_id = int(request.form.get('value'))
-    db.session.commit()
-    return sample.sampletype.name
-
-
-@main.route('/changesampledesc', methods=['POST'])
-@login_required
-def changesampledesc():
-    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
-    if sample == None or sample.owner != current_user:
-        return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
-    sample.description = request.form.get('value')
-    db.session.commit()
-    return sample.description
-
-
 @main.route('/changesampleimage', methods=['POST'])
 @login_required
 def changesampleimage():
     sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
-    print "request to change sample image, sample ", sample.id, " image ", request.form.get('value')
     if sample == None or sample.owner != current_user:
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
     sample.image = request.form.get('value')
     db.session.commit()
     return ""
-
-
-@main.route('/changeactiondate', methods=['POST'])
-@login_required
-def changeactiondate():
-    action = Action.query.filter_by(id=int(request.form.get("id"))).first()
-    if action == None or action.owner != current_user:
-        return jsonify(code=1, error="Action does not exist or you do not have the right to access it")
-    try:
-        action.timestamp = datetime.strptime(request.form.get('value'), '%Y-%m-%d')
-    except ValueError:
-        return jsonify(code=1, error="Not a valid date", id=action.id, date=action.timestamp.strftime('%Y-%m-%d'))
-    db.session.commit()
-    return jsonify(code=0, id=action.id, date=action.timestamp.strftime('%Y-%m-%d'))
-
-
-@main.route('/changeactiontype', methods=['POST'])
-@login_required
-def changeactiontype():
-    action = Action.query.filter_by(id=int(request.form.get("id"))).first()
-    if action == None or action.owner != current_user:
-        return jsonify(code=1, error="Action does not exist or you do not have the right to access it")
-    action.actiontype_id = request.form.get('value')
-    db.session.commit()
-    return action.actiontype.name
-
-
-@main.route('/getsampledesc', methods=['GET'])
-@login_required
-def getsampledesc():
-    sample = Sample.query.filter_by(id=int(request.args.get("id"))).first()
-    if sample == None or sample.owner != current_user:
-        return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
-    return sample.description
-
-@main.route('/getactiondesc', methods=['GET'])
-@login_required
-def getactiondesc():
-    action = Action.query.filter_by(id=int(request.args.get("id"))).first()
-    if action == None or action.owner != current_user:
-        return jsonify(code=1, error="Action does not exist or you do not have the right to access it")
-    return action.description
-
-
-@main.route('/changeactiondesc', methods=['POST'])
-@login_required
-def changeactiondesc():
-    action = Action.query.filter_by(id=int(request.form.get("id"))).first()
-    if action == None or action.owner != current_user:
-        return jsonify(code=1, error="Action does not exist or you do not have the right to access it")
-    action.description = request.form.get('value')
-    db.session.commit()
-    return action.description
 
 
 @main.route('/delaction/<actionid>', methods=['GET', 'POST'])
@@ -453,3 +360,105 @@ def setmatrixcoords(sampleid):
 def static_file(path):
     # TODO: this looks a bit unsafe to me
     return send_file('../plugins/'+path)
+
+
+def validate_sample_name(name):
+    if len(name) > SAMPLE_NAME_LENGTH:
+        raise Exception("Name too long.")
+    if Sample.query.filter_by(owner=current_user, name=name).first() is not None:
+        raise Exception("Name is already taken.")
+    return name
+
+
+# define supported fields
+supported_targets = {
+    'sample': {
+        'dbobject': Sample,
+        'auth': 'owner',        # TODO: implement this
+        'fields': {
+            'name': validate_sample_name,
+            'sampletype_id': int,
+            'description': str
+        }
+    },
+    'action': {
+        'dbobject': Action,
+        'auth': 'owner',
+        'fields': {
+            'timestamp': lambda x: datetime.strptime(x, '%Y-%m-%d'),
+            'actiontype_id': int,
+            'description': str
+        }
+    }
+    # TODO: should add sampletypes, actiontypes, SMBresources here, for easy modification by administrator
+    # TODO: in that case should also add admin required field
+    # e.g.:
+    #'resource': {
+    #    'dbobject': SMBResource,
+    #    'auth': 'admin',
+    #    'fields': {
+    #        'name': str
+    #    }
+    #}
+}
+
+
+@main.route('/get/<target>/<field>/<id>', methods=['GET'])
+@login_required
+def getfield(target, field, id):
+    if not (id and target and field and target in supported_targets):
+        return jsonify(code=1)
+
+    # redefine target to simplify
+    target = supported_targets[target]
+
+    # try to get requested item from database
+    item = target['dbobject'].query.get(id)
+
+    # check if the item is valid, if the requested field is supported and if the current user
+    # has the right to read it
+    if not (item and item.owner == current_user and field in target['fields']):
+        return jsonify(code=1)
+
+    # return value
+    if request.args.get('plain') is not None:
+        return str(getattr(item, field))
+    else:
+        return jsonify(code=0, value=getattr(item, field))
+
+
+@main.route('/set/<target>/<field>/<id>', methods=['POST'])
+@login_required
+def updatefield(target, field, id):
+    if not (id and target and field and target in supported_targets):
+        return jsonify(code=1, value='', message='Invalid request')
+
+    value = request.form.get('value')
+
+    # redefine target to simplify
+    target = supported_targets[target]
+
+    # try to get requested item from database
+    item = target['dbobject'].query.get(id)
+
+    # check if the item is valid, if the requested field is supported and if the current user
+    # has the right to modify it
+    if not (item and item.owner == current_user and field in target['fields']):
+        return jsonify(code=1, value='', message='Invalid request')
+
+    print target['dbobject'], "id:", id, "value:", value
+
+    # try to assign value
+    try:
+        # check if a modifier is to be applied
+        modifier = target['fields'][field]
+        if modifier is not None:
+            setattr(item, field, modifier(value))
+        else:
+            setattr(item, field, value)
+    except Exception as e:
+        return jsonify(code=1, value=str(getattr(item, field)), message='Error: '+str(e))
+
+    # commit changes to database
+    db.session.commit()
+    return jsonify(code=0, value=value)

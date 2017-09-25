@@ -21,6 +21,33 @@ div.sampleimage #changesampleimage {
   display:none;
 }
 
+.ckeditable {
+  min-height:3em;
+}
+
+#sampleimage {
+  max-width:100%;
+}
+
+#samplename {
+  display:inline;
+  font-weight:bold;
+}
+
+#sampletype {
+  display:inline;
+  font-weight:bold;
+}
+
+/* TODO: is this class used?? */
+.sampleimage {
+  min-height: 15em;
+}
+
+#sampledescription {
+  min-height:15em;
+}
+
 .editable {
   position:relative;
 }
@@ -51,16 +78,8 @@ div.sampleimage #changesampleimage {
   display:none;
 }
 
-.sampleimage {
-  min-height: 15em;
-}
-
-#sampleimage {
-  max-width:100%;
-}
-
-.editsampledescription {
-  min-height:15em;
+.ckeditabling {
+  background-color: #FFEEEE !important;
 }
 
 .sharelistentry {

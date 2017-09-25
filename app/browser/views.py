@@ -202,8 +202,6 @@ def retrieve_image(upload_id):
     # TODO: check that user has right to view the image (this might be tricky because the sample might be a shared one)
 
     dbentry = Upload.query.get(upload_id)
-
-    print app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext
     return send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext)
 
 

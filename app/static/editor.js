@@ -1,7 +1,9 @@
+var sample_id;
 var hideparentactions = false;
 
 // configure the CKEditor
 var ckeditorconfig = {
+    extraPlugins: 'save',
     imageUploadUrl: '/browser/upload?caller=ckdd&type=img',
     uploadUrl: '/browser/upload?caller=ckdd&type=att',
     filebrowserImageBrowseUrl: '/browser',
@@ -30,9 +32,11 @@ var ckeditorconfig = {
 $.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer
 
 function init_editor() {
+    sample_id = $('#sampleid').text();
+
     // handler for matrix view button
     $('#matrixviewbutton').click(function() {
-        load_matrix_view($('#sampleid').text());
+        load_matrix_view(sample_id);
     });
 
     // handler for archive button
@@ -40,7 +44,7 @@ function init_editor() {
         $.ajax({
             url: "/togglearchived",
             type: "post",
-            data: { "id": $('#sampleid').text() },
+            data: { "id": sample_id },
             success: function( data ) {
                 if(data.isarchived) {
                     $('#archive').attr('title', 'De-archive');
@@ -62,19 +66,19 @@ function init_editor() {
 
     // handler for button that changes sample image
     $('#changesampleimage').click(function(event) {
-        window.open("/browser?changesampleimage=1&sample="+$("#sampleid").text(), 'Browser', 'height=500, width=800, scrollbars=yes')
+        window.open("/browser?changesampleimage=1&sample="+sample_id, 'Browser', 'height=500, width=800, scrollbars=yes')
     });
 
     // handler for new action submit button
     $('#submit').click( function(event) {
         for ( instance in CKEDITOR.instances ) CKEDITOR.instances[instance].updateElement(); // otherwise content of editor is not transmitted
         $.ajax({
-            url: "/newaction/"+$('#sampleid').text(),
+            url: "/newaction/"+sample_id,
             type: "post",
             data: $('#newactionform').serialize(),
             success: function( data ) {
                 if(data.code == 0) {
-                    load_sample($('#sampleid').text());
+                    load_sample(sample_id);
                 }
                 else {      // form failed validation; because of invalid data or expired CSRF token
                     $(document).on("editor_initialised", data, function(event) {
@@ -92,8 +96,8 @@ function init_editor() {
     });
 
     // put lightbox link around images
-    $('.editsampledescription').find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
-    $('.editactiondescription').find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
+    $('#sampledescription').find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+sample_id+'">'; });
+    $('.actiondescription').find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+sample_id+'">'; });
     $('#sampleimage').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
 
     // typeset all equations
@@ -101,106 +105,34 @@ function init_editor() {
         MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 
     // tell CKEditor browser to pass on sample ID
-    ckeditorconfig.filebrowserImageBrowseUrl = '/browser?sample='+$("#sampleid").text();
+    ckeditorconfig.filebrowserImageBrowseUrl = '/browser?sample='+sample_id;
     CKEDITOR.replace('description', ckeditorconfig);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // handlers for fields that modify sample information (jEditables)
-    $('.editable').append('<img class="edittrigger" src="/static/edit.png">');
-    $('.editable').find('img.edittrigger').click(function(event) {
-        $(this).closest('.editable').addClass('editabling');
-        $(this).closest('.editable').removeClass('editable');
-        $(this).prev('div').trigger('edit');
-        $(this).closest('.editabling').find('form').on('remove', function(event) {
-            $(this).closest('.editabling').addClass('editable');
-            $(this).closest('.editabling').removeClass('editabling');
-        });
+    // set up editables (i.e. in-situ editors)
+
+    // add a trigger image to all editables
+    $('.editable').add_trigger_image();
+
+    // set up editors for sample and action descriptions (CKEditors)
+    $('.ckeditable').ckeditable();
+
+    // other editables:
+    $('#samplename.editable').texteditable();
+    $('#samplename.editable').on('editableupdate', function(event, data) {
+        if(!data.code) // only if no error occured
+            $("#navname"+sample_id).html(data.value);
     });
-
-    $('.editsamplename').editable('/changesamplename', {
-        style : 'inherit',
-        event : 'edit',
-        callback : function(value, settings) {
-            var json = $.parseJSON(value);
-            $(".editsamplename").html(json.name);
-            if (json.code == 0) {
-                $("#navname" + json.id).html(json.name);
-            } else {
-                $("#flashmessages").append(begin_flashmsg + json.error + end_flashmsg);
-            }
-        }
+    $('#sampletype.editable').comboeditable(sampletypes);
+    $('#sampletype.editable').on('editableupdate', function(event, data) {
+        if(!data.code) // only if no error occured
+            $("#navtype"+sample_id).html(sampletypes[data.value]);
     });
-
-    $('.selectsampletype').editable('/changesampletype', {
-        data   : sampletypes,
-        style  : 'inherit',
-        type   : 'select',
-        submit : 'OK',
-        event  : 'edit',
-        callback : function(value, settings) {
-            $( "#navtype"+$('#sampleid').text() ).html(value);
-        }
-    });
-
-    $('.editsampledescription').editable('/changesampledesc', {
-        type   : 'ckeditor',
-        submit : 'OK',
-        cancel : 'Cancel',
-        onblur : 'ignore',
-        event  : 'edit',
-        loadurl : '/getsampledesc',
-        ckeditor : ckeditorconfig,
-        callback: function() {
-            // typeset all equations in this action
-            MathJax.Hub.Queue(["Typeset",MathJax.Hub,$(this).get()]);
-
-            // put back lightbox link around images
-            $(this).find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
-        }
-    });
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // handlers for fields that modify action information (jEditables and the order buttons)
-    $('.editactiondate').editable('/changeactiondate', {
-        submit : 'OK',
-        event  : 'edit',
-        width  : '10ex',
-        callback : function(value, settings) {
-            var json = $.parseJSON(value);
-            $( "#"+json.id+".editactiondate" ).html(json.date);
-            if(json.code != 0) {
-                $( "#flashmessages" ).append(begin_flashmsg+json.error+end_flashmsg);
-            }
-        }
-    });
-
-    $('.selectactiontype').editable('/changeactiontype', {
-        data   : actiontypes,
-        style  : 'inherit',
-        type   : 'select',
-        submit : 'OK',
-        event  : 'edit'
-    });
-
-    $('.editactiondescription').editable('/changeactiondesc', {
-        type   : 'ckeditor',
-        submit : 'OK',
-        cancel : 'Cancel',
-        onblur : 'ignore',
-        event  : 'edit',
-        loadurl  : '/getactiondesc',
-        ckeditor : ckeditorconfig,
-        callback: function() {
-            // typeset all equations in this action
-            MathJax.Hub.Queue(["Typeset",MathJax.Hub,$(this).get()]);
-
-            // put back lightbox link around images
-            $(this).find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
-        }
-    });
+    $('.actiondate.editable').texteditable();
+    $('.actiontype.editable').comboeditable(actiontypes);
 
     $('.swapaction').click( function(event) {
-        sampleid = $('#sampleid').text();
+        sampleid = sample_id;
         actionid = $(this).data('id');
         swapid = $(this).data('swapid');
         $.ajax({
@@ -223,7 +155,7 @@ function load_sample(id, pushstate) {
     // if currently viewing a sample (not welcome page) then change the navbar background to transparent before loading
     // the new sample
     if($('#sampleid').text() != "")
-        $('#' + $('#sampleid').text() + ".nav-entry").css("background-color", "transparent");
+        $('#' + sample_id + ".nav-entry").css("background-color", "transparent");
 
     // load the sample data and re-initialise the editor
     $.ajax({
@@ -231,12 +163,13 @@ function load_sample(id, pushstate) {
         pushstate: pushstate,
         success: function( data ) {
             $( "#editor-frame" ).html(data);
+            sample_id = $('#sampleid').text();
             if(this.pushstate)
-                window.history.pushState({"id": $('#sampleid').text(), "pageTitle": data.pageTitle}, "", "/sample/"+ $('#sampleid').text());
+                window.history.pushState({"id": sample_id, "pageTitle": data.pageTitle}, "", "/sample/"+ sample_id);
             document.title = "MSM - "+$('#samplename').text();
             init_editor();
 
-            $('#'+$('#sampleid').text()+".nav-entry").css("background-color", "#BBBBFF");
+            $('#'+sample_id+".nav-entry").css("background-color", "#BBBBFF");
         }
     });
 }
@@ -272,6 +205,8 @@ $(document).ready(function() {
             }
         }
     });
+
+    // TODO: this stuff belongs in "main.js"
 
     // sample and action deletion
     $('#confirm-delete').on('show.bs.modal', function(e) {
@@ -313,7 +248,7 @@ $(document).ready(function() {
                     $.ajax({
                         url: "/sharesample",
                         type: "post",
-                        data: { "id": $('#sampleid').text(), "sharewith": $(this).attr('id') },
+                        data: { "id": sample_id, "sharewith": $(this).attr('id') },
                         success: function( data ) {
                             $('#sharelist').append('<div class="row sharelistentry" id="sharelistentry'+data.shareid+'">'+data.username+'<img style="cursor: pointer; float: left; display: inline;" width="32" height="32" src="/static/delete.png" data-type="share" data-id="'+data.shareid+'" data-toggle="modal" data-target="#confirm-delete"></div>');
                             $('#userbrowser').modal('hide');

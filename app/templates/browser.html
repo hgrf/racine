@@ -26,12 +26,14 @@
         {% endif %}
         <div style="margin-bottom:20px"><strong>Network shares:</strong></div>
         {% for resource in resources %}
-            <div class="resource" data-url="{{ resource.name }}" data-id="{{ resource.id }}" id="resource{{ resource.id }}">
-                <img src="{{ url_for('static', filename='resource.png') }}">
-                {{ resource.name }}
-            </div>
-            <div class="shortcuts" id="shortcuts{{ resource.id }}">
-                <img src="{{ url_for('static', filename='loader.gif') }}" width="48px" height="48px">
+            <div class="resourcerow">
+                <div class="resource" data-url="{{ resource.name }}" data-id="{{ resource.id }}" id="resource{{ resource.id }}">
+                    <img src="{{ url_for('static', filename='resource.png') }}">
+                    {{ resource.name }}
+                </div>
+                <div class="shortcuts" id="shortcuts{{ resource.id }}">
+                    <img class="shortcut" src="{{ url_for('static', filename='loader.gif') }}">
+                </div>
             </div>
         {% endfor %}
     {% else %}

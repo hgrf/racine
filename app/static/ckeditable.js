@@ -62,6 +62,7 @@
         else
             field = $(this);
 
+        field.unbind('dblclick');
         field.children('img.edittrigger').remove();
         field.addClass('editabling');
         field.removeClass('editable');

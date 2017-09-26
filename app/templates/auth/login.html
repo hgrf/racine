@@ -1,49 +1,121 @@
-{% extends "base.html" %}
+{% extends "bootstrap/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block styles %}
-{{super()}}
-<style>
-.user:hover {
-    cursor:pointer;
-    background-color: #CCCCEE;
-}
-</style>
+    {{super()}}
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='login.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='dashboard.css')}}">
 {% endblock %}
 
-{% block title %}Sample Manager - Login{% endblock %}
+{% block title %}Mercury Sample Manager - Login{% endblock %}
 
-{% block page_content %}
-    <div class="page-header">
-    <h1>Login</h1>
+{% block navbar %}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">Mercury Sample Manager</a>
     </div>
-    <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-6">
-            {{ wtf.quick_form(form) }}
-        </div>
-        <div class="col-md-6">
-            {% for user in users %}
-                {% if user.heir is none %}
-                <div class="user" data-email="{{ user.email }}" >
-                    <img src="{{ url_for('static', filename='user.png') }}" width="50px" height="50px">
-                    {{ user.username }}
-                </div>
-                {% endif %}
-            {% endfor %}
+  </div>
+</nav>
+{% endblock %}
+
+{% set begin_flashmsg = "<div class='alert alert-warning'><button type='button' class='close' data-dismiss='alert'>&times;</button>" %}
+{% set end_flashmsg = "</div>" %}
+{% block content %}
+    <div class="container" id="flashmessages">
+    {% for message in get_flashed_messages() %}
+    {{ begin_flashmsg|safe }}
+    {{ message }}
+    {{ end_flashmsg|safe }}
+    {% endfor %}
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="login-container">
+            <div class="col-md-2"></div>
+                <div class="login col-md-5">
+                <form method="POST" action="/auth/login" id="loginform">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        {{ form.username(class_='form-control', placeholder='username') }}
+                    </div>
+                    <div class="form-group input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        {{ form.password(class_='form-control', placeholder='password') }}
+                    </div>
+                    <div class="form-group input-group">
+                        {{ wtf.form_field(form.remember_me) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.submit(class_='btn btn-primary btn-block') }}
+                    </div>
+                </form>
+            </div>
+            <div class="quicklogin col-md-3">
+                {% for username in last_logged_in %}
+                    <div class="user" data-username="{{ username }}">
+                        <img src="{{ url_for('static', filename='user.png') }}">
+                        <span>{{ username }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-md-2"></div>
+            </div>
         </div>
     </div>
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
+    <script src="{{ url_for('static', filename='typeahead.js/typeahead.jquery.min.js') }}"></script>
     <script type="text/javascript" charset="utf-8">
     $(function() {
         $(document).ready(function() {
+            var substringMatcher = function(strs) {
+              return function findMatches(q, cb) {
+                var matches, substringRegex;
+
+                // an array that will be populated with substring matches
+                matches = [];
+
+                // regex used to determine if a string contains the substring `q`
+                substrRegex = new RegExp(q, 'i');
+
+                // iterate through the pool of strings and for any string that
+                // contains the substring `q`, add it to the `matches` array
+                $.each(strs, function(i, str) {
+                  if (substrRegex.test(str)) {
+                    matches.push(str);
+                  }
+                });
+
+                cb(matches);
+              };
+            };
+
+
             $(".user").click(function( event )  {
-                $("#email").val($(this).data("email"));
+                $("#username").val($(this).data("username"));
                 $("#password").focus();
                 event.preventDefault();
+            });
+
+            var users = [{% for u in users %}'{{ u.username }}', {% endfor %}];
+
+            $('#username').typeahead({
+                minLength: 1,
+                highlight: true
+            },
+            {
+                name: 'users',
+                source: substringMatcher(users),
+                templates: {
+                    suggestion: function(data) {
+                        return '<div><img src="/static/user.png" width="24px" height="24px">' + data + '</div>';
+                    }
+                }
             });
         });
     });

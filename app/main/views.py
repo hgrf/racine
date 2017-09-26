@@ -13,9 +13,16 @@ from sqlalchemy.sql import func
 
 
 @main.route('/')
+def index():
+    if current_user.is_authenticated:
+        return sample(0)
+    else:
+        return redirect('/auth/login?next=%2F')
+
+
 @main.route('/sample/<sampleid>')
 @login_required
-def index(sampleid=0):
+def sample(sampleid):
     sample = Sample.query.get(sampleid)
     samples = Sample.query.filter_by(owner=current_user).all()
     myshares = Share.query.filter_by(user=current_user).all()
@@ -95,6 +102,13 @@ def search():
     keyword = request.args.get("term")
     samples = Sample.query.filter_by(owner=current_user).filter(Sample.name.ilike('%'+keyword+'%')).limit(10).all()   # max 10 items
     return jsonify(results=[{"label": s.name, "value": s.id} for s in samples])
+
+
+@main.route('/usersearch', methods=['GET'])
+def usersearch():
+    keyword = request.args.get("term")
+    users = User.query.filter(User.username.ilike('%'+keyword+'%')).limit(5).all()   # max 5 items
+    return jsonify(results=[{"label": u.username, "value": u.id} for u in users])
 
 
 @main.route('/userlist', methods=['POST'])

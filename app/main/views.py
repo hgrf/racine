@@ -91,6 +91,7 @@ def editor(sampleid):
 
 
 @main.route('/help')
+@login_required
 def help():
     admin = User.query.filter_by(is_admin=True).first()
     return render_template('help.html', admin=admin)

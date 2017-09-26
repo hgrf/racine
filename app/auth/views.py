@@ -23,6 +23,8 @@ def login():
             last_logged_in.insert(0, user.username)
             last_logged_in = last_logged_in[0:5]
 
+            print request.args.get('next')
+
             resp = redirect(request.args.get('next') or url_for('main.index'))
         else:
             flash('Incorrect username or password.')

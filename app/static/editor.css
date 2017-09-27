@@ -89,6 +89,10 @@ div.sampleimage #changesampleimage {
   background-color: #FFEEEE !important;
 }
 
+.marker{
+	background-color: Yellow;
+}
+
 .sharelistentry {
   display: inline;
   float: left;

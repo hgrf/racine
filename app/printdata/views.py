@@ -1,11 +1,8 @@
-from flask import render_template, redirect, request, url_for
+from flask import render_template
 from . import printdata
-from .. import db
 from ..models import Action, Sample
 from forms import RequestActionsForm
 from flask.ext.login import login_required, current_user
-
-from datetime import date
 from datetime import datetime
 
 

@@ -83,7 +83,6 @@ function init_editor() {
                 else {      // form failed validation; because of invalid data or expired CSRF token
                     $(document).on("editor_initialised", data, function(event) {
                         CKEDITOR.instances.description.setData(event.data.description);
-                        $("#actiontype").val(event.data.actiontype);
                         $("#errordialog").find(".modal-body").text("Form is not valid. Either you entered an invalid date or the session has expired. Try submitting again.");
                         $("#errordialog").modal("show");
                         $(document).off("editor_initialised");
@@ -129,7 +128,6 @@ function init_editor() {
             $("#navtype"+sample_id).html(sampletypes[data.value]);
     });
     $('.actiondate.editable').texteditable();
-    $('.actiontype.editable').comboeditable(actiontypes);
 
     $('.swapaction').click( function(event) {
         sampleid = sample_id;

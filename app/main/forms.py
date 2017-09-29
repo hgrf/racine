@@ -5,7 +5,6 @@ from wtforms.fields.html5 import DateField
 
 class NewActionForm(Form):
     timestamp = DateField('Date:')
-    actiontype = SelectField('Action type:', coerce=int)
     description = TextAreaField('Description:')
     submit = SubmitField('Submit')
 

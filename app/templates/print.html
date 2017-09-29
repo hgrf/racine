@@ -10,7 +10,6 @@
 <div class="col-sm-3 col-md-2 sidebar">
     {{ wtf.quick_form(form, id="selectdataform") }}
     <div class="checkbox"><label><input type="checkbox" id="chkshowuser" onchange="onChkShowUser()">Hide user names</label></div>
-    <div class="checkbox"><label><input type="checkbox" id="chkshowtype" onchange="onChkShowType()">Hide action types</label></div>
     <p>Reduce image size:</p>
     <div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true">
@@ -45,7 +44,6 @@
                 <span>
                     <span class="date">{{ action.timestamp }}</span>
                     <span class="username">{{ action.owner.username }}</span>
-                    <span class="actiontype">{{ action.actiontype.name }}</span>
                 </span>
             </div>
             <div class="actiondesc">{{ action.description|safe }}</div>
@@ -70,18 +68,6 @@
         function onChkShowUser() {
             var spans = document.getElementsByClassName("username");
             if(document.getElementById('chkshowuser').checked) {
-                for (var i = 0; i < spans.length; i++)
-                    spans[i].style.display = "none";
-            } else {
-                for (var i = 0; i < spans.length; i++)
-                    spans[i].style.display = "initial";
-            }
-        }
-
-        // could do this more efficiently with jQuery
-        function onChkShowType() {
-            var spans = document.getElementsByClassName("actiontype");
-            if(document.getElementById('chkshowtype').checked) {
                 for (var i = 0; i < spans.length; i++)
                     spans[i].style.display = "none";
             } else {

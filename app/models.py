@@ -77,16 +77,6 @@ class Sample(db.Model):
         return user in [share.user for share in self.shares]
 
 
-class ActionType(db.Model):
-    __tablename__ = 'actiontypes'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
-    actions = db.relationship('Action', backref='actiontype')
-
-    def __repr__(self):
-        return '<ActionType %r>' % self.name
-
-
 class Action(db.Model):
     __tablename__ = 'actions'
     id = db.Column(db.Integer, primary_key=True)
@@ -95,7 +85,6 @@ class Action(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     timestamp = db.Column(db.Date)
     sample_id = db.Column(db.Integer, db.ForeignKey('samples.id'))
-    actiontype_id = db.Column(db.Integer, db.ForeignKey('actiontypes.id'))
     description = db.Column(db.UnicodeText)
 
     def __repr__(self):

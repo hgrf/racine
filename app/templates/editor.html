@@ -54,7 +54,6 @@
         <div class="col-md-2">
             <div class="actiondate{% if action.owner == current_user %} editable{% endif %}" data-setter="/set/action/timestamp/{{ action.id }}">{{ action.timestamp }}</div>
             {% if action.owner != current_user %}<div style="font-style: italic">{{ action.owner.username }}</div>{% endif %}
-            <div class="actiontype{% if action.owner == current_user %} editable{% endif %}" data-setter="/set/action/actiontype_id/{{ action.id }}">{{ action.actiontype.name }}</div>
             {% if action.sample != sample %}<div style="font-style: italic;">{{ action.sample.name }}</div>{% endif %}
         </div>
         <div class="col-md-8 actiondescription{% if action.owner == current_user %} editable ckeditable{% endif %}" data-getter="/get/action/description/{{ action.id }}" data-setter="/set/action/description/{{ action.id }}">{{ action.description|safe }}</div>
@@ -76,7 +75,6 @@
             {{ form.hidden_tag() }}
             <div class="col-md-2">
                 {{ wtf.form_field(form.timestamp) }}
-                {{ wtf.form_field(form.actiontype) }}
             </div>
             <div class="col-md-8">{{ wtf.form_field(form.description) }}</div>
             <div class="col-md-2">{{ wtf.form_field(form.submit) }}</div>

@@ -2,7 +2,7 @@ from flask import render_template, redirect, request, jsonify, send_file, flash,
 from flask.ext.login import current_user, login_required, login_user, logout_user
 from .. import db
 from .. import plugins
-from ..models import Sample, SampleType, Action, ActionType, User, Share, Upload
+from ..models import Sample, SampleType, Action, User, Share, Upload
 from ..models import SAMPLE_NAME_LENGTH   # <-- sort this out
 from . import main
 from forms import NewSampleForm, NewActionForm, NewMatrixForm
@@ -30,8 +30,7 @@ def sample(sampleid):
     showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
 
     return render_template('main.html', samples=samples, sample=sample, sampletypes=SampleType.query.all(),
-                           actiontypes=ActionType.query.all(), myshares=myshares, myinheritance=myinheritance,
-                           showarchived=showarchived)
+                           myshares=myshares, myinheritance=myinheritance, showarchived=showarchived)
 
 
 @main.route('/welcome')
@@ -72,7 +71,6 @@ def editor(sampleid):
         return render_template('404.html'), 404
     else:
         form = NewActionForm()
-        form.actiontype.choices = [(actiontype.id, actiontype.name) for actiontype in ActionType.query.order_by('name')]
         form.description.data = ''
         form.timestamp.data = date.today()
 
@@ -82,11 +80,12 @@ def editor(sampleid):
         while s is not None:
             actions.extend(Action.query.filter_by(sample=s).order_by(Action.ordnum).all())
             s = s.parent
-            if hideparentactions: break
+            if hideparentactions:
+                break
         actions = sorted(actions, key=lambda a: a.ordnum)
 
         return render_template('editor.html', sample=sample, actions=actions, form=form,
-                               sampletypes=SampleType.query.all(), actiontypes=ActionType.query.all(), shares=shares,
+                               sampletypes=SampleType.query.all(), shares=shares,
                                hideparentactions=hideparentactions)
 
 
@@ -277,10 +276,9 @@ def newaction(sampleid):
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
 
     form = NewActionForm()
-    form.actiontype.choices = [(actiontype.id, actiontype.name) for actiontype in ActionType.query.order_by('name')]
     if form.validate_on_submit():
-        a = Action(datecreated=date.today(), timestamp=form.timestamp.data, owner=current_user, sample_id=sampleid, actiontype_id=form.actiontype.data,
-                              description=form.description.data)
+        a = Action(datecreated=date.today(), timestamp=form.timestamp.data, owner=current_user, sample_id=sampleid,
+                   description=form.description.data)
         db.session.add(a)
         db.session.commit()
         a.ordnum = a.id         # add ID as order number (maybe there is a more elegant way to do this?)
@@ -290,7 +288,7 @@ def newaction(sampleid):
     # CSRF token passed its time limit (typically 3600s) -> users lose everything they
     # wrote otherwise (also happens when user enters invalid date)
     elif form.is_submitted():
-        return jsonify(code=1, actiontype=form.actiontype.data, description=form.description.data)
+        return jsonify(code=1, description=form.description.data)
 
     return jsonify(code=0)
 
@@ -402,11 +400,10 @@ supported_targets = {
         'auth': 'owner',
         'fields': {
             'timestamp': lambda x: datetime.strptime(x, '%Y-%m-%d'),
-            'actiontype_id': int,
             'description': str
         }
     }
-    # TODO: should add sampletypes, actiontypes, SMBresources here, for easy modification by administrator
+    # TODO: should add sampletypes, SMBresources here, for easy modification by administrator
     # TODO: in that case should also add admin required field
     # e.g.:
     #'resource': {

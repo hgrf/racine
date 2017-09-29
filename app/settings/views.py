@@ -1,7 +1,7 @@
 from flask import render_template, redirect, request, url_for
 from .. import db
 from ..decorators import admin_required
-from ..models import SampleType, ActionType, SMBResource, User, Upload, Action, Sample
+from ..models import SampleType, SMBResource, User, Upload, Action, Sample
 from forms import NewSMBResourceForm, NewTypeForm, ShutdownForm, NewUserForm
 from . import settings
 from flask.ext.login import login_required
@@ -34,18 +34,6 @@ def sampletypes():
         db.session.commit()
         form.name.data = ''
     return render_template('settings/sampletypes.html', sampletypes=SampleType.query.all(), form=form)
-
-
-@settings.route('/actiontypes', methods=['GET', 'POST'])
-@login_required
-@admin_required
-def actiontypes():
-    form = NewTypeForm()
-    if form.validate_on_submit():
-        db.session.add(ActionType(name=form.name.data))
-        db.session.commit()
-        form.name.data = ''
-    return render_template('settings/actiontypes.html', actiontypes=ActionType.query.all(), form=form)
 
 
 @settings.route('/shutdown', methods=['GET', 'POST'])

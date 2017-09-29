@@ -202,7 +202,10 @@ def retrieve_image(upload_id):
     # TODO: check that user has right to view the image (this might be tricky because the sample might be a shared one)
 
     dbentry = Upload.query.get(upload_id)
-    return send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext)
+    if dbentry is not None:
+        return send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext)
+    else:
+        return render_template('404.html'), 404
 
 
 @browser.route('/ulatt/<upload_id>')
@@ -219,8 +222,11 @@ def retrieve_attachment(upload_id):
     # TODO: check that user has right to view the attachment
 
     dbentry = Upload.query.get(upload_id)
-    return send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext,
-                               as_attachment=True, attachment_filename=dbentry.source[3:])
+    if dbentry is not None:
+        return send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext,
+                                   as_attachment=True, attachment_filename=dbentry.source[3:])
+    else:
+        return render_template('404.html'), 404
 
 
 @browser.route('/smbimg/<path:path>')

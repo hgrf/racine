@@ -40,23 +40,12 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-class SampleType(db.Model):
-    __tablename__ = 'sampletypes'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
-    samples = db.relationship('Sample', backref='sampletype')
-
-    def __repr__(self):
-        return '<SampleType %r>' % self.name
-
-
 class Sample(db.Model):
     __tablename__ = 'samples'
     id = db.Column(db.Integer, primary_key=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     name = db.Column(db.String(SAMPLE_NAME_LENGTH), unique=True, index=True)
     parent_id = db.Column(db.Integer, db.ForeignKey('samples.id'))
-    sampletype_id = db.Column(db.Integer, db.ForeignKey('sampletypes.id'))
     image = db.Column(db.String(300))  # <----------- a changer
     description = db.Column(db.UnicodeText)
     isarchived = db.Column(db.Boolean)

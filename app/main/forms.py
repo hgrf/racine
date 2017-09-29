@@ -12,7 +12,6 @@ class NewActionForm(Form):
 class NewSampleForm(Form):
     name = StringField('Sample name:')
     parent = SelectField('Parent:', coerce=int)
-    sampletype = SelectField('Sample type:', coerce=int)
     description = TextAreaField('Description:')
     submit = SubmitField('Submit')
 

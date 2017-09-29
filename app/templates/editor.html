@@ -4,7 +4,6 @@
 <div id="samplename" style="display: none">{{ sample.name }}</div>
 <h1 class="page-header">
     <div id="samplename" class="{% if sample.owner == current_user %}editable{% endif %}" data-setter="/set/sample/name/{{ sample.id }}">{{ sample.name }}</div>
-    | type: <div id="sampletype" class="{% if sample.owner == current_user %}editable{% endif %}" data-setter="/set/sample/sampletype_id/{{ sample.id }}">{{ sample.sampletype.name }}</div>
     {% if sample.owner == current_user %}<img title="Delete sample" style="cursor: pointer; float: right; margin-right: 15px;" width="32" height="32" src="{{ url_for('static', filename='delete.png') }}" data-href="/delsample/{{ sample.id }}" data-type="sample" data-id="{{ sample.id }}" data-toggle="modal" data-target="#confirm-delete">{% endif %}
     {% if sample.owner == current_user %}<img title="{% if sample.isarchived %}De-archive{% else %}Archive{% endif %}" style="cursor: pointer; float: right; margin-right: 10px;" id="archive" width="32" height="32" src="{% if sample.isarchived %}{{ url_for('static', filename='dearchive.png') }}{% else %}{{ url_for('static', filename='archive.png') }}{% endif %}">{% endif %}
     <img title="Switch to matrix view" style="cursor: pointer; float: right; margin-right: 10px;" id="matrixviewbutton" width="32" height="32" src="{{ url_for('static', filename='matrixview.png') }}">

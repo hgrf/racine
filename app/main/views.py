@@ -2,7 +2,7 @@ from flask import render_template, redirect, request, jsonify, send_file, flash,
 from flask.ext.login import current_user, login_required, login_user, logout_user
 from .. import db
 from .. import plugins
-from ..models import Sample, SampleType, Action, User, Share, Upload
+from ..models import Sample, Action, User, Share, Upload
 from ..models import SAMPLE_NAME_LENGTH   # <-- sort this out
 from . import main
 from forms import NewSampleForm, NewActionForm, NewMatrixForm
@@ -29,8 +29,8 @@ def sample(sampleid):
     myinheritance = User.query.filter_by(heir=current_user).all()
     showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
 
-    return render_template('main.html', samples=samples, sample=sample, sampletypes=SampleType.query.all(),
-                           myshares=myshares, myinheritance=myinheritance, showarchived=showarchived)
+    return render_template('main.html', samples=samples, sample=sample, myshares=myshares, myinheritance=myinheritance,
+                           showarchived=showarchived)
 
 
 @main.route('/welcome')
@@ -84,8 +84,7 @@ def editor(sampleid):
                 break
         actions = sorted(actions, key=lambda a: a.ordnum)
 
-        return render_template('editor.html', sample=sample, actions=actions, form=form,
-                               sampletypes=SampleType.query.all(), shares=shares,
+        return render_template('editor.html', sample=sample, actions=actions, form=form, shares=shares,
                                hideparentactions=hideparentactions)
 
 
@@ -255,13 +254,12 @@ def changeparent():
 @login_required
 def newsample():
     form = NewSampleForm()
-    form.sampletype.choices = [(sampletype.id, sampletype.name) for sampletype in SampleType.query.order_by('name')]
     form.parent.choices = [(0, "/")] + [(sample.id, sample.name) for sample in Sample.query.filter(Sample.owner == current_user).order_by('name')]
     if form.validate_on_submit():
         if Sample.query.filter_by(owner=current_user, name=form.name.data).all():
             flash("You already have a sample with this name: "+form.name.data+". Please choose a different name.")
             return render_template('newsample.html', form=form)
-        sample = Sample(owner=current_user, name=form.name.data, sampletype_id=form.sampletype.data, parent_id=form.parent.data, description=form.description.data)
+        sample = Sample(owner=current_user, name=form.name.data, parent_id=form.parent.data, description=form.description.data)
         db.session.add(sample)
         db.session.commit()
         return redirect("/sample/" + str(sample.id))
@@ -391,7 +389,6 @@ supported_targets = {
         'auth': 'owner',        # TODO: implement this
         'fields': {
             'name': validate_sample_name,
-            'sampletype_id': int,
             'description': str
         }
     },
@@ -403,7 +400,7 @@ supported_targets = {
             'description': str
         }
     }
-    # TODO: should add sampletypes, SMBresources here, for easy modification by administrator
+    # TODO: should add SMBresources here, for easy modification by administrator
     # TODO: in that case should also add admin required field
     # e.g.:
     #'resource': {

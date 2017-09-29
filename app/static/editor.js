@@ -122,11 +122,6 @@ function init_editor() {
         if(!data.code) // only if no error occured
             $("#navname"+sample_id).html(data.value);
     });
-    $('#sampletype.editable').comboeditable(sampletypes);
-    $('#sampletype.editable').on('editableupdate', function(event, data) {
-        if(!data.code) // only if no error occured
-            $("#navtype"+sample_id).html(sampletypes[data.value]);
-    });
     $('.actiondate.editable').texteditable();
 
     $('.swapaction').click( function(event) {

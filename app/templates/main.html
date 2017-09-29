@@ -13,7 +13,6 @@
       <div class="nav-container" id="{{ s.id }}">
       <div class="row nav-entry {% if s.isarchived %}nav-entry-archived{% endif %}"  data-toggle="collapse" data-target="#children{{ s.id }}" id="{{ s.id }}" draggable="true" data-name="{{ s.name }}">
           <div class="nav-entry-name" id="navname{{ s.id }}">{{ s.name }}</div>
-          <div class="nav-entry-type" id="navtype{{ s.id }}">{{ s.sampletype.name }}</div>
       </div>
       <div id="children{{ s.id }}" class="row-fluid collapse out" style="padding-left: 10px">
         {{ render_branch(s.id, level+1) }}
@@ -49,7 +48,6 @@
             {% for s in myshares %}
                 <div class="row nav-entry" id="{{ s.sample.id }}">
                     <div class="nav-entry-name">{{ s.sample.name }}</div>
-                    <div class="nav-entry-type">{{ s.sample.sampletype.name }}</div>
                     <div class="nav-entry-owner">{{ s.sample.owner.username }}</div>
                 </div>
             {% endfor %}
@@ -106,8 +104,6 @@
         {% if sample is not none %}
             var sample = {{ sample.id }};
         {% endif %}
-        var sampletypes = { {% for sampletype in sampletypes %} {{ sampletype.id }}:'{{ sampletype.name }}', {% endfor %} };
-        var actiontypes = { {% for actiontype in actiontypes %} {{ actiontype.id }}:'{{ actiontype.name }}', {% endfor %} };
         var begin_flashmsg = "{{ begin_flashmsg|safe }}";
         var end_flashmsg = "{{ end_flashmsg|safe }}";
     </script>

@@ -152,7 +152,13 @@ table#matrix, table#matrix th, table#matrix td {
 }
 /* END OF WORKAROUND */
 
-.nav-entry {
+.nav-heading {
+    padding-left: 5px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.nav-entry, .inheritance {
   -moz-user-select: none;
   -khtml-user-select: none;
   -webkit-user-select: none;
@@ -173,7 +179,7 @@ table#matrix, table#matrix th, table#matrix td {
   color: #999999;
 }
 
-.nav-entry:hover {
+.nav-entry:hover, .inheritance:hover {
   background-color: #CCCCEE !important;
 }
 

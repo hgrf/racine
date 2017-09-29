@@ -44,7 +44,7 @@
         {{ render_branch(0) }}
         </div>
         {% if myshares %}
-            <div class="row nav-entry" id="0" style="padding-left:5px">Shares:</div>
+            <div class="row nav-heading">Shares:</div>
             {% for s in myshares %}
                 <div class="row nav-entry" id="{{ s.sample.id }}">
                     <div class="nav-entry-name">{{ s.sample.name }}</div>
@@ -54,9 +54,9 @@
             {% endfor %}
         {% endif %}
         {% if myinheritance %}
-            <div class="row nav-entry" id="0" style="padding-left:5px">Inheritance:</div>
+            <div class="row nav-heading">Inheritance:</div>
             {% for i in myinheritance %}
-                <div class="row nav-entry inheritance" id="0" data-userid="{{ i.id }}">
+                <div class="row inheritance" data-userid="{{ i.id }}">
                     <img src="{{ url_for('static', filename='user.png') }}" width="30">{{ i.username }}
                 </div>
             {% endfor %}

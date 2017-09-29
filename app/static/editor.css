@@ -109,89 +109,11 @@ div.sampleimage #changesampleimage {
   font-weight: bold;
 }
 
-.list-entry {
-  padding-top: 20px;
-  padding-bottom: 20px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #CCCCCC;
-}
-
-.list-header {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  font-weight: bold;
-  border-top-style: double;
-  border-top-width: 2px;
-  border-bottom-style: double;
-  border-bottom-width: 2px;
-  margin-top: 20px;
-}
-
 table#matrix, table#matrix th, table#matrix td {
   border-style: solid;
   border-width: 1px;
   border-color: #CCCCCC;
   padding: 5px;
-}
-
-/* WORKAROUND TO "PULL DOWN" (BOTTOM ALIGN) COLUMN CONTENT OF LIST HEADER */
-.list-header {
-    font-size: 0;
-}
-.list-header > * {
-    float: none;
-    display: inline-block;
-    font-size: 14px; /* if using LESS it's quicker to just use @font-size-base */
-}
-.list-header > *:last-child {
-    vertical-align: bottom;
-}
-.list-header p:last-child {
-    margin-bottom: 0; /* optional */
-}
-/* END OF WORKAROUND */
-
-.nav-heading {
-    padding-left: 5px;
-    font-weight: bold;
-    margin-top: 20px;
-}
-
-.nav-entry, .inheritance {
-  -moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-
-  cursor: move;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 10px;
-}
-
-.nav-entry .glyphicon {
-  margin-left: -20px;
-  float: left;
-}
-
-.nav-entry-archived {
-  color: #999999;
-}
-
-.nav-entry:hover, .inheritance:hover {
-  background-color: #CCCCEE !important;
-}
-
-.nav-entry-name {
-  font-weight: bold;
-}
-
-.nav-entry-type {
-}
-
-.nav-entry-owner {
-  font-style: italic;
 }
 
 div.user:hover {
@@ -202,4 +124,12 @@ div.user:hover {
 div.user > img {
   width: 48px;
   height: 48px;
+}
+
+.list-entry {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #CCCCCC;
 }

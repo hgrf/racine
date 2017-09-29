@@ -1,0 +1,41 @@
+.nav-heading {
+    padding-left: 5px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.nav-entry, .inheritance {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+
+  cursor: move;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+}
+
+.nav-entry .glyphicon {
+  margin-left: -20px;
+  float: left;
+}
+
+.nav-entry-archived {
+  color: #999999;
+}
+
+.nav-entry:hover, .inheritance:hover {
+  background-color: #CCCCEE !important;
+}
+
+.nav-entry-name {
+  font-weight: bold;
+}
+
+.nav-entry-type {
+}
+
+.nav-entry-owner {
+  font-style: italic;
+}

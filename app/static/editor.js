@@ -251,7 +251,7 @@ $(document).ready(function() {
                         type: "post",
                         data: { "id": sample_id, "sharewith": $(this).attr('id') },
                         success: function( data ) {
-                            $('#sharelist').append('<div class="sharelistentry" id="sharelistentry'+data.shareid+'">'+data.username+'<a data-type="share" data-id="'+data.shareid+'" data-toggle="modal" data-target="#confirm-delete" href="">&times;</a></div>');
+                            $('#sharelist').append('<div class="sharelistentry" id="sharelistentry'+data.shareid+'"><a data-type="share" data-id="'+data.shareid+'" data-toggle="modal" data-target="#confirm-delete" href=""><i class="glyphicon glyphicon-remove"></i></a>\n'+data.username+'</div>');
                             $('#userbrowser').modal('hide');
                         }
                     }); // what if we drag parent to child?

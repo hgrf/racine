@@ -25,15 +25,23 @@
             <div style="clear:both;"><strong>Shared with:</strong></div>
             {% for share in shares %}
                 <div class="sharelistentry" id="sharelistentry{{ share.id }}">
-                    {{ share.user.username }}
                     {% if sample.owner == current_user or share.user == current_user %}
-                        <a data-type="share" data-id="{{ share.id }}" data-toggle="modal" data-target="#confirm-delete" href="">&times;</a>
+                        <a data-type="share" data-id="{{ share.id }}" data-toggle="modal" data-target="#confirm-delete" href="">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </a>
+                    {% else %}
+                        <i class="glyphicon glyphicon-user"></i>
                     {% endif %}
+                    {{ share.user.username }}
                 </div>
             {% endfor %}
             </div>
             <div class="newsharelistentry">
-                {% if sample.owner == current_user %}<a data-toggle="modal" data-target="#userbrowser" href="">+ add share</a>{% endif %}
+                {% if sample.owner == current_user %}
+                    <a data-toggle="modal" data-target="#userbrowser" href="">
+                        <i class="glyphicon glyphicon-plus"></i> add share
+                    </a>
+                {% endif %}
             </div>
         </div>
     </div>

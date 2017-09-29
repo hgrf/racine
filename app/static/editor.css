@@ -192,3 +192,8 @@ div.user:hover {
   background-color: #CCCCEE;
   cursor: pointer;
 }
+
+div.user > img {
+  width: 48px;
+  height: 48px;
+}

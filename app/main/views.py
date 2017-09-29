@@ -100,16 +100,17 @@ def help():
 @main.route('/search', methods=['GET'])
 @login_required
 def search():
-    keyword = request.args.get("term")
+    keyword = request.args.get('term')
     samples = Sample.query.filter_by(owner=current_user).filter(Sample.name.ilike('%'+keyword+'%')).limit(10).all()   # max 10 items
-    return jsonify(results=[{"label": s.name, "value": s.id} for s in samples])
+    shares = db.session.query(Share, Sample).filter(Share.user_id == current_user.id).filter(Sample.name.ilike('%'+keyword+'%')).all() # max 10 items
+    shares = [s[1] for s in shares] # shares is a list of (Share, Sample) tuples
+    samples.extend(shares)
+    results = [{"label": s.name, "id": s.id} for s in samples]
 
-
-@main.route('/usersearch', methods=['GET'])
-def usersearch():
-    keyword = request.args.get("term")
-    users = User.query.filter(User.username.ilike('%'+keyword+'%')).limit(5).all()   # max 5 items
-    return jsonify(results=[{"label": u.username, "value": u.id} for u in users])
+    if request.args.get('autocomplete') is not None:
+        return jsonify(results=results)
+    else:
+        return render_template('searchresults.html', results=results)
 
 
 @main.route('/userlist', methods=['POST'])

@@ -3,11 +3,10 @@
 {% block title %}{% if sample is defined and sample is not none %}MSM - {{ sample.name }}{% else %}Mercury Sample Manager{% endif %}{% endblock %}
 
 {% block styles %}
-{{super()}}
-<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-<link rel="stylesheet" href="{{url_for('static', filename='dashboard.css')}}">
-<link rel="stylesheet" href="{{url_for('static', filename='jquery-ui.min.css') }}">
-<link rel="stylesheet" href="{{url_for('static', filename='autocomplete-bootstrap.css') }}">
+    {{super()}}
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='dashboard.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='typeahead.css')}}">
 {% endblock %}
 
 {% block navbar %}
@@ -67,27 +66,45 @@
 
 {% block scripts %}
 {{ super() }}
-    <script src="{{ url_for('static', filename='jquery-ui.min.js') }}"></script>
-    <script>
-        (function($) {
-            $( ".searchfield" ).autocomplete({
-              source: function(request, response) {
-                  $.getJSON("/search", {
-                      term: request.term, // in flask, "term" will be the argument to look for using request.args
-                  }, function (data) {
-                      response(data.results); // results from jsonify
-                  });
-              },
-              select: function( event, ui ) {
-                  event.preventDefault();
-                  $(this).val(ui.item.label);
-                  location.href="/sample/"+ui.item.value;
-              },
-              focus: function(event, ui) {
-                  event.preventDefault();
-                  $(this).val(ui.item.label);
+    <script src="{{ url_for('static', filename='typeahead.js/typeahead.bundle.min.js') }}"></script>
+    <script type="text/javascript" charset="utf-8">
+    $(function() {
+        $(document).ready(function() {
+            var samples = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              remote: {
+                url: '/search?autocomplete&term=%QUERY',
+                wildcard: '%QUERY',
+                  transform: function(data) { return data.results; }
               }
             });
-        })(jQuery);
+
+            $('.searchfield').typeahead({
+                minLength: 1,
+                highlight: true
+            },
+            {
+                name: 'samples',
+                display: function(data) { return data.label; },
+                source: samples,
+                templates: {
+                    suggestion: function(data) {
+                        return '<div><img src="/static/sample.png" width="24px" height="24px">' + data.label + '</div>';
+                    }
+                }
+            });
+
+            $('.searchfield').bind('typeahead:select', function(event, suggestion) {
+                location.href="/sample/"+suggestion.id;
+            });
+
+            $('.searchfield').keypress(function(event) {
+                if (event.which == 13) {
+                    location.href="/search?term="+$(this).val();
+                }
+            });
+        });
+    });
     </script>
 {% endblock %}

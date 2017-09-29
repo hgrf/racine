@@ -6,6 +6,7 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="{{url_for('static', filename='login.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='dashboard.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='typeahead.css')}}">
 {% endblock %}
 
 {% block title %}Mercury Sample Manager - Login{% endblock %}
@@ -70,32 +71,10 @@
 {% block scripts %}
     {{ super() }}
     <script src="{{ url_for('static', filename='typeahead.js/typeahead.jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='typeahead.js/substringmatcher.js') }}"></script>
     <script type="text/javascript" charset="utf-8">
     $(function() {
         $(document).ready(function() {
-            var substringMatcher = function(strs) {
-              return function findMatches(q, cb) {
-                var matches, substringRegex;
-
-                // an array that will be populated with substring matches
-                matches = [];
-
-                // regex used to determine if a string contains the substring `q`
-                substrRegex = new RegExp(q, 'i');
-
-                // iterate through the pool of strings and for any string that
-                // contains the substring `q`, add it to the `matches` array
-                $.each(strs, function(i, str) {
-                  if (substrRegex.test(str)) {
-                    matches.push(str);
-                  }
-                });
-
-                cb(matches);
-              };
-            };
-
-
             $(".user").click(function( event )  {
                 $("#username").val($(this).data("username"));
                 $("#password").focus();

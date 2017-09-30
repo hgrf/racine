@@ -1,4 +1,109 @@
 $(document).ready(function() {
+    var order = 'id';
+    var showarchived = false;
+
+    // default load with order by ID and hide archived samples
+    load_navbar(order, false);
+
+    function init_navbar() {
+        // initialise sample navigation bar double click event
+        $('.nav-entry').dblclick(function (event) {
+            // this is a bit redundant with the TWO other page unload handlers, maybe want to tidy that shit up
+            if ($('#sampleid').text() != "" && CKEDITOR.instances.description.checkDirty()) {        // CKEDITOR.instances.description does not exist if no sample is open
+                if (confirm('Are you sure you want to navigate away from this page? Press OK to continue, or Cancel to stay on the current page.')) {
+                    load_sample($(this).attr('id'));
+                }
+            } else {
+                load_sample($(this).attr('id'));
+            }
+            event.preventDefault();
+        });
+
+        // add glyphicons to expandable items in the navbar
+        $('.nav-entry').each(function () {
+            if ($($(this).data('target')).children().length > 0) {
+                addGlyphicon($(this));
+            }
+        });
+
+        // enable sample drag and drop in navigation bar
+        $('.nav-entry').on({
+            dragstart: function(event) {
+                event.dataTransfer.setData('sampleid', event.target.id);
+                event.dataTransfer.setData('text/html', '<a href="/sample/'+event.target.id+'">'+$(event.target).data('name')+'</a> ');
+            },
+            dragenter: function(event) {
+                event.preventDefault();
+            },
+            dragover: function(event) {
+                $(this).css("background-color", "#BBBBFF");
+                event.preventDefault();
+            },
+            dragleave: function(event) {
+                $(this).css("background-color", "transparent");
+            },
+            drop: function(event) {
+                var draggedId = event.dataTransfer.getData('sampleid');
+                var parentId = $(this).attr('id');
+                if(draggedId == parentId) return;
+                event.preventDefault();
+                $.ajax({
+                    url: "/changeparent",
+                    type: "post",
+                    data: { "id": draggedId, "parent": parentId },
+                    success: function( data ) {
+                        if(data.code==0) {
+                            var draggedItem = $( "#"+draggedId+".nav-container" );
+                            if(parentId != 0) {
+                                if($("#children"+parentId).children().length == 0) {
+                                    // no children yet, so need to put glyphicon
+                                    addGlyphicon($("#children"+parentId).prev());
+                                }
+                                if(draggedItem.parent().children().length == 1) {
+                                    // there will be no children left after drag/drop, so remove glyphicon
+                                    removeGlyphicon(draggedItem.parent().prev());
+                                }
+                                draggedItem.appendTo("#children"+parentId);
+                            } else {
+                                draggedItem.appendTo("#root");
+                            }
+                        } else {
+                            $( "#flashmessages" ).append(begin_flashmsg+data.error+end_flashmsg);
+                        }
+                    }
+                }); // what if we drag parent to child?
+                $(this).css("background-color", "transparent");
+            }
+        });
+
+        $(".inheritance").dblclick(function() {
+           location.href = "/loginas?userid="+$(this).data('userid');
+        });
+
+        $('.navbar-togglearchived').click(function(event) { load_navbar(order, !showarchived); event.preventDefault(); });
+        $('.navbar-sort-az').click(function(event) { load_navbar('az', showarchived); event.preventDefault(); });
+        $('.navbar-sort-id').click(function(event) { load_navbar('id', showarchived); event.preventDefault(); });
+        $('.navbar-sort-lastaction').click(function(event) { load_navbar('lastaction', showarchived); event.preventDefault(); });
+    }
+
+    function load_navbar(_order, _showarchived) {
+        order = _order;
+        showarchived = _showarchived;
+
+        $.ajax({
+            url: "/navbar",
+            data: {'order': order,
+                   'showarchived': showarchived},
+            success: function(data) {
+                // load the navbar
+                $('#sidebar').html(data);
+
+                // set up handlers etc.
+                init_navbar();
+            }
+        });
+    }
+
     // this function adds a glyphicon to the nav-entry $target
     function addGlyphicon($target) {
         if ($($target.data('target')).is(":hidden"))
@@ -30,78 +135,4 @@ $(document).ready(function() {
         $($target.data('target')).off('show.bs.collapse');
         $($target.data('target')).off('hide.bs.collapse');
     }
-
-    // initialise sample navigation bar double click event
-    $('.nav-entry').dblclick(function (event) {
-        // this is a bit redundant with the TWO other page unload handlers, maybe want to tidy that shit up
-        if ($('#sampleid').text() != "" && CKEDITOR.instances.description.checkDirty()) {        // CKEDITOR.instances.description does not exist if no sample is open
-            if (confirm('Are you sure you want to navigate away from this page? Press OK to continue, or Cancel to stay on the current page.')) {
-                load_sample($(this).attr('id'));
-            }
-        } else {
-            load_sample($(this).attr('id'));
-        }
-        event.preventDefault();
-    });
-
-    // add glyphicons to expandable items in the navbar
-    $('.nav-entry').each(function () {
-        if ($($(this).data('target')).children().length > 0) {
-            addGlyphicon($(this));
-        }
-    });
-
-    // enable sample drag and drop in navigation bar
-    $('.nav-entry').on({
-        dragstart: function(event) {
-            event.dataTransfer.setData('sampleid', event.target.id);
-            event.dataTransfer.setData('text/html', '<a href="/sample/'+event.target.id+'">'+$(event.target).data('name')+'</a> ');
-        },
-        dragenter: function(event) {
-            event.preventDefault();
-        },
-        dragover: function(event) {
-            $(this).css("background-color", "#BBBBFF");
-            event.preventDefault();
-        },
-        dragleave: function(event) {
-            $(this).css("background-color", "transparent");
-        },
-        drop: function(event) {
-            var draggedId = event.dataTransfer.getData('sampleid');
-            var parentId = $(this).attr('id');
-            if(draggedId == parentId) return;
-            event.preventDefault();
-            $.ajax({
-                url: "/changeparent",
-                type: "post",
-                data: { "id": draggedId, "parent": parentId },
-                success: function( data ) {
-                    if(data.code==0) {
-                        var draggedItem = $( "#"+draggedId+".nav-container" );
-                        if(parentId != 0) {
-                            if($("#children"+parentId).children().length == 0) {
-                                // no children yet, so need to put glyphicon
-                                addGlyphicon($("#children"+parentId).prev());
-                            }
-                            if(draggedItem.parent().children().length == 1) {
-                                // there will be no children left after drag/drop, so remove glyphicon
-                                removeGlyphicon(draggedItem.parent().prev());
-                            }
-                            draggedItem.appendTo("#children"+parentId);
-                        } else {
-                            draggedItem.appendTo("#root");
-                        }
-                    } else {
-                        $( "#flashmessages" ).append(begin_flashmsg+data.error+end_flashmsg);
-                    }
-                }
-            }); // what if we drag parent to child?
-            $(this).css("background-color", "transparent");
-        }
-    });
-
-    $(".inheritance").dblclick(function() {
-       location.href = "/loginas?userid="+$(this).data('userid');
-    });
 });

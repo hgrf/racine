@@ -103,6 +103,7 @@ div.sampleimage #changesampleimage {
 
 .newsharelistentry {
   clear: both;
+  padding-top: 10px;
 }
 
 .newsharelistentry a {

@@ -1,38 +1,58 @@
-.nav-heading {
-    padding-left: 5px;
+.navbar-shortcuts {
     font-weight: bold;
-    margin-top: 20px;
+}
+
+.navbar-shortcuts > .left {
+    float: left;
+}
+
+.navbar-shortcuts > .right {
+    float: right;
+}
+
+.navbar-clear {
+    clear: both;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #CCCCCC;
+}
+
+.nav-heading {
+    padding-bottom: 10px;
+    font-weight: bold;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #CCCCCC;
 }
 
 .nav-entry, .inheritance {
-  -moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
 
-  cursor: move;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 10px;
+    cursor: move;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
 }
 
 .nav-entry .glyphicon {
-  margin-left: -20px;
-  float: left;
+    margin-left: -20px;
+    float: left;
 }
 
 .nav-entry-archived {
-  color: #999999;
+    color: #999999;
 }
 
 .nav-entry:hover, .inheritance:hover {
-  background-color: #CCCCEE !important;
+    background-color: #CCCCEE !important;
 }
 
 .nav-entry-name {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 .nav-entry-owner {
-  font-style: italic;
+    font-style: italic;
 }

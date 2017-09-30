@@ -3,13 +3,13 @@ from flask.ext.login import current_user, login_required, login_user, logout_use
 from .. import db
 from .. import plugins
 from ..models import Sample, Action, User, Share, Upload
-from ..models import SAMPLE_NAME_LENGTH   # <-- sort this out
+from ..models import SAMPLE_NAME_LENGTH   # <-- TODO: sort this out
 from . import main
 from forms import NewSampleForm, NewActionForm, NewMatrixForm
 from datetime import date, datetime, timedelta
 from .. import smbinterface
 
-from sqlalchemy.sql import func
+from sqlalchemy.sql import func, desc, distinct
 
 
 @main.route('/')
@@ -24,13 +24,8 @@ def index():
 @login_required
 def sample(sampleid):
     sample = Sample.query.get(sampleid)
-    samples = Sample.query.filter_by(owner=current_user).all()
-    myshares = Share.query.filter_by(user=current_user).all()
-    myinheritance = User.query.filter_by(heir=current_user).all()
-    showarchived = True if request.args.get('showarchived') != None and int(request.args.get('showarchived')) else False
 
-    return render_template('main.html', samples=samples, sample=sample, myshares=myshares, myinheritance=myinheritance,
-                           showarchived=showarchived)
+    return render_template('main.html', sample=sample)
 
 
 @main.route('/welcome')
@@ -58,6 +53,59 @@ def welcome():
     return render_template('welcome.html', conns=smbinterface.conns, newactions=newactions, maxcount=maxcount,
                            newactionsallusers=newactionsallusers, maxcountallusers=maxcountallusers,
                            uploadvols=uploadvols, maxuploadvol=maxuploadvol, plugins=plugins)
+
+@main.route('/navbar', methods=['GET'])
+@login_required
+def navbar():
+    inheritance = User.query.filter_by(heir=current_user).all()
+    showarchived = True if request.args.get('showarchived') is not None and request.args.get('showarchived') == 'true'\
+              else False
+    order = request.args.get('order')
+
+    if order == 'az':
+        # order alphabetically
+        samples = Sample.query.filter_by(owner=current_user).order_by(Sample.name).all()
+        shares = Sample.query.join(Share).filter(Share.user == current_user).order_by(Sample.name).all()
+    elif order == 'lastaction':
+        # order by last action
+
+        # first make a list of samples that don't have any actions yet
+        samples =  db.session.query(Sample) \
+                     .filter(Sample.owner == current_user) \
+                     .outerjoin((Action, Action.sample_id == Sample.id)) \
+                     .filter(Action.id == None).all()
+
+        # then extend it by a list of samples ordered by last action
+        samples += db.session.query(Sample) \
+                     .filter(Sample.owner == current_user) \
+                     .outerjoin((Action, Action.sample_id == Sample.id)) \
+                     .filter(Action.id != None) \
+                     .order_by(desc(Action.timestamp)) \
+                     .group_by(Sample.id).all()
+
+        # do the same for shares
+        shares =  db.session.query(Sample) \
+                    .outerjoin((Share, Share.sample_id == Sample.id)) \
+                    .filter(Share.user == current_user) \
+                    .outerjoin((Action, Action.sample_id == Sample.id)) \
+                    .filter(Action.id == None).all()
+
+        shares += db.session.query(Sample) \
+                    .outerjoin((Share, Share.sample_id == Sample.id)) \
+                    .filter(Share.user == current_user) \
+                    .outerjoin((Action, Action.sample_id == Sample.id)) \
+                    .filter(Action.id != None) \
+                    .order_by(desc(Action.timestamp)) \
+                    .group_by(Sample.id).all()
+
+    else:
+        # by default order by ID
+        samples = Sample.query.filter_by(owner=current_user).all()
+        shares = Sample.query.join(Share).filter(Share.user == current_user).all()
+
+    return render_template('navbar.html', samples=samples, shares=shares, inheritance=inheritance,
+                           showarchived=showarchived)
+
 
 
 @main.route('/editor/<sampleid>', methods=['GET', 'POST'])

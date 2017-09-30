@@ -1,0 +1,52 @@
+{# render_branch is a macro to recursively render the hierarchy of navbar elements #}
+{% macro render_branch(parent, level=0) %}
+  {% for s in samples %}
+    {% if s.parent_id == parent and (not s.isarchived or showarchived) %}
+      <div class="nav-container" id="{{ s.id }}">
+      <div class="row nav-entry {% if s.isarchived %}nav-entry-archived{% endif %}"  data-toggle="collapse" data-target="#children{{ s.id }}" id="{{ s.id }}" draggable="true" data-name="{{ s.name }}">
+          <div class="nav-entry-name" id="navname{{ s.id }}">{{ s.name }}</div>
+      </div>
+      <div id="children{{ s.id }}" class="row-fluid collapse out" style="padding-left: 10px">
+        {{ render_branch(s.id, level+1) }}
+      </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+{% endmacro %}
+
+{# HTML for navbar #}
+<div class="navbar-shortcuts">
+    <span class="left">
+        <a href="/newsample" data-toggle="tooltip" title="New sample"><i class="glyphicon glyphicon-plus"></i>&nbsp;New sample</a>
+    </span>
+    <span class="right">
+        &nbsp;<a href="#" class="navbar-togglearchived" data-toggle="tooltip" title="{{ 'Hide' if showarchived else 'Show' }} archived"><i class="glyphicon glyphicon-eye-{{ 'open' if showarchived else 'close' }}"></i></a>
+        &nbsp;<a href="#" data-toggle="tooltip" title="Sort alphabetically"><i class="shortcut-icon navbar-sort-az glyphicon glyphicon-sort-by-alphabet"></i></a>
+        &nbsp;<a href="#" data-toggle="tooltip" title="Sort by ID"><i class="shortcut-icon navbar-sort-id glyphicon glyphicon-sort-by-order"></i></a>
+        &nbsp;<a href="#" data-toggle="tooltip" title="Sort by last action"><i class="shortcut-icon navbar-sort-lastaction glyphicon glyphicon-calendar"></i></a>
+    </span>
+</div>
+<div class="navbar-clear"></div>
+<div class="container-fluid">
+    <div class="row nav-heading">My samples:</div>
+    <div id="root">
+    {{ render_branch(0) }}
+    </div>
+    {% if shares %}
+        <div class="row nav-heading">Shares:</div>
+        {% for s in shares %}
+            <div class="row nav-entry" id="{{ s.id }}">
+                <div class="nav-entry-name">{{ s.name }}</div>
+                <div class="nav-entry-owner">{{ s.owner.username }}</div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% if inheritance %}
+        <div class="row nav-heading">Inheritance:</div>
+        {% for i in inheritance %}
+            <div class="row inheritance" data-userid="{{ i.id }}">
+                <img src="{{ url_for('static', filename='user.png') }}" width="30">{{ i.username }}
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>

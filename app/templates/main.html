@@ -7,21 +7,6 @@
     <link rel="stylesheet" href="{{url_for('static', filename='editor.css')}}">
 {% endblock %}
 
-{% macro render_branch(parent, level=0) %}
-  {% for s in samples %}
-    {% if s.parent_id == parent and (not s.isarchived or showarchived) %}
-      <div class="nav-container" id="{{ s.id }}">
-      <div class="row nav-entry {% if s.isarchived %}nav-entry-archived{% endif %}"  data-toggle="collapse" data-target="#children{{ s.id }}" id="{{ s.id }}" draggable="true" data-name="{{ s.name }}">
-          <div class="nav-entry-name" id="navname{{ s.id }}">{{ s.name }}</div>
-      </div>
-      <div id="children{{ s.id }}" class="row-fluid collapse out" style="padding-left: 10px">
-        {{ render_branch(s.id, level+1) }}
-      </div>
-      </div>
-    {% endif %}
-  {% endfor %}
-{% endmacro %}
-
 {% macro begin_modal_dialog(id, title) %}
     <div class="modal fade" id="{{ id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -38,31 +23,7 @@
 {% endmacro %}
 
 {% block sidebarnav %}
-<div class="col-sm-3 col-md-2 sidebar">
-    <div class="container-fluid">
-        <div id="root">
-        {{ render_branch(0) }}
-        </div>
-        {% if myshares %}
-            <div class="row nav-heading">Shares:</div>
-            {% for s in myshares %}
-                <div class="row nav-entry" id="{{ s.sample.id }}">
-                    <div class="nav-entry-name">{{ s.sample.name }}</div>
-                    <div class="nav-entry-owner">{{ s.sample.owner.username }}</div>
-                </div>
-            {% endfor %}
-        {% endif %}
-        {% if myinheritance %}
-            <div class="row nav-heading">Inheritance:</div>
-            {% for i in myinheritance %}
-                <div class="row inheritance" data-userid="{{ i.id }}">
-                    <img src="{{ url_for('static', filename='user.png') }}" width="30">{{ i.username }}
-                </div>
-            {% endfor %}
-        {% endif %}
-        <div class="row nav-entry" id="0" style="padding-left:10px"><a href="/newsample">+ New Sample</a></div>
-        <div class="row nav-entry" style="padding-left:10px"><a href="?showarchived={% if showarchived %}0{% else %}1{% endif %}">{% if showarchived %}Hide{% else %}Show{% endif %} archived</a></div>
-    </div>
+<div id="sidebar" class="col-sm-3 col-md-2 sidebar">
 </div>
 {% endblock %}
 

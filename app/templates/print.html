@@ -2,8 +2,9 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block styles %}
-{{super()}}
-<link rel="stylesheet" href="{{url_for('static', filename='print.css')}}">
+    {{super()}}
+    <link rel="stylesheet" href="{{url_for('static', filename='print.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='jquery-ui.min.css')}}">
 {% endblock %}
 
 {% block sidebarnav %}
@@ -63,6 +64,7 @@
     </script>
     <script async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <script>window.MathJax || document.write('<script async src="{{ url_for('static', filename='mathjax/MathJax.js') }}?config=TeX-MML-AM_CHTML">\x3C/script>')</script>
+    <script src="{{ url_for('static', filename='jquery-ui.min.js') }}"></script>
     <script>
         // could do this more efficiently with jQuery
         function onChkShowUser() {
@@ -99,7 +101,7 @@
               }
             });
 
-            $("#sample").autocomplete({
+            /*$("#sample").autocomplete({
                 source: function (request, response) {
                     $.getJSON("/search", {
                         term: request.term, // in flask, "term" will be the argument to look for using request.args
@@ -114,6 +116,32 @@
                 focus: function (event, ui) {
                     event.preventDefault();
                     $(this).val(ui.item.label);
+                }
+            });*/
+
+
+            var samples = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              remote: {
+                url: '/search?autocomplete&term=%QUERY',
+                wildcard: '%QUERY',
+                  transform: function(data) { return data.results; }
+              }
+            });
+
+            $('#sample').typeahead({
+                minLength: 1,
+                highlight: true
+            },
+            {
+                name: 'samples',
+                display: function(data) { return data.label; },
+                source: samples,
+                templates: {
+                    suggestion: function(data) {
+                        return '<div><img src="/static/sample.png" width="24px" height="24px">' + data.label + '</div>';
+                    }
                 }
             });
 

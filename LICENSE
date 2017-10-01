@@ -7,12 +7,10 @@ app/static:
 |
 |- archive.png, dearchive.png, delete.png, down.png, edit.png, file.png, folder.png, insertimage.png, matrixview.png, resource.png, sample.png, up.png,
 |    upload.png, user.png were taken from Open Icon Library Standard (mixed licenses)
-|- jquery-1.11.3.min.js and jquery-ui.min.css are intellectual property of the jQuery Foundation and released
+|- jquery-1.11.3.min.js, jquery-ui.min.js and jquery-ui.min.css are intellectual property of the jQuery Foundation and released
 |    under the MIT license
 |- jquery.jeditable.js is intellectual property of Mika Tuupola and Dylan Verheul and
 |    released under the MIT license
-|- jquery.generateId.js and jquery.jeditable.ckeditor.js are intellectual property of
-|    Jeremy Bell and released under the MIT license
 |- ckeditor/* is intellectual property of Frederico Knabben and released under the GPL,
 |    LGPL or MPL license (see ckeditor/LICENSE.md)
 |- lightbox2-master/* is interllectual property of Lokesh Dhakar and released under the MIT license

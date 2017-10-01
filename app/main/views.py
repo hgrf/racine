@@ -113,7 +113,7 @@ def navbar():
 def editor(sampleid):
     sample = Sample.query.get(sampleid)
     shares = Share.query.filter_by(sample=sample).all()
-    hideparentactions = True if request.args.get('hideparentactions') != None and int(request.args.get('hideparentactions')) else False
+    showparentactions = True if request.args.get('showparentactions') != None and int(request.args.get('showparentactions')) else False
 
     if sample == None or (sample.owner != current_user and current_user not in [share.user for share in shares]):
         return render_template('404.html'), 404
@@ -128,12 +128,12 @@ def editor(sampleid):
         while s is not None:
             actions.extend(Action.query.filter_by(sample=s).order_by(Action.ordnum).all())
             s = s.parent
-            if hideparentactions:
+            if showparentactions:
                 break
         actions = sorted(actions, key=lambda a: a.ordnum)
 
         return render_template('editor.html', sample=sample, actions=actions, form=form, shares=shares,
-                               hideparentactions=hideparentactions)
+                               showparentactions=showparentactions)
 
 
 @main.route('/help')

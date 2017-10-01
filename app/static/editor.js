@@ -1,5 +1,5 @@
 var sample_id;
-var hideparentactions = false;
+var showparentactions = false;
 
 // configure the CKEditor
 var ckeditorconfig = {
@@ -59,8 +59,8 @@ function init_editor() {
         });
     });
 
-    $('#hideparentactions').click(function() {
-        hideparentactions = !hideparentactions; // toggle
+    $('#showparentactions').click(function() {
+        showparentactions = !showparentactions; // toggle
         load_sample($('#sampleid').text());
     });
 
@@ -152,7 +152,7 @@ function load_sample(id, pushstate) {
 
     // load the sample data and re-initialise the editor
     $.ajax({
-        url: "/editor/"+id+(hideparentactions ? "?hideparentactions=1" : ""),
+        url: "/editor/"+id+(showparentactions ? "?showparentactions=1" : ""),
         pushstate: pushstate,
         success: function( data ) {
             $( "#editor-frame" ).html(data);

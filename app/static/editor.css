@@ -21,6 +21,18 @@ div.sampleimage #changesampleimage {
   display:none;
 }
 
+.editor-shortcut {
+    width: 32px;
+    height: 32px;
+    margin-left: 20px;
+    float: right;
+    cursor: pointer;
+}
+
+i.editor-shortcut {
+    font-size: 32px;
+}
+
 .ckeditable {
   min-height:3em;
 }

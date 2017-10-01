@@ -123,9 +123,11 @@ def help():
 def search():
     keyword = request.args.get('term')
     samples = Sample.query.filter_by(owner=current_user).filter(Sample.name.ilike('%'+keyword+'%')).limit(10).all()   # max 10 items
-    shares = db.session.query(Share, Sample).filter(Share.user_id == current_user.id).filter(Sample.name.ilike('%'+keyword+'%')).all() # max 10 items
-    shares = [s[1] for s in shares] # shares is a list of (Share, Sample) tuples
-    samples.extend(shares)
+    samples += db.session.query(Sample) \
+                 .outerjoin((Share, Share.sample_id == Sample.id)) \
+                 .filter(Share.user_id == current_user.id) \
+                 .filter(Sample.name.ilike('%' + keyword + '%')) \
+                 .limit(10).all()  # max 10 items
     results = [{"label": s.name, "id": s.id} for s in samples]
 
     if request.args.get('autocomplete') is not None:

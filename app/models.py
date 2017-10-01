@@ -63,7 +63,13 @@ class Sample(db.Model):
         return '<Sample %r>' % self.name
 
     def is_shared_with(self, user):
-        return user in [share.user for share in self.shares]
+        # find all shares for this sample and all parent samples up to the root of the hierarchy
+        parent = self
+        shares = []
+        while parent:
+            shares += parent.shares
+            parent = parent.parent
+        return shares
 
 
 class Action(db.Model):

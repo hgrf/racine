@@ -100,7 +100,7 @@ function init_editor() {
     $('#sampleimage').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
 
     // typeset all equations
-    if(MathJax.isReady)         // if it is not ready now, it should typeset automatically once it is ready
+    if(typeof(MathJax) !== 'undefined' && MathJax.isReady)         // if it is not ready now, it should typeset automatically once it is ready
         MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 
     // tell CKEditor browser to pass on sample ID

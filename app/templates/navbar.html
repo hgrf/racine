@@ -1,17 +1,20 @@
 {# render_branch is a macro to recursively render the hierarchy of navbar elements #}
-{% macro render_branch(parent, level=0) %}
-  {% for s in samples %}
-    {% if s.parent_id == parent and (not s.isarchived or showarchived) %}
-      <div class="nav-container" id="{{ s.id }}">
-      <div class="row nav-entry {% if s.isarchived %}nav-entry-archived{% endif %}"  data-toggle="collapse" data-target="#children{{ s.id }}" id="{{ s.id }}" draggable="true" data-name="{{ s.name }}">
-          <div class="nav-entry-name" id="navname{{ s.id }}">{{ s.name }}</div>
-      </div>
-      <div id="children{{ s.id }}" class="row-fluid collapse out" style="padding-left: 10px">
-        {{ render_branch(s.id, level+1) }}
-      </div>
-      </div>
-    {% endif %}
-  {% endfor %}
+{% macro render_branch(samps) %}
+    {% for s in samps|sort(attribute=order, reverse=True if order=='last_action_date' else False) %}
+        {% if not s.isarchived or showarchived %}
+            <div class="nav-container" id="{{ s.id }}">
+                <div class="row nav-entry {% if s.isarchived %}nav-entry-archived{% endif %}" id="{{ s.id }}" data-toggle="collapse" data-target="#children{{ s.id }}">
+                    <div class="nav-entry-name">{{ s.name }}</div>
+                    {% if s.owner != current_user %}
+                        <div class="nav-entry-owner">{{ s.owner.username }}</div>
+                    {% endif %}
+                </div>
+                <div id="children{{ s.id }}" class="row-fluid collapse out" style="padding-left: 10px;">
+                    {{ render_branch(s.children) }}
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
 {% endmacro %}
 
 {# HTML for navbar #}
@@ -29,17 +32,10 @@
 <div class="navbar-clear"></div>
 <div class="container-fluid">
     <div class="row nav-heading">My samples:</div>
-    <div id="root">
-    {{ render_branch(0) }}
-    </div>
+    {{ render_branch(samples) }}
     {% if shares %}
         <div class="row nav-heading">Shares:</div>
-        {% for s in shares %}
-            <div class="row nav-entry" id="{{ s.id }}">
-                <div class="nav-entry-name">{{ s.name }}</div>
-                <div class="nav-entry-owner">{{ s.owner.username }}</div>
-            </div>
-        {% endfor %}
+        {{ render_branch(shares) }}
     {% endif %}
     {% if inheritance %}
         <div class="row nav-heading">Inheritance:</div>

@@ -54,57 +54,32 @@ def welcome():
                            newactionsallusers=newactionsallusers, maxcountallusers=maxcountallusers,
                            uploadvols=uploadvols, maxuploadvol=maxuploadvol, plugins=plugins)
 
+def recursive_add_timestamp(samples):
+    print samples
+    for s in samples:
+        actions = sorted(s.actions, key=lambda a: a.timestamp if a.timestamp else date.today())
+        s.last_action_date = actions[-1].timestamp if actions != [] and actions[-1].timestamp is not None else date.today()
+        recursive_add_timestamp(s.children)
+
 @main.route('/navbar', methods=['GET'])
 @login_required
 def navbar():
     inheritance = User.query.filter_by(heir=current_user).all()
     showarchived = True if request.args.get('showarchived') is not None and request.args.get('showarchived') == 'true'\
               else False
-    order = request.args.get('order')
+    order = request.args.get('order') if request.args.get('order') else 'id'
 
-    if order == 'az':
-        # order alphabetically
-        samples = Sample.query.filter_by(owner=current_user).order_by(Sample.name).all()
-        shares = Sample.query.join(Share).filter(Share.user == current_user).order_by(Sample.name).all()
-    elif order == 'lastaction':
-        # order by last action
+    # only query root level samples, the template will build the hierarchy
+    samples = Sample.query.filter_by(owner=current_user, parent_id=0).all()
+    shares = [s.sample for s in current_user.shares]
 
-        # first make a list of samples that don't have any actions yet
-        samples =  db.session.query(Sample) \
-                     .filter(Sample.owner == current_user) \
-                     .outerjoin((Action, Action.sample_id == Sample.id)) \
-                     .filter(Action.id == None).all()
-
-        # then extend it by a list of samples ordered by last action
-        samples += db.session.query(Sample) \
-                     .filter(Sample.owner == current_user) \
-                     .outerjoin((Action, Action.sample_id == Sample.id)) \
-                     .filter(Action.id != None) \
-                     .order_by(desc(Action.timestamp)) \
-                     .group_by(Sample.id).all()
-
-        # do the same for shares
-        shares =  db.session.query(Sample) \
-                    .outerjoin((Share, Share.sample_id == Sample.id)) \
-                    .filter(Share.user == current_user) \
-                    .outerjoin((Action, Action.sample_id == Sample.id)) \
-                    .filter(Action.id == None).all()
-
-        shares += db.session.query(Sample) \
-                    .outerjoin((Share, Share.sample_id == Sample.id)) \
-                    .filter(Share.user == current_user) \
-                    .outerjoin((Action, Action.sample_id == Sample.id)) \
-                    .filter(Action.id != None) \
-                    .order_by(desc(Action.timestamp)) \
-                    .group_by(Sample.id).all()
-
-    else:
-        # by default order by ID
-        samples = Sample.query.filter_by(owner=current_user).all()
-        shares = Sample.query.join(Share).filter(Share.user == current_user).all()
+    # add timestamps for sorting
+    if order == 'last_action_date':
+        recursive_add_timestamp(samples)
+        recursive_add_timestamp(shares)
 
     return render_template('navbar.html', samples=samples, shares=shares, inheritance=inheritance,
-                           showarchived=showarchived)
+                           showarchived=showarchived, order=order)
 
 
 
@@ -112,10 +87,10 @@ def navbar():
 @login_required
 def editor(sampleid):
     sample = Sample.query.get(sampleid)
-    shares = Share.query.filter_by(sample=sample).all()
+    shares = sample.shares
     showparentactions = True if request.args.get('showparentactions') != None and int(request.args.get('showparentactions')) else False
 
-    if sample == None or (sample.owner != current_user and current_user not in [share.user for share in shares]):
+    if sample == None or (sample.owner != current_user and not sample.is_shared_with(current_user)):
         return render_template('404.html'), 404
     else:
         form = NewActionForm()
@@ -128,7 +103,7 @@ def editor(sampleid):
         while s is not None:
             actions.extend(Action.query.filter_by(sample=s).order_by(Action.ordnum).all())
             s = s.parent
-            if showparentactions:
+            if not showparentactions:
                 break
         actions = sorted(actions, key=lambda a: a.ordnum)
 

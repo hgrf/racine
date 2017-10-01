@@ -81,9 +81,9 @@ $(document).ready(function() {
         });
 
         $('.navbar-togglearchived').click(function(event) { load_navbar(order, !showarchived); });
-        $('.navbar-sort-az').click(function(event) { load_navbar('az', showarchived); });
+        $('.navbar-sort-az').click(function(event) { load_navbar('name', showarchived); });
         $('.navbar-sort-id').click(function(event) { load_navbar('id', showarchived); });
-        $('.navbar-sort-lastaction').click(function(event) { load_navbar('lastaction', showarchived); });
+        $('.navbar-sort-lastaction').click(function(event) { load_navbar('last_action_date', showarchived); });
     }
 
     function load_navbar(_order, _showarchived) {

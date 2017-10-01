@@ -10,6 +10,10 @@
     float: right;
 }
 
+.navbar-shortcuts .navbar-shortcut {
+    cursor: pointer;
+}
+
 .navbar-clear {
     clear: both;
     padding-bottom: 10px;

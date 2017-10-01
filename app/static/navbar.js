@@ -80,10 +80,10 @@ $(document).ready(function() {
            location.href = "/loginas?userid="+$(this).data('userid');
         });
 
-        $('.navbar-togglearchived').click(function(event) { load_navbar(order, !showarchived); event.preventDefault(); });
-        $('.navbar-sort-az').click(function(event) { load_navbar('az', showarchived); event.preventDefault(); });
-        $('.navbar-sort-id').click(function(event) { load_navbar('id', showarchived); event.preventDefault(); });
-        $('.navbar-sort-lastaction').click(function(event) { load_navbar('lastaction', showarchived); event.preventDefault(); });
+        $('.navbar-togglearchived').click(function(event) { load_navbar(order, !showarchived); });
+        $('.navbar-sort-az').click(function(event) { load_navbar('az', showarchived); });
+        $('.navbar-sort-id').click(function(event) { load_navbar('id', showarchived); });
+        $('.navbar-sort-lastaction').click(function(event) { load_navbar('lastaction', showarchived); });
     }
 
     function load_navbar(_order, _showarchived) {

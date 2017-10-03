@@ -1,5 +1,8 @@
 /*
- * Base structure
+ * Set up scrollable side bar
+ *
+ * probably from https://gist.github.com/rmgimenez/07fd6a02c26fdf5e7febcba178ec78ec
+ *
  */
 
 /* Move down content because we have a fixed navbar that is 50px tall */

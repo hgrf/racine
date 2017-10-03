@@ -31,7 +31,7 @@
 </div>
 <div class="navbar-clear"></div>
 <div class="nav-main-container container-fluid nav-dropzone" data-id="0">
-    <div class="row nav-heading">My samples:</div>
+    <div class="row nav-heading">{{ current_user.username }}'{{ 's' if current_user.username[-1] != 's' else '' }} samples:</div>
     <div id="nav-mysamples">{{ render_branch(samples) }}</div>
     {% if shares %}
         <div class="row nav-heading">Shares:</div>

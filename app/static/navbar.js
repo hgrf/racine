@@ -11,10 +11,10 @@ $(document).ready(function() {
             // this is a bit redundant with the TWO other page unload handlers, maybe want to tidy that shit up
             if ($('#sampleid').text() != "" && CKEDITOR.instances.description.checkDirty()) {        // CKEDITOR.instances.description does not exist if no sample is open
                 if (confirm('Are you sure you want to navigate away from this page? Press OK to continue, or Cancel to stay on the current page.')) {
-                    load_sample($(this).attr('id'));
+                    load_sample($(this).data('id'));
                 }
             } else {
-                load_sample($(this).attr('id'));
+                load_sample($(this).data('id'));
             }
             event.preventDefault();
         });
@@ -28,44 +28,52 @@ $(document).ready(function() {
 
         // enable sample drag and drop in navigation bar
         $('.nav-entry').on({
-            dragstart: function(event) {
-                event.dataTransfer.setData('sampleid', event.target.id);
-                event.dataTransfer.setData('text/html', '<a href="/sample/'+event.target.id+'">'+$(event.target).data('name')+'</a> ');
-            },
+            dragstart: function (event) {
+                event.dataTransfer.setData('sampleid', $(event.target).data('id'));
+                event.dataTransfer.setData('text/html', '<a href="/sample/' + event.target.id + '">' + $(event.target).data('name') + '</a> ');
+            }
+        });
+
+        $('.nav-dropzone').on({
             dragenter: function(event) {
                 event.preventDefault();
+                event.stopPropagation();
             },
             dragover: function(event) {
                 $(this).css("background-color", "#BBBBFF");
                 event.preventDefault();
+                event.stopPropagation();
             },
             dragleave: function(event) {
                 $(this).css("background-color", "transparent");
             },
             drop: function(event) {
                 var draggedId = event.dataTransfer.getData('sampleid');
-                var parentId = $(this).attr('id');
+                var parentId = $(this).data('id');
                 if(draggedId == parentId) return;
                 event.preventDefault();
+                event.stopPropagation();
                 $.ajax({
                     url: "/changeparent",
                     type: "post",
                     data: { "id": draggedId, "parent": parentId },
                     success: function( data ) {
                         if(data.code==0) {
-                            var draggedItem = $( "#"+draggedId+".nav-container" );
-                            if(parentId != 0) {
-                                if($("#children"+parentId).children().length == 0) {
+                            var draggedItem = $( "#nav-container"+draggedId );
+                            if(draggedItem.parent().children().length == 1) {
+                                // there will be no children left after drag/drop, so remove glyphicon
+                                removeGlyphicon(draggedItem.parent().prev());
+                            }
+                            if(parentId != '0') {
+                                // moving to a regular nav-entry
+                                draggedItem.appendTo("#nav-children" + parentId);
+                                if ($("#children" + parentId).children().length == 0) {
                                     // no children yet, so need to put glyphicon
-                                    addGlyphicon($("#children"+parentId).prev());
+                                    addGlyphicon($("#nav-children" + parentId).prev());
                                 }
-                                if(draggedItem.parent().children().length == 1) {
-                                    // there will be no children left after drag/drop, so remove glyphicon
-                                    removeGlyphicon(draggedItem.parent().prev());
-                                }
-                                draggedItem.appendTo("#children"+parentId);
                             } else {
-                                draggedItem.appendTo("#root");
+                                // moving to root
+                                draggedItem.appendTo("#nav-mysamples");
                             }
                         } else {
                             $( "#flashmessages" ).append(begin_flashmsg+data.error+end_flashmsg);
@@ -76,8 +84,8 @@ $(document).ready(function() {
             }
         });
 
-        $(".inheritance").dblclick(function() {
-           location.href = "/loginas?userid="+$(this).data('userid');
+        $('.inheritance').dblclick(function() {
+           location.href = '/loginas?userid='+$(this).data('userid');
         });
 
         $('.navbar-togglearchived').click(function(event) { load_navbar(order, !showarchived); });

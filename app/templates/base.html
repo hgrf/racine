@@ -11,52 +11,54 @@
 {% endblock %}
 
 {% block navbar %}
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <div class="nav-button nav-button-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <i class="glyphicon glyphicon-option-vertical"></i>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div class="nav-button nav-button-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <i class="glyphicon glyphicon-option-vertical"></i>
+                </div>
+                <div id="toggle-sidebar" class="nav-button nav-button-left nav-button-toggle">
+                    <i class="glyphicon glyphicon-menu-hamburger"></i>
+                </div>
+                <a class="navbar-brand hidden-xs" href="/">Mercury Sample Manager</a>
+                <a class="navbar-brand visible-xs" href="/">MSM</a>
             </div>
-            <div id="toggle-sidebar" class="nav-button nav-button-left nav-button-toggle">
-                <i class="glyphicon glyphicon-menu-hamburger"></i>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    {% if current_user.is_admin %}
+                        <li><a href="/settings/overview"><i class="hidden-xs glyphicon glyphicon-wrench" title="Settings"></i><span class="visible-xs-block">Settings</span></a></li>
+                    {% endif %}
+                    <li><a href="/print"><i class="hidden-xs glyphicon glyphicon-print" title="Print"></i><span class="visible-xs-block">Print</span></a></li>
+                    <li><a href="/profile/overview"><i class="hidden-xs glyphicon glyphicon-user" title="Profile"></i><span class="visible-xs-block">Profile</span></a></li>
+                    <li><a href="{{ url_for('auth.logout') }}"><i class="hidden-xs glyphicon glyphicon-log-out" title="Sign out"></i><span class="visible-xs-block">Sign out</span></a></li>
+                    <li><a href="/help"><i class="hidden-xs glyphicon glyphicon-question-sign" title="Help"></i><span class="visible-xs-block">Help</span></a></li>
+                </ul>
+                <form class="nav navbar-form navbar-right"><input type="text" class="form-control searchfield" placeholder="Search..."></form>
             </div>
-            <a class="navbar-brand hidden-xs" href="/">Mercury Sample Manager</a>
-            <a class="navbar-brand visible-xs" href="/">MSM</a>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                {% if current_user.is_admin %}
-                    <li><a href="/settings/overview"><i class="hidden-xs glyphicon glyphicon-wrench" title="Settings"></i><span class="visible-xs-block">Settings</span></a></li>
-                {% endif %}
-                <li><a href="/print"><i class="hidden-xs glyphicon glyphicon-print" title="Print"></i><span class="visible-xs-block">Print</span></a></li>
-                <li><a href="/profile/overview"><i class="hidden-xs glyphicon glyphicon-user" title="Profile"></i><span class="visible-xs-block">Profile</span></a></li>
-                <li><a href="{{ url_for('auth.logout') }}"><i class="hidden-xs glyphicon glyphicon-log-out" title="Sign out"></i><span class="visible-xs-block">Sign out</span></a></li>
-                <li><a href="/help"><i class="hidden-xs glyphicon glyphicon-question-sign" title="Help"></i><span class="visible-xs-block">Help</span></a></li>
-            </ul>
-            <form class="nav navbar-form navbar-right"><input type="text" class="form-control searchfield" placeholder="Search..."></form>
-        </div>
-    </div>
-</nav>
+    </nav>
 {% endblock %}
 
 {% set begin_flashmsg = "<div class='alert alert-warning col-sm-9 col-md-10'><button type='button' class='close' data-dismiss='alert'>&times;</button>" %}
 {% set end_flashmsg = "</div>" %}
 {% block content %}
-<div class="container-fluid">
-  <div class="row">
-    {% block sidebarnav %}{% endblock %}
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-      <div class="container" id="flashmessages">
-        {% for message in get_flashed_messages() %}
-        {{ begin_flashmsg|safe }}
-        {{ message }}
-        {{ end_flashmsg|safe }}
-        {% endfor %}
+    <div class="container-fluid">
+      <div class="row">
+        {% block sidebarnav %}{% endblock %}
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <div class="container" id="flashmessages">
+            {% for message in get_flashed_messages() %}
+            {{ begin_flashmsg|safe }}
+            {{ message }}
+            {{ end_flashmsg|safe }}
+            {% endfor %}
+          </div>
+        {% block page_content %}{% endblock %}
+        </div>
       </div>
-    {% block page_content %}{% endblock %}
     </div>
-  </div>
-</div>
+
+    <div class="content-overlay"></div>
 {% endblock %}
 
 {% block scripts %}

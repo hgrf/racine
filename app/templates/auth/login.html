@@ -34,8 +34,8 @@
     <div class="container">
         <div class="row">
             <div class="login-container">
-                <div class="col-md-{{ '2' if last_logged_in else '4' }}"></div>
-                <div class="login col-md-4">
+                <div class="col-sm-{{ '2' if last_logged_in else '4' }}"></div>
+                <div class="login col-sm-4">
                     <form method="POST" action="#" id="loginform">
                         {{ form.hidden_tag() }}
                         <div class="form-group input-group">
@@ -55,7 +55,7 @@
                     </form>
                 </div>
                 {% if last_logged_in %}
-                <div class="quicklogin col-md-4">
+                <div class="quicklogin col-sm-4">
                     {% for username in last_logged_in %}
                         <div class="user" data-username="{{ username }}">
                             <img src="{{ url_for('static', filename='user.png') }}">
@@ -64,7 +64,7 @@
                     {% endfor %}
                 </div>
                 {% endif %}
-                <div class="col-md-{{ '2' if last_logged_in else '4' }}"></div>
+                <div class="col-sm-{{ '2' if last_logged_in else '4' }}"></div>
             </div>
         </div>
     </div>

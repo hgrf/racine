@@ -28,10 +28,18 @@
 .login-container {
     margin: auto;
     position: absolute;
-    top: 0; left: 0; bottom: 0; right: 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
     width: 50%;
     height: 50%;
-    /*min-width: 200px;
-    max-width: 350px;*/
-    padding: 40px;
+    min-width: 300px;
+    max-width: 700px;
+}
+
+@media (min-width: 768px) {
+    .login-container {
+        min-width: 700px;
+    }
 }

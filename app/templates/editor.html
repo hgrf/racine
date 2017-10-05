@@ -2,28 +2,51 @@
 
 <div id="sampleid" style="display: none">{{ sample.id }}</div>
 <div id="samplename" style="display: none">{{ sample.name }}</div>
-<h1 class="page-header">
+<h2 class="page-header">
     <div id="samplename" class="{% if sample.owner == current_user %}editable{% endif %}" data-setter="/set/sample/name/{{ sample.id }}">{{ sample.name }}</div>
     {% if sample.owner == current_user %}
         <img class="editor-shortcut" title="Delete sample" src="{{ url_for('static', filename='delete.png') }}" data-href="/delsample/{{ sample.id }}" data-type="sample" data-id="{{ sample.id }}" data-toggle="modal" data-target="#confirm-delete">
         <img class="editor-shortcut" title="{% if sample.isarchived %}De-archive{% else %}Archive{% endif %}" id="archive" src="{% if sample.isarchived %}{{ url_for('static', filename='dearchive.png') }}{% else %}{{ url_for('static', filename='archive.png') }}{% endif %}">
     {% endif %}
-    <img id="matrixviewbutton" class="editor-shortcut" title="Switch to matrix view" src="{{ url_for('static', filename='matrixview.png') }}">
+    {% if sample.children != [] %}
+        <img id="matrixviewbutton" class="editor-shortcut" title="Switch to matrix view" src="{{ url_for('static', filename='matrixview.png') }}">
+    {% endif %}
+    {% if sample.parent_id != 0 and sample.parent.actions != [] %}
     <i id="showparentactions" class="editor-shortcut glyphicon glyphicon-eye-{{ 'open' if showparentactions else 'close' }}" title="{{ 'Hide' if showparentactions else 'Show' }} parent actions"></i>
-</h1>
+    {% endif %}
+    <div style="clear:both;"></div>
+</h2>
 <div class="container-fluid">
     <div class="row">
+        {% set show_sampleimage_div = (sample.image != None or sample.owner == current_user) %}
+        {% if show_sampleimage_div %}
         <div class="col-md-4 sampleimage">
-            <img id="sampleimage" src="{% if sample.image == None %}{{ url_for('static', filename='sample.png') }}{% else %}{{ sample.image }}{% endif %}">
-            {% if sample.owner == current_user %}<img id="changesampleimage" src="{{ url_for('static', filename='insertimage.png') }}">{% endif %}
+            <div><strong>Image:</strong></div>
+            {% if sample.image == None and sample.owner == current_user %}
+                <div class="newsampleimage">
+                    <a id="changesampleimage" href=""><i class="glyphicon glyphicon-plus"></i> add sample image</a>
+                </div>
+            {% elif sample.image != None %}
+                <div class="{% if sample.owner == current_user %}imgeditable{% endif %}">
+                    <img id="sampleimage" src="{{ sample.image }}">
+                    <img id="changesampleimage" src="{{ url_for('static', filename='insertimage.png') }}">
+                </div>
+            {% endif %}
         </div>
-        <div class="col-md-5">
+        {% endif %}
+        <div class="col-md-5 sampledescription">
             <div><strong>Description:</strong></div>
-            <div id="sampledescription" class="{% if sample.owner == current_user %}ckeditable editable{% endif %}" data-getter="/get/sample/description/{{ sample.id }}" data-setter="/set/sample/description/{{ sample.id }}">{{ sample.description|safe }}</div>
+            <div id="sampledescription" class="{% if sample.owner == current_user %}ckeditable editable{% endif %}" data-getter="/get/sample/description/{{ sample.id }}" data-setter="/set/sample/description/{{ sample.id }}">
+                {% if sample.description != '' %}
+                    {{ sample.description|safe }}
+                {% else %}
+                    <p>Description</p>
+                {% endif %}
+            </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 sampleshares">
             <div id="sharelist">
-            <div style="clear:both;"><strong>Shared with:</strong></div>
+            <div><strong>Shared with:</strong></div>
             {% for share in shares %}
                 <div class="sharelistentry" id="sharelistentry{{ share.id }}">
                     {% if sample.owner == current_user or share.user == current_user %}
@@ -39,9 +62,7 @@
             </div>
             <div class="newsharelistentry">
                 {% if sample.owner == current_user %}
-                    <a data-toggle="modal" data-target="#userbrowser" href="">
-                        <i class="glyphicon glyphicon-plus"></i> add share
-                    </a>
+                    <a data-toggle="modal" data-target="#userbrowser" href=""><i class="glyphicon glyphicon-plus"></i> add share</a>
                 {% endif %}
             </div>
         </div>
@@ -54,21 +75,21 @@
     <div class="row list-entry {% if action.sample != sample %}parentaction{% endif %}" id="{{ action.id }}" {% if action.sample != sample %}style="background: #F0FFF0;"{% endif %}>
         <div class="col-md-2">
             <div class="actiondate{% if action.owner == current_user %} editable{% endif %}" data-setter="/set/action/timestamp/{{ action.id }}">{{ action.timestamp }}</div>
-            {% if action.owner != current_user %}<div style="font-style: italic">{{ action.owner.username }}</div>{% endif %}
-            {% if action.sample != sample %}<div style="font-style: italic;">{{ action.sample.name }}</div>{% endif %}
-        </div>
-        <div class="col-md-8 actiondescription{% if action.owner == current_user %} editable ckeditable{% endif %}" data-getter="/get/action/description/{{ action.id }}" data-setter="/set/action/description/{{ action.id }}">{{ action.description|safe }}</div>
-        <div class="col-md-2">
-            {% if action.owner == current_user %}
-                <img class="actionicon" src="{{ url_for('static', filename='delete.png') }}" data-type="action" data-id="{{ action.id }}" data-toggle="modal" data-target="#confirm-delete">
+            <div class="actionicons">
+                {% if action.owner != current_user %}<div style="font-style: italic">{{ action.owner.username }}</div>{% endif %}
+                {% if action.sample != sample %}<div style="font-style: italic;">{{ action.sample.name }}</div>{% endif %}
+                {% if action.owner == current_user %}
+                    <i class="actionicon glyphicon glyphicon-trash" data-type="action" data-id="{{ action.id }}" data-toggle="modal" data-target="#confirm-delete"></i>
                 {% if not i == 0 %} {# can  be moved up #}
-                    <img class="actionicon swapaction" src="{{ url_for('static', filename='up.png') }}" data-id="{{ action.id }}" data-swapid="{{ actions[i-1].id }}">
+                    <i class="actionicon glyphicon glyphicon-arrow-up swapaction" data-id="{{ action.id }}" data-swapid="{{ actions[i-1].id }}"></i>
                 {% endif %}
                 {% if not (i+1) == actions|length %} {# can  be moved down #}
-                    <img class="actionicon swapaction" src="{{ url_for('static', filename='down.png') }}" data-id="{{ action.id }}" data-swapid="{{ actions[i+1].id }}">
+                    <i class="actionicon glyphicon glyphicon-arrow-down swapaction" data-id="{{ action.id }}" data-swapid="{{ actions[i+1].id }}"></i>
                 {% endif %}
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
+        <div class="col-md-10 actiondescription{% if action.owner == current_user %} editable ckeditable{% endif %}" data-getter="/get/action/description/{{ action.id }}" data-setter="/set/action/description/{{ action.id }}">{{ action.description|safe }}</div>
     </div>
     {% endfor %}
     <div class="row list-entry">
@@ -76,9 +97,9 @@
             {{ form.hidden_tag() }}
             <div class="col-md-2">
                 {{ wtf.form_field(form.timestamp) }}
+                {{ wtf.form_field(form.submit) }}
             </div>
-            <div class="col-md-8">{{ wtf.form_field(form.description) }}</div>
-            <div class="col-md-2">{{ wtf.form_field(form.submit) }}</div>
+            <div class="col-md-10">{{ wtf.form_field(form.description) }}</div>
         </form>
     </div>
 </div>

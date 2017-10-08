@@ -139,7 +139,7 @@ def search():
 @main.route('/userlist', methods=['POST'])
 @login_required
 def userlist():
-    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    sample = Sample.query.get(int(request.form.get("id")))
     users = User.query.all()
     sharers = [share.user for share in sample.shares]
     sharers.append(sample.owner)
@@ -147,19 +147,10 @@ def userlist():
     return render_template('userlist.html', users=[user for user in users if user not in sharers])
 
 
-@main.route('/sharerlist', methods=['POST'])
-@login_required
-def sharerlist():
-    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
-    sharers = [share.user for share in sample.shares]
-
-    return jsonify(sharers=sharers)
-
-
 @main.route('/loginas', methods=['GET'])
 @login_required
 def login_as():
-    user = User.query.filter_by(id=int(request.args.get("userid"))).first()
+    user = User.query.get(int(request.args.get("userid")))
 
     # check if current user has the right to do this
     if user.heir != current_user:
@@ -174,7 +165,7 @@ def login_as():
 @main.route('/togglearchived', methods=['POST'])
 @login_required
 def togglearchived():
-    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    sample = Sample.query.get(int(request.form.get("id")))
     if sample == None or sample.owner != current_user:
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
     sample.isarchived = not sample.isarchived
@@ -185,8 +176,8 @@ def togglearchived():
 @main.route('/sharesample', methods=['POST'])
 @login_required
 def sharesample():
-    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
-    user = User.query.filter_by(id=int(request.form.get("sharewith"))).first()
+    sample = Sample.query.get(int(request.form.get("id")))
+    user = User.query.get(int(request.form.get("sharewith")))
     if sample == None or sample.owner != current_user:
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
     share = Share(sample = sample, user = user)
@@ -198,7 +189,7 @@ def sharesample():
 @main.route('/delaction/<actionid>', methods=['GET', 'POST'])
 @login_required
 def deleteaction(actionid):
-    action = Action.query.filter_by(id=int(actionid)).first()
+    action = Action.query.get(int(actionid))
     if action == None or action.owner != current_user:
         return render_template('404.html'), 404
     sampleid = action.sample_id
@@ -210,7 +201,7 @@ def deleteaction(actionid):
 @main.route('/delsample/<sampleid>', methods=['GET', 'POST'])
 @login_required
 def deletesample(sampleid):
-    sample = Sample.query.filter_by(id=int(sampleid)).first()
+    sample = Sample.query.get(int(sampleid))
     if sample == None or sample.owner != current_user:
         return render_template('404.html'), 404
     db.session.delete(sample)  # delete cascade automatically deletes associated actions
@@ -221,7 +212,7 @@ def deletesample(sampleid):
 @main.route('/delshare/<shareid>', methods=['GET', 'POST'])
 @login_required
 def deleteshare(shareid):
-    share = Share.query.filter_by(id=int(shareid)).first()
+    share = Share.query.get(int(shareid))
 
     if share is None or share.sample is None:
         return jsonify(code=1, error="Share or sample does not exist")
@@ -243,7 +234,7 @@ def deleteshare(shareid):
 @main.route('/changeparent', methods=['POST'])
 @login_required
 def changeparent():
-    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
+    sample = Sample.query.get(int(request.form.get("id")))
     if sample == None or sample.owner != current_user:
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
 
@@ -283,7 +274,7 @@ def newsample():
 @main.route('/newaction/<sampleid>', methods=['POST'])
 @login_required
 def newaction(sampleid):
-    sample = Sample.query.filter_by(id=int(sampleid)).first()
+    sample = Sample.query.get(int(sampleid))
     if sample == None or (sample.owner != current_user and not sample.is_shared_with(current_user)):
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
 
@@ -308,8 +299,8 @@ def newaction(sampleid):
 @main.route('/swapactionorder', methods=['POST'])
 @login_required
 def swapactionorder():          # TODO: sort out permissions for this (e.g. who has the right to change order?)
-    action = Action.query.filter_by(id = int(request.form.get('actionid'))).first()
-    swapaction = Action.query.filter_by(id = int(request.form.get('swapid'))).first()
+    action = Action.query.get(int(request.form.get('actionid')))
+    swapaction = Action.query.get(int(request.form.get('swapid')))
     ordnum = action.ordnum
     action.ordnum = swapaction.ordnum
     swapaction.ordnum = ordnum
@@ -320,7 +311,7 @@ def swapactionorder():          # TODO: sort out permissions for this (e.g. who 
 @main.route('/resetmatrix/<sampleid>', methods=['POST'])
 @login_required
 def resetmatrix(sampleid):
-    sample = Sample.query.filter_by(id=int(sampleid)).first()
+    sample = Sample.query.get(int(sampleid))
     sample.mwidth = None
     sample.mheight = None
     for c in sample.children:
@@ -333,7 +324,7 @@ def resetmatrix(sampleid):
 @main.route('/matrixview/<sampleid>', methods=['GET', 'POST'])
 @login_required
 def matrixview(sampleid):
-    sample = Sample.query.filter_by(id=int(sampleid)).first()
+    sample = Sample.query.get(int(sampleid))
     form = NewMatrixForm()
     if form.validate_on_submit():  # TODO: do this with AJAX
         sample.mheight = int(form.height.data)
@@ -359,14 +350,14 @@ def matrixview(sampleid):
 @main.route('/childbrowser/<sampleid>')
 @login_required
 def childbrowser(sampleid):
-    sample = Sample.query.filter_by(id=int(sampleid)).first()
+    sample = Sample.query.get(int(sampleid))
     return render_template('childbrowser.html', sample=sample)
 
 
 @main.route('/setmatrixcoords/<sampleid>', methods=['POST'])
 @login_required
 def setmatrixcoords(sampleid):
-    sample = Sample.query.filter_by(id=int(sampleid)).first()
+    sample = Sample.query.get(int(sampleid))
 
     # check if any sibling has these coords already and remove them if it's the case
     for c in sample.parent.children:

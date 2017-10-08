@@ -120,7 +120,7 @@ function init_editor() {
     $('#samplename.editable').texteditable();
     $('#samplename.editable').on('editableupdate', function(event, data) {
         if(!data.code) // only if no error occured
-            $("#navname"+sample_id).html(data.value);
+            $("#nav-entry"+sample_id+" > .nav-entry-name").html(data.value);
     });
     $('.actiondate.editable').texteditable();
 

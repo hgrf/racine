@@ -4,9 +4,9 @@ location.search.substr(1).split("&").forEach(function(item) {queryDict[item.spli
 
 function update_sample_image_and_quit(uploadurl) {
     $.ajax({
-        url: "/changesampleimage",
+        url: "/set/sample/image/"+queryDict['sample'],
         type: "post",
-        data: { "id": queryDict['sample'], "value": uploadurl },
+        data: { "value": uploadurl },
             success: function(data) {
             window.opener.location.href = "/sample/"+queryDict['sample'];   // reload the sample page in the editor window
             window.close();     // close the browser window

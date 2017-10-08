@@ -195,17 +195,6 @@ def sharesample():
     return jsonify(code=0, username=user.username, userid=user.id, shareid=share.id)
 
 
-@main.route('/changesampleimage', methods=['POST'])
-@login_required
-def changesampleimage():
-    sample = Sample.query.filter_by(id=int(request.form.get("id"))).first()
-    if sample == None or sample.owner != current_user:
-        return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
-    sample.image = request.form.get('value')
-    db.session.commit()
-    return ""
-
-
 @main.route('/delaction/<actionid>', methods=['GET', 'POST'])
 @login_required
 def deleteaction(actionid):
@@ -414,7 +403,8 @@ supported_targets = {
         'auth': 'owner',        # TODO: implement this
         'fields': {
             'name': validate_sample_name,
-            'description': str
+            'description': str,
+            'image': str
         }
     },
     'action': {

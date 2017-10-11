@@ -23,8 +23,6 @@ def login():
             last_logged_in.insert(0, user.username)
             last_logged_in = last_logged_in[0:5]
 
-            print request.args.get('next')
-
             resp = redirect(request.args.get('next') or url_for('main.index'))
         else:
             flash('Incorrect username or password.')
@@ -35,7 +33,7 @@ def login():
         resp = make_response(render_template('auth/login.html', form=form,users=User.query.all(),
                                              last_logged_in=last_logged_in))
 
-    resp.set_cookie('last_logged_in', ','.join(last_logged_in))
+    resp.set_cookie('last_logged_in', ','.join(last_logged_in), max_age=3600*24*7*4) # 4 week validity for the cookie
     return resp
 
 @auth.route('/logout')

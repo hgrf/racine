@@ -31,7 +31,7 @@ $(document).ready(function() {
         $('.nav-entry').on({
             dragstart: function (event) {
                 event.dataTransfer.setData('sampleid', $(event.target).data('id'));
-                event.dataTransfer.setData('text/html', '<a href="/sample/' + event.target.id + '">' + $(event.target).data('name') + '</a> ');
+                event.dataTransfer.setData('text/html', '<a href="/sample/' + $(event.target).data('id') + '">' + $(event.target).data('name') + '</a> ');
             }
         });
 

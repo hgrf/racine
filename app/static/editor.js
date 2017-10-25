@@ -167,6 +167,16 @@ function load_sample(id, pushstate) {
     });
 }
 
+function before_unload_handler(e) {
+    for(var i in CKEDITOR.instances) {
+        if(CKEDITOR.instances[i].checkDirty()) {
+            confirmationMessage = "Are you sure you want to leave before saving modifications?";
+            e.returnValue = confirmationMessage;     // Gecko, Trident, Chrome 34+
+            return confirmationMessage;              // Gecko, WebKit, Chrome <34
+        }
+    }
+}
+
 $(document).ready(function() {
     window.addEventListener("popstate", function(e) {
         if(e.state != null)
@@ -189,15 +199,7 @@ $(document).ready(function() {
 
     // add window unload handler (which asks the user to confirm leaving the page when one of the CKEditor instances
     // has been modified
-    window.addEventListener('beforeunload', function(e) {
-        for(var i in CKEDITOR.instances) {
-            if(CKEDITOR.instances[i].checkDirty()) {
-                confirmationMessage = "Are you sure you want to leave before saving modifications?";
-                e.returnValue = confirmationMessage;     // Gecko, Trident, Chrome 34+
-                return confirmationMessage;              // Gecko, WebKit, Chrome <34
-            }
-        }
-    });
+    window.addEventListener('beforeunload', before_unload_handler);
 
     // TODO: this stuff belongs in "main.js"
 

@@ -8,15 +8,17 @@ $(document).ready(function() {
     function init_navbar() {
         // initialise sample navigation bar double click event
         $('.nav-entry').dblclick(function (event) {
-            // this is a bit redundant with the TWO other page unload handlers, maybe want to tidy that shit up
-            if ($('#sampleid').text() != "" && CKEDITOR.instances.description.checkDirty()) {        // CKEDITOR.instances.description does not exist if no sample is open
-                if (confirm('Are you sure you want to navigate away from this page? Press OK to continue, or Cancel to stay on the current page.')) {
+            // use the before_unload_handler function in editor.js to check if any CKEditor is being edited
+            // if yes, ask the user if he really wants to load a different sample
+            confirm_message = before_unload_handler(0);
+            if(confirm_message) {
+                if (confirm(confirm_message)) {
                     load_sample($(this).data('id'));
                 }
             } else {
                 load_sample($(this).data('id'));
             }
-            mobile_hide_sidebar();
+            mobile_hide_sidebar();   // on the small screen, hide the sidebar after a sample has been selected
             event.preventDefault();
         });
 

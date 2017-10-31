@@ -37,6 +37,9 @@
         {% if previous_sample != action.sample.id %}
         <div class="samplename">
             Sample {{ action.sample.name }}
+            {% if action.sample.owner != current_user %}
+                <i>({{ action.sample.owner.username }})</i>
+            {% endif %}
         </div>
         {% endif %}
         {% set previous_sample = action.sample.id %}
@@ -100,25 +103,6 @@
                   }
               }
             });
-
-            /*$("#sample").autocomplete({
-                source: function (request, response) {
-                    $.getJSON("/search", {
-                        term: request.term, // in flask, "term" will be the argument to look for using request.args
-                    }, function (data) {
-                        response(data.results); // results from jsonify
-                    });
-                },
-                select: function (event, ui) {
-                    event.preventDefault();
-                    $(this).val(ui.item.label);
-                },
-                focus: function (event, ui) {
-                    event.preventDefault();
-                    $(this).val(ui.item.label);
-                }
-            });*/
-
 
             var samples = new Bloodhound({
               datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),

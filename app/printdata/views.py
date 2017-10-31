@@ -1,10 +1,10 @@
 from flask import render_template
 from . import printdata
-from ..models import Action, Sample
+from ..models import Action, Sample, Share
 from forms import RequestActionsForm
 from flask.ext.login import login_required, current_user
 from datetime import datetime
-
+from sqlalchemy import or_
 
 @printdata.route('/', methods=['GET', 'POST'])
 @login_required
@@ -16,7 +16,10 @@ def overview():
         except ValueError: datefrom = None
         try: dateto = datetime.strptime(form.dateto.data, "%Y-%m-%d")
         except ValueError: dateto = None
-        query = Action.query.join(Action.sample).filter(Sample.owner == current_user)
+        query = Action.query\
+            .join(Action.sample)\
+            .outerjoin(Sample.shares)\
+            .filter(or_(Sample.owner == current_user, Share.user == current_user))
         if datefrom:
             query = query.filter(Action.timestamp >= datefrom)
         if dateto:

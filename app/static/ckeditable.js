@@ -126,11 +126,11 @@
     }
 
     function ckeditable_on_done(event) {
+        editor = event.editor;
         field = event.editor.config.field;
         data = event.editor.getData();
 
         event.editor.updateElement();
-        event.editor.destroy();
 
         if(event.data == 'save') {
             $.ajax({
@@ -138,21 +138,26 @@
                 type: "post",
                 data: {"value": data},
                 success: function( data ) {
-                    if(data.code) alert("An error occured.");
-                    ckeditable_finish(field);
+                    if(data.code) error_dialog("An error occured.");
+                    ckeditable_finish(editor, field);
+                },
+                error: function( jqXHR, textStatus ) {
+                    error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
                 }
             });
         } else {
-            ckeditable_finish(field);
+            ckeditable_finish(editor, field);
         }
     }
 
-    function ckeditable_finish(field) {
+    function ckeditable_finish(editor, field) {
         // read new HTML from server (i.e. either the modified or unmodified version)
         $.ajax({
             url: field.data('getter'),
             type: "get",
             success: function( data ) {
+                editor.destroy();
+
                 // prepare div content for editing
                 field.empty();
                 field.append(data.value);
@@ -167,6 +172,9 @@
 
                 field.trigger('editableupdate', data);
                 field.trigger('editabledone');
+            },
+            error: function( jqXHR, textStatus ) {
+                error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
             }
         });
     }

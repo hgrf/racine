@@ -462,8 +462,6 @@ def updatefield(target, field, id):
     if not (item and item.owner == current_user and field in target['fields']):
         return jsonify(code=1, value='', message='Invalid request')
 
-    print target['dbobject'], "id:", id, "value:", value
-
     # try to assign value
     try:
         # check if a modifier is to be applied

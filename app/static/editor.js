@@ -31,6 +31,12 @@ var ckeditorconfig = {
 
 $.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer
 
+function error_dialog(message) {
+    // TODO: think about uniting this with flash messages
+    $("#errordialog").find(".modal-body").text(message);
+    $("#errordialog").modal("show");
+}
+
 function init_editor() {
     sample_id = $('#sampleid').text();
 
@@ -83,12 +89,14 @@ function init_editor() {
                 else {      // form failed validation; because of invalid data or expired CSRF token
                     $(document).on("editor_initialised", data, function(event) {
                         CKEDITOR.instances.description.setData(event.data.description);
-                        $("#errordialog").find(".modal-body").text("Form is not valid. Either you entered an invalid date or the session has expired. Try submitting again.");
-                        $("#errordialog").modal("show");
+                        error_dialog("Form is not valid. Either you entered an invalid date or the session has expired. Try submitting again.");
                         $(document).off("editor_initialised");
                     });
                     load_sample($('#sampleid').text());
                 }
+            },
+            error: function( jqXHR, textStatus ) {
+                error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
             }
         });
         event.preventDefault();

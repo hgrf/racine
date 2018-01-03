@@ -1,13 +1,14 @@
-from flask import render_template, redirect, request, url_for
+from flask import render_template, redirect, request, url_for, flash
 from .. import db
 from ..decorators import admin_required
 from ..models import SMBResource, User, Upload, Action, Sample
-from forms import NewSMBResourceForm, NewTypeForm, ShutdownForm, NewUserForm
+from forms import NewSMBResourceForm, ShutdownForm, NewUserForm, EmailSettings
 from . import settings
 from flask.ext.login import login_required
 import git
 from config import basedir
 from flask import current_app as app
+from flask_mail import Mail
 import os
 
 # see http://flask.pocoo.org/snippets/67/
@@ -71,6 +72,69 @@ def users():
         db.session.commit()
         return redirect(url_for('settings.users'))
     return render_template('settings/users.html', users=User.query.all(), form=form)
+
+
+@settings.route('/email', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def email():
+    form = EmailSettings()
+
+    if form.validate_on_submit():
+        # save settings
+        try:
+            f = open('mailconfig.py', 'w')
+
+            f.write(
+'''class MailConfig:
+    SENDER = '{}'
+    SERVER = '{}'
+    PORT = {}
+    USE_SSL = {}
+    USE_TLS = {}
+    USERNAME = '{}'
+    PASSWORD = '{}'
+'''.format(form.sender.data, form.server.data, form.port.data, form.use_ssl.data,
+           form.use_tls.data, form.username.data, form.password.data))
+
+            f.close()
+        except Exception:
+            flash('Could not save settings. Make sure MSM has write privileges in its main directory.')
+
+        # update mail config
+        app.config.update(
+            MAIL_SENDER = form.sender.data,
+            MAIL_SERVER = form.server.data,
+            MAIL_PORT = form.port.data,
+            MAIL_USE_SSL = form.use_ssl.data,
+            MAIL_USE_TLS = form.use_tls.data,
+            MAIL_USERNAME = form.username.data,
+            MAIL_PASSWORD = form.password.data
+        )
+
+        # send test mail
+        mail = Mail(app)
+        try:
+            msg = mail.send_message(
+                'Test mail',
+                sender=('MSM Admin', form.sender.data),
+                recipients=[form.sender.data],
+                body="This is a test mail from MSM."
+            )
+        except Exception as e:
+            flash('Error: '+str(e))
+        else:
+            flash('Test message was successfully sent')
+
+    if app.config['MAIL_SERVER'] is not None:
+        form.sender.data = app.config['MAIL_SENDER']
+        form.server.data = app.config['MAIL_SERVER']
+        form.port.data = app.config['MAIL_PORT']
+        form.use_ssl.data = app.config['MAIL_USE_SSL']
+        form.use_tls.data = app.config['MAIL_USE_TLS']
+        form.username.data = app.config['MAIL_USERNAME']
+
+    return render_template('settings/email.html', form=form)
 
 
 @settings.route('/revision', methods=['GET'])

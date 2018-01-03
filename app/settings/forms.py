@@ -1,12 +1,7 @@
 from flask.ext.wtf import Form
-from wtforms import SubmitField, StringField, ValidationError, PasswordField, BooleanField
+from wtforms import SubmitField, StringField, ValidationError, PasswordField, BooleanField, IntegerField
 from wtforms.validators import Required, Length, Email, Regexp, EqualTo
 from ..models import User
-
-
-class NewTypeForm(Form):
-    name = StringField('Type name:')
-    submit = SubmitField('Submit')
 
 
 class NewSMBResourceForm(Form):
@@ -42,3 +37,14 @@ Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
     def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in use.')
+
+
+class EmailSettings(Form):
+    sender = StringField('Sender:')
+    server = StringField('Server:')
+    port = IntegerField('Port:')
+    use_ssl = BooleanField('Use SSL')
+    use_tls = BooleanField('Use TLS')
+    username = StringField('User name:')
+    password = PasswordField('Password:')
+    submit = SubmitField('Save changes and send test email')

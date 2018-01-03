@@ -1,8 +1,12 @@
 from flask import render_template, redirect, request, url_for, flash, make_response, jsonify
-from flask.ext.login import login_user, logout_user, login_required
+from flask.ext.login import login_user, logout_user, login_required, current_user
 from . import auth
 from ..models import User
-from .forms import LoginForm
+from .forms import LoginForm, PasswordResetRequestForm, PasswordResetForm
+from flask_mail import Mail, Message
+from flask import current_app as app
+from .. import db
+
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -37,6 +41,49 @@ def login():
 
     resp.set_cookie('last_logged_in', ','.join(last_logged_in))
     return resp
+
+@auth.route('/reset', methods=['GET', 'POST'])
+def password_reset_request():
+    if not current_user.is_anonymous:
+        return redirect(url_for('main.index'))
+    form = PasswordResetRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            token = user.generate_reset_token()
+
+            # send password reset mail
+            mail = Mail(app)
+            try:
+                msg = Message()
+                msg = mail.send_message(
+                    'Reset your password',
+                    sender=('MSM Admin', app.config['MAIL_SENDER']),
+                    recipients=[user.email],
+                    body=render_template('auth/email/reset_password.txt', user=user, token=token, next=request.args.get('next'))
+                )
+            except Exception as e:
+                flash('Error: ' + str(e))
+            else:
+                flash('An email with instructions to reset your password has been sent to you.')
+        return redirect(url_for('auth.login'))
+    return render_template('auth/reset_password.html', form=form)
+
+
+@auth.route('/reset/<token>', methods=['GET', 'POST'])
+def password_reset(token):
+    if not current_user.is_anonymous:
+        return redirect(url_for('main.index'))
+    form = PasswordResetForm()
+    if form.validate_on_submit():
+        if User.reset_password(token, form.password.data):
+            db.session.commit()
+            flash('Your password has been updated.')
+            return redirect(url_for('auth.login'))
+        else:
+            return redirect(url_for('main.index'))
+    return render_template('auth/reset_password.html', form=form)
+
 
 @auth.route('/logout')
 @login_required

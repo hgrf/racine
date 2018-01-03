@@ -51,6 +51,9 @@ def password_reset_request():
             token = user.generate_reset_token()
 
             # send password reset mail
+            if app.config['MAIL_SERVER'] is None:
+                flash('Email support is not correctly set up. Please contact the administrator.')
+                return redirect(url_for('auth.login'))
             mail = Mail(app)
             try:
                 msg = Message()

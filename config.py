@@ -21,13 +21,13 @@ class Config:
     MAIL_SERVER = None
     if MailConfig is not None:
         try:
+            MAIL_SENDER = MailConfig.SENDER
             MAIL_SERVER = MailConfig.SERVER
             MAIL_PORT = MailConfig.PORT
             MAIL_USE_SSL = MailConfig.USE_SSL
             MAIL_USE_TLS = MailConfig.USE_TLS
             MAIL_USERNAME = MailConfig.USERNAME
             MAIL_PASSWORD = MailConfig.PASSWORD
-            MAIL_SENDER = MailConfig.SENDER
         except Exception:
             MAIL_SERVER = None
 

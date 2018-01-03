@@ -36,6 +36,8 @@ Now you have to initialise the database by running:
 
 This will also create the admin user that you will use for your first login (admin@admin.com, password is admin).
 
+You can update the details (user name, email and password) of the administrator in the "Profile" section (you will find the corresponding button on the top right after logging in). Also remember to set up an email account in the corresponding subsection of the "Settings" page.
+
 You can start the development server by simply executing the "run script":
 
     $ ./run

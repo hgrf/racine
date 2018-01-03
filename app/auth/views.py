@@ -53,8 +53,8 @@ def password_reset_request():
             try:
                 send_mail([user.email], 'Reset your password',
                           body=render_template('auth/email/reset_password.txt', user=user, token=token))
-            except Exception as e:
-                flash('Error: ' + str(e))
+            except:
+                flash('Email could not be sent, please contact the administrator.')
             else:
                 flash('An email with instructions to reset your password has been sent to you.')
         return redirect(url_for('auth.login'))

@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
 from wtforms import SubmitField, StringField, ValidationError, PasswordField, BooleanField, IntegerField
-from wtforms.validators import Required, Length, Email, Regexp, EqualTo
+from wtforms.validators import Required, Length, Email, Regexp, EqualTo, DataRequired
 from ..models import User
 
 
@@ -38,11 +38,11 @@ class NewUserForm(Form):
 
 
 class EmailSettings(Form):
-    sender = StringField('Sender:')
-    server = StringField('Server:')
-    port = IntegerField('Port:')
+    sender = StringField('Sender:', validators=[DataRequired()])
+    server = StringField('Server:', validators=[DataRequired()])
+    port = IntegerField('Port:', validators=[DataRequired()])
     use_ssl = BooleanField('Use SSL')
     use_tls = BooleanField('Use TLS')
-    username = StringField('User name:')
-    password = PasswordField('Password:')
+    username = StringField('User name:', validators=[DataRequired()])
+    password = PasswordField('Password:', validators=[DataRequired()])
     submit = SubmitField('Save changes and send test email')

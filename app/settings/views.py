@@ -8,7 +8,7 @@ from flask.ext.login import login_required
 import git
 from config import basedir
 from flask import current_app as app
-from flask_mail import Mail
+from ..email import send_mail, read_mailconfig
 import os
 
 # see http://flask.pocoo.org/snippets/67/
@@ -83,56 +83,39 @@ def email():
     if form.validate_on_submit():
         # save settings
         try:
-            f = open('mailconfig.py', 'w')
-
-            f.write(
-'''class MailConfig:
-    SENDER = '{}'
-    SERVER = '{}'
-    PORT = {}
-    USE_SSL = {}
-    USE_TLS = {}
-    USERNAME = '{}'
-    PASSWORD = '{}'
-'''.format(form.sender.data, form.server.data, form.port.data, form.use_ssl.data,
+            with open('mailconfig.py', 'w') as f:
+                f.write(
+'''{{
+    'MAIL_SENDER': '{}',
+    'MAIL_SERVER': '{}',
+    'MAIL_PORT': {},
+    'MAIL_USE_SSL': {},
+    'MAIL_USE_TLS': {},
+    'MAIL_USERNAME': '{}',
+    'MAIL_PASSWORD': '{}'
+}}'''.format(form.sender.data, form.server.data, form.port.data, form.use_ssl.data,
            form.use_tls.data, form.username.data, form.password.data))
-
-            f.close()
         except Exception:
             flash('Could not save settings. Make sure MSM has write privileges in its main directory.')
 
-        # update mail config
-        app.config.update(
-            MAIL_SENDER = form.sender.data,
-            MAIL_SERVER = form.server.data,
-            MAIL_PORT = form.port.data,
-            MAIL_USE_SSL = form.use_ssl.data,
-            MAIL_USE_TLS = form.use_tls.data,
-            MAIL_USERNAME = form.username.data,
-            MAIL_PASSWORD = form.password.data
-        )
-
         # send test mail
-        mail = Mail(app)
         try:
-            msg = mail.send_message(
-                'Test mail',
-                sender=('MSM Admin', form.sender.data),
-                recipients=[form.sender.data],
-                body="This is a test mail from MSM."
-            )
+            send_mail([form.sender.data], 'Test mail', body='This is a test mail from MSM.')
         except Exception as e:
             flash('Error: '+str(e))
         else:
             flash('Test message was successfully sent')
 
-    if app.config['MAIL_SERVER'] is not None:
-        form.sender.data = app.config['MAIL_SENDER']
-        form.server.data = app.config['MAIL_SERVER']
-        form.port.data = app.config['MAIL_PORT']
-        form.use_ssl.data = app.config['MAIL_USE_SSL']
-        form.use_tls.data = app.config['MAIL_USE_TLS']
-        form.username.data = app.config['MAIL_USERNAME']
+    try:
+        mailconfig = read_mailconfig()
+        form.sender.data = mailconfig['MAIL_SENDER']
+        form.server.data = mailconfig['MAIL_SERVER']
+        form.port.data = mailconfig['MAIL_PORT']
+        form.use_ssl.data = mailconfig['MAIL_USE_SSL']
+        form.use_tls.data = mailconfig['MAIL_USE_TLS']
+        form.username.data = mailconfig['MAIL_USERNAME']
+    except Exception:
+        pass
 
     return render_template('settings/email.html', form=form)
 

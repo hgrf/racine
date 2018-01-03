@@ -3,9 +3,8 @@ from flask.ext.login import login_user, logout_user, login_required, current_use
 from . import auth
 from ..models import User
 from .forms import LoginForm, PasswordResetRequestForm, PasswordResetForm
-from flask_mail import Mail, Message
-from flask import current_app as app
 from .. import db
+from ..email import send_mail
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -51,18 +50,9 @@ def password_reset_request():
             token = user.generate_reset_token()
 
             # send password reset mail
-            if app.config['MAIL_SERVER'] is None:
-                flash('Email support is not correctly set up. Please contact the administrator.')
-                return redirect(url_for('auth.login'))
-            mail = Mail(app)
             try:
-                msg = Message()
-                msg = mail.send_message(
-                    'Reset your password',
-                    sender=('MSM Admin', app.config['MAIL_SENDER']),
-                    recipients=[user.email],
-                    body=render_template('auth/email/reset_password.txt', user=user, token=token, next=request.args.get('next'))
-                )
+                send_mail([user.email], 'Reset your password',
+                          body=render_template('auth/email/reset_password.txt', user=user, token=token))
             except Exception as e:
                 flash('Error: ' + str(e))
             else:

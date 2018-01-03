@@ -1,0 +1,19 @@
+{% set active = "email" %}
+{% extends "settings/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+<h1 class="page-header">Email</h1>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ wtf.form_field(form.sender) }}
+    {{ wtf.form_field(form.server) }}
+    {{ wtf.form_field(form.port) }}
+    {{ wtf.form_field(form.use_ssl) }}
+    {{ wtf.form_field(form.use_tls) }}
+    {{ wtf.form_field(form.username) }}
+    (current password not shown for security purposes, please enter it every time you submit this form)<br>
+    {{ wtf.form_field(form.password) }}
+    {{ wtf.form_field(form.submit) }}
+</form>
+{% endblock %}

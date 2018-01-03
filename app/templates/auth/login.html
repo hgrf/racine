@@ -49,6 +49,9 @@
                         <div class="form-group input-group">
                             {{ wtf.form_field(form.remember_me) }}
                         </div>
+                        <div class="form-group input-group">
+                            <a href="{{ url_for('auth.password_reset_request') }}">Reset password.</a></p>
+                        </div>
                         <div class="form-group">
                             {{ form.submit(class_='btn btn-primary btn-block') }}
                         </div>

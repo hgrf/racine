@@ -124,14 +124,26 @@ def help():
 @main.route('/search', methods=['GET'])
 @login_required
 def search():
-    keyword = request.args.get('term')
-    samples = Sample.query.filter_by(owner=current_user).filter(Sample.name.ilike('%'+keyword+'%')).limit(10).all()   # max 10 items
-    samples += db.session.query(Sample) \
-                 .outerjoin((Share, Share.sample_id == Sample.id)) \
-                 .filter(Share.user_id == current_user.id) \
-                 .filter(Sample.name.ilike('%' + keyword + '%')) \
-                 .limit(10).all()  # max 10 items
-    results = [{"label": s.name, "id": s.id} for s in samples]
+    keyword = request.args.get('term').lower()
+    # In order to reach really ALL samples that are accessible by the current user, we need to go through the hierarchy.
+    # The most tricky samples to catch are the children of a sample that the user shares with someone else and that are
+    # not explicitly shared with the user.
+    #
+    # The problem with the following strategy is that samples on the same hierarchy level are not given the same
+    # priority in the results list. Instead the first "tree" will be given highest priority.
+    def find_in(samples, keyword, limit):
+        if not samples or limit < 1:
+            return []
+        result = []
+        for s in samples:
+            if keyword in s.name.lower():
+                result.append(s)
+            result.extend(find_in(s.children, keyword, limit-len(result)))
+        return result
+
+    own_samples = Sample.query.filter_by(owner=current_user, parent_id=0).all()
+    shares = [s.sample for s in current_user.shares]
+    results = [{"label": s.name, "id": s.id} for s in find_in(own_samples+shares, keyword, 10)]
 
     if request.args.get('autocomplete') is not None:
         return jsonify(results=results)

@@ -23,8 +23,11 @@ def index():
 @main.route('/sample/<sampleid>')
 @login_required
 def sample(sampleid):
+    if not sampleid:
+        return render_template('main.html', sample=None)
     sample = Sample.query.get(sampleid)
-
+    if sample == None or (sample.owner != current_user and not sample.is_shared_with(current_user)):
+        return render_template('404.html'), 404
     return render_template('main.html', sample=sample)
 
 

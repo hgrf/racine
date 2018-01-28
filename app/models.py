@@ -91,7 +91,7 @@ class Sample(db.Model):
         while parent:
             shares += parent.shares
             parent = parent.parent
-        return shares
+        return user in shares
 
 
 class Action(db.Model):

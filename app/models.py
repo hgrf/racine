@@ -85,11 +85,14 @@ class Sample(db.Model):
         return '<Sample %r>' % self.name
 
     def is_shared_with(self, user):
-        # find all shares for this sample and all parent samples up to the root of the hierarchy
+        # TODO: rename this function to something more adequate, like, is_accessible()
+        # go through the owner and shares of this sample and check in the hierarchy (i.e. all parents)
+        # if it can be accessed by user
         parent = self
         shares = []
         while parent:
-            shares += parent.shares
+            shares.append(parent.owner)
+            shares.extend([s.user for s in parent.shares])
             parent = parent.parent
         return user in shares
 

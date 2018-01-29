@@ -12,9 +12,9 @@ def overview():
     form = RequestActionsForm()
     actions = []
     if form.validate_on_submit():
-        try: datefrom = datetime.strptime(form.datefrom.data, "%Y-%m-%d")
+        try: datefrom = datetime.strptime(form.datefrom.data, "%Y-%m-%d").date()
         except ValueError: datefrom = None
-        try: dateto = datetime.strptime(form.dateto.data, "%Y-%m-%d")
+        try: dateto = datetime.strptime(form.dateto.data, "%Y-%m-%d").date()
         except ValueError: dateto = None
 
         def tree(samples):
@@ -35,9 +35,9 @@ def overview():
             if form.sample.data and form.sample.data != s.name:
                 continue
             for a in s.actions:
-                if datefrom and a.timestamp < datefrom:
+                if datefrom and a.timestamp and a.timestamp < datefrom:
                     continue
-                if dateto and a.timestamp > dateto:
+                if dateto and a.timestamp and a.timestamp > dateto:
                     continue
                 actions.append(a)
         actions = sorted(actions, key=lambda x: x.ordnum)

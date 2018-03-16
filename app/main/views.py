@@ -143,7 +143,10 @@ def search():
 
     own_samples = Sample.query.filter_by(owner=current_user, parent_id=0).all()
     shares = [s.sample for s in current_user.shares]
-    results = [{"label": s.name, "id": s.id} for s in find_in(own_samples+shares, keyword, 10)]
+    results = [{"label": s.name, "id": s.id,
+                "ownername": s.owner.username,
+                "plabel": s.parent.name if s.parent_id else ''}
+               for s in find_in(own_samples+shares, keyword, 10)]
 
     if request.args.get('autocomplete') is not None:
         return jsonify(results=results)
@@ -274,12 +277,16 @@ def changeparent():
 @login_required
 def newsample():
     form = NewSampleForm()
-    form.parent.choices = [(0, "/")] + [(sample.id, sample.name) for sample in Sample.query.filter(Sample.owner == current_user).order_by('name')]
     if form.validate_on_submit():
         if Sample.query.filter_by(owner=current_user, name=form.name.data).all():
             flash("You already have a sample with this name: "+form.name.data+". Please choose a different name.")
             return render_template('newsample.html', form=form)
-        sample = Sample(owner=current_user, name=form.name.data, parent_id=form.parent.data, description=form.description.data)
+        if not Sample.query.get(form.parentid.data) and form.parentid.data:
+            flash("Please select a valid parent sample or leave that field empty.")
+            return render_template('newsample.html', form=form, parenterror=True)
+        sample = Sample(owner=current_user, name=form.name.data,
+                        parent_id=form.parentid.data if form.parentid.data else 0,
+                        description=form.description.data)
         db.session.add(sample)
         db.session.commit()
         return redirect("/sample/" + str(sample.id))
@@ -399,6 +406,8 @@ def validate_sample_name(name):
         raise Exception("Name too long.")
     if Sample.query.filter_by(owner=current_user, name=name).first() is not None:
         raise Exception("Name is already taken.")
+    if name[0] == ' ':
+        raise Exception("Name must not start with a space.")
     return name
 
 

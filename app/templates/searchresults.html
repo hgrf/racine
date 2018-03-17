@@ -2,17 +2,42 @@
 
 {% block styles %}
     {{ super() }}
-    <link rel="stylesheet" href="{{url_for('static', filename='editor.css')}}">
+    <style>
+    .resultslist {
+        max-width: 500px;
+    }
+
+    .sample {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .sample:hover {
+        background-color: #CCCCEE;
+        cursor: pointer;"
+    }
+
+    .sample > img {
+        width: 24px;
+        height: 24px;
+    }
+    </style>
 {% endblock %}
 
 {% block page_content %}
-    <h1>Search results:</h1>
+    <h2><b>Search results:</b> "{{ term }}"</h2>
     <hr>
-    <div>
+    <div class="resultslist">
     {% for r in results %}
-        <div class="sample user" data-id="{{ r.id }}"> {# TODO: user class is the right style, but the name is misleading #}
+        <div class="sample" data-id="{{ r.id }}">
             <img src="/static/sample.png">
-            {{ r.label }}
+            {{ r.name }} &nbsp;&nbsp;
+            <i class="glyphicon glyphicon-user"></i> &nbsp;
+            {{ r.ownername }} &nbsp;&nbsp;
+            {% if r.parentname %}
+                <i class="glyphicon glyphicon-level-up"></i> &nbsp;
+                {{ r.parentname }}
+            {% endif %}
         </div>
     {% endfor %}
     </div>

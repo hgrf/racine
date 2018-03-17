@@ -150,7 +150,7 @@ def search():
     if request.args.get('autocomplete') is not None:
         return jsonify(results=results)
     else:
-        return render_template('searchresults.html', results=results)
+        return render_template('searchresults.html', results=results, term=keyword)
 
 
 @main.route('/userlist', methods=['POST'])

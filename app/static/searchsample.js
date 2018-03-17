@@ -14,19 +14,19 @@ function create_searchsample(searchfield) {
         highlight: true
     }, {
         name: 'samples',
-        display: function(data) { return data.label; },
+        display: function(result) { return result.name; },
         source: samples,
         templates: {
-            suggestion: function(data) {
-                if(data.plabel != '') {
-                    parentinfo = '&nbsp;<i class="glyphicon glyphicon-level-up"></i>&nbsp;'+data.plabel
+            suggestion: function(result) {
+                if(result.parentname != '') {
+                    parentinfo = '&nbsp;<i class="glyphicon glyphicon-level-up"></i>&nbsp;'+result.parentname
                 } else {
                     parentinfo = ''
                 }
                 return '<div>'+
-                       '<img src="/static/sample.png" width="24px" height="24px">'+data.label+
-                       '&nbsp;<i class="glyphicon glyphicon-user"></i>&nbsp;'+data.ownername+
-                       parentinfo +
+                       '<img src="/static/sample.png" width="24px" height="24px">'+result.name+
+                       '&nbsp;<i class="glyphicon glyphicon-user"></i>&nbsp;'+result.ownername+
+                       parentinfo+
                        '</div>';
             }
         }

@@ -142,9 +142,9 @@ def search():
 
     own_samples = Sample.query.filter_by(owner=current_user, parent_id=0).all()
     shares = [s.sample for s in current_user.shares]
-    results = [{"label": s.name, "id": s.id,
+    results = [{"name": s.name, "id": s.id,
                 "ownername": s.owner.username,
-                "plabel": s.parent.name if s.parent_id else ''}
+                "parentname": s.parent.name if s.parent_id else ''}
                for s in find_in(own_samples+shares, keyword, 10)]
 
     if request.args.get('autocomplete') is not None:

@@ -226,3 +226,13 @@ def uploads():
             unused.append(u)
 
     return render_template('settings/uploads.html', emptyfiles=emptyfiles, nofiles=nofiles, duplicates=duplicates, unused=unused)
+
+
+@settings.route('/log', methods=['GET'])
+@login_required
+@admin_required
+def log():
+    log = 'Failed to load log'
+    with open('msm.log', 'r') as f:
+        log = f.read()
+    return render_template('settings/log.html', log=log)

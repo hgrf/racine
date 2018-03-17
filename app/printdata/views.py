@@ -1,10 +1,9 @@
 from flask import render_template
 from . import printdata
-from ..models import Action, Sample, Share
+from ..models import Sample
 from forms import RequestActionsForm
 from flask.ext.login import login_required, current_user
 from datetime import datetime
-from sqlalchemy import or_
 
 @printdata.route('/', methods=['GET', 'POST'])
 @login_required
@@ -12,6 +11,8 @@ def overview():
     form = RequestActionsForm()
     actions = []
     if form.validate_on_submit():
+        sampleid = int(form.sampleid.data) if form.sampleid.data else 0
+
         try: datefrom = datetime.strptime(form.datefrom.data, "%Y-%m-%d").date()
         except ValueError: datefrom = None
         try: dateto = datetime.strptime(form.dateto.data, "%Y-%m-%d").date()
@@ -32,7 +33,7 @@ def overview():
 
         actions = []
         for s in all_samples:
-            if form.sample.data and form.sample.data != s.name:
+            if sampleid and sampleid != s.id:
                 continue
             for a in s.actions:
                 if datefrom and a.timestamp and a.timestamp < datefrom:
@@ -42,4 +43,4 @@ def overview():
                 actions.append(a)
         actions = sorted(actions, key=lambda x: x.ordnum)
         actions = sorted(actions, key=lambda x: x.sample_id)
-    return render_template('print.html', form=form, actions=actions)
+    return render_template('print.html', form=form, actions=actions, sampleerror=True if form.sampleid.data == "-1" else False)

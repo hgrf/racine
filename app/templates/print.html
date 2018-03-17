@@ -9,7 +9,7 @@
 
 {% block sidebarnav %}
 <div class="col-sm-3 col-md-2 sidebar">
-    {{ wtf.quick_form(form, id="selectdataform") }}
+    {{ wtf.quick_form(form) }}
     <div class="checkbox"><label><input type="checkbox" id="chkshowuser" onchange="onChkShowUser()">Hide user names</label></div>
     <p>Reduce image size:</p>
     <div class="dropdown">
@@ -104,36 +104,12 @@
               }
             });
 
-            var samples = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-              queryTokenizer: Bloodhound.tokenizers.whitespace,
-              remote: {
-                url: '/search?autocomplete&term=%QUERY',
-                wildcard: '%QUERY',
-                  transform: function(data) { return data.results; }
-              }
-            });
-
-            $('#sample').typeahead({
-                minLength: 1,
-                highlight: true
-            },
-            {
-                name: 'samples',
-                display: function(data) { return data.label; },
-                source: samples,
-                templates: {
-                    suggestion: function(data) {
-                        return '<div><img src="/static/sample.png" width="24px" height="24px">' + data.label + '</div>';
-                    }
-                }
-            });
-
             $("#datefrom").attr("autocomplete", "off");
             $("#datefrom").datepicker({dateFormat: "yy-mm-dd"});
             $("#dateto").attr("autocomplete", "off");
             $("#dateto").datepicker({dateFormat: "yy-mm-dd"});
 
+            create_selectsample($('#sample'), $('#sampleid'), {{ "false" if sampleerror else "true" }}, "All");
 
             $("#btnprint").click(function(){
                 $("body").append('<div id="printDestination">'+document.getElementById("printArea").innerHTML+'</div>');

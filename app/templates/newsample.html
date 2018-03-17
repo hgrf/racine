@@ -2,108 +2,30 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block page_content %}
-   <form action="" method="post" class="form" role="form" style="max-width: 700px;">
-        {{ form.hidden_tag() }}
-        {{ wtf.form_field(form.name) }}
-        <div class="form-group">
-            <label class="control-label" for="parent">Parent:</label>
-            <div class="input-group">
-                {{ form.parent(class_='form-control', placeholder='None') }}
-                <span class="input-group-addon">
-                    <i class="glyphicon glyphicon-{{ "ok" if not parenterror else "alert" }}"
-                       style="color:{{ "green" if not parenterror else "red" }};" id="parentindicator"></i>
-                </span>
-            </div>
-        </div>
-        {{ wtf.form_field(form.description) }}
-        {{ wtf.form_field(form.submit) }}
-    </form>
+    {{ wtf.quick_form(form) }}
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
     <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
     <script>
-        (function($) {
-            var ckeditorconfig = {
-                filebrowserImageBrowseUrl : '/browser',
-                filebrowserWindowWidth  : 800,
-                filebrowserWindowHeight : 500,
-                toolbar:
-                [
-                    ['Bold', 'Italic', 'Underline','Subscript','Superscript', 'Format', 'Styles', '-',
-                        'NumberedList', 'BulletedList', 'HorizontalRule', '-', 'Link', 'Unlink', '-',
-                        'Image', 'Table', 'SpecialChar', '-', 'Maximize'],
-                    ['UIColor']
-                ]
-            };
+    var ckeditorconfig = {
+        filebrowserImageBrowseUrl : '/browser',
+        filebrowserWindowWidth  : 800,
+        filebrowserWindowHeight : 500,
+        toolbar:
+        [
+            ['Bold', 'Italic', 'Underline','Subscript','Superscript', 'Format', 'Styles', '-',
+                'NumberedList', 'BulletedList', 'HorizontalRule', '-', 'Link', 'Unlink', '-',
+                'Image', 'Table', 'SpecialChar', '-', 'Maximize'],
+            ['UIColor']
+        ]
+    };
 
-            $(document).ready(function() {
-                CKEDITOR.replace( 'description', ckeditorconfig);
+    $(document).ready(function() {
+        CKEDITOR.replace( 'description', ckeditorconfig);
 
-                var samples = new Bloodhound({
-                  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-                  queryTokenizer: Bloodhound.tokenizers.whitespace,
-                  remote: {
-                    url: '/search?autocomplete&term=%QUERY',
-                    wildcard: '%QUERY',
-                    transform: function(data) { return data.results; }
-                  }
-                });
-
-                $('#parent').keyup(function(ev) {
-                    if(ev.keyCode == 13) return;
-                    if($('#parent').val() == '') {
-                        $('#parentid').attr('value', '');
-                        $('#parentindicator').removeClass('glyphicon-alert');
-                        $('#parentindicator').addClass('glyphicon-ok');
-                        $('#parentindicator').css('color', 'green');
-                    } else {
-                        $('#parentid').attr('value', -1);
-                        $('#parentindicator').removeClass('glyphicon-ok');
-                        $('#parentindicator').addClass('glyphicon-alert');
-                        $('#parentindicator').css('color', 'red');
-                    }
-                });
-
-                /* TODO
-                * the javascript for this search field is redundant in 3 places: here, the title search bar and the
-                  print search field
-                * the JSON dictionary returned by the /search viewfunction should have more reasonable field names and
-                  the JavaScript here should reflect better when we are dealing with this dictionary and when we are
-                  dealing with something else
-                */
-
-                $('#parent').typeahead({
-                    minLength: 1,
-                    highlight: true
-                }, {
-                    name: 'samples',
-                    display: function(data) { return data.label; },
-                    source: samples,
-                    templates: {
-                        suggestion: function(data) {
-                            if(data.plabel != '') {
-                                parentinfo = '&nbsp;<i class="glyphicon glyphicon-level-up"></i>&nbsp;'+data.plabel
-                            } else {
-                                parentinfo = ''
-                            }
-                            return '<div>'+
-                                   '<img src="/static/sample.png" width="24px" height="24px">'+data.label+
-                                   '&nbsp;<i class="glyphicon glyphicon-user"></i>&nbsp;'+data.ownername+
-                                   parentinfo +
-                                   '</div>';
-                        }
-                    }
-                });
-
-                $('#parent').bind('typeahead:select', function(ev, suggestion) {
-                    $('#parentid').attr('value', suggestion.id);
-                    $('#parentindicator').removeClass('glyphicon-alert');
-                    $('#parentindicator').addClass('glyphicon-ok');
-                    $('#parentindicator').css('color', 'green');
-                });
-            });
-        })(jQuery);
+        create_selectsample($('#parent'), $('#parentid'), {{ "false" if parenterror else "true" }});
+    });
     </script>
 {% endblock %}

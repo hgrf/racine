@@ -33,7 +33,7 @@
                     <li><a href="{{ url_for('auth.logout') }}"><i class="hidden-xs glyphicon glyphicon-log-out" title="Sign out"></i><span class="visible-xs-block">Sign out</span></a></li>
                     <li><a href="/help"><i class="hidden-xs glyphicon glyphicon-question-sign" title="Help"></i><span class="visible-xs-block">Help</span></a></li>
                 </ul>
-                <form class="nav navbar-form navbar-right"><input type="text" class="form-control searchfield" placeholder="Search..."></form>
+                <form class="nav navbar-form navbar-right"><input type="text" id="navbar-search" class="form-control" placeholder="Search..."></form>
             </div>
         </div>
     </nav>
@@ -65,43 +65,19 @@
 {{ super() }}
     <script src="{{ url_for('static', filename='base.js') }}"></script>
     <script src="{{ url_for('static', filename='typeahead.js/typeahead.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='searchsample.js') }}"></script>
     <script type="text/javascript" charset="utf-8">
-    $(function() {
-        $(document).ready(function() {
-            var samples = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-              queryTokenizer: Bloodhound.tokenizers.whitespace,
-              remote: {
-                url: '/search?autocomplete&term=%QUERY',
-                wildcard: '%QUERY',
-                  transform: function(data) { return data.results; }
-              }
-            });
+    $(document).ready(function() {
+        create_searchsample($('#navbar-search'));
 
-            $('.searchfield').typeahead({
-                minLength: 1,
-                highlight: true
-            },
-            {
-                name: 'samples',
-                display: function(data) { return data.label; },
-                source: samples,
-                templates: {
-                    suggestion: function(data) {
-                        return '<div><img src="/static/sample.png" width="24px" height="24px" style="float: left;">' + data.label + '</div>';
-                    }
-                }
-            });
+        $('#navbar-search').bind('typeahead:select', function(event, suggestion) {
+            location.href="/sample/"+suggestion.id;
+        });
 
-            $('.searchfield').bind('typeahead:select', function(event, suggestion) {
-                location.href="/sample/"+suggestion.id;
-            });
-
-            $('.searchfield').keypress(function(event) {
-                if (event.which == 13) {
-                    location.href="/search?term="+$(this).val();
-                }
-            });
+        $('#navbar-search').keypress(function(event) {
+            if (event.which == 13) {
+                location.href="/search?term="+$(this).val();
+            }
         });
     });
     </script>

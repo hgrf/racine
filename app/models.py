@@ -66,7 +66,7 @@ class Sample(db.Model):
     __tablename__ = 'samples'
     id = db.Column(db.Integer, primary_key=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    name = db.Column(db.String(SAMPLE_NAME_LENGTH), unique=True, index=True)
+    name = db.Column(db.String(SAMPLE_NAME_LENGTH))
     parent_id = db.Column(db.Integer, db.ForeignKey('samples.id'))
     image = db.Column(db.String(300))  # <----------- a changer
     description = db.Column(db.UnicodeText)

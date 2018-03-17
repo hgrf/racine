@@ -1,15 +1,14 @@
-from flask import render_template, redirect, request, jsonify, send_file, flash, send_from_directory
+from flask import render_template, redirect, request, jsonify, send_file, flash
 from flask.ext.login import current_user, login_required, login_user, logout_user
 from .. import db
 from .. import plugins
 from ..models import Sample, Action, User, Share, Upload
-from ..models import SAMPLE_NAME_LENGTH   # <-- TODO: sort this out
 from . import main
 from forms import NewSampleForm, NewActionForm, NewMatrixForm
 from datetime import date, datetime, timedelta
 from .. import smbinterface
-
-from sqlalchemy.sql import func, desc, distinct
+from ..validators import ValidSampleName
+from sqlalchemy.sql import func
 
 
 @main.route('/')
@@ -278,9 +277,6 @@ def changeparent():
 def newsample():
     form = NewSampleForm()
     if form.validate_on_submit():
-        if Sample.query.filter_by(owner=current_user, name=form.name.data).all():
-            flash("You already have a sample with this name: "+form.name.data+". Please choose a different name.")
-            return render_template('newsample.html', form=form)
         if not Sample.query.get(form.parentid.data) and form.parentid.data:
             flash("Please select a valid parent sample or leave that field empty.")
             return render_template('newsample.html', form=form, parenterror=True)
@@ -401,23 +397,13 @@ def static_file(path):
     return send_file('../plugins/'+path)
 
 
-def validate_sample_name(name):
-    if len(name) > SAMPLE_NAME_LENGTH:
-        raise Exception("Name too long.")
-    if Sample.query.filter_by(owner=current_user, name=name).first() is not None:
-        raise Exception("Name is already taken.")
-    if name[0] == ' ':
-        raise Exception("Name must not start with a space.")
-    return name
-
-
 # define supported fields
 supported_targets = {
     'sample': {
         'dbobject': Sample,
         'auth': 'owner',        # TODO: implement this
         'fields': {
-            'name': validate_sample_name,
+            'name': ValidSampleName.validate,
             'description': str,
             'image': str
         }

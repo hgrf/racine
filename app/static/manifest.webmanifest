@@ -1,0 +1,12 @@
+{
+  "name": "Mercury Sample Manager",
+  "short_name": "MSM",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "A note taking and sample management app.",
+  "icons": [{
+    "src": "/static/sample.png",
+    "sizes": "128x128",
+    "type": "image/png"
+  }]
+}

@@ -25,17 +25,6 @@ def set_overview():
     return render_template('settings/overview.html')
 
 
-@settings.route('/shutdown', methods=['GET', 'POST'])
-@login_required
-@admin_required
-def shutdown():
-    form = ShutdownForm()
-    if form.validate_on_submit():
-        shutdown_server()
-        return 'Server shutting down...'
-    return render_template('settings/shutdown.html', form=form)
-
-
 @settings.route('/smbresources', methods=['GET', 'POST'])
 @login_required
 @admin_required

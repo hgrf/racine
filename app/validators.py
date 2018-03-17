@@ -7,6 +7,8 @@ class ValidSampleName(object):
 
     @staticmethod
     def validate(name):
+        if not len(name):
+            raise ValidationError('Name too short.')
         if len(name) > SAMPLE_NAME_LENGTH:
             raise ValidationError('Name too long.')
         if name[0] == ' ':

@@ -1,5 +1,6 @@
 from . import db
 from . import login_manager
+from flask.ext.login import current_user
 from flask.ext.login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -80,6 +81,15 @@ class Sample(db.Model):
     children = db.relationship('Sample', backref=db.backref('parent', remote_side=[id]))
     shares = db.relationship('Share', backref='sample', cascade="delete")
     actions = db.relationship('Action', backref='sample', cascade="delete")
+
+    def __setattr__(self, name, value):
+        if name == 'name':
+            if value != self.name and self.query.filter_by(owner=current_user, parent_id=self.parent_id, name=value).all():
+                raise Exception('You already have a sample with this name on this hierarchy level.')
+        if name == 'parent_id':
+            if value != self.parent_id and self.name is not None and self.query.filter_by(owner=current_user, parent_id=value, name=self.name).all():
+                raise Exception('You already have a sample with this name on this hierarchy level.')
+        super(Sample, self).__setattr__(name, value)
 
     def __repr__(self):
         return '<Sample %r>' % self.name

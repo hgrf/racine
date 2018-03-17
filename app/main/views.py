@@ -265,10 +265,13 @@ def changeparent():
             p = p.parent
 
     # change parent ID and remove matrix coords
-    sample.parent_id = parentid
-    sample.mx = None
-    sample.my = None
-    db.session.commit()
+    try:
+        sample.parent_id = parentid
+        sample.mx = None
+        sample.my = None
+        db.session.commit()
+    except Exception as e:
+        return jsonify(code=1, error=e.message)
     return jsonify(code=0)
 
 
@@ -277,15 +280,19 @@ def changeparent():
 def newsample():
     form = NewSampleForm()
     if form.validate_on_submit():
+        parentid = int(form.parentid.data) if form.parentid.data else 0
         if not Sample.query.get(form.parentid.data) and form.parentid.data:
             flash("Please select a valid parent sample or leave that field empty.")
             return render_template('newsample.html', form=form, parenterror=True)
-        sample = Sample(owner=current_user, name=form.name.data,
-                        parent_id=form.parentid.data if form.parentid.data else 0,
-                        description=form.description.data)
-        db.session.add(sample)
-        db.session.commit()
-        return redirect("/sample/" + str(sample.id))
+        try:
+            print form.name.data
+            sample = Sample(owner=current_user, name=form.name.data, parent_id=parentid,
+                            description=form.description.data)
+            db.session.add(sample)
+            db.session.commit()
+            return redirect("/sample/" + str(sample.id))
+        except Exception as e:
+            flash(e.message)
     return render_template('newsample.html', form=form)
 
 

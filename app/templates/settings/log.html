@@ -4,5 +4,10 @@
 
 {% block page_content %}
     <h1 class="page-header">Log</h1>
-    {{ log }}
+    <code style="color:black;background:white;">
+    <b>Content of log file:</b><br/><br/>
+    {% for l in log %}
+        {{ l }}<br/>
+    {% endfor %}
+    </code>
 {% endblock %}

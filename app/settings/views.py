@@ -234,5 +234,5 @@ def uploads():
 def log():
     log = 'Failed to load log'
     with open('msm.log', 'r') as f:
-        log = f.read()
+        log = f.readlines()
     return render_template('settings/log.html', log=log)

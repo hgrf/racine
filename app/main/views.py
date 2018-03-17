@@ -285,7 +285,6 @@ def newsample():
             flash("Please select a valid parent sample or leave that field empty.")
             return render_template('newsample.html', form=form, parenterror=True)
         try:
-            print form.name.data
             sample = Sample(owner=current_user, name=form.name.data, parent_id=parentid,
                             description=form.description.data)
             db.session.add(sample)

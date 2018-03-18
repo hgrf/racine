@@ -19,13 +19,18 @@ function create_searchsample(searchfield) {
         templates: {
             suggestion: function(result) {
                 if(result.parentname != '') {
-                    parentinfo = '&nbsp;<i class="glyphicon glyphicon-level-up"></i>&nbsp;'+result.parentname
+                    parentinfo = '<span style="white-space:nowrap;"><i class="glyphicon glyphicon-level-up"></i>&nbsp;'+result.parentname+'</span>\n';
                 } else {
-                    parentinfo = ''
+                    parentinfo = '';
                 }
-                return '<div>'+
-                       '<img src="/static/sample.png" width="24px" height="24px">'+result.name+
-                       '&nbsp;<i class="glyphicon glyphicon-user"></i>&nbsp;'+result.ownername+
+                if(!result.mysample) {
+                    ownerinfo = '<span style="white-space:nowrap;"><i class="glyphicon glyphicon-user"></i>&nbsp;'+result.ownername+'</span>\n';
+                } else {
+                    ownerinfo = '';
+                }
+                return '<div style="padding-left:2em;padding-bottom:0.5em;padding-top:0.5em;">\n'+
+                       '<span style="white-space:nowrap;"><img src="/static/sample.png" style="margin-left:-1.5em;width:1.5em;height:1.5em;">&nbsp;'+result.name+'</span>\n'+
+                       ownerinfo+
                        parentinfo+
                        '</div>';
             }

@@ -144,6 +144,7 @@ def search():
     shares = [s.sample for s in current_user.shares]
     results = [{"name": s.name, "id": s.id,
                 "ownername": s.owner.username,
+                "mysample": (s.owner == current_user),
                 "parentname": s.parent.name if s.parent_id else ''}
                for s in find_in(own_samples+shares, keyword, 10)]
 

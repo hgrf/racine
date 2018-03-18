@@ -72,7 +72,8 @@ function init_editor() {
 
     // handler for button that changes sample image
     $('#changesampleimage').click(function(event) {
-        window.open("/browser?changesampleimage=1&sample="+sample_id, 'Browser', 'height=500, width=800, scrollbars=yes')
+        window.open("/browser?changesampleimage=1&sample="+sample_id, 'Browser', 'height=500, width=800, scrollbars=yes');
+        event.preventDefault();
     });
 
     // handler for new action submit button

@@ -37,11 +37,7 @@
         <div class="col-md-5 sampledescription">
             <div><strong>Description:</strong></div>
             <div id="sampledescription" class="{% if sample.owner == current_user %}ckeditable editable{% endif %}" data-getter="/get/sample/description/{{ sample.id }}" data-setter="/set/sample/description/{{ sample.id }}">
-                {% if sample.description != '' %}
-                    {{ sample.description|safe }}
-                {% else %}
-                    <p>Description</p>
-                {% endif %}
+                {{ sample.description|safe }}
             </div>
         </div>
         <div class="col-md-3 sampleshares">

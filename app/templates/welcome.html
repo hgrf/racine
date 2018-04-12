@@ -47,20 +47,22 @@
     {% endfor %}
     </table>
 {% endif %}
-<h2>Recent activity (actions added in the last 7 days):</h2>
-<table>
-{% for n in newactions %}
-    {% if n[1] %}
-        <tr>
-            <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="{{ url_for('static', filename='sample.png') }}" width="40">{{ n[0].name }}</td>
-            <td style="padding-top: 10px;">
-                <div class="progress" style="width: 200px">
-                    <div class="progress-bar" role="progressbar" style="width:{{ n[1]/maxcount*100 }}%">
-                        {{ n[1] }}
+{% if current_user.is_authenticated %}
+    <h2>Recent activity (actions added in the last 7 days):</h2>
+    <table>
+    {% for n in newactions %}
+        {% if n[1] %}
+            <tr>
+                <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="{{ url_for('static', filename='sample.png') }}" width="40">{{ n[0].name }}</td>
+                <td style="padding-top: 10px;">
+                    <div class="progress" style="width: 200px">
+                        <div class="progress-bar" role="progressbar" style="width:{{ n[1]/maxcount*100 }}%">
+                            {{ n[1] }}
+                        </div>
                     </div>
-                </div>
-            </td>
-        </tr>
-    {% endif %}
-{% endfor %}
-</table>
+                </td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+    </table>
+{% endif %}

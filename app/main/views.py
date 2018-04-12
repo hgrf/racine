@@ -1,5 +1,6 @@
 from flask import render_template, redirect, request, jsonify, send_file, flash
 from flask.ext.login import current_user, login_required, login_user, logout_user
+from ..decorators import admin_required
 from .. import db
 from .. import plugins
 from ..models import Sample, Action, User, Share, Upload
@@ -13,27 +14,25 @@ from sqlalchemy.sql import func
 
 @main.route('/')
 def index():
-    if current_user.is_authenticated:
-        return sample(0)
-    else:
-        return redirect('/auth/login?next=%2F')
+    return sample(0)
 
 
 @main.route('/sample/<sampleid>')
-@login_required
 def sample(sampleid):
     if not sampleid:
         return render_template('main.html', sample=None)
     sample = Sample.query.get(sampleid)
-    if sample == None or (sample.owner != current_user and not sample.is_shared_with(current_user)):
+    if (sample is None) or (sample.owner != current_user and not sample.is_visible_to(current_user)):
         return render_template('404.html'), 404
     return render_template('main.html', sample=sample)
 
 
 @main.route('/welcome')
-@login_required
 def welcome():
-    # get user activity for all users (only admin will see this)
+    if not current_user.is_authenticated:
+        return render_template('welcome.html', conns=smbinterface.conns, newactions=[], maxcount=0,
+                               newactionsallusers=[], maxcountallusers=[],
+                               uploadvols=[], maxuploadvol=0, plugins=plugins)
     aweekago = date.today()-timedelta(weeks=1)
     stmt = db.session.query(Action.owner_id, func.count('*').label('action_count')).filter(Action.datecreated > aweekago).group_by(Action.owner_id).subquery()
     newactionsallusers = db.session.query(User, stmt.c.action_count).outerjoin(stmt, User.id==stmt.c.owner_id).order_by(User.id).all()
@@ -64,35 +63,42 @@ def recursive_add_timestamp(samples):
         recursive_add_timestamp(s.children)
 
 @main.route('/navbar', methods=['GET'])
-@login_required
 def navbar():
-    inheritance = User.query.filter_by(heir=current_user).all()
+    # get navbar parameters
     showarchived = True if request.args.get('showarchived') is not None and request.args.get('showarchived') == 'true'\
               else False
     order = request.args.get('order') if request.args.get('order') else 'id'
 
+    # if no user is logged in, only return global samples
+    globalsamples = Sample.query.filter_by(owner_id=0, parent_id=0).all()
+    if not current_user.is_authenticated:
+        return render_template('navbar.html', globalsamples=globalsamples, samples=[], shares=[], inheritance=[],
+                               showarchived=showarchived, order=order)
+
+    # collect inheritance
+    inheritance = User.query.filter_by(heir=current_user).all()
     # only query root level samples, the template will build the hierarchy
     samples = Sample.query.filter_by(owner=current_user, parent_id=0).all()
     shares = [s.sample for s in current_user.shares]
 
     # add timestamps for sorting
     if order == 'last_action_date':
+        recursive_add_timestamp(globalsamples)
         recursive_add_timestamp(samples)
         recursive_add_timestamp(shares)
 
-    return render_template('navbar.html', samples=samples, shares=shares, inheritance=inheritance,
-                           showarchived=showarchived, order=order)
+    return render_template('navbar.html', globalsamples=globalsamples, samples=samples, shares=shares,
+                           inheritance=inheritance, showarchived=showarchived, order=order)
 
 
 
 @main.route('/editor/<sampleid>', methods=['GET', 'POST'])
-@login_required
 def editor(sampleid):
     sample = Sample.query.get(sampleid)
     shares = sample.shares
     showparentactions = True if request.args.get('showparentactions') != None and int(request.args.get('showparentactions')) else False
 
-    if sample == None or (sample.owner != current_user and not sample.is_shared_with(current_user)):
+    if sample == None or (sample.owner != current_user and not sample.is_visible_to(current_user)):
         return render_template('404.html'), 404
     else:
         form = NewActionForm()
@@ -274,6 +280,22 @@ def changeparent():
     except Exception as e:
         return jsonify(code=1, error=e.message)
     return jsonify(code=0)
+
+
+@main.route('/toggleglobal', methods=['POST'])
+@login_required
+@admin_required
+def toggleglobal():
+    sample = Sample.query.get(int(request.form.get("id")))
+    if sample == None:
+        return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
+
+    if sample.owner_id:
+        sample.owner_id = 0
+    else:
+        sample.owner_id = current_user.id
+    db.session.commit()
+    return jsonify(code=0, nowglobal=not bool(sample.owner_id))
 
 
 @main.route('/newsample', methods=['GET', 'POST'])

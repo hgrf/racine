@@ -42,7 +42,21 @@ function init_editor() {
 
     // handler for matrix view button
     $('#matrixviewbutton').click(function() {
-        load_matrix_view(sample_id);
+       load_matrix_view(sample_id);
+    });
+
+    // handler for global button
+    $('#globalbutton').click(function(event) {
+       $.ajax({
+           url: "/toggleglobal",
+           type: "post",
+           data: { "id": sample_id },
+           success: function( data ) {
+               console.log(data);
+               location.href = "/sample/"+sample_id;
+           }
+       });
+       event.preventDefault();
     });
 
     // handler for archive button
@@ -67,7 +81,7 @@ function init_editor() {
 
     $('#showparentactions').click(function() {
         showparentactions = !showparentactions; // toggle
-        load_sample($('#sampleid').text());
+        load_sample(sample_id);
     });
 
     // handler for button that changes sample image

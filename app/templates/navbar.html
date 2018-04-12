@@ -1,16 +1,16 @@
 {# render_branch is a macro to recursively render the hierarchy of navbar elements #}
-{% macro render_branch(samps) %}
+{% macro render_branch(samps, showowner=True) %}
     {% for s in samps|sort(attribute=order, reverse=True if order=='last_action_date' else False) %}
         {% if not s.isarchived or showarchived %}
             <div class="nav-container" id="nav-container{{ s.id }}">
                 <div id="nav-entry{{ s.id }}" class="row nav-entry nav-dropzone {% if s.isarchived %}nav-entry-archived{% endif %}" data-id="{{ s.id }}" data-name="{{ s.name }}" data-toggle="collapse" data-target="#nav-children{{ s.id }}" draggable="true">
                     <div class="nav-entry-name">{{ s.name }}</div>
-                    {% if s.owner != current_user %}
+                    {% if showowner and s.owner != current_user %}
                         <div class="nav-entry-owner">{{ s.owner.username }}</div>
                     {% endif %}
                 </div>
                 <div id="nav-children{{ s.id }}" class="row-fluid collapse out" style="padding-left: 10px;">
-                    {{ render_branch(s.children) }}
+                    {{ render_branch(s.children, showowner) }}
                 </div>
             </div>
         {% endif %}
@@ -20,7 +20,9 @@
 {# HTML for navbar #}
 <div class="navbar-shortcuts">
     <span class="left">
-        <a href="/newsample" data-toggle="tooltip" title="New sample"><i class="glyphicon glyphicon-plus"></i></a>
+        {% if current_user.is_authenticated %}
+            <a href="/newsample" data-toggle="tooltip" title="New sample"><i class="glyphicon glyphicon-plus"></i></a>
+        {% endif %}
     </span>
     <span class="right">
         &nbsp;<i class="navbar-shortcut navbar-togglearchived glyphicon glyphicon-eye-{{ 'open' if showarchived else 'close' }}" title="{{ 'Hide' if showarchived else 'Show' }} archived"></i>
@@ -31,18 +33,21 @@
 </div>
 <div class="navbar-clear"></div>
 <div class="nav-main-container container-fluid nav-dropzone" data-id="0">
-    <div class="row nav-heading">{{ current_user.username }}'{{ 's' if current_user.username[-1] != 's' else '' }} samples:</div>
-    <div id="nav-mysamples">{{ render_branch(samples) }}</div>
-    {% if shares %}
-        <div class="row nav-heading">Shares:</div>
-        {{ render_branch(shares) }}
-    {% endif %}
-    {% if inheritance %}
-        <div class="row nav-heading">Inheritance:</div>
-        {% for i in inheritance %}
-            <div class="row inheritance" data-userid="{{ i.id }}">
-                <img src="{{ url_for('static', filename='user.png') }}" width="30">{{ i.username }}
-            </div>
-        {% endfor %}
+    <div id="nav-globalsamples">{{ render_branch(globalsamples, showowner=False) }}</div>
+    {% if current_user.is_authenticated %}
+        <div class="row nav-heading">{{ current_user.username }}'{{ 's' if current_user.username[-1] != 's' else '' }} samples:</div>
+        <div id="nav-mysamples">{{ render_branch(samples) }}</div>
+        {% if shares %}
+            <div class="row nav-heading">Shares:</div>
+            {{ render_branch(shares) }}
+        {% endif %}
+        {% if inheritance %}
+            <div class="row nav-heading">Inheritance:</div>
+            {% for i in inheritance %}
+                <div class="row inheritance" data-userid="{{ i.id }}">
+                    <img src="{{ url_for('static', filename='user.png') }}" width="30">{{ i.username }}
+                </div>
+            {% endfor %}
+        {% endif %}
     {% endif %}
 </div>

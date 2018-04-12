@@ -29,12 +29,18 @@
                     {% if current_user.is_admin %}
                         <li><a href="/settings/overview"><i class="hidden-xs glyphicon glyphicon-wrench" title="Settings"></i><span class="visible-xs-block">Settings</span></a></li>
                     {% endif %}
-                    <li><a href="/print"><i class="hidden-xs glyphicon glyphicon-print" title="Print"></i><span class="visible-xs-block">Print</span></a></li>
-                    <li><a href="/profile/overview"><i class="hidden-xs glyphicon glyphicon-user" title="Profile"></i><span class="visible-xs-block">Profile</span></a></li>
-                    <li><a href="{{ url_for('auth.logout') }}"><i class="hidden-xs glyphicon glyphicon-log-out" title="Sign out"></i><span class="visible-xs-block">Sign out</span></a></li>
-                    <li><a href="/help"><i class="hidden-xs glyphicon glyphicon-question-sign" title="Help"></i><span class="visible-xs-block">Help</span></a></li>
+                    {% if current_user.is_authenticated %}
+                        <li><a href="/print"><i class="hidden-xs glyphicon glyphicon-print" title="Print"></i><span class="visible-xs-block">Print</span></a></li>
+                        <li><a href="/profile/overview"><i class="hidden-xs glyphicon glyphicon-user" title="Profile"></i><span class="visible-xs-block">Profile</span></a></li>
+                        <li><a href="{{ url_for('auth.logout') }}"><i class="hidden-xs glyphicon glyphicon-log-out" title="Sign out"></i><span class="visible-xs-block">Sign out</span></a></li>
+                        <li><a href="/help"><i class="hidden-xs glyphicon glyphicon-question-sign" title="Help"></i><span class="visible-xs-block">Help</span></a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('auth.login') }}"><i class="hidden-xs glyphicon glyphicon-log-in" title="Sign in"></i><span class="visible-xs-block">Sign in</span></a></li>
+                    {% endif %}
                 </ul>
-                <form class="nav navbar-form navbar-right"><input type="text" id="navbar-search" class="form-control" placeholder="Search..."></form>
+                {% if current_user.is_authenticated %}
+                    <form class="nav navbar-form navbar-right"><input type="text" id="navbar-search" class="form-control" placeholder="Search..."></form>
+                {% endif %}
             </div>
         </div>
     </nav>

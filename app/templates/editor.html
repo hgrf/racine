@@ -12,7 +12,14 @@
         <img id="matrixviewbutton" class="editor-shortcut" title="Switch to matrix view" src="{{ url_for('static', filename='matrixview.png') }}">
     {% endif %}
     {% if sample.parent_id != 0 and sample.parent.actions != [] %}
-    <i id="showparentactions" class="editor-shortcut glyphicon glyphicon-eye-{{ 'open' if showparentactions else 'close' }}" title="{{ 'Hide' if showparentactions else 'Show' }} parent actions"></i>
+        <i id="showparentactions" class="editor-shortcut glyphicon glyphicon-eye-{{ 'open' if showparentactions else 'close' }}" title="{{ 'Hide' if showparentactions else 'Show' }} parent actions"></i>
+    {% endif %}
+    {% if current_user.is_admin %}
+        {% if sample.owner_id != 0 %}
+            <img id="globalbutton" class="editor-shortcut" title="Make global" src="{{ url_for('static', filename='global.png') }}">
+        {% else %}
+            <i id="globalbutton" class="editor-shortcut glyphicon glyphicon-user" title="Make private"></i>
+        {% endif %}
     {% endif %}
     <div style="clear:both;"></div>
 </h2>

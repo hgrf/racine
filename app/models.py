@@ -95,6 +95,7 @@ class Sample(db.Model):
         return '<Sample %r>' % self.name
 
     def is_shared_with(self, user):
+        # this means the user has write-access to this sample
         # TODO: rename this function to something more adequate, like, is_accessible()
         # go through the owner and shares of this sample and check in the hierarchy (i.e. all parents)
         # if it can be accessed by user
@@ -106,6 +107,14 @@ class Sample(db.Model):
             parent = parent.parent
         return user in shares
 
+    def is_visible_to(self, user):
+        # this means the user only has read-access to this sample
+        parent = self
+        while parent:
+            if not parent.owner_id: # global share
+                return True
+            parent = parent.parent
+        return self.is_shared_with(user)
 
 class Action(db.Model):
     __tablename__ = 'actions'

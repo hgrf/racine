@@ -56,7 +56,6 @@ def welcome():
                            uploadvols=uploadvols, maxuploadvol=maxuploadvol, plugins=plugins)
 
 def recursive_add_timestamp(samples):
-    print samples
     for s in samples:
         actions = sorted(s.actions, key=lambda a: a.timestamp if a.timestamp else date.today())
         s.last_action_date = actions[-1].timestamp if actions != [] and actions[-1].timestamp is not None else date.today()

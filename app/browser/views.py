@@ -187,7 +187,7 @@ def store_attachment(file_obj, source, ext):
 ########################################################################################################################
 
 @browser.route('/ulimg/<upload_id>')
-@login_required
+#@login_required
 def retrieve_image(upload_id):
     """Retrieves an image that was uploaded to the server,
 
@@ -209,7 +209,7 @@ def retrieve_image(upload_id):
 
 
 @browser.route('/ulatt/<upload_id>')
-@login_required
+#@login_required
 def retrieve_attachment(upload_id):
     """Retrieves an attachment that was uploaded to the server.
 

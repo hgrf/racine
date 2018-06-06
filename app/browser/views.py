@@ -142,15 +142,17 @@ def store_image(file_obj, source, ext):
     upload : Upload object or None
     message : str
         upload URL if upload succeeds or error message if it fails
+    dimensions : tuple
+        (width, height) of the image
     """
 
     # check if file is OK and if extension is allowed
     ext = ext.lower()
 
     if not file_obj:
-        return None, "File could not be read."
+        return None, "File could not be read.", None
     if not ext in IMAGE_EXTENSIONS:
-        return None, "File extension is invalid."
+        return None, "File extension is invalid.", None
 
     # check if image can be opened and if needs to be converted
     try:
@@ -158,9 +160,9 @@ def store_image(file_obj, source, ext):
         if ext in CONVERSION_REQUIRED:
             ext = '.png'
     except IOError:
-        return None, "Image file invalid."
+        return None, "Image file invalid.", None
 
-    return store_file(image, source, ext, 'img')
+    return store_file(image, source, ext, 'img')+((image.width, image.height),)
 
 
 # TODO: implement this for SMB? (right now not possible, because no support for normal file object)
@@ -296,8 +298,7 @@ def imagebrowser(smb_path):
         folders = sorted(folders, key=lambda f: f.name.lower())
         return render_template('browser.html', files=files, folders=folders, smb_path=smb_path)
 
-# TODO: TIF upload is messed up, because CKEditor uploads it as a "file" not as an image (i.e. the representation in the
-# editor looks wrong, but this has to be sorted out on the editor side
+
 @browser.route('/upload', methods=['POST'])
 @login_required
 def uploadfile():
@@ -316,22 +317,16 @@ def uploadfile():
     filename, ext = os.path.splitext(file_obj.filename)
 
     if type == 'img':
-        upload, url = store_image(file_obj, 'ul:'+file_obj.filename, ext)
+        upload, url, dimensions = store_image(file_obj, 'ul:'+file_obj.filename, ext)
     else:
         upload, url = store_attachment(file_obj, 'ul:' + file_obj.filename, ext)
 
     uploaded = 0 if upload is None else 1
     message = '' if uploaded else url
 
-    # send adapted response
-    if caller == 'ckb':
-        return "<script type='text/javascript'>window.parent.CKEDITOR.tools.callFunction("\
-               + request.args.get('CKEditorFuncNum')\
-               + ", '" + url + "', '" + message + "');</script>"
-
-    if caller == 'ckdd':
-        # TODO: can return width and height in json response, but need to calculate with correct aspect ratio
-        return jsonify(uploaded=uploaded, filename=filename+ext, url=url, message=message)
+    if caller == 'ckdd' or caller == 'ckb':
+        return jsonify(uploaded=uploaded, filename=filename+ext, url=url, message=message, width=400,
+                       height=int(float(dimensions[1])/float(dimensions[0])*400.))
 
     if caller == 'msmb':
         if upload is not None:
@@ -361,7 +356,7 @@ def savefromsmb():
         return jsonify(code=1, message="File could not be retrieved from SMB resource.")
 
     # store the file
-    upload, uploadurl = store_image(file_obj, 'smb:'+src, ext)
+    upload, uploadurl, dimensions = store_image(file_obj, 'smb:'+src, ext)
 
     if upload is not None:
         return jsonify(code=0, uploadurl=uploadurl)

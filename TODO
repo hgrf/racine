@@ -1,0 +1,6 @@
+* sorting by last action causes bug when not logged in
+* login should be on welcome page when not logged in
+* rename, -structure possibly the samples is_ functions, i.e. access management
+* public samples could also be achieved by adding a share with user 0
+* need to secure images and downloads against unauthorized access -> MSM should map uploads (i.e. img and att) to samples, either in a new column in the uploads table or in a separate mapping table, so that it can look up the upload access rights via the sample access rights
+* navbar should indicate which sample is active ?

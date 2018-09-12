@@ -5,20 +5,8 @@
 {% block styles %}
     {{ super() }}
     <style>
-    .user {
-        padding-top: 10px;
-        padding-bottom: 10px;
-        max-width: 700px;
-    }
-
-    .user:hover {
-        background-color: #CCCCEE;
-        cursor: pointer;"
-    }
-
-    .user > img {
-        width: 36px;
-        height: 36px;
+    #userform {
+        max-width: 400px;
     }
     </style>
 {% endblock %}
@@ -38,24 +26,19 @@
         </b></p>
         {% if user is none %}
             <p><b>
-                Please click on the user that you would like to inherit your data.
+                Please select a user that you would like to inherit your data.
             </b></p>
-            <div class="container-fluid">
-            <div class="row">
-                {% for user in users %}
-                    {% if user != current_user and user.heir is none %}
-                    <div class="user" data-userid="{{ user.id }}">
-                        <img src="{{ url_for('static', filename='user.png') }}">
-                        {{ user.username }}
-                    </div>
-                    {% endif %}
-                {% endfor %}
+            <div id="userform">
+                <div class="form-group input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input type="text" id="username" class="form-control" placeholder="username">
+                </div>
             </div>
-            </div>
+            <button id="userbrowserok" type="button" class="btn btn-primary">Submit</button>
         {% else %}
             <p><b>
                 Please confirm that you want to leave and pass your data on to: {{ user.username }}
-                <button id="confirm" data-userid="{{ user.id }}">Confirm</button>
+                <button id="confirm" data-heir="{{ user.username }}">Confirm</button>
                 <br>N.B.: If any other user has passed his/her data on to you in the past, this data will also be
                 passed on to the person you designated. If you decide to reactivate your account in the future,
                 this data will stay with your designated person.
@@ -72,16 +55,41 @@
 
 {% block scripts %}
     {{ super() }}
+    <script src="{{ url_for('static', filename='typeahead.js/typeahead.jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='typeahead.js/substringmatcher.js') }}"></script>
     <script type="text/javascript" charset="utf-8">
     $(function() {
         $(document).ready(function() {
-            $(".user").click(function( event )  {
-                location.href = "/profile/leave?userid="+$(this).data("userid");
-                event.preventDefault();
+            // set up the OK button and the enter button
+            function leave() { location.href = "/profile/leave?heir="+$('#username').val(); }
+            $('#userbrowserok').click(leave);
+            $('#username').keyup(function(ev) { if(ev.keyCode == 13) leave(); });
+
+
+            // set up autocompletion for the text field
+            $.ajax({
+                url: "/userlist",
+                type: "post",
+                data: {"mode": "leave"},
+                success: function( data ){
+                    $('#username').typeahead({
+                        minLength: 1,
+                        highlight: true
+                    },
+                    {
+                        name: 'users',
+                        source: substringMatcher(data.users),
+                        templates: {
+                            suggestion: function(data) {
+                                return '<div><img src="/static/user.png" width="24px" height="24px">' + data + '</div>';
+                            }
+                        }
+                    });
+                }
             });
 
             $("#confirm").click(function( event ) {
-                location.href = "/profile/leave?userid="+$(this).data("userid")+"&confirm=1";
+                location.href = "/profile/leave?heir="+$(this).data("heir")+"&confirm=1";
             });
 
             $("#reactivate").click(function ( event ) {

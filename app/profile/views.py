@@ -44,8 +44,15 @@ def changepassword():
 @profile.route('/leave', methods=['GET'])
 @login_required
 def leave():
-    users = User.query.all()
-    user = User.query.filter_by(id=request.args.get("userid")).first()
+    user = None
+    heirname = request.args.get("heir")
+    if heirname is not None:
+        # try to get corresponding user from database
+        user = User.query.filter_by(username=heirname).first()
+        if user is None or user.heir is not None or user == current_user:
+            flash("Please name a valid user that is still part of the laboratory.")
+            return render_template('profile/leave.html', user=None)
+
     confirm = request.args.get("confirm")
     reactivate = request.args.get("reactivate")
 
@@ -63,4 +70,4 @@ def leave():
             u.heir = user
         db.session.commit()
 
-    return render_template('profile/leave.html', users=users, user=user)
+    return render_template('profile/leave.html', user=user)

@@ -76,6 +76,72 @@ function init_editor() {
         event.preventDefault();
     });
 
+    function shareselected(event, suggestion) {
+        $.ajax({
+            url: "/createshare",
+            type: "post",
+            data: { "sampleid": sample_id, "username": $('#username').val() },
+            success: function( data ) {
+                $('#userbrowser').modal('hide');
+                $('#sharelist').append('<div class="sharelistentry" id="sharelistentry' + data.shareid + '"><a data-type="share" data-id="' + data.shareid + '" data-toggle="modal" data-target="#confirm-delete" href=""><i class="glyphicon glyphicon-remove"></i></a>\n' + data.username + '</div>');
+            },
+            error: function( request, status, message ) {
+                $('#userbrowser').modal('hide');
+                error_dialog(request.responseJSON.error);
+            }
+        });
+    }
+
+    // set up the OK button and the enter button
+    $('#userbrowserok').click(shareselected);
+    $('#username').keyup(function(ev) { if(ev.keyCode == 13) shareselected(); });
+
+    // user browser (for sample sharing)
+    $('#userbrowser').on('show.bs.modal', function(event) {
+        // empty the text field and disable autocompletion
+        $('#username').val('');
+        $('#username').typeahead('destroy');
+
+        // empty recent collaborators list
+        $('#recent-collaborators').html('');
+
+        // update autocompletion for the text field and recent collaborators list
+        $.ajax({
+            url: "/userlist",
+            type: "post",
+            data: {"mode": "share", "sampleid": sample_id},
+            success: function( data ){
+                // set up autocompletion
+                $('#username').typeahead({
+                    minLength: 1,
+                    highlight: true
+                },
+                {
+                    name: 'users',
+                    source: substringMatcher(data.users),
+                    templates: {
+                        suggestion: function(data) {
+                            return '<div><img src="/static/user.png" width="24px" height="24px">' + data + '</div>';
+                        }
+                    }
+                });
+                // make recent collaborators list
+                if(data.recent.length > 0)
+                    $('#recent-collaborators').append('<div>Recent collaborators:<br>&nbsp</div>');
+                for(i in data.recent)
+                    $('#recent-collaborators').append('<div class="user" data-name="'+data.recent[i]+'"><img src="/static/user.png">'+data.recent[i]+'</div>');
+                // set up click event
+                $('.user').one('click', function(event) {
+                   $('#username').val($(this).data('name'));
+                   shareselected();
+                });
+            }
+        });
+    });
+
+    // once the modal dialog is open, put the cursor in the username field
+    $('#userbrowser').on('shown.bs.modal', function(event) { $('#username').focus(); });
+
     // handler for new action submit button
     $('#submit').click( function(event) {
         for ( instance in CKEDITOR.instances ) CKEDITOR.instances[instance].updateElement(); // otherwise content of editor is not transmitted
@@ -235,31 +301,6 @@ $(document).ready(function() {
                     $('#sharelistentry'+data.shareid).remove();
                 }
                 $('#confirm-delete').modal('hide');
-            }
-        });
-    });
-
-    // user browser (for sample sharing)
-    $('#userbrowser').on('show.bs.modal', function(e) {
-        $.ajax({
-            url: "/userlist",
-            type: "post",
-            data: { "id": $('#sampleid').text() },
-            success: function( data ){
-                $("#userbrowser-frame").html(data);
-
-                // use .one to avoid multiple clicks and creation of multiple identical shares
-                $('.user').one('click', function( event ) {
-                    $.ajax({
-                        url: "/sharesample",
-                        type: "post",
-                        data: { "id": sample_id, "sharewith": $(this).attr('id') },
-                        success: function( data ) {
-                            $('#sharelist').append('<div class="sharelistentry" id="sharelistentry'+data.shareid+'"><a data-type="share" data-id="'+data.shareid+'" data-toggle="modal" data-target="#confirm-delete" href=""><i class="glyphicon glyphicon-remove"></i></a>\n'+data.username+'</div>');
-                            $('#userbrowser').modal('hide');
-                        }
-                    }); // what if we drag parent to child?
-                });
             }
         });
     });

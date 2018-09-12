@@ -9,6 +9,7 @@ from datetime import date, datetime, timedelta
 from .. import smbinterface
 from ..validators import ValidSampleName
 from sqlalchemy.sql import func
+from sqlalchemy import not_
 
 
 @main.route('/')
@@ -157,12 +158,51 @@ def search():
 @main.route('/userlist', methods=['POST'])
 @login_required
 def userlist():
-    sample = Sample.query.get(int(request.form.get("id")))
+    # get list of all users
     users = User.query.all()
-    sharers = [share.user for share in sample.shares]
-    sharers.append(sample.owner)
 
-    return render_template('userlist.html', users=[user for user in users if user not in sharers])
+    # determine mode
+    mode = request.form.get("mode")
+    if mode == "share":
+        # get list of people who already share this sample
+        sample = Sample.query.get(int(request.form.get("sampleid")))
+        sharers = [share.user for share in sample.shares]
+        sharers.append(sample.owner)
+
+        # get list of max. 5 people that the current user has recently shared with
+        list1 = [{"id": share.id, "name": share.user.username} for share in Share.query.\
+            outerjoin(Sample).\
+            filter(Sample.owner_id == current_user.id). \
+            filter(not_(Share.user_id.in_([x.id for x in sharers]))).\
+            order_by(Share.id.desc()).\
+            group_by(Share.user_id).\
+            limit(5).\
+            all()]
+
+        # get list of max. 5 people that have recently shared with current user
+        list2 = [{"id": share.id, "name": share.sample.owner.username} for share in Share.query.\
+            filter(Share.user_id == current_user.id).\
+            outerjoin(Sample).\
+            filter(not_(Sample.owner_id.in_([x.id for x in sharers]))).\
+            order_by(Share.id.desc()).\
+            group_by(Sample.owner_id).\
+            limit(5).\
+            all()]
+
+        # now combine them, order by descending ID, remove duplicates and truncate to 5 elements
+        list = sorted(list1+list2, key=lambda x:x["id"], reverse=True)
+        finallist = []
+        for i,x in enumerate(list):
+            if len(finallist) > 4:
+                break
+            if x["name"] not in finallist:
+                finallist.append(x["name"])
+
+        return jsonify(users=[user.username for user in users if user not in sharers], recent=finallist)
+    elif mode == "leave":
+        return jsonify(users=[user.username for user in users if user != current_user and user.heir is None])
+    else:
+        return jsonify(users=[user.username for user in users])
 
 
 @main.route('/loginas', methods=['GET'])
@@ -191,13 +231,21 @@ def togglearchived():
     return jsonify(code=0, isarchived=sample.isarchived)
 
 
-@main.route('/sharesample', methods=['POST'])
+@main.route('/createshare', methods=['POST'])
 @login_required
-def sharesample():
-    sample = Sample.query.get(int(request.form.get("id")))
-    user = User.query.get(int(request.form.get("sharewith")))
-    if sample == None or sample.owner != current_user:
-        return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
+def createshare():
+    sample = Sample.query.get(int(request.form.get("sampleid")))
+    user = None
+    if request.form.get("userid"):
+        user = User.query.get(int(request.form.get("userid")))
+    elif request.form.get("username"):
+        user = User.query.filter_by(username=(request.form.get("username"))).first()
+    if user is None:
+        return jsonify(code=1, error="No valid user ID or name given"), 500
+    if sample is None or sample.owner != current_user:
+        return jsonify(code=1, error="Sample does not exist or you do not have the right to access it"), 500
+    if user in [x.user for x in sample.shares]:
+        return jsonify(code=1, error="This share already exists"), 500
     share = Share(sample = sample, user = user)
     db.session.add(share)
     db.session.commit()

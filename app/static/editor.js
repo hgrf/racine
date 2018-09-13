@@ -78,29 +78,47 @@ function init_editor() {
 
     // handler for new action submit button
     $('#submit').click( function(event) {
-        for ( instance in CKEDITOR.instances ) CKEDITOR.instances[instance].updateElement(); // otherwise content of editor is not transmitted
+        // prevent "normal" submission of form
+        event.preventDefault();
+
+        // check if the user is still modifying any actions before submitting the new one
+        close_editors = false;
+        for(var i in CKEDITOR.instances) {
+            if(i != "description" && CKEDITOR.instances[i].checkDirty()) {
+                if (close_editors || confirm("You have been editing the sample description or one or more past " +
+                    "actions. Your changes will be lost if you do not save them, are you sure you want to continue?")) {
+                    close_editors = true;
+                    CKEDITOR.instances[i].destroy();
+                } else return;
+            }
+        }
+
+        // make sure content of editor is transmitted
+        // NB: it might be sufficient to do this only for CKEDITOR.instances["description"]
+        // NB: this messes with the checkDirty() test, so have to do it after the above verification
+        for(instance in CKEDITOR.instances) CKEDITOR.instances[instance].updateElement();
+
         $.ajax({
             url: "/newaction/"+sample_id,
             type: "post",
             data: $('#newactionform').serialize(),
             success: function( data ) {
-                if(data.code == 0) {
-                    load_sample(sample_id);
-                }
-                else {      // form failed validation; because of invalid data or expired CSRF token
-                    $(document).on("editor_initialised", data, function(event) {
+                if(data.code != 0) {
+                    // form failed validation; because of invalid data or expired CSRF token
+                    // we still reload the sample in order to get a new CSRF token, but we
+                    // want to keep the text that the user has written in the description field
+                    $(document).one("editor_initialised", data, function(event) {
                         CKEDITOR.instances.description.setData(event.data.description);
-                        error_dialog("Form is not valid. Either you entered an invalid date or the session has expired. Try submitting again.");
-                        $(document).off("editor_initialised");
+                        error_dialog("Form is not valid. Either you entered an invalid date or the session has " +
+                            "expired. Try submitting again.");
                     });
-                    load_sample($('#sampleid').text());
                 }
+                load_sample(sample_id);
             },
             error: function( jqXHR, textStatus ) {
                 error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
             }
         });
-        event.preventDefault();
     });
 
     // put lightbox link around images

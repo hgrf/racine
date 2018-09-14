@@ -3,7 +3,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block page_content %}
-    <h1 class="page-header">Revision</h1>
+    <h3 class="page-header">Revision</h3>
     <p>
     running MSM revision: {{ local_rev }} <br>
     MSM revision on GitHub: {{ remote_rev if remote_rev != 0 else 'could not retrieve' }} <br>
@@ -15,7 +15,7 @@
       {% endif %}
     {% endif %}
     </p>
-    <h3>Recent modifications (running revision):</h3>
+    <h4>Recent modifications (running revision):</h4>
     <table>
     {% for c in recent_changes %}
         <tr><td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;">{{ c.hexsha }}</td><td style="padding-bottom: 10px; vertical-align: top;">{{ c.message }}</td>

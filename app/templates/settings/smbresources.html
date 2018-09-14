@@ -2,48 +2,51 @@
 {% extends "settings/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block page_content %}
-<h1 class="page-header">SMB resources</h1>
-<div class="container-fluid">
-  <div class="row list-header">
-    <div class="col-md-1">#</div>
-    <div class="col-md-1">Name</div>
-      <div class="col-md-2">Server name (NetBIOS)</div>
-      <div class="col-md-2">Server address</div>
-      <div class="col-md-1">Share name</div>
-      <div class="col-md-1">Path</div>
-      <div class="col-md-1">User ID</div>
-      <div class="col-md-2">Password</div>
-  </div>
-  {% for smbresource in smbresources %}
-  <div class="row list-entry">
-    <div class="col-md-1">{{ smbresource.id }}</div>
-    <div class="col-md-1">{{ smbresource.name }}</div>
-      <div class="col-md-2">{{ smbresource.servername }}</div>
-      <div class="col-md-2">{{ smbresource.serveraddr }}</div>
-      <div class="col-md-1">{{ smbresource.sharename }}</div>
-      <div class="col-md-1">{{ smbresource.path }}</div>
-      <div class="col-md-1">{{ smbresource.userid }}</div>
-      <div class="col-md-2">{{ smbresource.password }}</div>
-        <div class="col-md-1"><button class="btn btn-default" data-id="{{ smbresource.id }}" data-toggle="modal" data-target="#confirm-delete">Delete</button></div>
-  </div>
-  {% endfor %}
-  <div class="row list-entry">
-    <form method="POST">
-      {{ form.hidden_tag() }}
-      <div class="col-md-1"></div>
-      <div class="col-md-1">{{ wtf.form_field(form.name) }}</div>
-        <div class="col-md-2">{{ wtf.form_field(form.servername) }}</div>
-        <div class="col-md-2">{{ wtf.form_field(form.serveraddr) }}</div>
-        <div class="col-md-1">{{ wtf.form_field(form.sharename) }}</div>
-        <div class="col-md-1">{{ wtf.form_field(form.path) }}</div>
-        <div class="col-md-1">{{ wtf.form_field(form.userid) }}</div>
-        <div class="col-md-2">{{ wtf.form_field(form.password) }}</div>
-      <div class="col-md-1">{{ wtf.form_field(form.submit) }}</div>
-    </form>
-  </div>
-</div>
+{% block styles %}
+    {{super()}}
+    <link rel="stylesheet" href="{{url_for('static', filename='editor.css')}}">
+{% endblock %}
 
+{% block page_content %}
+<h3 class="page-header">SMB resources</h3>
+<table class="table">
+    <thead><tr>
+        <th>ID</th><th>Name</th><th>Server name (NetBIOS)</th><th>Server address</th><th>Share name</th>
+        <th>Path</th><th>Username</th><th>Password</th>
+    </tr></thead>
+    <tbody>
+    {% for smbresource in smbresources %}
+    <tr>
+        <td>
+            {{ smbresource.id }}
+            <i class="actionicon glyphicon glyphicon-trash" data-id="{{ smbresource.id }}" data-toggle="modal" data-target="#confirm-delete"></i>
+        </td>
+        <td><div class="editable" data-setter="/set/smbresource/name/{{ smbresource.id }}">{{ smbresource.name }}</div></td>
+        <td><div class="editable" data-setter="/set/smbresource/servername/{{ smbresource.id }}">{{ smbresource.servername }}</div></td>
+        <td><div class="editable" data-setter="/set/smbresource/serveraddr/{{ smbresource.id }}">{{ smbresource.serveraddr }}</div></td>
+        <td><div class="editable" data-setter="/set/smbresource/sharename/{{ smbresource.id }}">{{ smbresource.sharename }}</div></td>
+        <td><div class="editable" data-setter="/set/smbresource/path/{{ smbresource.id }}">{{ smbresource.path }}</div></td>
+        <td><div class="editable" data-setter="/set/smbresource/userid/{{ smbresource.id }}">{{ smbresource.userid }}</div></td>
+        <td><div class="editable" data-setter="/set/smbresource/password/{{ smbresource.id }}">{{ smbresource.password }}</div></td>
+    </tr>
+    {% endfor %}
+    <form method="POST">
+    {{ form.hidden_tag() }}
+    <tr>
+        <td>{{ form.submit(class_='form-control', value='+') }}</td>
+        <td>{{ form.name(class_='form-control') }}</td>
+        <td>{{ form.servername(class_='form-control') }}</td>
+        <td>{{ form.serveraddr(class_='form-control') }}</td>
+        <td>{{ form.sharename(class_='form-control') }}</td>
+        <td>{{ form.path(class_='form-control') }}</td>
+        <td>{{ form.userid(class_='form-control') }}</td>
+        <td>{{ form.password(class_='form-control') }}</td>
+    </tr>
+    </form>
+    </tbody>
+</table>
+
+<!-- TODO: the modal dialog should be defined in some parent document, cf. users.html -->
 <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -67,7 +70,12 @@
 
 {% block scripts %}
 {{ super() }}
-<<script type="text/javascript" charset="utf-8">
+<script type="text/javascript" charset="utf-8">
+  function error_dialog(message) { alert(message) }; // TODO: modal error dialog is in main.html and cannot yet be used here
+</script>
+<script src="{{ url_for('static', filename='jquery.jeditable.js') }}"></script>
+<script src="{{ url_for('static', filename='ckeditable.js') }}"></script>
+<script type="text/javascript" charset="utf-8">
 $(function() {
   $(document).ready(function() {
     $('#confirm-delete').on('show.bs.modal', function(e) {
@@ -79,6 +87,10 @@ $(function() {
       var id = $(this).attr('id');
       location.href = "/settings/smbresources?delete="+id;
     });
+
+    // set up editables
+    $('.editable').texteditable();
+    $('.editable').setup_triggers();
   });
 });
 </script>

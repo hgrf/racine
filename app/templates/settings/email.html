@@ -3,7 +3,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block page_content %}
-<h1 class="page-header">Email</h1>
+<h3 class="page-header">Email</h3>
 <form method="POST">
     {{ form.hidden_tag() }}
     {{ wtf.form_field(form.sender) }}

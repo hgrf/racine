@@ -54,6 +54,11 @@ def smbresources():
 @login_required
 @admin_required
 def users():
+    if request.args.get("delete"):
+        user = User.query.filter_by(id=int(request.args.get("delete"))).first()
+        db.session.delete(user)
+        db.session.commit()
+        return redirect('/settings/users')
     form = NewUserForm()
     if form.validate_on_submit():
         user = User(is_admin=form.is_admin.data, email=form.email.data, username=form.username.data, password=form.password.data)

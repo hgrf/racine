@@ -64,7 +64,7 @@
                 <div class="quicklogin col-sm-4">
                     {% for username in last_logged_in %}
                         <div class="user" data-username="{{ username }}">
-                            <img src="{{ url_for('static', filename='user.png') }}">
+                            <img src="/static/images/user.png">
                             <span>{{ username }}</span>
                         </div>
                     {% endfor %}

@@ -4,6 +4,12 @@ function mobile_hide_sidebar() {
     $('.content-overlay').fadeOut();
 }
 
+function error_dialog(message) {
+    // TODO: think about uniting this with flash messages
+    $("#errordialog").find(".modal-body").text(message);
+    $("#errordialog").modal("show");
+}
+
 $(document).ready(function() {
     $('#toggle-sidebar').click(function () {
         if ($('.sidebar').hasClass('overlay')) {

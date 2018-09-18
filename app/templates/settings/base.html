@@ -1,9 +1,5 @@
 {% extends "base.html" %}
 
-{% macro menu_entry(name, title) %}
-    <li {% if name==active %} class="active"><a href="#">{% else %}><a href="/settings/{{ name }}">{% endif %}{{ title }}{% if name==active %} <span class="sr-only">(current)</span>{% endif %}</a></li>
-{% endmacro %}
-
 {% block sidebarnav %}
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
@@ -16,9 +12,4 @@
         {{ menu_entry("log", "Log") }}
     </ul>
 </div>
-{% endblock %}
-
-
-{% block page_content %}
-<h1 class="page-header">Settings</h1>
 {% endblock %}

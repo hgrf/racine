@@ -32,33 +32,10 @@
 <h3 class="page-header">Add user</h3>
 {{ wtf.quick_form(form) }}
 
-<!-- TODO: the modal dialog should be defined in some parent document, cf. smbresources.html -->
-<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
-            </div>
-            <div class="modal-body">
-              <p>You are about to delete an item, this procedure is irreversible.</p>
-              <p>Do you want to proceed?</p>
-              <p class="debug-id"></p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-              <a class="btn btn-danger btn-ok">Delete</a>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
-<script type="text/javascript" charset="utf-8">
-  function error_dialog(message) { alert(message) }; // TODO: modal error dialog is in main.html and cannot yet be used here
-</script>
 <script src="{{ url_for('static', filename='jquery.jeditable.js') }}"></script>
 <script src="{{ url_for('static', filename='ckeditable.js') }}"></script>
 <script type="text/javascript" charset="utf-8">

@@ -1,5 +1,27 @@
 {% extends "bootstrap/base.html" %}
 
+{# menu_entry macro for profile and settings page where the sidebar is
+not populated by JavaScript #}
+{% macro menu_entry(name, title) %}
+    <li {% if name==active %} class="active"><a href="#">{% else %}><a href="{{ name }}">{% endif %}{{ title }}{% if name==active %} <span class="sr-only">(current)</span>{% endif %}</a></li>
+{% endmacro %}
+
+{# macros for quick creation of modal dialogs #}
+{% macro begin_modal_dialog(id, title) %}
+    <div class="modal fade" id="{{ id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="myModalLabel">{{ title }}</h4>
+            </div>
+{% endmacro %}
+{% macro end_modal_dialog() %}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
 {% block title %}{% if sample is defined and sample is not none %}MSM - {{ sample.name }}{% else %}Mercury Sample Manager{% endif %}{% endblock %}
 
 {% block styles %}
@@ -55,6 +77,24 @@
             {% endfor %}
           </div>
         {% block page_content %}{% endblock %}
+
+        {# The confirmation dialog for deletion is the most important modal dialog. #}
+        {{ begin_modal_dialog('confirm-delete', 'Confirm delete') }}
+        <div class="modal-body">
+          <p>You are about to delete an item, this procedure is irreversible.</p>
+          <p>Do you want to proceed?</p>
+          <p class="debug-id"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-danger btn-ok">Delete</a>
+        </div>
+        {{ end_modal_dialog() }}
+
+        {{ begin_modal_dialog('errordialog', 'Error') }}
+          <div class="modal-body"></div>
+          <div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">OK</button></div>
+        {{ end_modal_dialog() }}
         </div>
       </div>
     </div>
@@ -66,6 +106,7 @@
 {{ super() }}
     <script src="{{ url_for('static', filename='base.js') }}"></script>
     <script src="{{ url_for('static', filename='typeahead.js/typeahead.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='typeahead.js/substringmatcher.js') }}"></script>
     <script src="{{ url_for('static', filename='searchsample.js') }}"></script>
     <script type="text/javascript" charset="utf-8">
     $(document).ready(function() {

@@ -31,12 +31,6 @@ var ckeditorconfig = {
 
 $.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer
 
-function error_dialog(message) {
-    // TODO: think about uniting this with flash messages
-    $("#errordialog").find(".modal-body").text(message);
-    $("#errordialog").modal("show");
-}
-
 function init_editor() {
     sample_id = $('#sampleid').text();
 

@@ -2,32 +2,97 @@
 {% extends "settings/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block styles %}
+    {{super()}}
+    <link rel="stylesheet" href="{{url_for('static', filename='editor.css')}}">
+{% endblock %}
+
 {% block page_content %}
-<h1 class="page-header">Users</h1>
-<div class="container-fluid">
-  <div class="row list-header">
-    <div class="col-md-1">#</div>
-      <div class="col-md-1">Admin</div>
-    <div class="col-md-5">Name</div>
-      <div class="col-md-5">Email</div>
-  </div>
-  {% for user in users %}
-  <div class="row list-entry">
-    <div class="col-md-1">{{ user.id }}</div>
-      <div class="col-md-1">{{ user.is_admin }}</div>
-    <div class="col-md-5">{{ user.username }}</div>
-    <div class="col-md-5">{{ user.email }}</div>
-  </div>
-  {% endfor %}
-  <div class="row list-entry">
-    <form method="POST">
-      {{ form.hidden_tag() }}
-      <div class="col-md-1"></div>
-        <div class="col-md-1">{{ wtf.form_field(form.is_admin) }}</div>
-      <div class="col-md-5">{{ wtf.form_field(form.username) }}{{ wtf.form_field(form.password) }}{{ wtf.form_field(form.password2) }}</div>
-        <div class="col-md-4">{{ wtf.form_field(form.email) }}</div>
-      <div class="col-md-1">{{ wtf.form_field(form.submit) }}</div>
-    </form>
-  </div>
+<h3 class="page-header">Users</h3>
+<table class="table">
+    <thead><tr>
+        <th>ID</th><th>Admin</th><th>Name</th><th>Email</th>
+    </tr></thead>
+    <tbody>
+    {% for user in users %}
+    <tr>
+        <td>
+            {{ user.id }}
+            <i class="actionicon glyphicon glyphicon-trash" data-id="{{ user.id }}" data-toggle="modal" data-target="#confirm-delete"></i>
+            <i class="actionicon loginas glyphicon glyphicon-log-in" data-userid="{{ user.id }}"></i>
+        </td>
+        <td><div class="editable cmbeditable" data-setter="/set/user/is_admin/{{ user.id }}">{{ user.is_admin }}</div></td>
+        <td><div class="editable txteditable" data-setter="/set/user/username/{{ user.id }}">{{ user.username }}</div></td>
+        <td><div class="editable txteditable" data-setter="/set/user/email/{{ user.id }}">{{ user.email }}</div></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h3 class="page-header">Add user</h3>
+{{ wtf.quick_form(form) }}
+
+<!-- TODO: the modal dialog should be defined in some parent document, cf. smbresources.html -->
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+            </div>
+            <div class="modal-body">
+              <p>You are about to delete an item, this procedure is irreversible.</p>
+              <p>Do you want to proceed?</p>
+              <p class="debug-id"></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <a class="btn btn-danger btn-ok">Delete</a>
+            </div>
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript" charset="utf-8">
+  function error_dialog(message) { alert(message) }; // TODO: modal error dialog is in main.html and cannot yet be used here
+</script>
+<script src="{{ url_for('static', filename='jquery.jeditable.js') }}"></script>
+<script src="{{ url_for('static', filename='ckeditable.js') }}"></script>
+<script type="text/javascript" charset="utf-8">
+$(function() {
+  $(document).ready(function() {
+    $('#confirm-delete').on('show.bs.modal', function(e) {
+      $(this).find('.btn-ok').attr('id', $(e.relatedTarget).data('id'));
+      $('.debug-id').html('Delete ID: <strong>' + $(this).find('.btn-ok').attr('id') + '</strong>');
+    });
+
+    $('.btn-ok').click(function(event) {
+      var id = $(this).attr('id');
+      location.href = "/settings/users?delete="+id;
+    });
+
+    $('.loginas').click(function(event) {
+        $.ajax({
+            url: "/loginas",
+            type: "get",
+            data: { "userid": $(this).data("userid") },
+            success: function(data) {
+                location.href = "/";
+            },
+            error: function(data) {
+                alert("Could not login.");
+            }
+        });
+    });
+
+    // set up editables
+    $('.txteditable').texteditable();
+    $('.cmbeditable').comboeditable({'True': 'True', 'False': 'False'});
+    $('.editable').setup_triggers();
+  });
+});
+</script>
 {% endblock %}

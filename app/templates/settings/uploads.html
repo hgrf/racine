@@ -3,68 +3,81 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block page_content %}
-<h1 class="page-header">Uploads</h1>
-<h2>Files not found</h2>
-<div class="container-fluid">
-  <div class="row list-header">
-    <div class="col-md-1">#</div>
-    <div class="col-md-1">User</div>
-    <div class="col-md-10">Source</div>
-  </div>
-{% for n in nofiles %}
-  <div class="row list-entry">
-    <div class="col-md-1">{{ n.id }}</div>
-    <div class="col-md-1">{{ n.user.username }}</div>
-    <div class="col-md-10">{{ n.source }}</div>
-  </div>
-{% endfor %}
-<h2>Empty files</h2>
-<div class="container-fluid">
-  <div class="row list-header">
-    <div class="col-md-1">#</div>
-    <div class="col-md-1">User</div>
-    <div class="col-md-10">Source</div>
-  </div>
-{% for e in emptyfiles %}
-  <div class="row list-entry">
-    <div class="col-md-1">{{ e.id }}</div>
-    <div class="col-md-1">{{ e.user.username }}</div>
-    <div class="col-md-10">{{ e.source }}</div>
-  </div>
-{% endfor %}
-</div>
-<h2>Duplicates</h2>
-<div class="container-fluid">
-  <div class="row list-header">
-    <div class="col-md-1">#</div>
-    <div class="col-md-1">Dup#</div>
-    <div class="col-md-1">User (1st)</div>
-    <div class="col-md-8">Source (1st)</div>
-    <div class="col-md-1">2nd ident.</div>
-  </div>
-{% for d in duplicates %}
-  <div class="row list-entry">
-    <div class="col-md-1">{{ d[0].id }}</div>
-    <div class="col-md-1">{{ d[1].id }}</div>
-    <div class="col-md-1">{{ d[0].user.username }}</div>
-    <div class="col-md-8">{{ d[0].source }}</div>
-    <div class="col-md-1">{{ d[0].source == d[1].source and d[0].user.id == d[1].user.id }}</div>
-  </div>
-{% endfor %}
-</div>
-<h2>Unused uploads</h2>
-<div class="container-fluid">
-  <div class="row list-header">
-    <div class="col-md-1">#</div>
-    <div class="col-md-1">User</div>
-    <div class="col-md-10">Source</div>
-  </div>
-{% for u in unused %}
-  <div class="row list-entry">
-    <div class="col-md-1">{{ u.id }}</div>
-    <div class="col-md-1">{{ u.user.username }}</div>
-    <div class="col-md-10">{{ u.source }}</div>
-  </div>
-{% endfor %}
-</div>
+<h3 class="page-header">Uploads</h3>
+
+<h4>Files that cannot be found:</h4>
+<table class="table">
+    <thead><tr>
+      <th>#</th>
+      <th>User</th>
+      <th>Source</th>
+    </tr></thead>
+    <tbody>
+    {% for n in nofiles %}
+        <tr>
+            <td>{{ n.id }}</td>
+            <td>{{ n.user.username }}</td>
+            <td>{{ n.source }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h4>Empty files:</h4>
+<table class="table">
+    <thead><tr>
+        <th>#</th>
+        <th>User</th>
+        <th>Source</th>
+    </tr></thead>
+    <tbody>
+    {% for e in emptyfiles %}
+        <tr>
+            <td>{{ e.id }}</td>
+            <td>{{ e.user.username }}</td>
+            <td>{{ e.source }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h4>Duplicates:</h4>
+<table class="table">
+    <thead><tr>
+        <th>#</th>
+        <th>Dup#</th>
+        <th>User (1st)</th>
+        <th>Source (1st)</th>
+        <th>2nd ident.<th>
+    </tr></thead>
+    <tbody>
+    {% for d in duplicates %}
+        <tr>
+            <td>{{ d[0].id }}</td>
+            <td>{{ d[1].id }}</td>
+            <td>{{ d[0].user.username }}</td>
+            <td>{{ d[0].source }}</td>
+            <td>{{ d[0].source == d[1].source and d[0].user.id == d[1].user.id }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h4>Unused uploads:</h4>
+<table class="table">
+    <thead><tr>
+        <th>#</th>
+        <th>User</th>
+        <th>Source</th>
+    </tr></thead>
+    <tbody>
+    {% for u in unused %}
+        <tr>
+            <td>{{ u.id }}</td>
+            <td>{{ u.user.username }}</td>
+            <td>{{ u.source }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

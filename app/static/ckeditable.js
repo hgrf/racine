@@ -8,12 +8,13 @@
                 style: 'inherit',
                 event: 'edit',
                 width: '8ex',
+                placeholder: '&nbsp;',
                 callback: function (value, settings) {
                     var json = $.parseJSON(value);
                     field.html(json.value);
                     // display error message if error occured
                     if (json.code)
-                        $("#flashmessages").append(begin_flashmsg + json.message + end_flashmsg);
+                        error_dialog(json.message);
                     field.trigger('editableupdate', json);
                     field.trigger('editabledone');
                 },
@@ -40,7 +41,7 @@
                     field.html(choice[json.value]);
                     // display error message if error occured
                     if(json.code)
-                        $( "#flashmessages" ).append(begin_flashmsg+data.message+end_flashmsg);
+                        error_dialog(data.message);
                     field.trigger('editableupdate', json);
                     field.trigger('editabledone');
                 },

@@ -2,7 +2,7 @@ from flask import render_template, redirect, request, jsonify, send_file, flash
 from flask.ext.login import current_user, login_required, login_user, logout_user
 from .. import db
 from .. import plugins
-from ..models import Sample, Action, User, Share, Upload
+from ..models import Sample, Action, User, Share, Upload, SMBResource
 from . import main
 from forms import NewSampleForm, NewActionForm, NewMatrixForm
 from datetime import date, datetime, timedelta
@@ -211,7 +211,7 @@ def login_as():
     user = User.query.get(int(request.args.get("userid")))
 
     # check if current user has the right to do this
-    if user.heir != current_user:
+    if not current_user.is_admin and user.heir != current_user:
         return "You do not have the permission to log in as: "+user.username
 
     logout_user()
@@ -452,6 +452,30 @@ def static_file(path):
     return send_file('../plugins/'+path)
 
 
+def str_to_bool(str):
+    if str.lower() == 'true' or str == '1':
+        return True
+    elif str.lower() == 'false' or str == '0':
+        return False
+    else:
+        raise Exception('String could not be converted to boolean')
+
+
+# use the email validator from the new user form
+# TODO: this could be generalised for any field by passing the form and the field name as parameters to this function
+#       however, the approach in app/validators.py is also a solution (i.e. writing my own validators that are
+#       compatible both with the below field updating and the WTForms validation
+from ..settings.forms import NewUserForm
+def validate_email(str):
+    form = NewUserForm()
+    form.email.data = str
+    if form.email.validate(form):
+        return str
+    else:
+        # raise exception with first validation error as message
+        raise Exception(form.email.errors[0])
+
+
 # define supported fields
 supported_targets = {
     'sample': {
@@ -470,19 +494,30 @@ supported_targets = {
             'timestamp': lambda x: datetime.strptime(x, '%Y-%m-%d'),
             'description': str
         }
+    },
+    'smbresource': {
+        'dbobject': SMBResource,
+        'auth': 'admin',
+        'fields': {
+            'name': str,
+            'servername': str,
+            'serveraddr': str,
+            'sharename': str,
+            'path': str,
+            'userid': str,
+            'password': str
+        }
+    },
+    'user': {
+        'dbobject': User,
+        'auth': 'admin',
+        'fields': {
+            'username': str,
+            'email': validate_email,
+            'is_admin': str_to_bool
+        }
     }
-    # TODO: should add SMBresources here, for easy modification by administrator
-    # TODO: in that case should also add admin required field
-    # e.g.:
-    #'resource': {
-    #    'dbobject': SMBResource,
-    #    'auth': 'admin',
-    #    'fields': {
-    #        'name': str
-    #    }
-    #}
 }
-
 
 @main.route('/get/<target>/<field>/<id>', methods=['GET'])
 @login_required
@@ -496,9 +531,13 @@ def getfield(target, field, id):
     # try to get requested item from database
     item = target['dbobject'].query.get(id)
 
-    # check if the item is valid, if the requested field is supported and if the current user
-    # has the right to read it
-    if not (item and item.owner == current_user and field in target['fields']):
+    # check if the item is valid and if the requested field is supported
+    if not (item and field in target['fields']):
+        return jsonify(code=1)
+
+    # check if the current user is authorized to access this item
+    if      not (target['auth'] == 'owner' and item.owner == current_user)\
+        and not (target['auth'] == 'admin' and current_user.is_admin):
         return jsonify(code=1)
 
     # return value
@@ -522,9 +561,13 @@ def updatefield(target, field, id):
     # try to get requested item from database
     item = target['dbobject'].query.get(id)
 
-    # check if the item is valid, if the requested field is supported and if the current user
-    # has the right to modify it
-    if not (item and item.owner == current_user and field in target['fields']):
+    # check if the item is valid and if the requested field is supported
+    if not (item and field in target['fields']):
+        return jsonify(code=1, value='', message='Invalid request')
+
+    # check if the current user is authorized to access this item
+    if      not (target['auth'] == 'owner' and item.owner == current_user)\
+        and not (target['auth'] == 'admin' and current_user.is_admin):
         return jsonify(code=1, value='', message='Invalid request')
 
     # try to assign value

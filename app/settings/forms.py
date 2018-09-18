@@ -20,8 +20,8 @@ class ShutdownForm(Form):
 
 
 class NewUserForm(Form):
-    is_admin = BooleanField('Admin:')
-    username = StringField('User name:', validators=[Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_. ]*$', 0,
+    is_admin = BooleanField('Admin')
+    username = StringField('User name', validators=[Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_. ]*$', 0,
 'Usernames must contain only letters, numbers, dots, underscores or spaces and start with a letter.')])
     email = StringField('Email', validators=[Required(), Length(1,64), Email()])
     password = PasswordField('Password', validators=[Required(), EqualTo('password2', message='Passwords must match.')])

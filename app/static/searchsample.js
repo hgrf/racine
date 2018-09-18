@@ -29,7 +29,7 @@ function create_searchsample(searchfield) {
                     ownerinfo = '';
                 }
                 return '<div style="padding-left:2em;padding-bottom:0.5em;padding-top:0.5em;">\n'+
-                       '<span style="white-space:nowrap;"><img src="/static/sample.png" style="margin-left:-1.5em;width:1.5em;height:1.5em;">&nbsp;'+result.name+'</span>\n'+
+                       '<span style="white-space:nowrap;"><img src="/static/images/sample.png" style="margin-left:-1.5em;width:1.5em;height:1.5em;">&nbsp;'+result.name+'</span>\n'+
                        ownerinfo+
                        parentinfo+
                        '</div>';

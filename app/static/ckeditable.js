@@ -80,7 +80,7 @@
             field = $(field);
             // we have to iterate because we could not do the if statement on a collection of fields
             if(!field.has('img.edittrigger').length) {
-                field.append('<img class="edittrigger" src="/static/edit.png">');
+                field.append('<img class="edittrigger" src="/static/images/edit.png">');
             }
             // avoid accumulation of events
             field.find('img.edittrigger').unbind('click');

@@ -16,7 +16,7 @@
         {% if request.args.get('changesampleimage') %}
             <div id="upload-frame">
                 <form method="post" action="#" style="margin:0;padding:0;" enctype="multipart/form-data" id="uploadform">
-                    <img class="upload" src="{{url_for('static', filename='upload.png')}}" width="48px" height="48px">
+                    <img class="upload" src="/static/images/upload.png" width="48px" height="48px">
                     <strong>Upload an image:&nbsp;&nbsp;&nbsp;&nbsp;</strong>
                     <input style="display:inline;" type="file" name="upload" id="upload">
                     <input style="display:inline;" type="submit" value="OK">
@@ -28,11 +28,11 @@
         {% for resource in resources %}
             <div class="resourcerow">
                 <div class="resource" data-url="{{ resource.name }}" data-id="{{ resource.id }}" id="resource{{ resource.id }}">
-                    <img src="{{ url_for('static', filename='resource.png') }}">
+                    <img src="/static/images/resource.png">
                     {{ resource.name }}
                 </div>
                 <div class="shortcuts" id="shortcuts{{ resource.id }}">
-                    <img class="shortcut" src="{{ url_for('static', filename='loader.gif') }}">
+                    <img class="shortcut" src="/static/images/loader.gif">
                 </div>
             </div>
         {% endfor %}

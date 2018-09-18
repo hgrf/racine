@@ -47,6 +47,9 @@ You can start the development server by simply executing the "run script":
 Carry out the steps described above in order to set up the development server. Then configure gunicorn autostart
 by setting up a corresponding autostart file. This is explained below either for upstart or for systemd.
 
+Please note that the app should be executed in the HTTP root, bugs should be expected when you install MSM in a
+subfolder.
+
 ## For upstart
 
 Create the file /etc/init/msm.conf and copy the following code into it:

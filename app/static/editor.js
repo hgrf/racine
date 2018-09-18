@@ -48,11 +48,11 @@ function init_editor() {
             success: function( data ) {
                 if(data.isarchived) {
                     $('#archive').attr('title', 'De-archive');
-                    $('#archive').attr('src', '/static/dearchive.png');
+                    $('#archive').attr('src', '/static/images/dearchive.png');
                     $('#nav-entry'+sample_id).addClass('nav-entry-archived');
                 } else {
                     $('#archive').attr('title', 'Archive');
-                    $('#archive').attr('src', '/static/archive.png');
+                    $('#archive').attr('src', '/static/images/archive.png');
                     $('#nav-entry'+sample_id).removeClass('nav-entry-archived');
                 }
             }
@@ -269,7 +269,7 @@ $(document).ready(function() {
                     source: substringMatcher(data.users),
                     templates: {
                         suggestion: function(data) {
-                            return '<div><img src="/static/user.png" width="24px" height="24px">' + data + '</div>';
+                            return '<div><img src="/static/images/user.png" width="24px" height="24px">' + data + '</div>';
                         }
                     }
                 });
@@ -277,7 +277,7 @@ $(document).ready(function() {
                 if(data.recent.length > 0)
                     $('#recent-collaborators').append('<div>Recent collaborators:<br>&nbsp</div>');
                 for(i in data.recent)
-                    $('#recent-collaborators').append('<div class="user" data-name="'+data.recent[i]+'"><img src="/static/user.png">'+data.recent[i]+'</div>');
+                    $('#recent-collaborators').append('<div class="user" data-name="'+data.recent[i]+'"><img src="/static/images/user.png">'+data.recent[i]+'</div>');
                 // set up click event
                 $('.user').one('click', function(event) {
                    $('#username').val($(this).data('name'));

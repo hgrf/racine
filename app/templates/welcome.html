@@ -7,7 +7,10 @@
     <h2>Active SMB connections</h2>
     <table>
     {% for c in conns %}
-        <tr><td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="{{ url_for('static', filename='resource.png') }}" width="40">{{ c.resource }}, {{ "not" if not c.inuse else "" }} in use</td></tr>
+        <tr><td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;">
+            <img src="/static/images/resource.png" width="40">
+            {{ c.resource }}, {{ "not" if not c.inuse else "" }} in use
+        </td></tr>
     {% endfor %}
     </table>
     <h2>Upload volume per user</h2>
@@ -15,7 +18,7 @@
     {% for u in uploadvols %}
         {% if u[1] %}
             <tr>
-                <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="{{ url_for('static', filename='user.png') }}" width="40">{{ u[0].username }}</td>
+                <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="/static/images/user.png" width="40">{{ u[0].username }}</td>
                 <td style="padding-top: 10px;">
                     <div class="progress" style="width: 200px;">
                         <div class="progress-bar" role="progressbar" style="width:{{ u[1]/maxuploadvol*100 }}%;color:#000000";>
@@ -34,7 +37,7 @@
     {% for n in newactionsallusers %}
         {% if n[1] %}
             <tr>
-                <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="{{ url_for('static', filename='user.png') }}" width="40">{{ n[0].username }}</td>
+                <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="/static/images/user.png" width="40">{{ n[0].username }}</td>
                 <td style="padding-top: 10px;">
                     <div class="progress" style="width: 200px;">
                         <div class="progress-bar" role="progressbar" style="width:{{ n[1]/maxcountallusers*100 }}%;">
@@ -52,7 +55,7 @@
 {% for n in newactions %}
     {% if n[1] %}
         <tr>
-            <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="{{ url_for('static', filename='sample.png') }}" width="40">{{ n[0].name }}</td>
+            <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="/static/images/sample.png" width="40">{{ n[0].name }}</td>
             <td style="padding-top: 10px;">
                 <div class="progress" style="width: 200px">
                     <div class="progress-bar" role="progressbar" style="width:{{ n[1]/maxcount*100 }}%">

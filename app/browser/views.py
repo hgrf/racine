@@ -287,10 +287,10 @@ def imagebrowser(smb_path):
                 if f.ext.lower() in IMAGE_EXTENSIONS:
                     f.image = '/browser/smbimg/' + smb_path + ('' if smb_path == '' else '/') + f.name + f.ext
                 else:
-                    f.image = "/static/file.png"
+                    f.image = "/static/images/file.png"
                 files.append(f)
             else:
-                f.image = "/static/folder.png"
+                f.image = "/static/images/folder.png"
                 folders.append(f)
 
         # sort by name and return

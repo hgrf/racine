@@ -8,6 +8,7 @@
                 style: 'inherit',
                 event: 'edit',
                 width: '8ex',
+                placeholder: '&nbsp;',
                 callback: function (value, settings) {
                     var json = $.parseJSON(value);
                     field.html(json.value);

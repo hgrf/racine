@@ -452,6 +452,30 @@ def static_file(path):
     return send_file('../plugins/'+path)
 
 
+def str_to_bool(str):
+    if str.lower() == 'true' or str == '1':
+        return True
+    elif str.lower() == 'false' or str == '0':
+        return False
+    else:
+        raise Exception('String could not be converted to boolean')
+
+
+# use the email validator from the new user form
+# TODO: this could be generalised for any field by passing the form and the field name as parameters to this function
+#       however, the approach in app/validators.py is also a solution (i.e. writing my own validators that are
+#       compatible both with the below field updating and the WTForms validation
+from ..settings.forms import NewUserForm
+def validate_email(str):
+    form = NewUserForm()
+    form.email.data = str
+    if form.email.validate(form):
+        return str
+    else:
+        # raise exception with first validation error as message
+        raise Exception(form.email.errors[0])
+
+
 # define supported fields
 supported_targets = {
     'sample': {
@@ -489,8 +513,8 @@ supported_targets = {
         'auth': 'admin',
         'fields': {
             'username': str,
-            'email': str,
-            'is_admin': bool
+            'email': validate_email,
+            'is_admin': str_to_bool
         }
     }
 }

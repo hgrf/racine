@@ -41,7 +41,7 @@
         <div class="row nav-heading">Inheritance:</div>
         {% for i in inheritance %}
             <div class="row inheritance" data-userid="{{ i.id }}">
-                <img src="{{ url_for('static', filename='user.png') }}" width="30">{{ i.username }}
+                <img src="/static/images/user.png" width="30">{{ i.username }}
             </div>
         {% endfor %}
     {% endif %}

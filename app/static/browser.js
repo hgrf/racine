@@ -28,7 +28,7 @@ function init_browser() {
 
     $('.file').click( function(event) {
         src = $(this).find('img').attr('src')
-        if(src == '/static/file.png') {
+        if(src == '/static/images/file.png') {
             alert('Please choose a file with a valid extension.');
             return;
         }
@@ -60,10 +60,10 @@ function init_browser() {
                shortcutsdiv.empty();
                if(!data.code) {
                    if(data.userfolder != '') {
-                       shortcutsdiv.append("<img class='shortcut' src='/static/user.png' data-url='"+data.userfolder+"'>");
+                       shortcutsdiv.append("<img class='shortcut' src='/static/images/user.png' data-url='"+data.userfolder+"'>");
                    }
                    if(data.samplefolder != '') {
-                       shortcutsdiv.append("<img class='shortcut' src='/static/sample.png' data-url='"+data.samplefolder+"'>");
+                       shortcutsdiv.append("<img class='shortcut' src='/static/images/sample.png' data-url='"+data.samplefolder+"'>");
                    }
                    resourcediv.addClass('available'); // for CSS :hover
 

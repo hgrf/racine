@@ -18,7 +18,7 @@ You should have python 2.x and pip installed on your system. From there on it's 
 installs virtualenv for python. This is not absolutely necessary, but I recommend it. You can now create a folder somewhere
 and clone the git repository:
 
-    $ git clone git@github.com:green-mercury/MSM.git
+    $ git clone git@github.com:HolgerGraef/MSM.git
 
 Now you enter this directory and you create a virtual environment for python - and activate it:
 

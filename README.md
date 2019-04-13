@@ -33,6 +33,11 @@ Finally, all that remains to do is to install the required python packages:
 Now you have to initialise the database by running:
 
     $ python manage.py db upgrade
+    
+Note that, if you want to initialise the database for deployment (i.e. in the "production" configuration), you should
+first set up the FLASK_CONFIG variable accordingly:
+
+    $ export FLASK_CONFIG=production && python manage.py db upgrade
 
 This will also create the admin user that you will use for your first login (admin@admin.com, password is admin).
 

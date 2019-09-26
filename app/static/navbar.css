@@ -60,3 +60,8 @@
 .nav-entry-owner {
     font-style: italic;
 }
+
+.nav-entry-owner .glyphicon {
+    margin-left: 0;
+    margin-right: 5px;
+}

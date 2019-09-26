@@ -6,11 +6,16 @@
                 <div id="nav-entry{{ s.id }}" class="row nav-entry nav-dropzone {% if s.isarchived %}nav-entry-archived{% endif %}" data-id="{{ s.id }}" data-name="{{ s.name }}" data-toggle="collapse" data-target="#nav-children{{ s.id }}" draggable="true">
                     <div class="nav-entry-name">{{ s.name }}</div>
                     {% if s.owner != current_user %}
-                        <div class="nav-entry-owner">{{ s.owner.username }}</div>
+                        <div class="nav-entry-owner">
+                            {% if s.is_shared_with(current_user, indirect_only=True) %}
+                                <i class="glyphicon glyphicon-lock"></i>
+                            {% endif %}
+                            {{ s.owner.username }}
+                        </div>
                     {% endif %}
                 </div>
                 <div id="nav-children{{ s.id }}" class="row-fluid collapse out" style="padding-left: 10px;">
-                    {{ render_branch(s.children) }}
+                    {{ render_branch(s.children+s.mountedsamples) }}
                 </div>
             </div>
         {% endif %}
@@ -31,12 +36,7 @@
 </div>
 <div class="navbar-clear"></div>
 <div class="nav-main-container container-fluid nav-dropzone" data-id="0">
-    <div class="row nav-heading">{{ current_user.username }}'{{ 's' if current_user.username[-1] != 's' else '' }} samples:</div>
     <div id="nav-mysamples">{{ render_branch(samples) }}</div>
-    {% if shares %}
-        <div class="row nav-heading">Shares:</div>
-        {{ render_branch(shares) }}
-    {% endif %}
     {% if inheritance %}
         <div class="row nav-heading">Inheritance:</div>
         {% for i in inheritance %}

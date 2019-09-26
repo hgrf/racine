@@ -57,12 +57,13 @@ def welcome():
                            newactionsallusers=newactionsallusers, maxcountallusers=maxcountallusers,
                            uploadvols=uploadvols, maxuploadvol=maxuploadvol, plugins=plugins)
 
+
 def recursive_add_timestamp(samples):
-    print samples
     for s in samples:
         actions = sorted(s.actions, key=lambda a: a.timestamp if a.timestamp else date.today())
         s.last_action_date = actions[-1].timestamp if actions != [] and actions[-1].timestamp is not None else date.today()
-        recursive_add_timestamp(s.children)
+        recursive_add_timestamp(s.children+s.mountedsamples)
+
 
 @main.route('/navbar', methods=['GET'])
 @login_required
@@ -74,16 +75,14 @@ def navbar():
 
     # only query root level samples, the template will build the hierarchy
     samples = Sample.query.filter_by(owner=current_user, parent_id=0).all()
-    shares = [s.sample for s in current_user.shares]
+    samples.extend(current_user.directshares)
 
     # add timestamps for sorting
     if order == 'last_action_date':
         recursive_add_timestamp(samples)
-        recursive_add_timestamp(shares)
 
-    return render_template('navbar.html', samples=samples, shares=shares, inheritance=inheritance,
+    return render_template('navbar.html', samples=samples, inheritance=inheritance,
                            showarchived=showarchived, order=order)
-
 
 
 @main.route('/editor/<sampleid>', methods=['GET', 'POST'])
@@ -138,11 +137,11 @@ def search():
         for s in samples:
             if keyword in s.name.lower():
                 result.append(s)
-            result.extend(find_in(s.children, keyword, limit-len(result)))
+            result.extend(find_in(s.children+s.mountedsamples, keyword, limit-len(result)))
         return result
 
     own_samples = Sample.query.filter_by(owner=current_user, parent_id=0).all()
-    shares = [s.sample for s in current_user.shares]
+    shares = current_user.directshares
     results = [{"name": s.name, "id": s.id,
                 "ownername": s.owner.username,
                 "mysample": (s.owner == current_user),
@@ -171,7 +170,7 @@ def userlist():
 
         # get list of max. 5 people that the current user has recently shared with
         list1 = [{"id": share.id, "name": share.user.username} for share in Share.query.\
-            outerjoin(Sample).\
+            outerjoin(Sample, Sample.id==Share.sample_id).\
             filter(Sample.owner_id == current_user.id). \
             filter(not_(Share.user_id.in_([x.id for x in sharers]))).\
             order_by(Share.id.desc()).\
@@ -182,7 +181,7 @@ def userlist():
         # get list of max. 5 people that have recently shared with current user
         list2 = [{"id": share.id, "name": share.sample.owner.username} for share in Share.query.\
             filter(Share.user_id == current_user.id).\
-            outerjoin(Sample).\
+            outerjoin(Sample, Sample.id==Share.sample_id).\
             filter(not_(Sample.owner_id.in_([x.id for x in sharers]))).\
             order_by(Share.id.desc()).\
             group_by(Sample.owner_id).\
@@ -246,7 +245,7 @@ def createshare():
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it"), 500
     if user in [x.user for x in sample.shares]:
         return jsonify(code=1, error="This share already exists"), 500
-    share = Share(sample = sample, user = user)
+    share = Share(sample = sample, user = user, mountpoint_id = 0)
     db.session.add(share)
     db.session.commit()
     return jsonify(code=0, username=user.username, userid=user.id, shareid=share.id)
@@ -301,7 +300,7 @@ def deleteshare(shareid):
 @login_required
 def changeparent():
     sample = Sample.query.get(int(request.form.get("id")))
-    if sample == None or sample.owner != current_user:
+    if sample is None or (sample.owner != current_user and not sample.is_shared_with(current_user)):
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
 
     # check if we're not trying to make the snake bite its tail
@@ -313,14 +312,28 @@ def changeparent():
                 return jsonify(code=1, error="Cannot move sample")
             p = p.parent
 
+    # check if the current user is the sample owner, otherwise get corresponding share
+    if sample.owner != current_user:
+        if sample.is_shared_with(current_user, indirect_only=True):
+            return jsonify(code=1, error="The sample owner ("+sample.owner.username+") has fixed the sample's location.")
+  
+        share = Share.query.filter_by(sample=sample, user=current_user).first()
+        if share is None:
+            return jsonify(code=1, error="Could not find corresponding share")
+        try:
+            share.mountpoint_id = parentid
+            db.session.commit()
+        except Exception as e:
+            return jsonify(code=1, error="Exception: "+e.message)
+    else:
     # change parent ID and remove matrix coords
-    try:
-        sample.parent_id = parentid
-        sample.mx = None
-        sample.my = None
-        db.session.commit()
-    except Exception as e:
-        return jsonify(code=1, error=e.message)
+        try:
+            sample.parent_id = parentid
+            sample.mx = None
+            sample.my = None
+            db.session.commit()
+        except Exception as e:
+            return jsonify(code=1, error=e.message)
     return jsonify(code=0)
 
 

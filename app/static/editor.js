@@ -184,6 +184,9 @@ function load_sample(id, pushstate) {
             init_editor();
 
             $('#'+sample_id+".nav-entry").css("background-color", "#BBBBFF");
+        },
+        error: function() {
+            error_dialog('Sample #'+sample_id+" does not exist or you do not have access to it.");
         }
     });
 }

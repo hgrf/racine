@@ -116,8 +116,8 @@ def editor(sampleid):
 @main.route('/help')
 @login_required
 def help():
-    admin = User.query.filter_by(is_admin=True).first()
-    return render_template('help.html', admin=admin)
+    admins = User.query.filter_by(is_admin=True).all()
+    return render_template('help.html', admins=admins)
 
 
 @main.route('/search', methods=['GET'])

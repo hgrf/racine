@@ -1,7 +1,166 @@
 {% extends "base.html" %}
 
+{% block scripts %}
+    {{ super() }}
+    {# see https://afeld.github.io/bootstrap-toc/ #}
+    <link rel="stylesheet" href="/static/bootstrap-toc.min.css">
+    <script src="/static/bootstrap-toc.min.js"></script>
+    <script>
+        (function($) {
+            $('body').attr("data-spy", "scroll");
+            $('body').attr("data-target", "#toc");
+        })(jQuery);
+    </script>
+{% endblock %}
+
+{% block sidebarnav %}
+<div id="sidebar" class="col-sm-3 col-md-2 sidebar">
+    <nav id="toc" data-toggle="toc"></nav>
+</div>
+{% endblock %}
+
 {% block page_content %}
-    <h1 class="page-header">Help</h1>
-    For help, please send an email describing your issue to holger.graef [AT] lpa.ens.fr
+<div style="max-width: 800px;">
+    <h2>Introduction</h2>
+    <p>Mercury Sample Manager is a sample management tool that enables researchers to keep track of their samples from any PC in a laboratory.
+    The programme is a Flask-based web service that runs on a central server in the local network of your research institute and that can be
+    accessed from all other computers on the same network using the normal web browser (should be a recent browser though).</p>
+    <p><i>Samples</i> can be organised hierarchically similar to files and folders on you computer. There is however no distinction between
+    a "file" and a "folder", any sample can contain other samples as well as the so-called <i>actions</i>. Samples can be shared with other
+    users, enabling them to add actions. However, no user can modify the actions added by another user.</p>
+
+    <h2>Administrators</h2>
+    <p>Your administrators are:
+    {% for admin in admins %}
+    <br><a href="mailto:{{ admin.email }}">{{ admin.email }}</a>
+    {% endfor %}
+    </p>
+
+    <h2>The header</h2>
+    <p>The header contains a search bar and some icons. If you type a keyword in the search bar and press enter, a list of samples containing
+    the keyword in their sample name will be displayed. You can also select a search result from the dropdown menu and go directly to the
+    corresponding sample. In the case of shared samples, the sample owner is displayed after the <i class="glyphicon glyphicon-user"></i>-icon
+    and if the sample is not on the top level, the parent sample is displayed after the <i class="glyphicon glyphicon-level-up"></i>-icon. The
+    dropdown list is limited to five search results.</p>
+    <p>The <i class="glyphicon glyphicon-print"></i>-icon in the header bar leads to the <a href="#printing">print</a>-page, the
+    <i class="glyphicon glyphicon-user"></i>-icon leads to your <a href="#modifying-your-profile">profile</a>-page, the
+    <i class="glyphicon glyphicon-log-out"></i>-icon logs you out of the system and the <i class="glyphicon glyphicon-question-sign"></i>-icon
+    leads to this help page.</p>
+
+    <h2>The navigation bar</h2>
+    <p>The navigation bar on the left contains all your samples and the samples that other users shared with you. By double-clicking on a sample,
+    you can load it into the editor. By dragging a sample on another sample, you can define your hierarchy. When a sample contains other
+    samples, a little arrow appears next to it. By clicking once on these samples, you can expand/collapse the underlying tree.</p>
+    <p>You can move a sample back to the top level of the tree by dragging it slightly to the left until the background of the navigation bar
+    is highlighted.</p>
+    <p>New samples can be created by clicking on the blue plus-symbol at the top left of the navigation bar. This leads to a page where you can
+    choose a name, a parent (i.e. another sample underneath which the new one will appear in the hierarchy) and a description for your sample.</p>
+    <p>There are a couple of other symbols at the top of the navigation bar: Using the eye-symbol, you can switch on/off the display of
+    archived samples. The other three symbols are for sorting the samples by name, by ID, or by the last modification. The currently active
+    sorting mechanism is highlighted in dark grey.</p>
+    <img src="/static/help/navigation.png">
+
+    <h2>The editor</h2>
+    <p>At the top of the editor window you see the sample name, image, description and shares. The name and the description can be edited by
+    double-clicking on the corresponding field or by hovering with the mouse over the field and clicking on the edit button at the top right.
+    A sample image can be added by clicking on the corresponding button. It can either be uploaded from your PC or it can be taken from a
+    file server. You can see and modify shares in the "Shared with" field.</p>
+    <p>Next to the sample name, at the top right of the editor window, there are buttons to archive or delete the sample. If you archive a sample,
+    it disappears from your navigation bar, unless you explicitly activate the display of archived samples (see above). If your sample has
+    a parent sample in the hierarchy, you can display the actions of the parent sample by clicking on the "eye"-symbol on the top right. If your
+    sample has children in the hierarchy, you can switch to the matrix view by clicking on the "matrix view" symbol (this feature will be
+    removed in future versions of the sample manager).</p>
+    <p>New actions can be added using the form at the bottom of the page. The procedure for modifying existing actions is illustrated in the
+    figure below.</p>
+    <img src="/static/help/editor.png">
+
+    <h2>Sharing samples</h2>
+    <p>There are two types of shares: <i>direct</i> and <i>indirect shares</i>. Direct shares can be defined by adding the corresponding user to the
+    share list on the upper right of the editor window. These direct shares will appear on the top level of that user's navigation bar. The other user
+    can move the direct share to another location in his hierarchy, without affecting its location in the owner's hierarchy. This is called <i>
+    mounting.</i> If a shared sample contains other samples, these are <i>indirectly</i> shared with the other user. This is indicated by a little
+    lock next to the owner's name in the other user's navigation bar. These indirect shares cannot be mounted in a different location.</p>
+    <img src="/static/help/sharing.png">
+
+    <h2>Using LaTeX</h2>
+    <p>You can use LaTeX to typeset mathematical expressions in the sample description and in the actions. You can use \(...\) for in-line math,
+    and \[...\] for displayed equations. The software also recognizes the TeX delimiters $$...$$ for displayed equations. The type-setting
+    happens automatically once you save a modified action or description.</p>
+    <img src="/static/help/latex.png">
+
+    <h2>Attaching files</h2>
+    <p>By dragging and dropping files into a description or action field, it is automatically uploaded to the sample manager and stored on 
+    the server. It can be downloaded by simply clicking on the link after the description/action is saved. If the uploaded file is an image,
+    it will not be saved as an attachment, but it will be directly displayed in the editor.</p>
+    <img src="/static/help/attachment.png">
+
+    <h2>Using file servers</h2>
+    <p>The sample manager can help you to find images (for example from a microscope) on SMB file servers. The connection to the file servers has
+    to be set up by the <a href="#administrators">administrators</a>. In order to access the file servers, click on the "image" icon in the editor
+    and select <i>Browse Server</i> in the popup window (steps 1 and 2 in the below figure). A new window will pop up and show you the different
+    available network resources. By clicking on the "network"-icon on the left, you can access the resource directly. If the sample manager
+    finds a folder corresponding to the sample owner's user name on the server, a "user"-icon is shown which leads you directly to the user folder. If
+    the user folder has a subfolder corresponding to the name of the sample, a "sample"-icon is shown which leads you directly to the sample folder
+    (see step 3). Once you've opened a folder using one of these methods, you arrive at the file browser (step 4). By clicking on an image, you 
+    can import it into the editor window. Files that are imported this way are stored on the sample manager server, so they stay available even
+    if they are deleted or moved from the file servers.</p>
+    <img src="/static/help/browser.png">
+
+    <h2>Printing</h2>
+    <p>By clicking on the <i class="glyphicon glyphicon-print"></i>-icon in the header bar, you get to the printing page, where you can print all
+    actions added in a specific time window or to a specific sample. If you want to define a time window, simply fill in the <i>From</i>- and
+    <i>To</i>-fields using the popup calender or by typing the date in the following format: YYYY-MM-DD. If you want to restrict the printing
+    to a specific sample, you can select it in the corresponding field. You need to explicitly select the sample from the dropdown menu, so that
+    a green tick appears next to the field. By clicking on <i>Submit</i>, you load the requested data into the print page. You can print this page
+    by clicking on <i>Print</i>.</p>
+    <p>By default, the user names associated with each action are displayed next to the action date. If you wish to disable this, you can activate
+    the checkbox <i>Hide user names</i>. In order to save space and ink, you can reduce the image sizes using the corresponding drop down menu.</p>
+
+    <h2>Modifying your profile</h2>
+    <p>In order to modify your profile, click on the <i class="glyphicon glyphicon-user"></i>-icon in the header menu.</p>
+    
+    <h3>Changing your details</h3>
+    <p>By selecting the "Change my details" entry in the menu on the left, you can change your user name or associated email address. You need
+    to confirm these changes by typing your current password in the corresponding field. Your password can be changed by selecting "Change
+    my password".</p>
+
+    <h3>Leaving the lab</h3>
+    <p>The "Leave" menu entry leads to a page where you can designate someone who will "inherit" all your data once you leave the laboratory.
+    You will still be able to log in after leaving. The designated user will see your name at the bottom of his navigation bar. By double-clicking
+    on your nane, the other user can access all of your samples.</p>
+    <img src="/static/help/leaving.png">
+
+{% if current_user.is_admin %}
+    <h2>Modifying the settings</h2>
+    <p>In order to access the settings page, click on the <i class="glyphicon glyphicon-wrench"></i>-symbol on the upper right.</p>
+
+    <h3>Set up email</h3>
+    <p>In order to enable users to reset their password via email, the administrator has to set up an email account on the corresponding settings
+    page ("Email" menu item in the settings menu).</p>
+
+    <h3>Managing users</h3>
+    <p>In order to manage users, select the "Users" menu item
+    in the settings menu. New users can be added using the form at the bottom of the page. Existing users can be deleted by clicking on the
+    <i class="glyphicon glyphicon-trash"></i>-symbol in the corresponding row. The administrators can log in as any user by clicking on the
+    corresponding <i class="glyphicon glyphicon-log-in"></i>-icon. User names, email addresses and the admin "flag" can be edited by double-
+    clicking on the respective fields or by clicking on the edit button that appears when hovering over the fields.</p>
+
+    <h3>Managing file servers</h3>
+    <p>In order to manage file servers, select the "SMB Resources"
+    menu item in the settings menu. New file servers can be added by filling in the fields at the bottom of the table and clicking on the "+" button.
+    Existing resources can be modified or deleted as described above for the user table.</p>
+    <p>The <i>Name</i>-field defines how the resource will be called within the sample manager. The <i>Server name</i>- and <i>Server address</i>-
+    fields typically contain the same value (the network location of the SMB server). The <i>Share name</i>-field defines the name of the
+    network share to be accessed on the SMB server and in the <i>Path</i>-field you can optionally define a subfolder.</p>
+
+    <h3>Other settings pages</h3>
+    <p>The "Revision" page gives you information about the sample manager version. This only works if the sample manager is set up as a git
+    repository.</p>
+    <p>The "Log" page gives you access to the server's log file for debugging.</p>
+    <p>The "Uploads" page provides information about lost, empty, unused and duplicate uploads. It can take a long time to load, since a lot
+    of database and filesystem operations are required to collect this data.</p>
+
+{% endif %}
+</div>
 {% endblock %}
 

@@ -80,6 +80,10 @@ function init_editor() {
             .queue(function (next) { $(this).css("background-color", "transparent"); next(); })
     });
 
+    $('#scrolltobottom').click(function() {
+       $('html, body').stop().animate({scrollTop: $('div#editor-frame').height()}, 1000);
+    });
+
     $('#showparentactions').click(function() {
         showparentactions = !showparentactions; // toggle
         load_sample($('#sampleid').text());

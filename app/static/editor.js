@@ -59,6 +59,27 @@ function init_editor() {
         });
     });
 
+    $('#showinnavigator').click(function() {
+        // make sure all parent samples are expanded in navbar
+        $('#nav-entry'+sample_id).parents('.nav-children').collapse('show');
+
+        // scroll to the sample
+        scrollval = $('#nav-entry'+sample_id).offset().top-$('#navbar').height();
+        if(scrollval != 0) {
+            $('div#sidebar')
+                .stop()
+                .animate({scrollTop: scrollval + $('div#sidebar').scrollTop()}, 1000);
+        }
+
+        // flash the sample
+        $('#nav-entry'+sample_id)
+            .stop()
+            .delay(scrollval ? 1000 : 0)
+            .queue(function (next) { $(this).css("background-color", "#FFFF9C"); next(); })
+            .delay(1000)
+            .queue(function (next) { $(this).css("background-color", "transparent"); next(); })
+    });
+
     $('#showparentactions').click(function() {
         showparentactions = !showparentactions; // toggle
         load_sample($('#sampleid').text());

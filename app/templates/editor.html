@@ -14,6 +14,7 @@
     {% if sample.parent_id != 0 and sample.parent.actions != [] %}
     <i id="showparentactions" class="editor-shortcut glyphicon glyphicon-eye-{{ 'open' if showparentactions else 'close' }}" title="{{ 'Hide' if showparentactions else 'Show' }} parent actions"></i>
     {% endif %}
+    <i id="showinnavigator" class="editor-shortcut glyphicon glyphicon-search" title="Show in navigator"></i>
     <div style="clear:both;"></div>
 </h2>
 <div class="container-fluid">

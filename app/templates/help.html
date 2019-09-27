@@ -4,6 +4,16 @@
     {{ super() }}
     {# see https://afeld.github.io/bootstrap-toc/ #}
     <link rel="stylesheet" href="/static/bootstrap-toc.min.css">
+    <style>
+    /* see https://tscanlin.github.io/tocbot/ */
+    h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
+        display: block;
+        content: " ";
+        height: 60px;
+        margin-top: -60px;
+        visibility: hidden;
+    }
+    </style>
     <script src="/static/bootstrap-toc.min.js"></script>
     <script>
         (function($) {

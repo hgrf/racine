@@ -41,7 +41,7 @@
                     field.html(choice[json.value]);
                     // display error message if error occured
                     if(json.code)
-                        error_dialog(data.message);
+                        error_dialog(json.message);
                     field.trigger('editableupdate', json);
                     field.trigger('editabledone');
                 },

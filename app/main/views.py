@@ -11,6 +11,7 @@ from ..validators import ValidSampleName
 from sqlalchemy.sql import func
 from sqlalchemy import not_
 import os
+import inspect
 
 
 @main.route('/')
@@ -498,6 +499,14 @@ def validate_email(str):
         raise Exception(form.email.errors[0])
 
 
+def validate_is_admin(str, item):
+    b = str_to_bool(str)
+    if item.is_admin and not b:
+        # check if any other administrators are left
+        if len(User.query.filter_by(is_admin=True).all()) == 1:
+            raise Exception('There has to be at least one administrator.')
+    return b
+
 # define supported fields
 supported_targets = {
     'sample': {
@@ -536,7 +545,7 @@ supported_targets = {
         'fields': {
             'username': str,
             'email': validate_email,
-            'is_admin': str_to_bool
+            'is_admin': validate_is_admin
         }
     }
 }
@@ -596,10 +605,23 @@ def updatefield(target, field, id):
     try:
         # check if a modifier is to be applied
         modifier = target['fields'][field]
-        if modifier is not None:
-            setattr(item, field, modifier(value))
+        if modifier is  None:
+            setvalue = value
+        # check if the modifier is a function
+        elif type(modifier) == type(lambda x: x):
+            argno = len(inspect.getargspec(modifier).args)
+            if argno == 1:
+                setvalue = modifier(value)
+            elif argno == 2:
+                setvalue = modifier(value, item)
+            elif argno == 3:
+                setvalue = modifier(value, item, field)
+            else:
+                raise Exception("Invalid modifier")
+        # otherwise it is probably simply type casting
         else:
-            setattr(item, field, value)
+            setvalue = modifier(value)
+        setattr(item, field, setvalue)
     except Exception as e:
         return jsonify(code=1, value=str(getattr(item, field)), message='Error: '+str(e))
 

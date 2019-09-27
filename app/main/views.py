@@ -10,6 +10,7 @@ from .. import smbinterface
 from ..validators import ValidSampleName
 from sqlalchemy.sql import func
 from sqlalchemy import not_
+import os
 
 
 @main.route('/')
@@ -34,6 +35,10 @@ def sample(sampleid):
 @main.route('/welcome')
 @login_required
 def welcome():
+    # get free disk space
+    statvfs = os.statvfs(os.path.dirname(__file__))
+    availablevol = statvfs.f_frsize*statvfs.f_bavail
+
     # get user activity for all users (only admin will see this)
     aweekago = date.today()-timedelta(weeks=1)
     stmt = db.session.query(Action.owner_id, func.count('*').label('action_count')).filter(Action.datecreated > aweekago).group_by(Action.owner_id).subquery()
@@ -45,7 +50,10 @@ def welcome():
     stmt = db.session.query(Upload.user_id, func.sum(Upload.size).label('upload_volume')).group_by(Upload.user_id).subquery()
     uploadvols = db.session.query(User, stmt.c.upload_volume).outerjoin(stmt, User.id==stmt.c.user_id).order_by(User.id).all()
     maxuploadvol = 0
-    for u in uploadvols: maxuploadvol = max(maxuploadvol, u[1])
+    totuploadvol = 0
+    for u in uploadvols:
+        maxuploadvol = max(maxuploadvol, u[1])
+        totuploadvol += u[1] if u[1] is not None else 0
 
     # get user activity only for current user (every user will see this for his samples)
     stmt = db.session.query(Action.sample_id, func.count('*').label('action_count')).filter(Action.owner_id == current_user.id).filter(Action.datecreated > aweekago).group_by(Action.sample_id).subquery()
@@ -55,7 +63,8 @@ def welcome():
 
     return render_template('welcome.html', conns=smbinterface.conns, newactions=newactions, maxcount=maxcount,
                            newactionsallusers=newactionsallusers, maxcountallusers=maxcountallusers,
-                           uploadvols=uploadvols, maxuploadvol=maxuploadvol, plugins=plugins)
+                           uploadvols=uploadvols, maxuploadvol=maxuploadvol, plugins=plugins,
+                           totuploadvol=totuploadvol, availablevol=availablevol)
 
 
 def recursive_add_timestamp(samples):

@@ -26,7 +26,7 @@ def sample(sampleid):
     if not sampleid:
         return render_template('main.html', sample=None)
     sample = Sample.query.get(sampleid)
-    if sample == None or (sample.owner != current_user and not sample.is_shared_with(current_user)):
+    if sample is None or not sample.is_accessible_for(current_user):
         return render_template('404.html'), 404
     return render_template('main.html', sample=sample)
 
@@ -92,7 +92,7 @@ def editor(sampleid):
     shares = sample.shares
     showparentactions = True if request.args.get('showparentactions') != None and int(request.args.get('showparentactions')) else False
 
-    if sample == None or (sample.owner != current_user and not sample.is_shared_with(current_user)):
+    if sample is None or not sample.is_accessible_for(current_user):
         return render_template('404.html'), 404
     else:
         form = NewActionForm()
@@ -300,21 +300,21 @@ def deleteshare(shareid):
 @login_required
 def changeparent():
     sample = Sample.query.get(int(request.form.get("id")))
-    if sample is None or (sample.owner != current_user and not sample.is_shared_with(current_user)):
+    if sample is None or not sample.is_accessible_for(current_user):
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
 
     # check if we're not trying to make the snake bite its tail
     parentid = int(request.form.get('parent'))
-    if (parentid != 0):
+    if parentid != 0:
         p = Sample.query.filter_by(id=parentid).first()
-        while (p.parent_id != 0):
-            if (p.parent_id == sample.id):
+        while p.logical_parent:
+            if p.logical_parent == sample:
                 return jsonify(code=1, error="Cannot move sample")
-            p = p.parent
+            p = p.logical_parent
 
     # check if the current user is the sample owner, otherwise get corresponding share
     if sample.owner != current_user:
-        if sample.is_shared_with(current_user, indirect_only=True):
+        if sample.is_accessible_for(current_user, indirect_only=True):
             return jsonify(code=1, error="The sample owner ("+sample.owner.username+") has fixed the sample's location.")
   
         share = Share.query.filter_by(sample=sample, user=current_user).first()
@@ -361,7 +361,7 @@ def newsample():
 @login_required
 def newaction(sampleid):
     sample = Sample.query.get(int(sampleid))
-    if sample == None or (sample.owner != current_user and not sample.is_shared_with(current_user)):
+    if sample is None or not sample.is_accessible_for(current_user):
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
 
     form = NewActionForm()

@@ -7,7 +7,7 @@
                     <div class="nav-entry-name">{{ s.name }}</div>
                     {% if s.owner != current_user %}
                         <div class="nav-entry-owner">
-                            {% if s.is_shared_with(current_user, indirect_only=True) %}
+                            {% if s.is_accessible_for(current_user, indirect_only=True) %}
                                 <i class="glyphicon glyphicon-lock"></i>
                             {% endif %}
                             {{ s.owner.username }}

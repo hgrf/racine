@@ -34,6 +34,9 @@ $.event.props.push('dataTransfer');   // otherwise jQuery event does not have fu
 function init_editor() {
     sample_id = $('#sampleid').text();
 
+    // scroll to top
+    $('html, body').scrollTop(0);
+
     // handler for matrix view button
     $('#matrixviewbutton').click(function() {
         load_matrix_view(sample_id);

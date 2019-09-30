@@ -19,17 +19,15 @@ def overview():
         except ValueError: dateto = None
 
         def tree(samples):
-            if not samples:
-                return []
             result = []
             for s in samples:
                 result.append(s)
-                result.extend(tree(s.children))
+                result.extend(tree(s.children+s.mountedsamples))
             return result
 
-        own_samples = Sample.query.filter_by(owner=current_user, parent_id=0).all()
-        shares = [s.sample for s in current_user.shares]
-        all_samples = tree(own_samples+shares)
+        samples = Sample.query.filter_by(owner=current_user, parent_id=0).all()
+        samples.extend(current_user.directshares)
+        all_samples = tree(samples)
 
         actions = []
         for s in all_samples:

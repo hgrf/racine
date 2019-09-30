@@ -10,6 +10,8 @@ from .. import smbinterface
 from ..validators import ValidSampleName
 from sqlalchemy.sql import func
 from sqlalchemy import not_
+import os
+import inspect
 
 
 @main.route('/')
@@ -26,7 +28,7 @@ def sample(sampleid):
     if not sampleid:
         return render_template('main.html', sample=None)
     sample = Sample.query.get(sampleid)
-    if sample == None or (sample.owner != current_user and not sample.is_shared_with(current_user)):
+    if sample is None or not sample.is_accessible_for(current_user):
         return render_template('404.html'), 404
     return render_template('main.html', sample=sample)
 
@@ -34,6 +36,10 @@ def sample(sampleid):
 @main.route('/welcome')
 @login_required
 def welcome():
+    # get free disk space
+    statvfs = os.statvfs(os.path.dirname(__file__))
+    availablevol = statvfs.f_frsize*statvfs.f_bavail
+
     # get user activity for all users (only admin will see this)
     aweekago = date.today()-timedelta(weeks=1)
     stmt = db.session.query(Action.owner_id, func.count('*').label('action_count')).filter(Action.datecreated > aweekago).group_by(Action.owner_id).subquery()
@@ -45,7 +51,10 @@ def welcome():
     stmt = db.session.query(Upload.user_id, func.sum(Upload.size).label('upload_volume')).group_by(Upload.user_id).subquery()
     uploadvols = db.session.query(User, stmt.c.upload_volume).outerjoin(stmt, User.id==stmt.c.user_id).order_by(User.id).all()
     maxuploadvol = 0
-    for u in uploadvols: maxuploadvol = max(maxuploadvol, u[1])
+    totuploadvol = 0
+    for u in uploadvols:
+        maxuploadvol = max(maxuploadvol, u[1])
+        totuploadvol += u[1] if u[1] is not None else 0
 
     # get user activity only for current user (every user will see this for his samples)
     stmt = db.session.query(Action.sample_id, func.count('*').label('action_count')).filter(Action.owner_id == current_user.id).filter(Action.datecreated > aweekago).group_by(Action.sample_id).subquery()
@@ -55,14 +64,16 @@ def welcome():
 
     return render_template('welcome.html', conns=smbinterface.conns, newactions=newactions, maxcount=maxcount,
                            newactionsallusers=newactionsallusers, maxcountallusers=maxcountallusers,
-                           uploadvols=uploadvols, maxuploadvol=maxuploadvol, plugins=plugins)
+                           uploadvols=uploadvols, maxuploadvol=maxuploadvol, plugins=plugins,
+                           totuploadvol=totuploadvol, availablevol=availablevol)
+
 
 def recursive_add_timestamp(samples):
-    print samples
     for s in samples:
         actions = sorted(s.actions, key=lambda a: a.timestamp if a.timestamp else date.today())
         s.last_action_date = actions[-1].timestamp if actions != [] and actions[-1].timestamp is not None else date.today()
-        recursive_add_timestamp(s.children)
+        recursive_add_timestamp(s.children+s.mountedsamples)
+
 
 @main.route('/navbar', methods=['GET'])
 @login_required
@@ -74,16 +85,14 @@ def navbar():
 
     # only query root level samples, the template will build the hierarchy
     samples = Sample.query.filter_by(owner=current_user, parent_id=0).all()
-    shares = [s.sample for s in current_user.shares]
+    samples.extend(current_user.directshares)
 
     # add timestamps for sorting
     if order == 'last_action_date':
         recursive_add_timestamp(samples)
-        recursive_add_timestamp(shares)
 
-    return render_template('navbar.html', samples=samples, shares=shares, inheritance=inheritance,
+    return render_template('navbar.html', samples=samples, inheritance=inheritance,
                            showarchived=showarchived, order=order)
-
 
 
 @main.route('/editor/<sampleid>', methods=['GET', 'POST'])
@@ -93,7 +102,7 @@ def editor(sampleid):
     shares = sample.shares
     showparentactions = True if request.args.get('showparentactions') != None and int(request.args.get('showparentactions')) else False
 
-    if sample == None or (sample.owner != current_user and not sample.is_shared_with(current_user)):
+    if sample is None or not sample.is_accessible_for(current_user):
         return render_template('404.html'), 404
     else:
         form = NewActionForm()
@@ -117,8 +126,8 @@ def editor(sampleid):
 @main.route('/help')
 @login_required
 def help():
-    admin = User.query.filter_by(is_admin=True).first()
-    return render_template('help.html', admin=admin)
+    admins = User.query.filter_by(is_admin=True).all()
+    return render_template('help.html', admins=admins)
 
 
 @main.route('/search', methods=['GET'])
@@ -138,11 +147,11 @@ def search():
         for s in samples:
             if keyword in s.name.lower():
                 result.append(s)
-            result.extend(find_in(s.children, keyword, limit-len(result)))
+            result.extend(find_in(s.children+s.mountedsamples, keyword, limit-len(result)))
         return result
 
     own_samples = Sample.query.filter_by(owner=current_user, parent_id=0).all()
-    shares = [s.sample for s in current_user.shares]
+    shares = current_user.directshares
     results = [{"name": s.name, "id": s.id,
                 "ownername": s.owner.username,
                 "mysample": (s.owner == current_user),
@@ -171,7 +180,7 @@ def userlist():
 
         # get list of max. 5 people that the current user has recently shared with
         list1 = [{"id": share.id, "name": share.user.username} for share in Share.query.\
-            outerjoin(Sample).\
+            outerjoin(Sample, Sample.id==Share.sample_id).\
             filter(Sample.owner_id == current_user.id). \
             filter(not_(Share.user_id.in_([x.id for x in sharers]))).\
             order_by(Share.id.desc()).\
@@ -182,7 +191,7 @@ def userlist():
         # get list of max. 5 people that have recently shared with current user
         list2 = [{"id": share.id, "name": share.sample.owner.username} for share in Share.query.\
             filter(Share.user_id == current_user.id).\
-            outerjoin(Sample).\
+            outerjoin(Sample, Sample.id==Share.sample_id).\
             filter(not_(Sample.owner_id.in_([x.id for x in sharers]))).\
             order_by(Share.id.desc()).\
             group_by(Sample.owner_id).\
@@ -246,7 +255,7 @@ def createshare():
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it"), 500
     if user in [x.user for x in sample.shares]:
         return jsonify(code=1, error="This share already exists"), 500
-    share = Share(sample = sample, user = user)
+    share = Share(sample = sample, user = user, mountpoint_id = 0)
     db.session.add(share)
     db.session.commit()
     return jsonify(code=0, username=user.username, userid=user.id, shareid=share.id)
@@ -301,26 +310,40 @@ def deleteshare(shareid):
 @login_required
 def changeparent():
     sample = Sample.query.get(int(request.form.get("id")))
-    if sample == None or sample.owner != current_user:
+    if sample is None or not sample.is_accessible_for(current_user):
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
 
     # check if we're not trying to make the snake bite its tail
     parentid = int(request.form.get('parent'))
-    if (parentid != 0):
+    if parentid != 0:
         p = Sample.query.filter_by(id=parentid).first()
-        while (p.parent_id != 0):
-            if (p.parent_id == sample.id):
+        while p.logical_parent:
+            if p.logical_parent == sample:
                 return jsonify(code=1, error="Cannot move sample")
-            p = p.parent
+            p = p.logical_parent
 
+    # check if the current user is the sample owner, otherwise get corresponding share
+    if sample.owner != current_user:
+        if sample.is_accessible_for(current_user, indirect_only=True):
+            return jsonify(code=1, error="The sample owner ("+sample.owner.username+") has fixed the sample's location.")
+  
+        share = Share.query.filter_by(sample=sample, user=current_user).first()
+        if share is None:
+            return jsonify(code=1, error="Could not find corresponding share")
+        try:
+            share.mountpoint_id = parentid
+            db.session.commit()
+        except Exception as e:
+            return jsonify(code=1, error="Exception: "+e.message)
+    else:
     # change parent ID and remove matrix coords
-    try:
-        sample.parent_id = parentid
-        sample.mx = None
-        sample.my = None
-        db.session.commit()
-    except Exception as e:
-        return jsonify(code=1, error=e.message)
+        try:
+            sample.parent_id = parentid
+            sample.mx = None
+            sample.my = None
+            db.session.commit()
+        except Exception as e:
+            return jsonify(code=1, error=e.message)
     return jsonify(code=0)
 
 
@@ -348,7 +371,7 @@ def newsample():
 @login_required
 def newaction(sampleid):
     sample = Sample.query.get(int(sampleid))
-    if sample == None or (sample.owner != current_user and not sample.is_shared_with(current_user)):
+    if sample is None or not sample.is_accessible_for(current_user):
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
 
     form = NewActionForm()
@@ -476,6 +499,14 @@ def validate_email(str):
         raise Exception(form.email.errors[0])
 
 
+def validate_is_admin(str, item):
+    b = str_to_bool(str)
+    if item.is_admin and not b:
+        # check if any other administrators are left
+        if len(User.query.filter_by(is_admin=True).all()) == 1:
+            raise Exception('There has to be at least one administrator.')
+    return b
+
 # define supported fields
 supported_targets = {
     'sample': {
@@ -514,7 +545,7 @@ supported_targets = {
         'fields': {
             'username': str,
             'email': validate_email,
-            'is_admin': str_to_bool
+            'is_admin': validate_is_admin
         }
     }
 }
@@ -574,10 +605,23 @@ def updatefield(target, field, id):
     try:
         # check if a modifier is to be applied
         modifier = target['fields'][field]
-        if modifier is not None:
-            setattr(item, field, modifier(value))
+        if modifier is  None:
+            setvalue = value
+        # check if the modifier is a function
+        elif type(modifier) == type(lambda x: x):
+            argno = len(inspect.getargspec(modifier).args)
+            if argno == 1:
+                setvalue = modifier(value)
+            elif argno == 2:
+                setvalue = modifier(value, item)
+            elif argno == 3:
+                setvalue = modifier(value, item, field)
+            else:
+                raise Exception("Invalid modifier")
+        # otherwise it is probably simply type casting
         else:
-            setattr(item, field, value)
+            setvalue = modifier(value)
+        setattr(item, field, setvalue)
     except Exception as e:
         return jsonify(code=1, value=str(getattr(item, field)), message='Error: '+str(e))
 

@@ -3,6 +3,12 @@
     <h2>{{ p.title }}</h2>
     {{ p.display()|safe }}
 {% endfor %}
+<h2>Disk space</h2>
+{{ totuploadvol|filesizeformat }} out of {{ (availablevol+totuploadvol)|filesizeformat }} occupied. This only takes into
+account uploads, since the database size is typically negligible.
+<div class="progress" style="width: 200px;">
+<div class="progress-bar" role="progressbar" style="width:{{ totuploadvol/(totuploadvol+availablevol)*100 }}%;color:#000000";></div>
+</div>
 {% if current_user.is_admin %}
     <h2>Active SMB connections</h2>
     <table>

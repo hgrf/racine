@@ -17,3 +17,4 @@ app/static:
 |- mathjax/* is intellectual property of the MathJax Consortium, which "is a joint venture of the American Mathematical Society
 |   (AMS) and the Society for Industrial and Applied Mathematics (SIAM)"; it is released under the Apache Licence version 2.0
 |- typeahead.js/* is intellectual property of Twitter, Inc. and released under the MIT license
+|- bootstrap-toc.min.js and bootstrap-toc.min.css are intellectual property of Aidan Feldman and released under the MIT license

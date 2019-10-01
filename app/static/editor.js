@@ -31,11 +31,15 @@ var ckeditorconfig = {
 
 $.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer
 
-function init_editor() {
+function init_editor(scrolltotop) {
+    // define default values for arguments
+    var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : true;
+
     sample_id = $('#sampleid').text();
 
     // scroll to top
-    $('html, body').scrollTop(0);
+    if(scrolltotop)
+        $('html, body').scrollTop(0);
 
     // handler for matrix view button
     $('#matrixviewbutton').click(function() {
@@ -135,7 +139,7 @@ function init_editor() {
                             "expired. Try submitting again.");
                     });
                 }
-                load_sample(sample_id);
+                load_sample(sample_id, false, false);
             },
             error: function( jqXHR, textStatus ) {
                 error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
@@ -191,8 +195,10 @@ function init_editor() {
     $(document).trigger("editor_initialised");
 }
 
-function load_sample(id, pushstate) {
+function load_sample(id, pushstate, scrolltotop) {
+    // define default values for arguments
     var pushstate = typeof pushstate !== 'undefined' ?  pushstate : true;
+    var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : true;
 
     // if currently viewing a sample (not welcome page) then change the navbar background to transparent before loading
     // the new sample
@@ -203,13 +209,14 @@ function load_sample(id, pushstate) {
     $.ajax({
         url: "/editor/"+id+(showparentactions ? "?showparentactions=1" : ""),
         pushstate: pushstate,
+        scrolltotop: scrolltotop,
         success: function( data ) {
             $( "#editor-frame" ).html(data);
             sample_id = $('#sampleid').text();
             if(this.pushstate)
                 window.history.pushState({"id": sample_id, "pageTitle": data.pageTitle}, "", "/sample/"+ sample_id);
             document.title = "MSM - "+$('#samplename').text();
-            init_editor();
+            init_editor(this.scrolltotop);
 
             $('#'+sample_id+".nav-entry").css("background-color", "#BBBBFF");
         },

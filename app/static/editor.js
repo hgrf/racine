@@ -246,7 +246,7 @@ $(document).ready(function() {
             }
         });
     } else {
-        load_sample(sample);
+        load_sample(sample, false);
     }
 
     // add window unload handler (which asks the user to confirm leaving the page when one of the CKEditor instances

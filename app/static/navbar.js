@@ -6,6 +6,14 @@ $(document).ready(function() {
     load_navbar(order, false);
 
     function init_navbar() {
+        // make sure the current sample is highlighted in the navbar (this is redundant in editor.js, but we need to do
+        // it here too if editor.js is executed before navbar.js
+        if(typeof sample_id !== 'undefined') {
+            $('#nav-entry' + sample_id).css("background-color", "#BBBBFF");
+            show_in_navbar(sample_id, false);
+        }
+
+
         // initialise sample navigation bar double click event
         $('.nav-entry').dblclick(function (event) {
             // use the before_unload_handler function in editor.js to check if any CKEditor is being edited

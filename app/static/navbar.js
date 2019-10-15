@@ -5,12 +5,16 @@ $(document).ready(function() {
     // default load with order by ID and hide archived samples
     load_navbar(order, false);
 
-    function init_navbar() {
+    function init_navbar(scrolltocurrent) {
+        // define default values for arguments
+        var scrolltocurrent = typeof scrolltocurrent !== 'undefined' ? scrolltocurrent : true;
+
         // make sure the current sample is highlighted in the navbar (this is redundant in editor.js, but we need to do
         // it here too if editor.js is executed before navbar.js
         if(typeof sample_id !== 'undefined') {
             $('#nav-entry' + sample_id).css("background-color", "#BBBBFF");
-            show_in_navbar(sample_id, false);
+            if(scrolltocurrent)
+                show_in_navbar(sample_id, false);
         }
 
         // keep track of CTRL key, so that double click event can open sample in new window if CTRL is held
@@ -118,13 +122,18 @@ $(document).ready(function() {
            location.href = '/loginas?userid='+$(this).data('userid');
         });
 
-        $('.navbar-togglearchived').click(function(event) { load_navbar(order, !showarchived); });
-        $('.navbar-sort-az').click(function(event) { load_navbar('name', showarchived); });
-        $('.navbar-sort-id').click(function(event) { load_navbar('id', showarchived); });
-        $('.navbar-sort-lastaction').click(function(event) { load_navbar('last_action_date', showarchived); });
+        $('.navbar-togglearchived').click(function(event) { load_navbar(order, !showarchived, false); });
+        $('.navbar-sort-az').click(function(event) { load_navbar('name', showarchived, false); });
+        $('.navbar-sort-id').click(function(event) { load_navbar('id', showarchived, false); });
+        $('.navbar-sort-lastaction').click(function(event) {
+            load_navbar('last_action_date', showarchived, false);
+        });
     }
 
-    function load_navbar(_order, _showarchived) {
+    function load_navbar(_order, _showarchived, scrolltocurrent) {
+        // define default values for arguments
+        var scrolltocurrent = typeof scrolltocurrent !== 'undefined' ? scrolltocurrent : true;
+
         order = _order;
         showarchived = _showarchived;
 
@@ -137,7 +146,7 @@ $(document).ready(function() {
                 $('#sidebar').html(data);
 
                 // set up handlers etc.
-                init_navbar();
+                init_navbar(scrolltocurrent);
             }
         });
     }

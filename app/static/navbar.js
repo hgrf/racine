@@ -6,8 +6,36 @@ $(document).ready(function() {
     load_navbar(order, false);
 
     function init_navbar() {
+        // make sure the current sample is highlighted in the navbar (this is redundant in editor.js, but we need to do
+        // it here too if editor.js is executed before navbar.js
+        if(typeof sample_id !== 'undefined') {
+            $('#nav-entry' + sample_id).css("background-color", "#BBBBFF");
+            show_in_navbar(sample_id, false);
+        }
+
+        // keep track of CTRL key, so that double click event can open sample in new window if CTRL is held
+        $(document).keydown(function(event){
+            if(event.which=="17")
+                ctrlIsPressed = true;
+        });
+
+        $(document).keyup(function(event){
+            if(event.which=="17")
+                ctrlIsPressed = false;
+        });
+
+        var ctrlIsPressed = false;
+
         // initialise sample navigation bar double click event
         $('.nav-entry').dblclick(function (event) {
+            event.preventDefault();
+
+            // if CTRL is pressed, open sample in a new tab
+            if(ctrlIsPressed) {
+                window.open('/sample/' + $(this).data('id'));
+                return;
+            }
+
             // use the before_unload_handler function in editor.js to check if any CKEditor is being edited
             // if yes, ask the user if he really wants to load a different sample
             confirm_message = before_unload_handler(0);
@@ -19,7 +47,6 @@ $(document).ready(function() {
                 load_sample($(this).data('id'));
             }
             mobile_hide_sidebar();   // on the small screen, hide the sidebar after a sample has been selected
-            event.preventDefault();
         });
 
         // add glyphicons to expandable items in the navbar

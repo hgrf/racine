@@ -31,10 +31,40 @@ var ckeditorconfig = {
 
 $.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer
 
+function show_in_navbar(id, flash) {
+    // make sure all parent samples are expanded in navbar
+    $('#nav-entry'+id).parents('.nav-children').collapse('show');
+
+    // scroll to the sample
+    scrollval = $('#nav-entry'+id).offset().top-$('#navbar').height();
+    if(scrollval != 0) {
+        $('div#sidebar')
+            .stop()
+            .animate({scrollTop: scrollval + $('div#sidebar').scrollTop()}, 1000);
+    }
+
+    if(flash) {
+        old_background = $('#nav-entry' + id).css("background-color");
+        // flash the sample
+        $('#nav-entry' + id)
+            .stop()
+            .delay(scrollval ? 1000 : 0)
+            .queue(function (next) {
+                $(this).css("background-color", "#FFFF9C");
+                next();
+            })
+            .delay(1000)
+            .queue(function (next) {
+                $(this).css("background-color", old_background);
+                next();
+            });
+    }
+}
+
 function init_editor(scrolltotop) {
     // define default values for arguments
     var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : true;
-
+  
     sample_id = $('#sampleid').text();
 
     // scroll to top
@@ -67,24 +97,7 @@ function init_editor(scrolltotop) {
     });
 
     $('#showinnavigator').click(function() {
-        // make sure all parent samples are expanded in navbar
-        $('#nav-entry'+sample_id).parents('.nav-children').collapse('show');
-
-        // scroll to the sample
-        scrollval = $('#nav-entry'+sample_id).offset().top-$('#navbar').height();
-        if(scrollval != 0) {
-            $('div#sidebar')
-                .stop()
-                .animate({scrollTop: scrollval + $('div#sidebar').scrollTop()}, 1000);
-        }
-
-        // flash the sample
-        $('#nav-entry'+sample_id)
-            .stop()
-            .delay(scrollval ? 1000 : 0)
-            .queue(function (next) { $(this).css("background-color", "#FFFF9C"); next(); })
-            .delay(1000)
-            .queue(function (next) { $(this).css("background-color", "transparent"); next(); })
+        show_in_navbar(sample_id, true)
     });
 
     $('#scrolltobottom').click(function() {
@@ -203,7 +216,7 @@ function load_sample(id, pushstate, scrolltotop) {
     // if currently viewing a sample (not welcome page) then change the navbar background to transparent before loading
     // the new sample
     if($('#sampleid').text() != "")
-        $('#' + sample_id + ".nav-entry").css("background-color", "transparent");
+        $('#nav-entry' + sample_id).css("background-color", "transparent");
 
     // load the sample data and re-initialise the editor
     $.ajax({
@@ -217,8 +230,7 @@ function load_sample(id, pushstate, scrolltotop) {
                 window.history.pushState({"id": sample_id, "pageTitle": data.pageTitle}, "", "/sample/"+ sample_id);
             document.title = "MSM - "+$('#samplename').text();
             init_editor(this.scrolltotop);
-
-            $('#'+sample_id+".nav-entry").css("background-color", "#BBBBFF");
+            $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
         },
         error: function() {
             error_dialog('Sample #'+sample_id+" does not exist or you do not have access to it.");

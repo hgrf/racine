@@ -36,8 +36,8 @@ $(document).ready(function() {
     // set up search field in header bar
     create_searchsample($('#navbar-search'));
 
-    $('#navbar-search').bind('typeahead:select', function(event, suggestion) {
-        //location.href="/sample/"+suggestion.id;
+    $('#navbar-search').bind('typeahead:selected', function(event, suggestion) {
+        $(this).typeahead('val', '');    // clear the search field
         load_sample(suggestion.id);
     });
 

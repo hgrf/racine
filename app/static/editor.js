@@ -160,6 +160,14 @@ function init_editor(scrolltotop) {
         });
     });
 
+    // catch internal links
+    $('a').click(function(event) {
+        if(typeof $(this).attr('href') == 'string' && $(this).attr('href').startsWith('/sample/')) {
+            event.preventDefault();
+            load_sample($(this).attr('href').split('/')[2]);
+        }
+    });
+
     // put lightbox link around images
     $('#sampledescription').find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+sample_id+'">'; });
     $('.actiondescription').find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+sample_id+'">'; });
@@ -230,7 +238,11 @@ function load_sample(id, pushstate, scrolltotop) {
                 window.history.pushState({"id": sample_id, "pageTitle": data.pageTitle}, "", "/sample/"+ sample_id);
             document.title = "MSM - "+$('#samplename').text();
             init_editor(this.scrolltotop);
-            $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
+            // highlight in navbar, if the navbar is already loaded
+            if($('#nav-entry'+sample_id).length) {
+                $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
+                show_in_navbar(sample_id, false);
+            }
         },
         error: function() {
             error_dialog('Sample #'+sample_id+" does not exist or you do not have access to it.");

@@ -108,19 +108,4 @@ not populated by JavaScript #}
     <script src="{{ url_for('static', filename='typeahead.js/typeahead.bundle.min.js') }}"></script>
     <script src="{{ url_for('static', filename='typeahead.js/substringmatcher.js') }}"></script>
     <script src="{{ url_for('static', filename='searchsample.js') }}"></script>
-    <script type="text/javascript" charset="utf-8">
-    $(document).ready(function() {
-        create_searchsample($('#navbar-search'));
-
-        $('#navbar-search').bind('typeahead:select', function(event, suggestion) {
-            location.href="/sample/"+suggestion.id;
-        });
-
-        $('#navbar-search').keypress(function(event) {
-            if (event.which == 13) {
-                location.href="/search?term="+$(this).val();
-            }
-        });
-    });
-    </script>
 {% endblock %}

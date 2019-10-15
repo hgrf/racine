@@ -97,7 +97,7 @@ function init_editor(scrolltotop) {
     });
 
     $('#showinnavigator').click(function() {
-        show_in_navbar(sample_id, true)
+        show_in_navbar(sample_id, true);
     });
 
     $('#scrolltobottom').click(function() {

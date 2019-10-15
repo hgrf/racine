@@ -32,4 +32,18 @@ $(document).ready(function() {
             $(this).addClass('active');
         }
     });
+
+    // set up search field in header bar
+    create_searchsample($('#navbar-search'));
+
+    $('#navbar-search').bind('typeahead:select', function(event, suggestion) {
+        //location.href="/sample/"+suggestion.id;
+        load_sample(suggestion.id);
+    });
+
+    $('#navbar-search').keypress(function(event) {
+        if (event.which == 13) {
+            location.href="/search?term="+$(this).val();
+        }
+    });
 });

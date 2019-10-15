@@ -208,7 +208,7 @@ function init_editor(scrolltotop) {
             data: { "actionid": actionid,
                     "swapid": swapid },
             success: function( data ) {
-                load_sample(sampleid);
+                load_sample(sampleid, false, false);
             }
         });
     });
@@ -222,8 +222,8 @@ function load_sample(id, pushstate, scrolltotop) {
     var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : true;
 
     // if currently viewing a sample (not welcome page) then change the navbar background to transparent before loading
-    // the new sample
-    if($('#sampleid').text() != "")
+    // the new sample (do not do this if the viewed sample is unchanged)
+    if($('#sampleid').text() !== "" && $('#sampleid').text() !== id)
         $('#nav-entry' + sample_id).css("background-color", "transparent");
 
     // load the sample data and re-initialise the editor
@@ -241,7 +241,8 @@ function load_sample(id, pushstate, scrolltotop) {
             // highlight in navbar, if the navbar is already loaded
             if($('#nav-entry'+sample_id).length) {
                 $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
-                show_in_navbar(sample_id, false);
+                if(scrolltotop)
+                    show_in_navbar(sample_id, false);
             }
         },
         error: function() {

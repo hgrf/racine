@@ -65,6 +65,11 @@ $(document).ready(function() {
             dragstart: function (event) {
                 event.dataTransfer.setData('sampleid', $(event.target).data('id'));
                 event.dataTransfer.setData('text/html', '<a href="/sample/' + $(event.target).data('id') + '">' + $(event.target).data('name') + '</a> ');
+            },
+            drop: function(event) {
+                // reset background color (but highlight if sample is active)
+                $(this).css("background-color", "transparent");
+                $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
             }
         });
 
@@ -74,19 +79,27 @@ $(document).ready(function() {
                 event.stopPropagation();
             },
             dragover: function(event) {
-                $(this).css("background-color", "#BBBBFF");
+                $(this).css("background-color", "#CCCCEE");
                 event.preventDefault();
                 event.stopPropagation();
             },
             dragleave: function(event) {
+                // reset background color (but highlight if sample is active)
                 $(this).css("background-color", "transparent");
+                $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
             },
             drop: function(event) {
                 var draggedId = event.dataTransfer.getData('sampleid');
                 var parentId = $(this).data('id');
                 event.preventDefault();
                 event.stopPropagation();
+
+                // reset background color (but highlight if sample is active)
+                $(this).css("background-color", "transparent");
+                $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
+
                 if(draggedId == parentId) return;
+
                 $.ajax({
                     url: "/changeparent",
                     type: "post",
@@ -113,8 +126,7 @@ $(document).ready(function() {
                             $( "#flashmessages" ).append(begin_flashmsg+data.error+end_flashmsg);
                         }
                     }
-                }); // what if we drag parent to child?
-                $(this).css("background-color", "transparent");
+                });
             }
         });
 

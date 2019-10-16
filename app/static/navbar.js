@@ -84,9 +84,9 @@ $(document).ready(function() {
             drop: function(event) {
                 var draggedId = event.dataTransfer.getData('sampleid');
                 var parentId = $(this).data('id');
-                if(draggedId == parentId) return;
                 event.preventDefault();
                 event.stopPropagation();
+                if(draggedId == parentId) return;
                 $.ajax({
                     url: "/changeparent",
                     type: "post",

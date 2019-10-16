@@ -31,36 +31,6 @@ var ckeditorconfig = {
 
 $.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer
 
-function show_in_navbar(id, flash) {
-    // make sure all parent samples are expanded in navbar
-    $('#nav-entry'+id).parents('.nav-children').collapse('show');
-
-    // scroll to the sample
-    scrollval = $('#nav-entry'+id).offset().top-$('#navbar').height();
-    if(scrollval != 0) {
-        $('div#sidebar')
-            .stop()
-            .animate({scrollTop: scrollval + $('div#sidebar').scrollTop()}, 1000);
-    }
-
-    if(flash) {
-        old_background = $('#nav-entry' + id).css("background-color");
-        // flash the sample
-        $('#nav-entry' + id)
-            .stop()
-            .delay(scrollval ? 1000 : 0)
-            .queue(function (next) {
-                $(this).css("background-color", "#FFFF9C");
-                next();
-            })
-            .delay(1000)
-            .queue(function (next) {
-                $(this).css("background-color", old_background);
-                next();
-            });
-    }
-}
-
 function init_editor(scrolltotop) {
     // define default values for arguments
     var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : true;

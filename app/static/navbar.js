@@ -183,3 +183,64 @@ $(document).ready(function() {
         $($target.data('target')).off('hide.bs.collapse');
     }
 });
+
+function scroll_to_sample(id, flash) {
+    var naventry = $('#nav-entry'+id);
+
+    if(!naventry.is(':visible')) {
+        console.error('cannot scroll to hidden sample');
+        return;
+    }
+
+    var top = naventry.offset().top-$('#navbar').height();
+    var isInView = top >= 0 && top+naventry.outerHeight() <= $('div#sidebar').outerHeight();
+    if(!isInView) {
+        $('div#sidebar')
+            .stop()
+            .animate({scrollTop: top + $('div#sidebar').scrollTop()}, 1000);
+    }
+    if(flash) {
+        var old_background = naventry.css("background-color");
+        // flash the sample
+        naventry
+            .stop()
+            .delay(isInView ? 0 : 1000)
+            .queue(function (next) {
+                $(this).css("background-color", "#FFFF9C");
+                next();
+            })
+            .delay(1000)
+            .queue(function (next) {
+                $(this).css("background-color", old_background);
+                next();
+            });
+    }
+}
+
+function show_in_navbar(id, flash) {
+    // make sure all parent samples are expanded in navbar
+    var naventry = $('#nav-entry'+id);
+    var collapsibles = naventry.parents('.nav-children');
+    var collapsed_counter = 0;
+
+    // for each collapsible parent check if it's collapsed and increase the counter accordingly, so that the autoscroll
+    // function is only activated when everything has finished expanding (so that the coordinates in scroll_to_sample
+    // are correctly calculated)
+    collapsibles.each(function() {
+        if($(this).attr('aria-expanded') !== 'true') {   // careful, it can be undefined instead of false, hence the notation
+            collapsed_counter++;
+            $(this).one('shown.bs.collapse', function() {
+                collapsed_counter--;
+                if(!collapsed_counter) {
+                    scroll_to_sample(id, flash);
+                }
+            });
+        }
+    });
+
+    if(collapsed_counter) {
+        collapsibles.collapse('show');
+    } else {
+        scroll_to_sample(id, flash);
+    }
+}

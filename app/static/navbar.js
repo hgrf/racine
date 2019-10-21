@@ -204,7 +204,7 @@ function scroll_to_sample(id, flash) {
         return;
     }
 
-    var top = naventry.offset().top-$('#navbar').height();
+    var top = naventry.offset().top-$('#navbar').height()-$('html, body').scrollTop();
     var isInView = top >= 0 && top+naventry.outerHeight() <= $('div#sidebar').outerHeight();
     if(!isInView) {
         $('div#sidebar')

@@ -76,7 +76,7 @@ function init_editor(scrolltotop) {
 
     $('#showparentactions').click(function() {
         showparentactions = !showparentactions; // toggle
-        load_sample($('#sampleid').text());
+        load_sample($('#sampleid').text(), false, false, false);
     });
 
     // handler for button that changes sample image

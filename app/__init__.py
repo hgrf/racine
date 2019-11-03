@@ -17,6 +17,7 @@ login_manager.login_view = 'auth.login'
 
 from smbinterface import SMBInterface   # has to be here, because it will import db and login_manager from this file
 smbinterface = SMBInterface()
+from usagestats import UsageStatisticsThread   # has to be here, because it will import db from this file
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -41,6 +42,9 @@ def create_app(config_name):
     app.register_blueprint(settings_blueprint, url_prefix='/settings')
     app.register_blueprint(profile_blueprint, url_prefix='/profile')
     app.register_blueprint(printdata_blueprint, url_prefix='/print')
+
+    # run usage statistics thread
+    UsageStatisticsThread(app)
 
     # look for plugins
     plugin_files = glob('plugins/*/*.py')

@@ -5,6 +5,12 @@ to keep track of their samples from any PC in a laboratory. The programme is a F
 central server on the local network of your research institute and that can be accessed from all other computers on the
 same network using the normal web browser (should be a recent browser though).
 
+# Disclaimer
+
+The developers take no responsibility for the loss or theft of data managed by this software.
+The software sends anonymous usage statistics to the developers, including the software version, the number of users,
+samples and actions stored in the database, the server uptime and the used/available disk space.
+
 # Installation of development server
 
 This programme should work an almost any platform (Linux, Windows, MacOS), but I only provide the installation
@@ -42,6 +48,8 @@ first set up the FLASK_CONFIG variable accordingly:
 This will also create the admin user that you will use for your first login (admin@admin.com, password is admin).
 
 You can update the details (user name, email and password) of the administrator in the "Profile" section (you will find the corresponding button on the top right after logging in). Also remember to set up an email account in the corresponding subsection of the "Settings" page.
+
+You can set up a site name for usage statistics by writing it into a file "usage_stats_site" in the MSM folder.
 
 You can start the development server by simply executing the "run script":
 

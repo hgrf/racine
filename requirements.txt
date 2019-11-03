@@ -1,6 +1,8 @@
 ## The following requirements were added by pip freeze:
 alembic==0.8.3
 blinker==1.4
+certifi==2019.9.11
+chardet==3.0.4
 dominate==2.1.16
 Flask==0.10.1
 Flask-Bootstrap==3.3.5.7
@@ -14,6 +16,7 @@ Flask-WTF==0.12
 gitdb==0.6.4
 GitPython==1.0.2
 gunicorn==19.4.5
+idna==2.8
 itsdangerous==0.24
 Jinja2==2.8
 Mako==1.0.3
@@ -23,7 +26,11 @@ Pillow==4.2.1
 pyasn1==0.1.9
 pysmb==1.1.17
 python-editor==0.5
+requests==2.22.0
+smmap==0.9.0
 SQLAlchemy==1.0.10
+urllib3==1.25.6
+uuid==1.30
 visitor==0.1.2
 Werkzeug==0.11.2
 WTForms==2.0.2

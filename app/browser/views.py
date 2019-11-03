@@ -7,10 +7,11 @@ import os
 from . import browser
 import io
 import hashlib
+from xml.etree import ElementTree as ElementTree
 from .. import smbinterface
 from PIL import Image
 
-IMAGE_EXTENSIONS = set(['.png', '.jpg', '.jpeg', '.bmp', '.tif', '.tiff'])
+IMAGE_EXTENSIONS = set(['.png', '.jpg', '.jpeg', '.bmp', '.tif', '.tiff', '.svg'])
 CONVERSION_REQUIRED = set(['.tif', '.tiff'])
 THUMBNAIL_SIZE = [120, 120]
 
@@ -153,6 +154,31 @@ def store_image(file_obj, source, ext):
         return None, "File could not be read.", None
     if not ext in IMAGE_EXTENSIONS:
         return None, "File extension is invalid.", None
+
+    # hack for SVG files (since we cannot open them with PIL)
+    # see also:
+    # https://stackoverflow.com/questions/24316032/can-pil-be-used-to-get-dimensions-of-an-svg-file
+    # https://graphicdesign.stackexchange.com/questions/71568/is-there-any-concept-of-size-in-an-svg
+    # http://osgeo-org.1560.x6.nabble.com/Get-size-of-SVG-in-Python-td5273032.html
+    if ext == '.svg':
+        def_dims = (800, 600)
+        tree = ElementTree.parse(file_obj)
+        attrib = tree.getroot().attrib
+        if 'height' in attrib and 'width' in attrib:
+            width = attrib["width"]
+            height = attrib["height"]
+            # remove unit (mm...) from these values
+            try:
+                width, height = strip_unit(width), strip_unit(height)
+                height = int(height/width*800)
+                width = 800
+            except Exception:
+                width, height = def_dims
+        else:
+            width, height = def_dims
+        file_obj.seek(0)        # return to beginning of file after parsing
+
+        return store_file(file_obj, source, ext, 'img')+((width, height),)
 
     # check if image can be opened and if needs to be converted
     try:
@@ -407,3 +433,11 @@ def inspectresource():
             break
 
     return jsonify(code=0, resourceid=resource.id, userfolder=userfolder, samplefolder=samplefolder)
+
+
+def strip_unit(s):
+    numeric = '0123456789-.'
+    for i, c in enumerate(s):
+        if c not in numeric:
+            break
+    return float(s[:i])

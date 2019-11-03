@@ -6,11 +6,11 @@ from config import config
 from glob import glob
 import imp
 
-bootstrap = Bootstrap()
-db = SQLAlchemy()
-
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 plugins = []
 
+bootstrap = Bootstrap()
+db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
@@ -19,7 +19,6 @@ from smbinterface import SMBInterface   # has to be here, because it will import
 smbinterface = SMBInterface()
 from usagestats import UsageStatisticsThread   # has to be here, because it will import db from this file
 
-SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 def create_app(config_name):
     app = Flask(__name__)

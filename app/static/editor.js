@@ -249,6 +249,7 @@ $(document).ready(function() {
             url: "/welcome",
             success: function(data) {
                 $("#editor-frame").html(data);
+                $(document).trigger("welcome_initialised");
             }
         });
     } else {

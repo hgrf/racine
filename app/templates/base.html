@@ -31,6 +31,17 @@ not populated by JavaScript #}
     <link rel="stylesheet" href="{{url_for('static', filename='typeahead.css')}}">
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
+    <style>
+    div.sample {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    div.sample:hover {
+        background-color: #CCCCEE;
+        cursor: pointer;"
+    }
+    </style>
 {% endblock %}
 
 {% block navbar %}
@@ -108,4 +119,16 @@ not populated by JavaScript #}
     <script src="{{ url_for('static', filename='typeahead.js/typeahead.bundle.min.js') }}"></script>
     <script src="{{ url_for('static', filename='typeahead.js/substringmatcher.js') }}"></script>
     <script src="{{ url_for('static', filename='searchsample.js') }}"></script>
+    <script type="text/javascript" charset="utf-8">
+    $(function() {
+        function make_samples_clickable() {
+            $('div.sample').click(function(event) {
+                location.href = '/sample/'+$(this).data('id');
+            });
+        }
+
+        $(document).ready(make_samples_clickable); // e.g. for searchresults.html
+        $(document).on("welcome_initialised", make_samples_clickable); // for the welcome page
+    });
+    </script>
 {% endblock %}

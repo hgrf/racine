@@ -10,6 +10,7 @@ import hashlib
 from xml.etree import ElementTree as ElementTree
 from .. import smbinterface
 from PIL import Image
+import urllib
 
 IMAGE_EXTENSIONS = set(['.png', '.jpg', '.jpeg', '.bmp', '.tif', '.tiff', '.svg'])
 CONVERSION_REQUIRED = set(['.tif', '.tiff'])
@@ -290,12 +291,18 @@ def retrieve_smb_image(path):
 @browser.route('/<path:smb_path>')
 @login_required
 def imagebrowser(smb_path):
+    browser_history = request.cookies.get('browser_history')
+    if browser_history is None or browser_history == '':
+        browser_history = []
+    else:
+        browser_history = [urllib.unquote(item) for item in browser_history.split(',')]
+
     # process address
     resource, path_on_server = smbinterface.process_smb_path(smb_path)
 
     if resource is None:
         # list resources
-        return render_template('browser.html', resources=SMBResource.query.all())
+        return render_template('browser.html', resources=SMBResource.query.all(), browser_history=browser_history)
     else:
         # list files and folders in current path
         files = []
@@ -391,6 +398,20 @@ def savefromsmb():
         return jsonify(code=0, uploadurl=uploadurl)
     else:
         return jsonify(code=1, message=uploadurl)
+
+@browser.route('/inspectpath', methods=['POST'])
+@login_required
+def inspectpath():
+    # TODO: smbinterface.list_path should clearly communicate why it could not list the path, the following is more of
+    # a workaround
+    try:
+        listpath = smbinterface.list_path(request.form.get('smbpath'))
+        if listpath is None:
+            return jsonify(code=1, error='noconnection')
+        else:
+            return jsonify(code=0)
+    except Exception:
+        return jsonify(code=1, error='notfound')
 
 
 @browser.route('/inspectresource', methods=['POST'])

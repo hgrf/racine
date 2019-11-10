@@ -11,7 +11,7 @@
 .resourcerow {
     clear:both;
 }
-.folder, .resource {
+.folder, .resource, .historyitem {
     padding-left:48px;
     padding-top:10px;
     position:relative;
@@ -19,26 +19,24 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.resource {
+.resource, .historyitem {
     padding-left:56px;
     margin-bottom:10px;
+    margin-right: 30px;
+    float: left;
 }
 .shortcut {
     width: 48px;
     height: 48px;
 }
-.resource {
-    margin-right: 30px;
-    float: left;
-}
-.folder img, .resource img {
+.folder img, .resource img, .historyitem img {
     position:absolute;
     left:0px;
     top:0px;
     width: 48px;
     height: 48px;
 }
-.folder:hover, .resource.available:hover, .shortcut:hover {
+.folder:hover, .resource.available:hover, .historyitem.available:hover, .shortcut:hover {
     cursor:pointer;
     background-color: #CCCCEE;
 }

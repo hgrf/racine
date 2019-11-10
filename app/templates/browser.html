@@ -24,7 +24,20 @@
             </div>
             <hr>
         {% endif %}
+        {% if browser_history %}
+        <div style="margin-bottom:20px"><strong>Previous locations:</strong></div>
+        {% for item in browser_history %}
+            <div class="resourcerow">
+                <div class="historyitem" data-url="{{ item }}" data-id="historyitem{{ loop.index }}" id="historyitem{{ loop.index }}">
+                    <img src="/static/images/loader.gif">
+                    {{ item }}
+                </div>
+            </div>
+        {% endfor %}
+        <div style="margin-bottom:20px;margin-top:30px;clear: both;"><strong>Network shares:</strong></div>
+        {% else %}
         <div style="margin-bottom:20px"><strong>Network shares:</strong></div>
+        {% endif %}
         {% for resource in resources %}
             <div class="resourcerow">
                 <div class="resource" data-url="{{ resource.name }}" data-id="{{ resource.id }}" id="resource{{ resource.id }}">
@@ -38,6 +51,7 @@
         {% endfor %}
     {% else %}
         {# Display the folders and files in the current path #}
+        <div style="display:none" id="smbpath">{{ smb_path }}</div>
         <div style="margin-bottom:20px"><strong>Path: </strong>{{ smb_path }}</div>
         <div>
             <div class="folders">

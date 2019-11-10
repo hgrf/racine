@@ -81,7 +81,11 @@ function init_browser() {
             alert('Please choose a file with a valid extension.');
             return;
         }
+        // add this path to the browser history
         add_to_browser_history($('div#smbpath').text());
+        // show "activity" overlay
+        $('#overlay').css("display", "block");
+        // tell the server to store the file
         $.ajax({
             url: "/browser/savefromsmb",
             type: "post",
@@ -91,7 +95,7 @@ function init_browser() {
                     alert("Error: "+data.message);
                 }
                 else {
-                    terminate_browser(data.uploadurl)
+                    terminate_browser(data.uploadurl);
                 }
             }
         });

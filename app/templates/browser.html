@@ -8,6 +8,9 @@
 {% block title %}Browser{% endblock %}
 
 {% block content %}
+<div id="overlay">
+  <div id="text">Saving image...</div>
+</div>
 <div id="browser-frame">
     {% if smb_path is not defined or smb_path == '' %}
         {# Display the upload section and the resource list #}

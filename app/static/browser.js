@@ -97,6 +97,9 @@ function init_browser() {
         });
     });
 
+    // TODO: note that the functionality of inpectpath and inspectresource could be easily combined and the following
+    // code could be reduced a lot by treating historyitem, resource and shortcut all the same way...
+
     // check for each history item if it is available
     $('.historyitem').each(function(index, element) {
         var historyitemdiv = $(this);

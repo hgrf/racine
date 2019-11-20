@@ -10,6 +10,8 @@ from config import basedir
 from flask import current_app as app
 from ..email import send_mail, read_mailconfig
 import os
+from .. import plugins
+
 
 # see http://flask.pocoo.org/snippets/67/
 def shutdown_server():
@@ -146,7 +148,11 @@ def revision():
     except Exception as inst:
         app.logger.error("Could not retrieve remote git information:" + str(type(inst)) + str(inst.args))
 
-    return render_template('settings/revision.html', local_rev=local_revision, remote_rev=remote_revision, recent_changes=recent_changes)
+    return render_template('settings/revision.html',
+                           local_rev=local_revision,
+                           remote_rev=remote_revision,
+                           recent_changes=recent_changes,
+                           plugins=plugins)
 
 
 ### two helper functions for the settings/uploads page

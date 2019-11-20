@@ -8,5 +8,7 @@ msm.log
 venv/*
 # ignore PyCharm specific files
 .idea/*
+# ignore VSCode specific files
+.vscode/*
 # ignore plugins folder
 /plugins

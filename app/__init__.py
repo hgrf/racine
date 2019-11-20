@@ -6,19 +6,19 @@ from config import config
 from glob import glob
 import imp
 
-bootstrap = Bootstrap()
-db = SQLAlchemy()
-
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 plugins = []
 
+bootstrap = Bootstrap()
+db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
 
 from smbinterface import SMBInterface   # has to be here, because it will import db and login_manager from this file
 smbinterface = SMBInterface()
+from usagestats import UsageStatisticsThread   # has to be here, because it will import db from this file
 
-SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -42,13 +42,16 @@ def create_app(config_name):
     app.register_blueprint(profile_blueprint, url_prefix='/profile')
     app.register_blueprint(printdata_blueprint, url_prefix='/print')
 
+    # run usage statistics thread
+    UsageStatisticsThread(app)
+
     # look for plugins
     plugin_files = glob('plugins/*/*.py')
-    print "Plugins found: ", plugin_files
     for f in plugin_files:
         p = imp.load_source(f[8:-3], f)
         if not hasattr(p, 'display') or not hasattr(p, 'title'):
-            print "Uncompatible plugin: ", f[8:-3]
+            # TODO: report this some other way, e.g. raise Exception or log warning...
+            print "Incompatible plugin: ", f[8:-3]
         plugins.append(p)
 
     return app

@@ -7,10 +7,13 @@ import os
 from . import browser
 import io
 import hashlib
+from xml.etree import ElementTree as ElementTree
 from .. import smbinterface
 from PIL import Image
+import urllib
+from ..asyncapi import async_api
 
-IMAGE_EXTENSIONS = set(['.png', '.jpg', '.jpeg', '.bmp', '.tif', '.tiff'])
+IMAGE_EXTENSIONS = set(['.png', '.jpg', '.jpeg', '.bmp', '.tif', '.tiff', '.svg'])
 CONVERSION_REQUIRED = set(['.tif', '.tiff'])
 THUMBNAIL_SIZE = [120, 120]
 
@@ -154,6 +157,31 @@ def store_image(file_obj, source, ext):
     if not ext in IMAGE_EXTENSIONS:
         return None, "File extension is invalid.", None
 
+    # hack for SVG files (since we cannot open them with PIL)
+    # see also:
+    # https://stackoverflow.com/questions/24316032/can-pil-be-used-to-get-dimensions-of-an-svg-file
+    # https://graphicdesign.stackexchange.com/questions/71568/is-there-any-concept-of-size-in-an-svg
+    # http://osgeo-org.1560.x6.nabble.com/Get-size-of-SVG-in-Python-td5273032.html
+    if ext == '.svg':
+        def_dims = (800, 600)
+        tree = ElementTree.parse(file_obj)
+        attrib = tree.getroot().attrib
+        if 'height' in attrib and 'width' in attrib:
+            width = attrib["width"]
+            height = attrib["height"]
+            # remove unit (mm...) from these values
+            try:
+                width, height = strip_unit(width), strip_unit(height)
+                height = int(height/width*800)
+                width = 800
+            except Exception:
+                width, height = def_dims
+        else:
+            width, height = def_dims
+        file_obj.seek(0)        # return to beginning of file after parsing
+
+        return store_file(file_obj, source, ext, 'img')+((width, height),)
+
     # check if image can be opened and if needs to be converted
     try:
         image = Image.open(file_obj)
@@ -264,12 +292,18 @@ def retrieve_smb_image(path):
 @browser.route('/<path:smb_path>')
 @login_required
 def imagebrowser(smb_path):
+    browser_history = request.cookies.get('browser_history')
+    if browser_history is None or browser_history == '':
+        browser_history = []
+    else:
+        browser_history = [urllib.unquote(item) for item in browser_history.split(',')]
+
     # process address
     resource, path_on_server = smbinterface.process_smb_path(smb_path)
 
     if resource is None:
         # list resources
-        return render_template('browser.html', resources=SMBResource.query.all())
+        return render_template('browser.html', resources=SMBResource.query.all(), browser_history=browser_history)
     else:
         # list files and folders in current path
         files = []
@@ -367,8 +401,28 @@ def savefromsmb():
         return jsonify(code=1, message=uploadurl)
 
 
+@browser.route('/inspectpath', methods=['POST'])
+@login_required
+@async_api
+def inspectpath():
+    # TODO:
+    # smbinterface.list_path should clearly communicate why it could not list the path,
+    # the following is more of a workaround
+    smbpath = request.form.get('smbpath')       # NB: do this outside the try environment, so that the ClientDisconnect
+                                                # exception gets caught in asyncapi.py
+    try:
+        listpath = smbinterface.list_path(smbpath)
+        if listpath is None:
+            return jsonify(code=1, error='noconnection')
+        else:
+            return jsonify(code=0)
+    except Exception:
+        return jsonify(code=1, error='notfound')
+
+
 @browser.route('/inspectresource', methods=['POST'])
 @login_required
+@async_api
 def inspectresource():
     # if sample ID is provided, look up sample
     if request.form.get('sampleid') is not None:
@@ -407,3 +461,11 @@ def inspectresource():
             break
 
     return jsonify(code=0, resourceid=resource.id, userfolder=userfolder, samplefolder=samplefolder)
+
+
+def strip_unit(s):
+    numeric = '0123456789-.'
+    for i, c in enumerate(s):
+        if c not in numeric:
+            break
+    return float(s[:i])

@@ -5,9 +5,41 @@ $(document).ready(function() {
     // default load with order by ID and hide archived samples
     load_navbar(order, false);
 
-    function init_navbar() {
+    function init_navbar(scrolltocurrent) {
+        // define default values for arguments
+        var scrolltocurrent = typeof scrolltocurrent !== 'undefined' ? scrolltocurrent : true;
+
+        // make sure the current sample is highlighted in the navbar (this is redundant in editor.js, but we need to do
+        // it here too if editor.js is executed before navbar.js
+        if(typeof sample_id !== 'undefined') {
+            $('#nav-entry' + sample_id).css("background-color", "#BBBBFF");
+            if(scrolltocurrent)
+                show_in_navbar(sample_id, false);
+        }
+
+        // keep track of CTRL key, so that double click event can open sample in new window if CTRL is held
+        $(document).keydown(function(event){
+            if(event.which=="17")
+                ctrlIsPressed = true;
+        });
+
+        $(document).keyup(function(event){
+            if(event.which=="17")
+                ctrlIsPressed = false;
+        });
+
+        var ctrlIsPressed = false;
+
         // initialise sample navigation bar double click event
         $('.nav-entry').dblclick(function (event) {
+            event.preventDefault();
+
+            // if CTRL is pressed, open sample in a new tab
+            if(ctrlIsPressed) {
+                window.open('/sample/' + $(this).data('id'));
+                return;
+            }
+
             // use the before_unload_handler function in editor.js to check if any CKEditor is being edited
             // if yes, ask the user if he really wants to load a different sample
             confirm_message = before_unload_handler(0);
@@ -19,7 +51,6 @@ $(document).ready(function() {
                 load_sample($(this).data('id'));
             }
             mobile_hide_sidebar();   // on the small screen, hide the sidebar after a sample has been selected
-            event.preventDefault();
         });
 
         // add glyphicons to expandable items in the navbar
@@ -34,6 +65,11 @@ $(document).ready(function() {
             dragstart: function (event) {
                 event.dataTransfer.setData('sampleid', $(event.target).data('id'));
                 event.dataTransfer.setData('text/html', '<a href="/sample/' + $(event.target).data('id') + '">' + $(event.target).data('name') + '</a> ');
+            },
+            drop: function(event) {
+                // reset background color (but highlight if sample is active)
+                $(this).css("background-color", "transparent");
+                $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
             }
         });
 
@@ -43,19 +79,27 @@ $(document).ready(function() {
                 event.stopPropagation();
             },
             dragover: function(event) {
-                $(this).css("background-color", "#BBBBFF");
+                $(this).css("background-color", "#CCCCEE");
                 event.preventDefault();
                 event.stopPropagation();
             },
             dragleave: function(event) {
+                // reset background color (but highlight if sample is active)
                 $(this).css("background-color", "transparent");
+                $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
             },
             drop: function(event) {
                 var draggedId = event.dataTransfer.getData('sampleid');
                 var parentId = $(this).data('id');
-                if(draggedId == parentId) return;
                 event.preventDefault();
                 event.stopPropagation();
+
+                // reset background color (but highlight if sample is active)
+                $(this).css("background-color", "transparent");
+                $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
+
+                if(draggedId == parentId) return;
+
                 $.ajax({
                     url: "/changeparent",
                     type: "post",
@@ -82,8 +126,7 @@ $(document).ready(function() {
                             $( "#flashmessages" ).append(begin_flashmsg+data.error+end_flashmsg);
                         }
                     }
-                }); // what if we drag parent to child?
-                $(this).css("background-color", "transparent");
+                });
             }
         });
 
@@ -91,13 +134,18 @@ $(document).ready(function() {
            location.href = '/loginas?userid='+$(this).data('userid');
         });
 
-        $('.navbar-togglearchived').click(function(event) { load_navbar(order, !showarchived); });
-        $('.navbar-sort-az').click(function(event) { load_navbar('name', showarchived); });
-        $('.navbar-sort-id').click(function(event) { load_navbar('id', showarchived); });
-        $('.navbar-sort-lastaction').click(function(event) { load_navbar('last_action_date', showarchived); });
+        $('.navbar-togglearchived').click(function(event) { load_navbar(order, !showarchived, false); });
+        $('.navbar-sort-az').click(function(event) { load_navbar('name', showarchived, false); });
+        $('.navbar-sort-id').click(function(event) { load_navbar('id', showarchived, false); });
+        $('.navbar-sort-lastaction').click(function(event) {
+            load_navbar('last_action_date', showarchived, false);
+        });
     }
 
-    function load_navbar(_order, _showarchived) {
+    function load_navbar(_order, _showarchived, scrolltocurrent) {
+        // define default values for arguments
+        var scrolltocurrent = typeof scrolltocurrent !== 'undefined' ? scrolltocurrent : true;
+
         order = _order;
         showarchived = _showarchived;
 
@@ -110,7 +158,7 @@ $(document).ready(function() {
                 $('#sidebar').html(data);
 
                 // set up handlers etc.
-                init_navbar();
+                init_navbar(scrolltocurrent);
             }
         });
     }
@@ -147,3 +195,64 @@ $(document).ready(function() {
         $($target.data('target')).off('hide.bs.collapse');
     }
 });
+
+function scroll_to_sample(id, flash) {
+    var naventry = $('#nav-entry'+id);
+
+    if(!naventry.is(':visible')) {
+        console.error('cannot scroll to hidden sample');
+        return;
+    }
+
+    var top = naventry.offset().top-$('#navbar').height()-$('html, body').scrollTop();
+    var isInView = top >= 0 && top+naventry.outerHeight() <= $('div#sidebar').outerHeight();
+    if(!isInView) {
+        $('div#sidebar')
+            .stop()
+            .animate({scrollTop: top + $('div#sidebar').scrollTop()}, 1000);
+    }
+    if(flash) {
+        var old_background = naventry.css("background-color");
+        // flash the sample
+        naventry
+            .stop()
+            .delay(isInView ? 0 : 1000)
+            .queue(function (next) {
+                $(this).css("background-color", "#FFFF9C");
+                next();
+            })
+            .delay(1000)
+            .queue(function (next) {
+                $(this).css("background-color", old_background);
+                next();
+            });
+    }
+}
+
+function show_in_navbar(id, flash) {
+    // make sure all parent samples are expanded in navbar
+    var naventry = $('#nav-entry'+id);
+    var collapsibles = naventry.parents('.nav-children');
+    var collapsed_counter = 0;
+
+    // for each collapsible parent check if it's collapsed and increase the counter accordingly, so that the autoscroll
+    // function is only activated when everything has finished expanding (so that the coordinates in scroll_to_sample
+    // are correctly calculated)
+    collapsibles.each(function() {
+        if($(this).attr('aria-expanded') !== 'true') {   // careful, it can be undefined instead of false, hence the notation
+            collapsed_counter++;
+            $(this).one('shown.bs.collapse', function() {
+                collapsed_counter--;
+                if(!collapsed_counter) {
+                    scroll_to_sample(id, flash);
+                }
+            });
+        }
+    });
+
+    if(collapsed_counter) {
+        collapsibles.collapse('show');
+    } else {
+        scroll_to_sample(id, flash);
+    }
+}

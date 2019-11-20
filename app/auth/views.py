@@ -57,6 +57,8 @@ def password_reset_request():
                 flash('Email could not be sent, please contact the administrator.')
             else:
                 flash('An email with instructions to reset your password has been sent to you.')
+        else:
+            flash('That email address could not be found in the database.')
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password.html', form=form)
 

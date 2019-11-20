@@ -1,3 +1,27 @@
+#overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 2;
+  cursor: pointer;
+}
+
+#text{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 50px;
+  color: white;
+  transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+}
+
 .folders {
     display:inline-block;
     vertical-align:top;
@@ -11,7 +35,7 @@
 .resourcerow {
     clear:both;
 }
-.folder, .resource {
+.folder, .resource, .historyitem {
     padding-left:48px;
     padding-top:10px;
     position:relative;
@@ -19,26 +43,28 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.resource {
+.resource, .historyitem {
     padding-left:56px;
     margin-bottom:10px;
+    margin-right: 30px;
+    float: left;
 }
 .shortcut {
     width: 48px;
     height: 48px;
 }
-.resource {
-    margin-right: 30px;
-    float: left;
-}
-.folder img, .resource img {
+.folder img, .resource img, .historyitem img {
     position:absolute;
     left:0px;
     top:0px;
     width: 48px;
     height: 48px;
 }
-.folder:hover, .resource.available:hover, .shortcut:hover {
+.shortcuts img {
+    width: 48px;
+    height: 48px;
+}
+.folder:hover, .resource.available:hover, .historyitem.available:hover, .shortcut:hover {
     cursor:pointer;
     background-color: #CCCCEE;
 }

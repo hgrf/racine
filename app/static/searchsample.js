@@ -38,7 +38,11 @@ function create_searchsample(searchfield) {
     });
 }
 
-function create_selectsample(searchfield, hiddenfield, valid=true, placeholder="None") {
+function create_selectsample(searchfield, hiddenfield, valid, placeholder) {
+    // default values
+    valid = valid || true;
+    placeholder = placeholder || "None";
+
     searchfield.wrap("<div class=\"input-group\"></div>");
     searchfield.attr("placeholder", placeholder)
 

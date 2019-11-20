@@ -3,6 +3,35 @@
     <h2>{{ p.title }}</h2>
     {{ p.display()|safe }}
 {% endfor %}
+<h2>Disk space</h2>
+{{ totuploadvol|filesizeformat }} out of {{ (availablevol+totuploadvol)|filesizeformat }} occupied. This only takes into
+account uploads, since the database size is typically negligible.
+<div class="progress" style="width: 200px;">
+<div class="progress-bar" role="progressbar" style="width:{{ totuploadvol/(totuploadvol+availablevol)*100 }}%;color:#000000";></div>
+</div>
+<h2>Recent activity (actions added in the last 7 days):</h2>
+<table>
+{% for n in newactions %}
+    {% if n[1] %}
+        <tr>
+            <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;">
+                <div class="sample" data-id="{{ n[0].id }}">
+                    <img src="/static/images/sample.png" width="40">
+                    {{ n[0].name }}
+                </div>
+            </td>
+            <td style="padding-top: 10px;">
+                <div class="progress" style="width: 200px">
+                    <div class="progress-bar" role="progressbar" style="width:{{ n[1]/maxcount*100 }}%">
+                        {{ n[1] }}
+                    </div>
+                </div>
+            </td>
+        </tr>
+    {% endif %}
+{% endfor %}
+</table>
+{# information only for the administrator #}
 {% if current_user.is_admin %}
     <h2>Active SMB connections</h2>
     <table>
@@ -50,20 +79,3 @@
     {% endfor %}
     </table>
 {% endif %}
-<h2>Recent activity (actions added in the last 7 days):</h2>
-<table>
-{% for n in newactions %}
-    {% if n[1] %}
-        <tr>
-            <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="/static/images/sample.png" width="40">{{ n[0].name }}</td>
-            <td style="padding-top: 10px;">
-                <div class="progress" style="width: 200px">
-                    <div class="progress-bar" role="progressbar" style="width:{{ n[1]/maxcount*100 }}%">
-                        {{ n[1] }}
-                    </div>
-                </div>
-            </td>
-        </tr>
-    {% endif %}
-{% endfor %}
-</table>

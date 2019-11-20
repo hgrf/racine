@@ -31,8 +31,15 @@ var ckeditorconfig = {
 
 $.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer
 
-function init_editor() {
+function init_editor(scrolltotop) {
+    // define default values for arguments
+    var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : true;
+  
     sample_id = $('#sampleid').text();
+
+    // scroll to top
+    if(scrolltotop)
+        $('html, body').scrollTop(0);
 
     // handler for matrix view button
     $('#matrixviewbutton').click(function() {
@@ -59,9 +66,17 @@ function init_editor() {
         });
     });
 
+    $('#showinnavigator').click(function() {
+        show_in_navbar(sample_id, true);
+    });
+
+    $('#scrolltobottom').click(function() {
+       $('html, body').stop().animate({scrollTop: $('div#editor-frame').height()}, 1000);
+    });
+
     $('#showparentactions').click(function() {
         showparentactions = !showparentactions; // toggle
-        load_sample($('#sampleid').text());
+        load_sample($('#sampleid').text(), false, false, false);
     });
 
     // handler for button that changes sample image
@@ -107,12 +122,22 @@ function init_editor() {
                             "expired. Try submitting again.");
                     });
                 }
-                load_sample(sample_id);
+                load_sample(sample_id, false, false, false);
             },
             error: function( jqXHR, textStatus ) {
                 error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
             }
         });
+    });
+
+    // catch internal links
+    $('a').click(function(event) {
+        // N.B. the detection of internal links does not work with Internet Explorer because the href attribute
+        // contains the entire address
+        if(typeof $(this).attr('href') == 'string' && $(this).attr('href').startsWith('/sample/')) {
+            event.preventDefault();
+            load_sample($(this).attr('href').split('/')[2]);
+        }
     });
 
     // put lightbox link around images
@@ -155,7 +180,7 @@ function init_editor() {
             data: { "actionid": actionid,
                     "swapid": swapid },
             success: function( data ) {
-                load_sample(sampleid);
+                load_sample(sampleid, false, false, false);
             }
         });
     });
@@ -163,27 +188,39 @@ function init_editor() {
     $(document).trigger("editor_initialised");
 }
 
-function load_sample(id, pushstate) {
+function load_sample(id, pushstate, scrolltotop, scrollnavbar) {
+    // define default values for arguments
     var pushstate = typeof pushstate !== 'undefined' ?  pushstate : true;
+    var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : true;
+    var scrollnavbar = typeof scrollnavbar !== 'undefined' ? scrollnavbar : true;
 
     // if currently viewing a sample (not welcome page) then change the navbar background to transparent before loading
-    // the new sample
-    if($('#sampleid').text() != "")
-        $('#' + sample_id + ".nav-entry").css("background-color", "transparent");
+    // the new sample (do not do this if the viewed sample is unchanged)
+    if($('#sampleid').text() !== "" && $('#sampleid').text() !== id)
+        $('#nav-entry' + sample_id).css("background-color", "transparent");
 
     // load the sample data and re-initialise the editor
     $.ajax({
         url: "/editor/"+id+(showparentactions ? "?showparentactions=1" : ""),
         pushstate: pushstate,
+        scrolltotop: scrolltotop,
+        scrollnavbar: scrollnavbar,
         success: function( data ) {
             $( "#editor-frame" ).html(data);
             sample_id = $('#sampleid').text();
             if(this.pushstate)
                 window.history.pushState({"id": sample_id, "pageTitle": data.pageTitle}, "", "/sample/"+ sample_id);
             document.title = "MSM - "+$('#samplename').text();
-            init_editor();
-
-            $('#'+sample_id+".nav-entry").css("background-color", "#BBBBFF");
+            init_editor(this.scrolltotop);
+            // highlight in navbar, if the navbar is already loaded
+            if($('#nav-entry'+sample_id).length) {
+                $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
+                if(scrollnavbar)
+                    show_in_navbar(sample_id, false);
+            }
+        },
+        error: function() {
+            error_dialog('Sample #'+sample_id+" does not exist or you do not have access to it.");
         }
     });
 }
@@ -201,7 +238,7 @@ function before_unload_handler(e) {
 $(document).ready(function() {
     window.addEventListener("popstate", function(e) {
         if(e.state != null)
-            load_sample(e.state.id, false);
+            load_sample(e.state.id, false, false, true);
         else
             location.href = "/";
     });
@@ -212,10 +249,11 @@ $(document).ready(function() {
             url: "/welcome",
             success: function(data) {
                 $("#editor-frame").html(data);
+                $(document).trigger("welcome_initialised");
             }
         });
     } else {
-        load_sample(sample);
+        load_sample(sample, false);
     }
 
     // add window unload handler (which asks the user to confirm leaving the page when one of the CKEditor instances

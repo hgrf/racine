@@ -41,7 +41,7 @@
                     field.html(choice[json.value]);
                     // display error message if error occured
                     if(json.code)
-                        error_dialog(data.message);
+                        error_dialog(json.message);
                     field.trigger('editableupdate', json);
                     field.trigger('editabledone');
                 },
@@ -167,6 +167,14 @@
 
                 // typeset all equations in this field
                 MathJax.Hub && MathJax.Hub.Queue(["Typeset",MathJax.Hub,field.get()]);
+
+                // catch internal links
+                field.find('a').click(function(event) {
+                    if(typeof $(this).attr('href') == 'string' && $(this).attr('href').startsWith('/sample/')) {
+                        event.preventDefault();
+                        load_sample($(this).attr('href').split('/')[2]);
+                    }
+                });
 
                 // put back lightbox link around images
                 field.find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+sample_id+'">'; });

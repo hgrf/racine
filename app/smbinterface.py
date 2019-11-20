@@ -147,8 +147,8 @@ class SMBInterface:
         # set up SMB connection
         try:
             server_ip = socket.gethostbyname(resource.serveraddr)
-        except:  # if host unknown
-            return None, False
+        except Exception:  # if host unknown
+            return None
         # need to convert unicode -> string apparently...
         conn = SMBConnection(str(resource.userid), str(resource.password),
                              self.client_machine_name, str(resource.servername), use_ntlm_v2=True)

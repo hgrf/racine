@@ -1,0 +1,19 @@
+"saved commit message" => TODO: check if this still applies and ideally sort out issues
+======================
+
+Bernardo Castilho's polyfill works, but it would be (much) better if
+there were a drag delay / minimum distance for mobile
+
+dropping in new action CKEditor does not work on mobile, but it does
+in the inline editor (on PC it works either way)
+
+the alternative is to switch completely to the jQuery UI drag and drop
+combined with jQuery UI Touch Punch, but then I will have to change a
+lot of things, including the behaviour when we cancel dragging (put
+item back where it was), the "phantom item" etc.
+
+we can also say we do not implement drag and drop on tablet, but we need
+a way to change samples parent, THIS WOULD BE USEFUL either way, in
+case dragging and dropping becomes annoying
+
+how about the automatic link creation in this case?

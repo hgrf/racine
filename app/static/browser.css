@@ -60,6 +60,10 @@
     width: 48px;
     height: 48px;
 }
+.shortcuts img {
+    width: 48px;
+    height: 48px;
+}
 .folder:hover, .resource.available:hover, .historyitem.available:hover, .shortcut:hover {
     cursor:pointer;
     background-color: #CCCCEE;

@@ -1,0 +1,56 @@
+archive-extract-2.ico / oxygen / CC-BY-SA 3.0 or LGPL
+archive-insert-2.ico / oxygen / CC-BY-SA 3.0 or LGPL
+edit-delete-2.png / gnome / GPLv2
+edit-rename.png / oxygen / CC-BY-SA 3.0 or LGPL
+applications-science-3.png / oxygen / CC-BY-SA 3.0 or LGPL
+crystal-style/file.png / crystal / LGPL-2.1
+folder-3.png / nuovext2 / LGPL-2.1
+insert-image-2.png / gnome / GPLv2
+network-nfs-2.png / nuvola / LGPL-2.1
+go-up-10.png / nuovext2 / LGPL-2.1
+kuser.png / intrigue / GPLv2
+
+-----------------
+loader.gif ???
+matrixview.png ???
+who is nuovext2 ???
+-----------------
+
+
+************************************************************************
+Oxygen Icons 4.3.1 (KDE) (oxygen)
+	link: http://www.oxygen-icons.org/
+	license: Dual: CC-BY-SA 3.0 or LGPL
+	License link: http://creativecommons.org/licenses/by-sa/3.0/
+			http://creativecommons.org/licenses/LGPL/2.1/
+	formats: svg, png
+	subdirectory: open_icon_library-devel/icons/oxygen
+	
+GNOME Icon Theme 2.26.0 (gnome)
+	link: http://art.gnome.org/
+	license: GPLv2 
+	license link: http://creativecommons.org/licenses/GPL/2.0/
+	formats: svg, png
+	subdirectories: open_icon_library-devel/icons/gnome
+					open_icon_library-devel/icons_by_subject/gnome
+					
+Crystal Project (crystal)
+	link: http://everaldo.com/crystal/, CrystalXp.net
+	license: LGPL-2.1
+	license link: http://creativecommons.org/licenses/LGPL/2.1/
+	formats: png, ico
+	subdirectory: open_icon_library-devel/icons/crystal
+	
+Nuvola 1.0 (KDE 3.x icon set) (nuvola)
+	link: http://www.icon-king.com/projects/nuvola/
+	license: LGPL 2.1
+	license link: http://creativecommons.org/licenses/LGPL/2.1/
+	formats: png
+	subdirectory: open_icon_library-devel/icons/nuvola
+	
+Intrigue Icon Set 0.6.2 [Green] (intrigue)
+	link: http://simpleinnovation.net/index.php?page=22&source=2&id=2
+	license: GPLv2
+	license link: http://creativecommons.org/licenses/GPL/2.0/
+	formats: png
+	subdirectory: open_icon_library-devel/icons/intrigue

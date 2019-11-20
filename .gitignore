@@ -12,3 +12,8 @@ venv/*
 .vscode/*
 # ignore plugins folder
 /plugins
+# ignore usage statistics related files
+usage_stats_key
+usage_stats_site
+# ignore email config
+mailconfig.py

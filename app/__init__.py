@@ -47,11 +47,11 @@ def create_app(config_name):
 
     # look for plugins
     plugin_files = glob('plugins/*/*.py')
-    print "Plugins found: ", plugin_files
     for f in plugin_files:
         p = imp.load_source(f[8:-3], f)
         if not hasattr(p, 'display') or not hasattr(p, 'title'):
-            print "Uncompatible plugin: ", f[8:-3]
+            # TODO: report this some other way, e.g. raise Exception or log warning...
+            print "Incompatible plugin: ", f[8:-3]
         plugins.append(p)
 
     return app

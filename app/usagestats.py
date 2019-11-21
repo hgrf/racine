@@ -63,10 +63,13 @@ class UsageStatisticsThread(threading.Thread):
                         'availablevol': availablevol}
 
             # get usage statistics script url from GitHub
-            response = requests.get(usage_statistics_url_source)
-            if response.status_code == 200:
-                url = response.content.strip()
-                requests.post(url, json=data)
+            try:
+                response = requests.get(usage_statistics_url_source)
+                if response.status_code == 200:
+                    url = response.content.strip()
+                    requests.post(url, json=data)
+            except Exception as e:
+                pass        # do not crash when there is e.g. a ConnectionError, simply keep trying
 
             time.sleep(usage_statistics_sleep_time)
 

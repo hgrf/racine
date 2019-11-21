@@ -101,10 +101,13 @@ function init_browser() {
         });
     });
 
+    // TODO: note that the functionality of inpectpath and inspectresource could be easily combined and the following
+    // code could be reduced a lot by treating historyitem, resource and shortcut all the same way...
+
     // check for each history item if it is available
     $('.historyitem').each(function(index, element) {
         var historyitemdiv = $(this);
-        async_api_call({
+        $.ajax({
            url: "/browser/inspectpath",
            type: "post",
            data: { "smbpath": $(this).data('url') },
@@ -123,14 +126,14 @@ function init_browser() {
 
     // check for each resource if it is available and if it has a user/sample folder
     $('.resource').each(function(index, element) {
-        async_api_call({
+       $.ajax({
            url: "/browser/inspectresource",
            type: "post",
            data: { "sampleid": queryDict['sample'],
                    "resourceid": $(this).data('id') },
-           success: function(data, textStatus, jqXHR) {
-               var resourcediv = $('#resource' + data.resourceid);
-               var shortcutsdiv = $('#shortcuts' + data.resourceid);
+           success: function(data) {
+               resourcediv = $('#resource' + data.resourceid);
+               shortcutsdiv = $('#shortcuts' + data.resourceid);
                shortcutsdiv.empty();
                if(!data.code) {
                    if(data.userfolder != '') {
@@ -147,7 +150,8 @@ function init_browser() {
                } else {
                    resourcediv.append(" (N/A)");
                }
-           }});
+           }
+       })
     });
 }
 

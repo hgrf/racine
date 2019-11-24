@@ -56,13 +56,10 @@ def welcome():
         maxuploadvol = max(maxuploadvol, u[1])
         totuploadvol += u[1] if u[1] is not None else 0
 
-    # get user activity only for current user (every user will see this for his samples)
-    stmt = db.session.query(Action.sample_id, func.count('*').label('action_count')).filter(Action.owner_id == current_user.id).filter(Action.datecreated > aweekago).group_by(Action.sample_id).subquery()
-    newactions = db.session.query(Sample, stmt.c.action_count).outerjoin(stmt, Sample.id == stmt.c.sample_id).order_by(Sample.id).all()
-    maxcount = 0
-    for n in newactions: maxcount = max(maxcount, n[1])
+    # get last modified samples
+    recent_samples = db.session.query(Sample).join(Activity).order_by(Activity.id.desc()).distinct().limit(5).all()
 
-    return render_template('welcome.html', conns=smbinterface.conns, newactions=newactions, maxcount=maxcount,
+    return render_template('welcome.html', conns=smbinterface.conns, recent_samples=recent_samples,
                            newactionsallusers=newactionsallusers, maxcountallusers=maxcountallusers,
                            uploadvols=uploadvols, maxuploadvol=maxuploadvol, plugins=plugins,
                            totuploadvol=totuploadvol, availablevol=availablevol)

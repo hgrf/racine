@@ -7,6 +7,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app as app
 from sqlalchemy import event
 from flask_sqlalchemy import SignallingSession
+from datetime import datetime
 
 SAMPLE_NAME_LENGTH = 64
 
@@ -245,3 +246,38 @@ class Upload(db.Model):
 
     def __repr__(self):
         return '<Upload %r>' % self.id
+
+
+class Activity(db.Model):
+    __tablename__ = 'activity'
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    sample_id = db.Column(db.Integer, db.ForeignKey('samples.id'))
+    type_id = db.Column(db.Integer, db.ForeignKey('activitytypes.id'))
+    description = db.Column(db.UnicodeText)
+
+
+# Since the activity table will probably contain a lot of entries, the activity
+# type, e.g. "update:sample:description" should be encoded as an integer ID
+# referring to this table. When the database models are amended, the supported
+# activity types will be adapted automatically in app/__init__.py based on the
+# supported_targets dictionary in app/main/views.py.
+class ActivityType(db.Model):
+    __tablename__ = 'activitytypes'
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(256))
+
+
+def record_activity(type, user=None, sample=None, description=None, commit=False):
+    atype = ActivityType.query.filter_by(description=type).first()
+    if atype is None:
+        raise Exception('Unknown activity type: '+type)
+    activity = Activity(timestamp=datetime.now(),
+                        user_id=user.id if user is not None else 0,
+                        sample_id=sample.id if sample is not None else 0,
+                        type_id=atype.id,
+                        description=description)
+    db.session.add(activity)
+    if commit:
+        db.session.commit()

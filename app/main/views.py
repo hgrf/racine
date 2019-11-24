@@ -2,7 +2,7 @@ from flask import render_template, redirect, request, jsonify, send_file, flash
 from flask.ext.login import current_user, login_required, login_user, logout_user
 from .. import db
 from .. import plugins
-from ..models import Sample, Action, User, Share, Upload, SMBResource
+from ..models import Sample, Action, User, Share, Upload, SMBResource, Activity, record_activity
 from . import main
 from forms import NewSampleForm, NewActionForm, NewMatrixForm
 from datetime import date, datetime, timedelta
@@ -257,6 +257,7 @@ def createshare():
         return jsonify(code=1, error="This share already exists"), 500
     share = Share(sample=sample, user=user, mountpoint_id=0)
     db.session.add(share)
+    record_activity('add:share', current_user, sample)
     db.session.commit()
     return jsonify(code=0, username=user.username, userid=user.id, shareid=share.id)
 
@@ -269,6 +270,7 @@ def deleteaction(actionid):
         return render_template('404.html'), 404
     sampleid = action.sample_id
     db.session.delete(action)
+    record_activity('delete:action', current_user, Sample.query.get(sampleid))
     db.session.commit()
     return redirect("/sample/" + str(sampleid))
 
@@ -279,6 +281,7 @@ def deletesample(sampleid):
     sample = Sample.query.get(int(sampleid))
     if sample == None or sample.owner != current_user:
         return render_template('404.html'), 404
+    record_activity('delete:sample', current_user, sample)
     db.session.delete(sample)  # delete cascade automatically deletes associated actions
     db.session.commit()
     return redirect("/")
@@ -297,6 +300,7 @@ def deleteshare(shareid):
 
     user = share.user
 
+    record_activity('delete:share', current_user, share.sample)
     db.session.delete(share)
     db.session.commit()
 
@@ -361,6 +365,7 @@ def newsample():
                             description=form.description.data)
             db.session.add(sample)
             db.session.commit()
+            record_activity('add:sample', current_user, sample, commit=True)
             return redirect("/sample/" + str(sample.id))
         except Exception as e:
             flash(e.message)
@@ -379,6 +384,7 @@ def newaction(sampleid):
         a = Action(datecreated=date.today(), timestamp=form.timestamp.data, owner=current_user, sample_id=sampleid,
                    description=form.description.data)
         db.session.add(a)
+        record_activity('add:action', current_user, sample)
         db.session.commit()
         a.ordnum = a.id         # add ID as order number (maybe there is a more elegant way to do this?)
         db.session.commit()
@@ -527,6 +533,11 @@ supported_targets = {
             'description': str
         }
     },
+    'share': {
+        'dbobject': Share,
+        'auth': None,
+        'fields': {}
+    },
     'smbresource': {
         'dbobject': SMBResource,
         'auth': 'admin',
@@ -589,6 +600,7 @@ def updatefield(target, field, id):
     value = request.form.get('value')
 
     # redefine target to simplify
+    target_name = target
     target = supported_targets[target]
 
     # try to get requested item from database
@@ -607,7 +619,7 @@ def updatefield(target, field, id):
     try:
         # check if a modifier is to be applied
         modifier = target['fields'][field]
-        if modifier is  None:
+        if modifier is None:
             setvalue = value
         # check if the modifier is a function
         elif type(modifier) == type(lambda x: x):
@@ -623,7 +635,16 @@ def updatefield(target, field, id):
         # otherwise it is probably simply type casting
         else:
             setvalue = modifier(value)
-        setattr(item, field, setvalue)
+        if getattr(item, field) != setvalue:
+            setattr(item, field, setvalue)
+            if target_name == 'sample':
+                sample = item
+            elif target_name == 'action':
+                sample = item.sample
+            else:
+                sample = None
+            record_activity('update:'+target_name+':'+field, current_user, sample)
+
     except Exception as e:
         return jsonify(code=1, value=str(getattr(item, field)), message='Error: '+str(e))
 

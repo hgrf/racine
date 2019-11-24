@@ -10,9 +10,6 @@ import hashlib
 from xml.etree import ElementTree as ElementTree
 from .. import smbinterface
 from PIL import Image
-import urllib
-from ..asyncapi import async_api
-from datetime import datetime
 
 IMAGE_EXTENSIONS = set(['.png', '.jpg', '.jpeg', '.bmp', '.tif', '.tiff', '.svg'])
 CONVERSION_REQUIRED = set(['.tif', '.tiff'])
@@ -414,18 +411,13 @@ def savefromsmb():
     else:
         return jsonify(code=1, message=uploadurl)
 
-
 @browser.route('/inspectpath', methods=['POST'])
 @login_required
-@async_api
 def inspectpath():
-    # TODO:
-    # smbinterface.list_path should clearly communicate why it could not list the path,
-    # the following is more of a workaround
-    smbpath = request.form.get('smbpath')       # NB: do this outside the try environment, so that the ClientDisconnect
-                                                # exception gets caught in asyncapi.py
+    # TODO: smbinterface.list_path should clearly communicate why it could not list the path, the following is more of
+    # a workaround
     try:
-        listpath = smbinterface.list_path(smbpath)
+        listpath = smbinterface.list_path(request.form.get('smbpath'))
         if listpath is None:
             return jsonify(code=1, error='noconnection')
         else:
@@ -436,7 +428,6 @@ def inspectpath():
 
 @browser.route('/inspectresource', methods=['POST'])
 @login_required
-@async_api
 def inspectresource():
     # if sample ID is provided, look up sample
     if request.form.get('sampleid') is not None:

@@ -63,6 +63,12 @@ by setting up a corresponding autostart file. This is explained below either for
 Please note that the app should be executed in the HTTP root, bugs should be expected when you install MSM in a
 subfolder.
 
+Note the use of the `--preload` option for gunicorn in the following, which ensures that the thread for reporting
+usage statistics is only started once (before the worker processes are forked). Also note that you can test the
+multiprocessing behaviour in your development environment by running e.g.:
+
+    gunicorn [--preload] --workers 4 --bind 127.0.0.1 manage:app 
+
 ## For upstart
 
 Create the file /etc/init/msm.conf and copy the following code into it:
@@ -79,7 +85,7 @@ Create the file /etc/init/msm.conf and copy the following code into it:
     env FLASK_CONFIG=production
     env PATH=[path]/MSM/venv/bin:/usr/bin
     chdir [path]/MSM
-    exec gunicorn --workers 4 --bind unix:msm.sock -m 007 manage:app
+    exec gunicorn --preload --workers 4 --bind unix:msm.sock -m 007 manage:app
 
 Where you will have to replace [user name] by your user name and [path] by the path where you installed the programme. The second path (/usr/bin) is where you should have installed the git executable.
 
@@ -98,7 +104,7 @@ Create the file /lib/systemd/system/msm.service and copy the following code into
     Environment=FLASK_CONFIG=production
     Environment=PATH=[path]/MSM/venv/bin:/usr/bin
     WorkingDirectory=[path]/MSM
-    ExecStart=[path]/MSM/venv/bin/gunicorn --workers 4 --bind unix:msm.sock -m 007 manage:app
+    ExecStart=[path]/MSM/venv/bin/gunicorn --preload --workers 4 --bind unix:msm.sock -m 007 manage:app
 
     [Install]
     WantedBy=multi-user.target

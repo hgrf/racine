@@ -1,7 +1,7 @@
 from flask import render_template, redirect, request, url_for, flash, make_response, jsonify
 from flask.ext.login import login_user, logout_user, login_required, current_user
 from . import auth
-from ..models import User
+from ..models import User, record_activity
 from .forms import LoginForm, PasswordResetRequestForm, PasswordResetForm
 from .. import db
 from ..email import send_mail
@@ -19,6 +19,9 @@ def login():
         if user is not None and user.verify_password(form.password.data):
             # log in the user
             login_user(user, form.remember_me.data)
+
+            # log activity
+            record_activity('login', current_user, commit=True)
 
             # make user first in list of last logged in users and trim the list to 5 users
             while user.username in last_logged_in:
@@ -81,6 +84,9 @@ def password_reset(token):
 @auth.route('/logout')
 @login_required
 def logout():
+    # log activity
+    record_activity('logout', current_user, commit=True)
+
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('main.index'))

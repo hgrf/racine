@@ -42,6 +42,24 @@ def create_app(config_name):
     app.register_blueprint(profile_blueprint, url_prefix='/profile')
     app.register_blueprint(printdata_blueprint, url_prefix='/print')
 
+    # update activity types table
+    activity_types = ['selectsmbfile', 'login', 'logout']
+    with app.app_context():
+        from main.views import supported_targets
+        for key, target in supported_targets.items():
+            activity_types.append('add:'+key)
+            activity_types.append('delete:'+key)
+            for field in target['fields']:
+                activity_types.append('update:'+key+':'+field)
+
+        from models import ActivityType
+        registered_activity_types = [at.description for at in ActivityType.query.all()]
+        for at in activity_types:
+            if at not in registered_activity_types:
+                newat = ActivityType(description=at)
+                db.session.add(newat)
+                db.session.commit()
+
     # run usage statistics thread
     UsageStatisticsThread(app)
 

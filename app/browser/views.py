@@ -2,7 +2,7 @@ from flask import render_template, send_file, request, redirect, url_for, send_f
 from flask_login import current_user, login_required
 from flask import current_app as app
 from .. import db
-from ..models import SMBResource, Sample, Upload
+from ..models import SMBResource, Sample, Upload, Activity, ActivityType, record_activity
 import os
 from . import browser
 import io
@@ -10,7 +10,6 @@ import hashlib
 from xml.etree import ElementTree as ElementTree
 from .. import smbinterface
 from PIL import Image
-import urllib
 
 IMAGE_EXTENSIONS = set(['.png', '.jpg', '.jpeg', '.bmp', '.tif', '.tiff', '.svg'])
 CONVERSION_REQUIRED = set(['.tif', '.tiff'])
@@ -291,11 +290,21 @@ def retrieve_smb_image(path):
 @browser.route('/<path:smb_path>')
 @login_required
 def imagebrowser(smb_path):
-    browser_history = request.cookies.get('browser_history')
-    if browser_history is None or browser_history == '':
-        browser_history = []
-    else:
-        browser_history = [urllib.unquote(item) for item in browser_history.split(',')]
+    # get last locations from activity log:
+    atype = ActivityType.query.filter_by(description='selectsmbfile').first()
+    # get the last 20 selectsmbfile events from the activity table
+    browser_history = [act.description[:act.description.rfind('/')] for act in
+        Activity.query
+           .filter_by(type_id=atype.id, user_id=current_user.id)
+           .order_by(Activity.id.desc())
+           .limit(20)
+           .all()
+        ]
+    # remove duplicates and limit to 5 elements
+    # NB: here I assume that in the 20 elements selected above the user has at least 5 different locations
+    seen = set()
+    browser_history = [x for x in browser_history if not (x in seen or seen.add(x))]
+    browser_history = browser_history[:5]
 
     # process address
     resource, path_on_server = smbinterface.process_smb_path(smb_path)
@@ -393,6 +402,9 @@ def savefromsmb():
 
     # store the file
     upload, uploadurl, dimensions = store_image(file_obj, 'smb:'+src, ext)
+
+    # record activity
+    record_activity('selectsmbfile', current_user, description=path, commit=True)
 
     if upload is not None:
         return jsonify(code=0, uploadurl=uploadurl)

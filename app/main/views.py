@@ -255,7 +255,7 @@ def createshare():
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it"), 500
     if user in [x.user for x in sample.shares]:
         return jsonify(code=1, error="This share already exists"), 500
-    share = Share(sample = sample, user = user, mountpoint_id = 0)
+    share = Share(sample=sample, user=user, mountpoint_id=0)
     db.session.add(share)
     db.session.commit()
     return jsonify(code=0, username=user.username, userid=user.id, shareid=share.id)
@@ -507,11 +507,12 @@ def validate_is_admin(str, item):
             raise Exception('There has to be at least one administrator.')
     return b
 
+
 # define supported fields
 supported_targets = {
     'sample': {
         'dbobject': Sample,
-        'auth': 'owner',        # TODO: implement this
+        'auth': 'owner',
         'fields': {
             'name': ValidSampleName.validate,
             'description': str,
@@ -549,6 +550,7 @@ supported_targets = {
         }
     }
 }
+
 
 @main.route('/get/<target>/<field>/<id>', methods=['GET'])
 @login_required

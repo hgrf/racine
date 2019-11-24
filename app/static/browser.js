@@ -14,54 +14,6 @@ function update_sample_image_and_quit(uploadurl) {
     });
 }
 
-// from https://www.w3schools.com/js/js_cookies.asp
-function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+ d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
-
-// from https://www.w3schools.com/js/js_cookies.asp
-// but removed use of decodeURIComponent
-function getCookie(cname) {
-    var name = cname + "=";
-    //var decodedCookie = decodeURIComponent(document.cookie);
-    var decodedCookie = document.cookie;
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}
-
-function add_to_browser_history(smbpath) {
-    var browser_history = getCookie('browser_history');
-    browser_history = (browser_history === '') ? [] : browser_history.split(',');
-    // NB: commas in folder names are escaped by encodeURIComponent
-    // decode every entry of the browser history
-    for(i in browser_history)
-        browser_history[i] = decodeURIComponent(browser_history[i]);
-    // remove the current entry from the list if it exists
-    var index = browser_history.indexOf(smbpath);
-    if(index >= 0)
-        browser_history.splice(index,1);
-    // prepend the current entry to the list
-    browser_history.unshift(smbpath);
-    // make sure the length of the history is not longer than 5
-    while(browser_history.length > 5)
-        browser_history.pop();
-    // decode every entry of the browser history
-    for(i in browser_history)
-        browser_history[i] = encodeURIComponent(browser_history[i]);
-    setCookie('browser_history', browser_history.join(','), 365);
-}
 
 function init_browser() {
     // tell the upload form how to communicate with the server (this has to preserve the query string, so that
@@ -81,8 +33,6 @@ function init_browser() {
             alert('Please choose a file with a valid extension.');
             return;
         }
-        // add this path to the browser history
-        add_to_browser_history($('div#smbpath').text());
         // show "activity" overlay
         $('#overlay').css("display", "block");
         // tell the server to store the file

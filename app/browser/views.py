@@ -404,10 +404,10 @@ def uploadfile():
 
     if caller == 'ckdd' or caller == 'ckb':
         if type == 'img':
-            return jsonify(uploaded=uploaded, filename=filename+ext, url=url, message=message, width=400,
-                           height=int(float(dimensions[1])/float(dimensions[0])*400.))
+            return jsonify(uploaded=uploaded, filename=filename+ext, url=url, error={'message': message}, width=400,
+                           height=int(float(dimensions[1])/float(dimensions[0])*400.) if uploaded else 0)
         else:
-            return jsonify(uploaded=uploaded, filename=filename+ext, url=url, message=message)
+            return jsonify(uploaded=uploaded, filename=filename+ext, url=url, error={'message': message})
 
     if caller == 'msmb':
         if upload is not None:

@@ -41,6 +41,12 @@ not populated by JavaScript #}
         background-color: #CCCCEE;
         cursor: pointer;"
     }
+
+    {% if config['DEBUG'] %}
+    .navbar-fixed-top {
+        background-color: #660000;
+    }
+    {% endif %}
     </style>
 {% endblock %}
 
@@ -54,7 +60,13 @@ not populated by JavaScript #}
                 <div id="toggle-sidebar" class="nav-button nav-button-left nav-button-toggle">
                     <i class="glyphicon glyphicon-menu-hamburger"></i>
                 </div>
-                <a class="navbar-brand hidden-xs" href="/">Mercury Sample Manager</a>
+                <a class="navbar-brand hidden-xs" href="/">
+                    {% if config['DEBUG'] %}
+                    MSM #DEV#
+                    {% else %}
+                    Mercury Sample Manager
+                    {% endif %}
+                </a>
                 <a class="navbar-brand visible-xs" href="/">MSM</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">

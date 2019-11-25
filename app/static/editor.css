@@ -58,6 +58,7 @@ img#changesampleimage {
 
 .imgcontainer {
     position:relative;
+    display:inline-block;
 }
 
 .imgcontainer:hover a.zoombutton {

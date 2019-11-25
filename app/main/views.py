@@ -57,7 +57,10 @@ def welcome():
         totuploadvol += u[1] if u[1] is not None else 0
 
     # get last modified samples
-    recent_samples = db.session.query(Sample).join(Activity).order_by(Activity.id.desc()).distinct().limit(5).all()
+    recent_samples = db.session.query(Sample)\
+            .join(Activity)\
+            .filter(Activity.user_id == current_user.id)\
+            .order_by(Activity.id.desc()).distinct().limit(5).all()
 
     return render_template('welcome.html', conns=smbinterface.conns, recent_samples=recent_samples,
                            newactionsallusers=newactionsallusers, maxcountallusers=maxcountallusers,

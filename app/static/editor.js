@@ -140,6 +140,11 @@ function init_editor(scrolltotop) {
         }
     });
 
+    // add zoom buttons to images
+    $('#sampledescription').find('img').zoombutton();
+    $('.actiondescription').find('img').zoombutton();
+    $('#sampleimage').zoombutton();
+
     // put lightbox link around images
     $('#sampledescription').find('img').wrap(lightboxwrapper);
     $('.actiondescription').find('img').wrap(lightboxwrapper);

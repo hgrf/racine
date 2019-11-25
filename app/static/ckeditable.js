@@ -176,6 +176,9 @@
                     }
                 });
 
+                // put back the zoombutton
+                field.find('img').zoombutton();
+
                 // put back lightbox link around images
                 field.find('img').wrap(lightboxwrapper);
 

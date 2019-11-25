@@ -177,7 +177,7 @@
                 });
 
                 // put back lightbox link around images
-                field.find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+sample_id+'">'; });
+                field.find('img').wrap(lightboxwrapper);
 
                 field.trigger('editableupdate', data);
                 field.trigger('editabledone');

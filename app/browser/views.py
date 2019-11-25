@@ -1,4 +1,4 @@
-from flask import render_template, send_file, request, redirect, url_for, send_from_directory, jsonify, abort
+from flask import render_template, send_file, request, send_from_directory, jsonify, abort
 from flask_login import current_user, login_required
 from flask import current_app as app
 from .. import db
@@ -14,6 +14,7 @@ from PIL import Image
 IMAGE_EXTENSIONS = set(['.png', '.jpg', '.jpeg', '.bmp', '.tif', '.tiff', '.svg'])
 CONVERSION_REQUIRED = set(['.tif', '.tiff'])
 THUMBNAIL_SIZE = [120, 120]
+PREVIEW_SIZE = [800, 800]
 
 ########################################################################################################################
 # Notes
@@ -129,6 +130,23 @@ def store_file(file_obj, source, ext, type):
     return upload, uploadurl
 
 
+def make_preview(upload, image):
+    path = os.path.join(app.config['UPLOAD_FOLDER'], str(upload.id) + '.preview.jpg')
+    if os.path.exists(path):
+        raise Exception('Preview already exists.')
+
+    # compress the image to JPG format and preview size
+    # convert to RGB to remove alpha channel from PNG or BMP files
+    if image.mode == 'RGBA':
+        # remove transparency by placing on white background
+        background = Image.new("RGB", image.size, (255, 255, 255))
+        background.paste(image, mask=image.split()[3])  # 3 is the alpha channel
+        image = background
+    image.thumbnail(PREVIEW_SIZE)
+    # store the preview image
+    image.convert('RGB').save(path)    # default quality for JPEG according to pillow doc is 75
+
+
 def store_image(file_obj, source, ext):
     """Stores an image file in the upload database and saves it in the upload folder, checking for duplicates.
 
@@ -188,7 +206,18 @@ def store_image(file_obj, source, ext):
     except IOError:
         return None, "Image file invalid.", None
 
-    return store_file(image, source, ext, 'img')+((image.width, image.height),)
+    # store image in original resolution
+    upload, address = store_file(image, source, ext, 'img')
+
+    # make a preview image
+    try:
+        make_preview(upload, image)
+    except Exception as e:
+        # for now we ignore the exceptions, since even if no preview can be generated,
+        # MSM will still serve the fullsize image instead
+        pass
+
+    return upload, address, (image.width, image.height)
 
 
 # TODO: implement this for SMB? (right now not possible, because no support for normal file object)
@@ -230,10 +259,17 @@ def retrieve_image(upload_id):
     # TODO: check that user has right to view the image (this might be tricky because the sample might be a shared one)
 
     dbentry = Upload.query.get(upload_id)
-    if dbentry is not None:
+    if dbentry is None:
+        return render_template('404.html'), 404
+
+    if 'fullsize' in request.args:
         return send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext)
     else:
-        return render_template('404.html'), 404
+        # check if preview exists, otherwise send full size
+        if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.preview.jpg')):
+            return send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.preview.jpg')
+        else:
+            return send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id) + '.' + dbentry.ext)
 
 
 @browser.route('/ulatt/<upload_id>')

@@ -31,7 +31,7 @@
             {% elif sample.image != None %}
                 <div class="{% if sample.owner == current_user %}imgeditable{% endif %}">
                     <img id="sampleimage" src="{{ sample.image }}">
-                    <img id="changesampleimage" src="/static/images/insertimage.png">
+                    <img id="changesampleimage" src="/static/images/insertimage.png" title="Change sample image">
                 </div>
             {% endif %}
         </div>

@@ -140,10 +140,15 @@ function init_editor(scrolltotop) {
         }
     });
 
+    // add zoom buttons to images
+    $('#sampledescription').find('img').zoombutton();
+    $('.actiondescription').find('img').zoombutton();
+    $('#sampleimage').zoombutton();
+
     // put lightbox link around images
-    $('#sampledescription').find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+sample_id+'">'; });
-    $('.actiondescription').find('img').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+sample_id+'">'; });
-    $('#sampleimage').wrap(function() { return '<a class="lightboxlink" href="'+this.src+'" data-lightbox="'+$('#sampleid').text()+'">'; });
+    $('#sampledescription').find('img').wrap(lightboxwrapper);
+    $('.actiondescription').find('img').wrap(lightboxwrapper);
+    $('#sampleimage').wrap(lightboxwrapper);
 
     // typeset all equations
     if(typeof(MathJax) !== 'undefined' && MathJax.isReady)         // if it is not ready now, it should typeset automatically once it is ready

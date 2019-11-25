@@ -29,7 +29,6 @@ i.editor-shortcut {
     padding-top: 10px;
 }
 
-
 img#changesampleimage {
     display:none;
 }
@@ -44,12 +43,35 @@ img#changesampleimage {
     cursor:pointer;
 }
 
+.imgeditable:hover a.zoombutton {
+    display:block;
+}
+
 .imgeditable img#changesampleimage {
     position:absolute;
-    top:5px;
-    right:5px;
-    width:48px;
-    height:48px;
+    top:25px;
+    right:55px;
+    width:36px;
+    height:36px;
+    display:none;
+}
+
+.imgcontainer {
+    position:relative;
+}
+
+.imgcontainer:hover a.zoombutton {
+    display:block;
+}
+
+.imgcontainer a.zoombutton {
+    position:absolute;
+    top:8px;
+    right:8px;
+    color:black;
+    font-size:14pt;
+    background-color:#CCCCCC;
+    padding:2px 2px 2px 5px;
     display:none;
 }
 

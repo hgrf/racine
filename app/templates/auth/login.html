@@ -10,6 +10,13 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta http-equiv="refresh" content="1800">
     <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
+    {% if config['DEBUG'] %}
+    <style>
+        .navbar-fixed-top {
+            background-color: #660000;
+        }
+    </style>
+    {% endif %}
 {% endblock %}
 
 {% block title %}Mercury Sample Manager - Login{% endblock %}
@@ -18,7 +25,13 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="/">Mercury Sample Manager</a>
+      <a class="navbar-brand" href="/">
+        {% if config['DEBUG'] %}
+        MSM #DEV#
+        {% else %}
+        Mercury Sample Manager
+        {% endif %}
+      </a>
     </div>
   </div>
 </nav>

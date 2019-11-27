@@ -19,6 +19,26 @@ manager.add_command('db', MigrateCommand)
 
 
 @manager.command
+def find_base64():
+    """ Helper function to find base64 encoded images in sample and action descriptions
+        for subsequent manual correction in admin mode. """
+    from app.models import Action, Sample
+    for item in Sample.query.all():
+        desc = item.description
+        if desc is None:
+            continue
+        j = desc.find('base64')
+        if j != -1:
+            print "Found base64 in sample #", item.id, ":", item.name, "/ belongs to", item.owner.username
+    for item in Action.query.all():
+        desc = item.description
+        if desc is None:
+            continue
+        j = desc.find('base64')
+        if j != -1:
+            print "Found base64 in sample #", item.sample.id, ":", item.sample.name, "/ action #", item.id, "/ belongs to ", item.owner.username
+
+@manager.command
 def make_previews():
     """ Helper function to generate previews (smaller versions of images) for all existing
         images on the server.

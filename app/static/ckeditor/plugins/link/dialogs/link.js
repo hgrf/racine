@@ -368,6 +368,7 @@
 							var dialog = this.getDialog();
 							var editor = dialog.getParentEditor();
 							CKEDITOR.fbtype = 'att';
+							CKEDITOR.fbupload = false;
 							CKEDITOR.fbcallback = function(url, data) {
 								dialog.getContentElement('info', 'url').setValue(url);
 								if(dialog.getContentElement('info', 'linkDisplayText').getValue() === "") {

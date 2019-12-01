@@ -5,7 +5,7 @@
  * modifications by Holger Graef:
  * lines 232 ff.: hack to set a default image width
  * lines 587 ff.: use MSM fb plugin instead of CKEditor's file browser functionality
- * line 1011: hide image link tab (clicking on images in MSM opens the lightbox, images should never be links)
+ * line 1012: hide image link tab (clicking on images in MSM opens the lightbox, images should never be links)
  *
  */
 
@@ -589,6 +589,7 @@
 									var dialog = this.getDialog();
 									var editor = dialog.getParentEditor();
 									CKEDITOR.fbtype = 'img';
+									CKEDITOR.fbupload = false;
 									CKEDITOR.fbcallback = function(url) {
 										dialog.getContentElement('info', 'txtUrl').setValue(url);
                                     };

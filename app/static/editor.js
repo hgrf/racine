@@ -48,7 +48,6 @@ function setup_sample_image() {
         CKEDITOR.fbtype = 'img';
         CKEDITOR.fbupload = true;
         CKEDITOR.fbcallback = function(url) {
-            CKEDITOR.fbupload = false;
             $.ajax({
                 url: "/set/sample/image/"+sample_id,
                 type: "post",

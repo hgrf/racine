@@ -1,6 +1,7 @@
 // c.f. https://ckeditor.com/docs/ckeditor4/latest/guide/plugin_sdk_sample_1.html
 var launchfb = {
     exec: function( editor ) {
+        CKEDITOR.fbupload = false;
         CKEDITOR.fbtype = 'auto';
         CKEDITOR.fbcallback = function(url, data) {
             if(data.type === 'img')

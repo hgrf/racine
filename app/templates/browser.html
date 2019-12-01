@@ -12,28 +12,36 @@
   <div id="overlaytext"></div>
 </div>
 <div id="browser-frame">
-    {% if smb_path is not defined or smb_path == '' %}
-        {# Display the network shares and previous locations #}
-        <div id="header">
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default folder" data-url="">
-                    <i class="glyphicon glyphicon-home"></i>
-                </button>
-            </div>
-            {# the upload section is only shown if we are using the browser to change the
-            sample image - CKEditor has its own upload function #}
-            {% if request.args.get('upload') is not none and request.args.get('upload').lower() == 'true' %}
-                <div id="upload-frame">
-                    <form method="post" action="#" style="margin:0;padding:0;" enctype="multipart/form-data" id="uploadform">
-                        <img class="upload" src="/static/images/upload.png" width="30px" height="30px">
-                        <strong>Upload:&nbsp;&nbsp;&nbsp;&nbsp;</strong>
-                        <input style="display:inline;" type="file" name="upload" id="upload">
-                        <input style="display:inline;" type="submit" value="OK">
-                    </form>
-                </div>
+    <div id="header">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-default folder" data-url="">
+                <i class="glyphicon glyphicon-home"></i>
+            </button>
+            {% if smb_path is not undefined and smb_path != '' %}
+                {% set curr_path = '' %}
+                {% for element in smb_path.split('/') %}
+                    {% set curr_path = curr_path+('/' if curr_path != '' else '')+element %}
+                    <button type="button" class="btn btn-default folder" data-url="{{ curr_path }}">
+                        {{ element }}
+                    </button>
+                {% endfor %}
             {% endif %}
         </div>
-
+        {# the upload section is only shown if we are using the browser to change the
+           sample image - CKEditor has its own upload function #}
+        {% if request.args.get('upload') is not none and request.args.get('upload').lower() == 'true' %}
+            <div id="upload-frame">
+                <form method="post" action="#" style="margin:0;padding:0;" enctype="multipart/form-data" id="uploadform">
+                    <img class="upload" src="/static/images/upload.png" width="30px" height="30px">
+                    <strong>Upload:&nbsp;&nbsp;&nbsp;&nbsp;</strong>
+                    <input style="display:inline;" type="file" name="upload" id="upload">
+                    <input style="display:inline;" type="submit" value="OK">
+                </form>
+            </div>
+        {% endif %}
+    </div>
+    {% if not error and (smb_path is not defined or smb_path == '') %}
+        {# Display the network shares and previous locations #}
         <div id="networkshares">
             <h4>Network shares:</h4>
             {% for resource in resources %}
@@ -65,40 +73,30 @@
             </div>
         {% endif %}
     {% else %}
-        {# Display the folders and files in the current path #}
-        <div style="display:none" id="smbpath">{{ smb_path }}</div>
-        <div id="header">
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default folder" data-url="">
-                    <i class="glyphicon glyphicon-home"></i>
-                </button>
-                {% set curr_path = '' %}
-                {% for element in smb_path.split('/') %}
-                    {% set curr_path = curr_path+('/' if curr_path != '' else '')+element %}
-                    <button type="button" class="btn btn-default folder" data-url="{{ curr_path }}">
-                        {{ element }}
-                    </button>
-                {% endfor %}
+        {% if not error %}
+            {# Display the folders and files in the current path #}
+            <div style="display:none" id="smbpath">{{ smb_path }}</div>
+            <div>
+                <div class="folders">
+                    {% for folder in folders %}
+                        <div class="folder" data-url="{{ smb_path }}/{{ folder.name }}{{ folder.ext }}">
+                            <img src="{{ folder.image }}">
+                            <span>{{ folder.name }}{{ folder.ext }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="files">
+                    {% for file in files %}
+                        <div class="file" data-path="{{ file.path }}">
+                            <img src="{{ file.image }}">
+                            <span>{{ file.name }}{{ file.ext }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-        <div>
-            <div class="folders">
-                {% for folder in folders %}
-                    <div class="folder" data-url="{{ smb_path }}/{{ folder.name }}{{ folder.ext }}">
-                        <img src="{{ folder.image }}">
-                        <span>{{ folder.name }}{{ folder.ext }}</span>
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="files">
-                {% for file in files %}
-                    <div class="file" data-path="{{ file.path }}">
-                        <img src="{{ file.image }}">
-                        <span>{{ file.name }}{{ file.ext }}</span>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
+        {% else %}
+            <h4 style="color:red;">{{ message }}</h4>
+        {% endif %}
     {% endif %}
 </div>
 {% endblock %}

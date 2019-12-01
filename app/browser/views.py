@@ -357,9 +357,12 @@ def imagebrowser(smb_path):
         # list files and folders in current path
         files = []
         folders = []
-        listpath = smbinterface.list_path(smb_path)
+        try:
+            listpath = smbinterface.list_path(smb_path)
+        except Exception:
+            return render_template('browser.html', error=True, message='Folder could not be found on server: '+smb_path)
         if listpath is None:
-            abort(500)
+            return render_template('browser.html', error=True, message='Could not connect to server: '+smb_path)
         for item in listpath:
             # ignore . entry
             if item.filename == '.':
@@ -380,7 +383,7 @@ def imagebrowser(smb_path):
         # sort by name and return
         files = sorted(files, key=lambda f: f.name.lower())
         folders = sorted(folders, key=lambda f: f.name.lower())
-        return render_template('browser.html', files=files, folders=folders, smb_path=smb_path)
+        return render_template('browser.html', error=False, files=files, folders=folders, smb_path=smb_path)
 
 
 @browser.route('/upload', methods=['POST'])

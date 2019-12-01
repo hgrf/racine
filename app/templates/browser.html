@@ -2,7 +2,7 @@
 
 {% block styles %}
 {{super()}}
-<link rel="stylesheet" href="{{url_for('static', filename='browser.css', version='20191201s')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='browser.css', version='20191201x')}}">
 {% endblock %}
 
 {% block title %}Browser{% endblock %}
@@ -13,6 +13,7 @@
 </div>
 <div id="browser-frame">
     {% if smb_path is not defined or smb_path == '' %}
+        {# Display the network shares and previous locations #}
         <div id="header">
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default folder" data-url="">
@@ -32,31 +33,37 @@
                 </div>
             {% endif %}
         </div>
+
+        <div id="networkshares">
+            <h4>Network shares:</h4>
+            {% for resource in resources %}
+                <div class="resourcerow">
+                    <div class="resource" data-url="{{ resource.name }}" data-id="{{ resource.id }}"
+                         id="resource{{ resource.id }}">
+                        <img src="/static/images/resource.png">
+                        {{ resource.name }}
+                    </div>
+                    <div class="shortcuts" id="shortcuts{{ resource.id }}">
+                        <img src="/static/images/loader.gif">
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
         {% if browser_history %}
-        <div style="margin-bottom:20px"><strong>Previous locations:</strong></div>
-        {% for item in browser_history %}
-            <div class="resourcerow">
-                <div class="historyitem" data-url="{{ item }}" data-id="historyitem{{ loop.index }}" id="historyitem{{ loop.index }}">
-                    <img src="/static/images/loader.gif">
-                    {{ item }}
+            <div id="browserhistory">
+            <h4>Previous locations:</h4>
+            {% for item in browser_history %}
+                <div class="resourcerow">
+                    <div class="historyitem" data-url="{{ item }}" data-id="historyitem{{ loop.index }}"
+                         id="historyitem{{ loop.index }}">
+                        <img src="/static/images/loader.gif">
+                        {{ item }}
+                    </div>
                 </div>
+            {% endfor %}
             </div>
-        {% endfor %}
-        <div style="margin-bottom:20px;margin-top:30px;clear: both;"><strong>Network shares:</strong></div>
-        {% else %}
-        <div style="margin-bottom:20px"><strong>Network shares:</strong></div>
         {% endif %}
-        {% for resource in resources %}
-            <div class="resourcerow">
-                <div class="resource" data-url="{{ resource.name }}" data-id="{{ resource.id }}" id="resource{{ resource.id }}">
-                    <img src="/static/images/resource.png">
-                    {{ resource.name }}
-                </div>
-                <div class="shortcuts" id="shortcuts{{ resource.id }}">
-                    <img src="/static/images/loader.gif">
-                </div>
-            </div>
-        {% endfor %}
     {% else %}
         {# Display the folders and files in the current path #}
         <div style="display:none" id="smbpath">{{ smb_path }}</div>
@@ -68,7 +75,9 @@
                 {% set curr_path = '' %}
                 {% for element in smb_path.split('/') %}
                     {% set curr_path = curr_path+('/' if curr_path != '' else '')+element %}
-                    <button type="button" class="btn btn-default folder" data-url="{{ curr_path }}">{{ element }}</button>
+                    <button type="button" class="btn btn-default folder" data-url="{{ curr_path }}">
+                        {{ element }}
+                    </button>
                 {% endfor %}
             </div>
         </div>
@@ -84,8 +93,8 @@
             <div class="files">
                 {% for file in files %}
                     <div class="file" data-path="{{ file.path }}">
-                    <img src="{{ file.image }}">
-                    <span>{{ file.name }}{{ file.ext }}</span>
+                        <img src="{{ file.image }}">
+                        <span>{{ file.name }}{{ file.ext }}</span>
                     </div>
                 {% endfor %}
             </div>

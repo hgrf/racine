@@ -112,3 +112,12 @@ div.folder, .resource, .historyitem {
 #browser-frame {
     margin-top: 45px;
 }
+#networkshares {
+    float:left;
+    width:50%;
+    min-width:300px;
+}
+#browserhistory {
+    float:left;
+    width:50%;
+}

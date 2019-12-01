@@ -17,25 +17,6 @@ THUMBNAIL_SIZE = [120, 120]
 PREVIEW_SIZE = [800, 800]
 
 ########################################################################################################################
-# Notes
-########################################################################################################################
-"""Possible scenarios:
-1) Browser was opened from CKEditor
-    In this case we always need to provide the browser with the callback number for the CKEditor.
-    1.1) Browser was opened from CKEditor in action editor
-        In this case we know which sample we are dealing with, so we can use it to find the sample folder within
-        SMB resources.
-    1.2) Browser was opened from CKEditor in new sample description editor
-        In this case we have no sample information for now.
-2) Browser was opened from editor page in order to find a new sample image.
-    In this case we have no callback function, but the browser will need to update the sample image when it is
-    closed.
-    
-In order to make sure that the JavaScript part knows the sample ID and the CKEditorFuncNum, we need to make sure that
-these are always in the query string. This is taken care of by the JavaScript part.
-"""
-
-########################################################################################################################
 # Classes that contain the file/folder or resource info for easy transfer to the template
 ########################################################################################################################
 
@@ -43,6 +24,7 @@ class FileTile:
     name = ""
     ext = ""
     image = ""
+    path = ""
 
 
 ########################################################################################################################
@@ -119,7 +101,14 @@ def store_file(file_obj, source, ext, type):
 
     # save the file
     # TODO: if anything goes wrong here, we should delete the reference in the upload database again
-    file_obj.save(os.path.join(app.config['UPLOAD_FOLDER'], str(upload.id) + '.' + upload.ext))
+    # check if the file_obj has a save method (flask uploads have it, pillow images have it,
+    # but the file_obj from the smb_interface does not, so we have to save the file "manually")
+    if hasattr(file_obj, 'save'):
+        file_obj.save(os.path.join(app.config['UPLOAD_FOLDER'], str(upload.id) + '.' + upload.ext))
+    else:
+        with open(os.path.join(app.config['UPLOAD_FOLDER'], str(upload.id) + '.' + upload.ext), 'w') as f:
+            file_obj.seek(0)
+            f.write(file_obj.read())
 
     # calculate filesize, SHA-256 hash and check for duplicates
     upload = check_stored_file(upload)
@@ -170,8 +159,8 @@ def store_image(file_obj, source, ext):
 
     if not file_obj:
         return None, "File could not be read.", None
-    if not ext in IMAGE_EXTENSIONS:
-        return None, "File extension is invalid.", None
+    if ext not in IMAGE_EXTENSIONS:
+        return None, "File extension is invalid. Supported extensions are: "+', '.join(IMAGE_EXTENSIONS), None
 
     # hack for SVG files (since we cannot open them with PIL)
     # see also:
@@ -287,8 +276,15 @@ def retrieve_attachment(upload_id):
 
     dbentry = Upload.query.get(upload_id)
     if dbentry is not None:
+        srctype, src = dbentry.source.split(':', 1)
+        if srctype == 'ul':
+            att_filename = src
+        elif srctype == 'smb':
+            att_filename = os.path.basename(src)
+        else:
+            att_filename = 'unknown.'+dbentry.ext
         return send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext,
-                                   as_attachment=True, attachment_filename=dbentry.source[3:])
+                                   as_attachment=True, attachment_filename=att_filename)
     else:
         return render_template('404.html'), 404
 
@@ -311,7 +307,7 @@ def retrieve_smb_image(path):
     try:
         image = Image.open(file_obj)
     except IOError:
-        abort(500)
+        return send_file(os.path.join(app.config['MSM_FOLDER'], 'app/static/images/file.png'))
 
     # convert the image to a thumbnail and store it in thumbnail JPEG format in memory before sending it to user
     image_binary = io.BytesIO()
@@ -362,8 +358,9 @@ def imagebrowser(smb_path):
             f = FileTile()
             f.name, f.ext = os.path.splitext(item.filename)
             if not item.isDirectory:
+                f.path = smb_path + ('' if smb_path == '' else '/') + f.name + f.ext
                 if f.ext.lower() in IMAGE_EXTENSIONS:
-                    f.image = '/browser/smbimg/' + smb_path + ('' if smb_path == '' else '/') + f.name + f.ext
+                    f.image = '/browser/smbimg/' + f.path
                 else:
                     f.image = "/static/images/file.png"
                 files.append(f)
@@ -382,14 +379,8 @@ def imagebrowser(smb_path):
 def uploadfile():
     # find out what kind of upload we are dealing with and who sent it
     type = request.args.get('type')
-    caller = request.args.get('caller')
-    if type is None or not type in ('img', 'att') or caller is None or not caller in ('ckb', 'ckdd', 'msmb'):
+    if type is None or type not in ('img', 'att'):
         return 'error'
-
-    # caller meaning:
-    #  ckb = CKEditor "browser"
-    #  ckdd = CKEditor drag/drop or copy/paste
-    #  msmb = MSM browser (normally to change sample image)
 
     file_obj = request.files['upload']
     filename, ext = os.path.splitext(file_obj.filename)
@@ -402,34 +393,28 @@ def uploadfile():
     uploaded = 0 if upload is None else 1
     message = '' if uploaded else url
 
-    if caller == 'ckdd' or caller == 'ckb':
-        if type == 'img':
-            return jsonify(uploaded=uploaded, filename=filename+ext, url=url, error={'message': message}, width=400,
-                           height=int(float(dimensions[1])/float(dimensions[0])*400.) if uploaded else 0)
-        else:
-            return jsonify(uploaded=uploaded, filename=filename+ext, url=url, error={'message': message})
-
-    if caller == 'msmb':
-        if upload is not None:
-            # notify of successful upload
-            return render_template('browser.html', uploadurl=url)
-        else:
-            # render browser root and notify of failed upload
-            return render_template('browser.html', resources=SMBResource.query.all(),
-                                   uploadfailed=True, errormessage=message, extensions=", ".join(IMAGE_EXTENSIONS))
+    if type == 'img':
+        return jsonify(uploaded=uploaded, filename=filename+ext, url=url, error={'message': message}, width=400,
+                       height=int(float(dimensions[1])/float(dimensions[0])*400.) if uploaded else 0)
+    else:
+        return jsonify(uploaded=uploaded, filename=filename+ext, url=url, error={'message': message})
 
 
 @browser.route('/savefromsmb', methods=['POST'])
 @login_required
 def savefromsmb():
-    # get img src string for the image (i.e. this will include the '/browser/img/' path)
-    src = request.form.get('src')
+    path = request.form.get('path')
+    type = request.form.get('type')
 
-    # get rid of '/browser/img/', if it's not there return error
-    if not src[:16] == '/browser/smbimg/':
-        return jsonify(code=1, message="File has to be in /browser/smbimg sub-path.")
-    path = src[16:]
-    pathwithoutext, ext = os.path.splitext(path)
+    # check if path is provided
+    if path is None:
+        return jsonify(code=1, message="No path specified.")
+
+    # check if type is valid
+    if type is None or type not in ('img', 'att'):
+        return jsonify(code=1, message="Invalid type.")
+
+    ext = os.path.splitext(path)[1]
 
     # get a file object for the requested path
     file_obj = smbinterface.get_file(path)
@@ -437,15 +422,19 @@ def savefromsmb():
         return jsonify(code=1, message="File could not be retrieved from SMB resource.")
 
     # store the file
-    upload, uploadurl, dimensions = store_image(file_obj, 'smb:'+src, ext)
+    if type == 'img':
+        upload, uploadurl, dimensions = store_image(file_obj, 'smb:'+path, ext)
+    else:
+        upload, uploadurl = store_attachment(file_obj, 'smb:'+path, ext)
 
     # record activity
     record_activity('selectsmbfile', current_user, description=path, commit=True)
 
     if upload is not None:
-        return jsonify(code=0, uploadurl=uploadurl)
+        return jsonify(code=0, uploadurl=uploadurl, filename=os.path.basename(path))
     else:
         return jsonify(code=1, message=uploadurl)
+
 
 @browser.route('/inspectpath', methods=['POST'])
 @login_required

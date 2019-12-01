@@ -2,21 +2,21 @@
 
 {% block styles %}
 {{super()}}
-<link rel="stylesheet" href="{{url_for('static', filename='browser.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='browser.css', version='20191201')}}">
 {% endblock %}
 
 {% block title %}Browser{% endblock %}
 
 {% block content %}
 <div id="overlay">
-  <div id="text">Saving image...</div>
+  <div id="overlaytext"></div>
 </div>
 <div id="browser-frame">
     {% if smb_path is not defined or smb_path == '' %}
         {# Display the upload section and the resource list #}
         {# upload section is only shown if we are using the browser to change the sample image - CKEditor has its own
            upload function #}
-        {% if request.args.get('changesampleimage') %}
+        {% if request.args.get('upload') is not none and request.args.get('upload').lower() == 'true' %}
             <div id="upload-frame">
                 <form method="post" action="#" style="margin:0;padding:0;" enctype="multipart/form-data" id="uploadform">
                     <img class="upload" src="/static/images/upload.png" width="48px" height="48px">
@@ -67,7 +67,7 @@
             </div>
             <div class="files">
                 {% for file in files %}
-                    <div class="file">
+                    <div class="file" data-path="{{ file.path }}">
                     <img src="{{ file.image }}">
                     <span>{{ file.name }}{{ file.ext }}</span>
                     </div>
@@ -80,21 +80,5 @@
 
 {% block scripts %}
     {{ super() }}
-    <script src="{{ url_for('static', filename='browser.js') }}"></script>
-    <script type="text/javascript" charset="utf-8">
-        $(function() { $(document).ready(function () {
-            {# Check if an upload has failed. #}
-            {% if uploadfailed is defined and uploadfailed %}
-                init_browser();
-                alert("Upload failed: {{ errormessage }} The following extensions are accepted: {{ extensions }}");
-            {% else %}
-                {# Check if an upload has succeeded #}
-                {% if uploadurl is defined %}
-                    terminate_browser("{{ uploadurl }}");
-                {% else %}
-                    init_browser();
-                {% endif %}
-            {% endif %}
-        });});
-    </script>
+    <script src="{{ url_for('static', filename='browser.js', version='20191201') }}"></script>
 {% endblock %}

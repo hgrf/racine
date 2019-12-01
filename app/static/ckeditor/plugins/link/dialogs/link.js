@@ -1,6 +1,10 @@
 /**
  * @license Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+ *
+ * modifications by Holger Graef:
+ * lines 365 ff.: use MSM fb plugin instead of CKEditor's file browser functionality
+ *
  */
 
 'use strict';
@@ -358,9 +362,20 @@
 					{
 						type: 'button',
 						id: 'browse',
-						hidden: 'true',
-						filebrowser: 'info:url',
-						label: commonLang.browseServer
+						label: commonLang.browseServer,
+						hidden: false,
+						onClick: function() {
+							var dialog = this.getDialog();
+							var editor = dialog.getParentEditor();
+							CKEDITOR.fbtype = 'att';
+							CKEDITOR.fbcallback = function(url, data) {
+								dialog.getContentElement('info', 'url').setValue(url);
+								if(dialog.getContentElement('info', 'linkDisplayText').getValue() === "") {
+									dialog.getContentElement('info', 'linkDisplayText').setValue(data['filename']);
+								}
+							};
+							editor.execCommand('fb');
+						}
 					} ]
 				},
 				{

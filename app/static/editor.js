@@ -1,16 +1,24 @@
 var sample_id;
+var hiddeneditor;
 var showparentactions = false;
+
+CKEDITOR.timestamp='20191201';
+
+// polyfill for string startsWith
+if (!String.prototype.startsWith) {
+  String.prototype.startsWith = function(searchString, position) {
+    position = position || 0;
+    return this.indexOf(searchString, position) === position;
+  };
+}
 
 // configure the CKEditor
 var ckeditorconfig = {
-    extraPlugins: 'save',
-    imageUploadUrl: '/browser/upload?caller=ckdd&type=img',
-    uploadUrl: '/browser/upload?caller=ckdd&type=att',
-    filebrowserImageBrowseUrl: '/browser',
-    filebrowserImageUploadUrl: '/browser/upload?caller=ckb&type=img',
-    filebrowserLinkUploadUrl: '/browser/upload?caller=ckb&type=att',
-    filebrowserWindowWidth: 800,
-    filebrowserWindowHeight: 500,
+    extraPlugins: 'save,fb',
+    imageUploadUrl: '/browser/upload?type=img',
+    uploadUrl: '/browser/upload?type=att',
+    filebrowserImageUploadUrl: '/browser/upload?type=img',
+    filebrowserLinkUploadUrl: '/browser/upload?type=att',
 	toolbarGroups: [
 		{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
 		{ name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
@@ -31,11 +39,53 @@ var ckeditorconfig = {
 
 $.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer
 
+function setup_sample_image() {
+    $('#sampleimage').zoombutton();
+    $('#sampleimage').wrap(lightboxwrapper);
+
+    // handler for button that changes sample image
+    $('#changesampleimage').click(function(event) {
+        CKEDITOR.fbtype = 'img';
+        CKEDITOR.fbupload = true;
+        CKEDITOR.fbcallback = function(url) {
+            CKEDITOR.fbupload = false;
+            $.ajax({
+                url: "/set/sample/image/"+sample_id,
+                type: "post",
+                data: { "value": url },
+                success: function() {
+                    // check if there is currently a sample image
+                    if($('#sampleimage').length) {
+                        // update the sample image
+                        $('#sampleimage').attr('src', url);
+                    } else {
+                        // add sample image and remove "add sample image" link
+                        var div = $('div.newsampleimage');
+                        div.removeClass('newsampleimage');
+                        div.addClass('imgeditable');
+                        div.empty();
+                        // TODO: this is duplicated code from templates/editor.html, there is probably a more elegant
+                        //       way to sort this out
+                        div.append('<img id="sampleimage" src="'+url+'">'+
+                                   '<img id="changesampleimage" src="/static/images/insertimage.png"'
+                                                             +' title="Change sample image">');
+                        setup_sample_image();
+                    }
+                }
+            });
+        };
+        // use hidden CKEDITOR instance to open the filebrowser dialog
+        hiddeneditor.execCommand('fb');
+        event.preventDefault();
+    });
+}
+
 function init_editor(scrolltotop) {
     // define default values for arguments
     var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : true;
   
     sample_id = $('#sampleid').text();
+    hiddeneditor = CKEDITOR.inline($('#hiddenckeditor')[0], $.extend({'removePlugins': 'toolbar,clipboard,pastetext,pastefromword,tableselection,widget,uploadwidget,pastefromexcel,uploadimage,uploadfile'}, ckeditorconfig));
 
     // scroll to top
     if(scrolltotop)
@@ -77,12 +127,6 @@ function init_editor(scrolltotop) {
     $('#showparentactions').click(function() {
         showparentactions = !showparentactions; // toggle
         load_sample($('#sampleid').text(), false, false, false);
-    });
-
-    // handler for button that changes sample image
-    $('#changesampleimage').click(function(event) {
-        window.open("/browser?changesampleimage=1&sample="+sample_id, 'Browser', 'height=500, width=800, scrollbars=yes');
-        event.preventDefault();
     });
 
     // handler for new action submit button
@@ -140,22 +184,22 @@ function init_editor(scrolltotop) {
         }
     });
 
+    // set up the sample image
+    setup_sample_image();
+
     // add zoom buttons to images
     $('#sampledescription').find('img').zoombutton();
     $('.actiondescription').find('img').zoombutton();
-    $('#sampleimage').zoombutton();
 
     // put lightbox link around images
     $('#sampledescription').find('img').wrap(lightboxwrapper);
     $('.actiondescription').find('img').wrap(lightboxwrapper);
-    $('#sampleimage').wrap(lightboxwrapper);
 
     // typeset all equations
     if(typeof(MathJax) !== 'undefined' && MathJax.isReady)         // if it is not ready now, it should typeset automatically once it is ready
         MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 
-    // tell CKEditor browser to pass on sample ID
-    ckeditorconfig.filebrowserImageBrowseUrl = '/browser?sample='+sample_id;
+    // set up CKEditor for new action form
     CKEDITOR.replace('description', ckeditorconfig);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

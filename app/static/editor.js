@@ -84,7 +84,8 @@ function init_editor(scrolltotop) {
     var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : true;
   
     sample_id = $('#sampleid').text();
-    hiddeneditor = CKEDITOR.inline($('#hiddenckeditor')[0], $.extend({'removePlugins': 'toolbar,clipboard,pastetext,pastefromword,tableselection,widget,uploadwidget,pastefromexcel,uploadimage,uploadfile'}, ckeditorconfig));
+    if($('#hiddenckeditor').length)     // check if this field exists
+        hiddeneditor = CKEDITOR.inline($('#hiddenckeditor')[0], $.extend({'removePlugins': 'toolbar,clipboard,pastetext,pastefromword,tableselection,widget,uploadwidget,pastefromexcel,uploadimage,uploadfile'}, ckeditorconfig));
 
     // scroll to top
     if(scrolltotop)

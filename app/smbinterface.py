@@ -38,6 +38,7 @@ class SMBInterface:
         file_obj = tempfile.NamedTemporaryFile()
         try:
             file_attributes, filesize = conn.retrieveFile(resource.sharename, path_on_server, file_obj)
+            file_obj.seek(0)    # go back to the beginning
         except Exception:  # if we have any problem retrieving the file
             # TODO: specify exception
             self._free_connection(conn)

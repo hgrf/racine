@@ -107,7 +107,6 @@ def store_file(file_obj, source, ext, type):
         file_obj.save(os.path.join(app.config['UPLOAD_FOLDER'], str(upload.id) + '.' + upload.ext))
     else:
         with open(os.path.join(app.config['UPLOAD_FOLDER'], str(upload.id) + '.' + upload.ext), 'w') as f:
-            file_obj.seek(0)
             f.write(file_obj.read())
 
     # calculate filesize, SHA-256 hash and check for duplicates
@@ -169,19 +168,20 @@ def store_image(file_obj, source, ext):
     # http://osgeo-org.1560.x6.nabble.com/Get-size-of-SVG-in-Python-td5273032.html
     if ext == '.svg':
         def_dims = (800, 600)
-        tree = ElementTree.parse(file_obj)
-        attrib = tree.getroot().attrib
-        if 'height' in attrib and 'width' in attrib:
-            width = attrib["width"]
-            height = attrib["height"]
-            # remove unit (mm...) from these values
-            try:
+        try:
+            tree = ElementTree.parse(file_obj)
+            attrib = tree.getroot().attrib
+            if 'height' in attrib and 'width' in attrib:
+                width = attrib["width"]
+                height = attrib["height"]
+                # remove unit (mm...) from these values
+
                 width, height = strip_unit(width), strip_unit(height)
                 height = int(height/width*800)
                 width = 800
-            except Exception:
+            else:
                 width, height = def_dims
-        else:
+        except Exception:
             width, height = def_dims
         file_obj.seek(0)        # return to beginning of file after parsing
 
@@ -304,6 +304,12 @@ def retrieve_smb_image(path):
     # get a file object for the requested path and try to open it with PIL
     # TODO: error handling for get_file
     file_obj = smbinterface.get_file(path)
+
+    # check if it's an SVG file (in this case we won't create a thumbnail)
+    if os.path.splitext(path)[1].lower() == '.svg':
+        return send_file(file_obj,  mimetype='image/svg+xml')
+
+    # open the image for thumbnail creation
     try:
         image = Image.open(file_obj)
     except IOError:

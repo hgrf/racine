@@ -54,7 +54,7 @@ CKEDITOR.dialog.add( 'fbDialog', function(editor) {
         },
         onShow: function(event) {
             // check if sample_id is defined or assign default value 0
-            var sample_id = typeof sample_id !== 'undefined' ? sample_id : 0;
+            var sample_id = typeof window.sample_id !== 'undefined' ? window.sample_id : 0;
             var iframe = document.getElementById(this.getContentElement('tab-basic', 'fbiframe').domId);
             // resize the dialog
             this.move(0.1*window.innerWidth, 0.1*window.innerHeight, false);
@@ -62,7 +62,11 @@ CKEDITOR.dialog.add( 'fbDialog', function(editor) {
             this.fire('resize');
             // update the iframe content
             iframe.contentWindow.location.href = "/browser?type="+CKEDITOR.fbtype+
-                "&upload="+CKEDITOR.fbupload+"&"+(sample_id ? "sample="+sample_id : "");
+                "&upload="+CKEDITOR.fbupload+(sample_id ? "&sample="+sample_id : "");
+        },
+        onHide: function(event) {
+            var iframe = document.getElementById(this.getContentElement('tab-basic', 'fbiframe').domId);
+            iframe.contentWindow.location.href = "about:blank";
         }
     };
 });

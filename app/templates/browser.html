@@ -2,7 +2,7 @@
 
 {% block styles %}
 {{super()}}
-<link rel="stylesheet" href="{{url_for('static', filename='browser.css', version='20191201x')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='browser.css', version='20191201aj')}}">
 {% endblock %}
 
 {% block title %}Browser{% endblock %}
@@ -13,7 +13,7 @@
 </div>
 <div id="browser-frame">
     <div id="header">
-        <div class="btn-group" role="group">
+        <div id="pathbuttons" class="btn-group" role="group">
             <button type="button" class="btn btn-default folder" data-url="">
                 <i class="glyphicon glyphicon-home"></i>
             </button>
@@ -37,6 +37,20 @@
                     <input style="display:inline;" type="file" name="upload" id="upload">
                     <input style="display:inline;" type="submit" value="OK">
                 </form>
+            </div>
+        {% endif %}
+        {% if request.args.get('type') is not none and request.args.get('type') == 'auto' %}
+            <div id="multiswitch">
+                <strong>Select multiple:&nbsp;&nbsp;&nbsp;</strong>
+                <label class="switch">
+                    <input type="checkbox" id="multiswitch-checkbox"
+                            {{ ' checked' if request.args.get('multi') is not none
+                            and request.args.get('multi').lower() == 'true' else '' }}>
+                    <span class="slider round"></span>
+                </label>
+                &nbsp;&nbsp;&nbsp;
+                <button type="button" class="btn btn-primary disabled" id="savemulti">Save</button>
+                &nbsp;&nbsp;&nbsp;
             </div>
         {% endif %}
     </div>
@@ -103,5 +117,5 @@
 
 {% block scripts %}
     {{ super() }}
-    <script src="{{ url_for('static', filename='browser.js', version='20191201a') }}"></script>
+    <script src="{{ url_for('static', filename='browser.js', version='20191201z') }}"></script>
 {% endblock %}

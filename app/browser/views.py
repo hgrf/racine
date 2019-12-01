@@ -414,7 +414,7 @@ def uploadfile():
 
 @browser.route('/savefromsmb', methods=['POST'])
 @login_required
-def savefromsmb():
+def save_from_smb():
     path = request.form.get('path')
     type = request.form.get('type')
 
@@ -431,7 +431,9 @@ def savefromsmb():
     # get a file object for the requested path
     file_obj = smbinterface.get_file(path)
     if not file_obj:
-        return jsonify(code=1, message="File could not be retrieved from SMB resource.")
+        return jsonify(code=1,
+                       message="File could not be retrieved from SMB resource.",
+                       filename=os.path.basename(path))
 
     # store the file
     if type == 'img':
@@ -452,7 +454,7 @@ def savefromsmb():
     if upload is not None:
         return jsonify(code=0, uploadurl=uploadurl, filename=os.path.basename(path), type=type)
     else:
-        return jsonify(code=1, message=uploadurl)
+        return jsonify(code=1, message=uploadurl, filename=os.path.basename(path))
 
 
 @browser.route('/inspectpath', methods=['POST'])

@@ -8,6 +8,7 @@ class Config:
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     BOOTSTRAP_SERVE_LOCAL = True        # don't use CDN for Bootstrap resources (so app will work without Internet access)
+    MSM_FOLDER = basedir
     UPLOAD_FOLDER = os.path.join(basedir, 'uploads')
 
     @staticmethod

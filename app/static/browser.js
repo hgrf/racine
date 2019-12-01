@@ -1,55 +1,152 @@
 // parse the query string and put it in a dictionary
 var queryDict = {};
-location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]})
-
-function update_sample_image_and_quit(uploadurl) {
-    $.ajax({
-        url: "/set/sample/image/"+queryDict['sample'],
-        type: "post",
-        data: { "value": uploadurl },
-            success: function(data) {
-            window.opener.location.href = "/sample/"+queryDict['sample'];   // reload the sample page in the editor window
-            window.close();     // close the browser window
-        }
-    });
+location.search.substr(1).split("&").
+    forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]});
+function dictToURI(dict) {
+  var str = [];
+  for(var p in dict){
+     str.push(encodeURIComponent(p) + "=" + encodeURIComponent(dict[p]));
+  }
+  return str.join("&");
 }
 
+function set_single_selection() {
+    // disable Save button
+    $('#savemulti').unbind('click');
+    $('#savemulti').addClass('disabled');
 
-function init_browser() {
-    // tell the upload form how to communicate with the server (this has to preserve the query string, so that
-    // sample and CKEditorFuncNum information is kept)
-    $('#uploadform').attr('action', '/browser/upload?caller=msmb&type=img&'+location.search.substr(1));
+    // unselect selected files
+    $('.file.selected').removeClass('selected');
 
-    function folderclickhandler(event) {
-        location.href = "/browser/" + $(this).data('url') + '?' + location.search.substr(1);
-        event.preventDefault();
-    }
-
-    $('.folder').click(folderclickhandler);
-
-    $('.file').click( function(event) {
-        src = $(this).find('img').attr('src')
-        if(src == '/static/images/file.png') {
-            alert('Please choose a file with a valid extension.');
-            return;
-        }
+    // update handler for file tiles
+    $('.file').unbind('click');
+    $('.file').click(function(event) {
+        path = $(this).data('path');
         // show "activity" overlay
+        $('#overlaytext').text('Saving file...');
         $('#overlay').css("display", "block");
         // tell the server to store the file
         $.ajax({
             url: "/browser/savefromsmb",
             type: "post",
-            data: { "src": src },
+            data: { "path": path,
+                    "type": queryDict['type'] },
             success: function(data) {
                 if(data.code) {
                     alert("Error: "+data.message);
-                }
-                else {
-                    terminate_browser(data.uploadurl);
+                    $('#overlay').css("display", "none");
+                } else {
+                    // hide the file browser
+                    parent.CKEDITOR.dialog.getCurrent().hide();
+                    // call the call back function
+                    parent.CKEDITOR.fbcallback(data.uploadurl, {'filename': data.filename, 'type': data.type});
                 }
             }
         });
     });
+}
+
+var files_total = 0;
+var files_left = 0;
+
+function set_multi_selection() {
+    // update handler for file tiles
+    $('.file').unbind('click');
+    $('.file').click(function(event) {
+        $(this).toggleClass('selected');
+    });
+
+    // set up Save button
+    $('#savemulti').removeClass('disabled');
+    $('#savemulti').click(function() {
+        // count files
+        files_total = $('.file.selected').length;
+        files_left = files_total;
+        // show "activity" overlay
+        $('#overlaytext').html('Saving files... <span id="filecounter">(0/'+files_total+')</span>'+
+            '<div id="saveerrors"></div>');
+        $('#overlay').css("display", "block");
+        // save files
+        $('.file.selected').each(function() {
+            path = $(this).data('path');
+            // tell the server to store the file
+            $.ajax({
+                url: "/browser/savefromsmb",
+                type: "post",
+                data: { "path": path,
+                        "type": queryDict['type'] },
+                success: function(data) {
+                    files_left -= 1;
+                    $('#filecounter').text('('+(files_total-files_left)+'/'+files_total+')');
+                    if(data.code) {
+                        $('#saveerrors').append('<div>Error: '+data.filename+': '+data.message+'</div>');
+                    } else {
+                        // call the call back function
+                        parent.CKEDITOR.fbcallback(data.uploadurl, {'filename': data.filename, 'type': data.type});
+                    }
+                    if(!files_left && $('#saveerrors').html() == '') {
+                        // hide the file browser
+                        parent.CKEDITOR.dialog.getCurrent().hide();
+                    }
+                }
+            });
+        });
+    });
+}
+
+function init_browser() {
+    if(queryDict['multi'] === 'true') {
+        set_multi_selection();
+    } else {
+        set_single_selection();
+    }
+
+    $('#multiswitch-checkbox').click(function(event) {
+        if(this.checked) {
+            set_multi_selection();
+        } else {
+            set_single_selection();
+        }
+    });
+
+    // tell the upload form how to communicate with the server
+    $('#uploadform').submit(function(event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+
+        // show "activity" overlay
+        $('#overlaytext').text('Uploading file...');
+        $('#overlay').css("display", "block");
+        // send file to server
+        $.ajax({
+            url: '/browser/upload?type=img',
+            data: formData,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                if(data.uploaded) {
+                    parent.CKEDITOR.dialog.getCurrent().hide();	// hide the file browser
+                    parent.CKEDITOR.fbcallback(data.url); // call the call back
+                } else {
+                    alert("Error: "+data.error['message']);
+                    $('#overlay').css("display", "none");
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert("Error when communicating with server.");
+            }
+        });
+    });
+
+    function folderclickhandler(event) {
+        if(document.getElementById('multiswitch-checkbox') !== null)
+            queryDict['multi'] = document.getElementById('multiswitch-checkbox').checked;
+        location.href = '/browser/'+$(this).data('url')+'?'+dictToURI(queryDict);
+        event.preventDefault();
+    }
+
+    $('.folder').click(folderclickhandler);
 
     // TODO: note that the functionality of inpectpath and inspectresource could be easily combined and the following
     // code could be reduced a lot by treating historyitem, resource and shortcut all the same way...
@@ -105,15 +202,6 @@ function init_browser() {
     });
 }
 
-function terminate_browser(uploadurl) {
-    if (queryDict['CKEditorFuncNum'] == undefined) {
-        // in this case the browser was opened by the sample editor with the intention to change the
-        // sample image, so we should do that now:
-        update_sample_image_and_quit(uploadurl);
-    } else {
-        // in this case the browser was opened by a CKEditor and we should inform it
-        // about the chosen image
-        window.opener.CKEDITOR.tools.callFunction(queryDict['CKEditorFuncNum'], uploadurl);
-        window.close();
-    }
-}
+$(document).ready(function() {
+    init_browser();
+});

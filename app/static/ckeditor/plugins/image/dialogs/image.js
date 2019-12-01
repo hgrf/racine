@@ -2,7 +2,10 @@
  * @license Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  *
- * lines 229 ff.: hack added by Holger Graef in order to set a default image width
+ * modifications by Holger Graef:
+ * lines 232 ff.: hack to set a default image width
+ * lines 587 ff.: use MSM fb plugin instead of CKEditor's file browser functionality
+ * line 1012: hide image link tab (clicking on images in MSM opens the lightbox, images should never be links)
  *
  */
 
@@ -581,8 +584,17 @@
 								style: 'display:inline-block;margin-top:14px;',
 								align: 'center',
 								label: editor.lang.common.browseServer,
-								hidden: true,
-								filebrowser: 'info:txtUrl'
+								hidden: false,
+								onClick: function() {
+									var dialog = this.getDialog();
+									var editor = dialog.getParentEditor();
+									CKEDITOR.fbtype = 'img';
+									CKEDITOR.fbupload = false;
+									CKEDITOR.fbcallback = function(url) {
+										dialog.getContentElement('info', 'txtUrl').setValue(url);
+                                    };
+									editor.execCommand('fb');
+								}
 							} ]
 						} ]
 					},
@@ -997,6 +1009,7 @@
 				},
 				{
 					id: 'Link',
+					hidden: true,
 					requiredContent: 'a[href]',
 					label: editor.lang.image.linkTab,
 					padding: 0,

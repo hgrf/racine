@@ -23,6 +23,7 @@
         {% set show_sampleimage_div = (sample.image != None or sample.owner == current_user) %}
         {% if show_sampleimage_div %}
         <div class="col-md-4 sampleimage">
+            <div id="hiddenckeditor" contenteditable="true" style="display:none;"></div>
             <div><strong>Image:</strong></div>
             {% if sample.image == None and sample.owner == current_user %}
                 <div class="newsampleimage">

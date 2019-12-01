@@ -2,99 +2,120 @@
 
 {% block styles %}
 {{super()}}
-<link rel="stylesheet" href="{{url_for('static', filename='browser.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='browser.css', version='20191201aj')}}">
 {% endblock %}
 
 {% block title %}Browser{% endblock %}
 
 {% block content %}
 <div id="overlay">
-  <div id="text">Saving image...</div>
+  <div id="overlaytext"></div>
 </div>
 <div id="browser-frame">
-    {% if smb_path is not defined or smb_path == '' %}
-        {# Display the upload section and the resource list #}
-        {# upload section is only shown if we are using the browser to change the sample image - CKEditor has its own
-           upload function #}
-        {% if request.args.get('changesampleimage') %}
+    <div id="header">
+        <div id="pathbuttons" class="btn-group" role="group">
+            <button type="button" class="btn btn-default folder" data-url="">
+                <i class="glyphicon glyphicon-home"></i>
+            </button>
+            {% if smb_path is not undefined and smb_path != '' %}
+                {% set curr_path = '' %}
+                {% for element in smb_path.split('/') %}
+                    {% set curr_path = curr_path+('/' if curr_path != '' else '')+element %}
+                    <button type="button" class="btn btn-default folder" data-url="{{ curr_path }}">
+                        {{ element }}
+                    </button>
+                {% endfor %}
+            {% endif %}
+        </div>
+        {# the upload section is only shown if we are using the browser to change the
+           sample image - CKEditor has its own upload function #}
+        {% if request.args.get('upload') is not none and request.args.get('upload').lower() == 'true' %}
             <div id="upload-frame">
                 <form method="post" action="#" style="margin:0;padding:0;" enctype="multipart/form-data" id="uploadform">
-                    <img class="upload" src="/static/images/upload.png" width="48px" height="48px">
-                    <strong>Upload an image:&nbsp;&nbsp;&nbsp;&nbsp;</strong>
+                    <img class="upload" src="/static/images/upload.png" width="30px" height="30px">
+                    <strong>Upload:&nbsp;&nbsp;&nbsp;&nbsp;</strong>
                     <input style="display:inline;" type="file" name="upload" id="upload">
                     <input style="display:inline;" type="submit" value="OK">
                 </form>
             </div>
-            <hr>
         {% endif %}
-        {% if browser_history %}
-        <div style="margin-bottom:20px"><strong>Previous locations:</strong></div>
-        {% for item in browser_history %}
-            <div class="resourcerow">
-                <div class="historyitem" data-url="{{ item }}" data-id="historyitem{{ loop.index }}" id="historyitem{{ loop.index }}">
-                    <img src="/static/images/loader.gif">
-                    {{ item }}
-                </div>
+        {% if request.args.get('type') is not none and request.args.get('type') == 'auto' %}
+            <div id="multiswitch">
+                <strong>Select multiple:&nbsp;&nbsp;&nbsp;</strong>
+                <label class="switch">
+                    <input type="checkbox" id="multiswitch-checkbox"
+                            {{ ' checked' if request.args.get('multi') is not none
+                            and request.args.get('multi').lower() == 'true' else '' }}>
+                    <span class="slider round"></span>
+                </label>
+                &nbsp;&nbsp;&nbsp;
+                <button type="button" class="btn btn-primary disabled" id="savemulti">Save</button>
+                &nbsp;&nbsp;&nbsp;
             </div>
-        {% endfor %}
-        <div style="margin-bottom:20px;margin-top:30px;clear: both;"><strong>Network shares:</strong></div>
-        {% else %}
-        <div style="margin-bottom:20px"><strong>Network shares:</strong></div>
         {% endif %}
-        {% for resource in resources %}
-            <div class="resourcerow">
-                <div class="resource" data-url="{{ resource.name }}" data-id="{{ resource.id }}" id="resource{{ resource.id }}">
-                    <img src="/static/images/resource.png">
-                    {{ resource.name }}
-                </div>
-                <div class="shortcuts" id="shortcuts{{ resource.id }}">
-                    <img src="/static/images/loader.gif">
-                </div>
-            </div>
-        {% endfor %}
-    {% else %}
-        {# Display the folders and files in the current path #}
-        <div style="display:none" id="smbpath">{{ smb_path }}</div>
-        <div style="margin-bottom:20px"><strong>Path: </strong>{{ smb_path }}</div>
-        <div>
-            <div class="folders">
-                {% for folder in folders %}
-                    <div class="folder" data-url="{{ smb_path }}/{{ folder.name }}{{ folder.ext }}">
-                        <img src="{{ folder.image }}">
-                        <span>{{ folder.name }}{{ folder.ext }}</span>
+    </div>
+    {% if not error and (smb_path is not defined or smb_path == '') %}
+        {# Display the network shares and previous locations #}
+        <div id="networkshares">
+            <h4>Network shares:</h4>
+            {% for resource in resources %}
+                <div class="resourcerow">
+                    <div class="resource" data-url="{{ resource.name }}" data-id="{{ resource.id }}"
+                         id="resource{{ resource.id }}">
+                        <img src="/static/images/resource.png">
+                        {{ resource.name }}
                     </div>
-                {% endfor %}
-            </div>
-            <div class="files">
-                {% for file in files %}
-                    <div class="file">
-                    <img src="{{ file.image }}">
-                    <span>{{ file.name }}{{ file.ext }}</span>
+                    <div class="shortcuts" id="shortcuts{{ resource.id }}">
+                        <img src="/static/images/loader.gif">
                     </div>
-                {% endfor %}
-            </div>
+                </div>
+            {% endfor %}
         </div>
+
+        {% if browser_history %}
+            <div id="browserhistory">
+            <h4>Previous locations:</h4>
+            {% for item in browser_history %}
+                <div class="resourcerow">
+                    <div class="historyitem" data-url="{{ item }}" data-id="historyitem{{ loop.index }}"
+                         id="historyitem{{ loop.index }}">
+                        <img src="/static/images/loader.gif">
+                        {{ item }}
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% else %}
+        {% if not error %}
+            {# Display the folders and files in the current path #}
+            <div style="display:none" id="smbpath">{{ smb_path }}</div>
+            <div>
+                <div class="folders">
+                    {% for folder in folders %}
+                        <div class="folder" data-url="{{ smb_path }}/{{ folder.name }}{{ folder.ext }}">
+                            <img src="{{ folder.image }}">
+                            <span>{{ folder.name }}{{ folder.ext }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="files">
+                    {% for file in files %}
+                        <div class="file" data-path="{{ file.path }}">
+                            <img src="{{ file.image }}">
+                            <span>{{ file.name }}{{ file.ext }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <h4 style="color:red;">{{ message }}</h4>
+        {% endif %}
     {% endif %}
 </div>
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
-    <script src="{{ url_for('static', filename='browser.js') }}"></script>
-    <script type="text/javascript" charset="utf-8">
-        $(function() { $(document).ready(function () {
-            {# Check if an upload has failed. #}
-            {% if uploadfailed is defined and uploadfailed %}
-                init_browser();
-                alert("Upload failed: {{ errormessage }} The following extensions are accepted: {{ extensions }}");
-            {% else %}
-                {# Check if an upload has succeeded #}
-                {% if uploadurl is defined %}
-                    terminate_browser("{{ uploadurl }}");
-                {% else %}
-                    init_browser();
-                {% endif %}
-            {% endif %}
-        });});
-    </script>
+    <script src="{{ url_for('static', filename='browser.js', version='20191201z') }}"></script>
 {% endblock %}

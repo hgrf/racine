@@ -9,15 +9,15 @@
     {{ super() }}
     <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
     <script>
+    CKEDITOR.timestamp='20191201h';
+
     // configure the CKEditor
     var ckeditorconfig = {
-        imageUploadUrl: '/browser/upload?caller=ckdd&type=img',
-        uploadUrl: '/browser/upload?caller=ckdd&type=att',
-        filebrowserImageBrowseUrl: '/browser',
-        filebrowserImageUploadUrl: '/browser/upload?caller=ckb&type=img',
-        filebrowserLinkUploadUrl: '/browser/upload?caller=ckb&type=att',
-        filebrowserWindowWidth: 800,
-        filebrowserWindowHeight: 500,
+        extraPlugins: 'save,fb',
+        imageUploadUrl: '/browser/upload?type=img',
+        uploadUrl: '/browser/upload?type=att',
+        filebrowserImageUploadUrl: '/browser/upload?type=img',
+        filebrowserLinkUploadUrl: '/browser/upload?type=att',
         toolbarGroups: [
             { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
             { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },

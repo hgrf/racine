@@ -13,6 +13,9 @@
         margin-top: -60px;
         visibility: hidden;
     }
+    p {
+        text-align:justify;
+    }
     </style>
     <script src="/static/bootstrap-toc.min.js"></script>
     <script>
@@ -126,15 +129,23 @@
 
     <h2>Using file servers</h2>
     <p>The sample manager can help you to find images (for example from a microscope) on SMB file servers. The connection to the file servers has
-    to be set up by the <a href="#administrators">administrators</a>. In order to access the file servers, click on the "image" icon in the editor
-    and select <i>Browse Server</i> in the popup window (steps 1 and 2 in the below figure). A new window will pop up and show you the different
-    available network resources. By clicking on the "network"-icon on the left, you can access the resource directly. If the sample manager
-    finds a folder corresponding to the sample owner's user name on the server, a "user"-icon is shown which leads you directly to the user folder. If
-    the user folder has a subfolder corresponding to the name of the sample, a "sample"-icon is shown which leads you directly to the sample folder
-    (see step 3). Once you've opened a folder using one of these methods, you arrive at the file browser (step 4). By clicking on an image, you 
-    can import it into the editor window. Files that are imported this way are stored on the sample manager server, so they stay available even
-    if they are deleted or moved from the file servers.</p>
-    <img src="/static/help/browser.png">
+    to be set up by the <a href="#administrators">administrators</a>. In order to access the file servers, click on the "file browser" icon in the
+    editor (step 1 the figure below). A dialog will pop up and show you the different available network resources. By clicking on the "network"-icon
+    on the left, you can access the resource directly. If the sample manager finds a folder corresponding to the sample owner's user name on the server,
+    a "user"-icon is shown which leads you directly to the user folder. If the user folder has a subfolder corresponding to the name of the sample,
+    a "sample"-icon is shown which leads you directly to the sample folder (see step 2). Once you've opened a folder using one of these methods,
+    you arrive at the file browser (step 3). By clicking on an image, you can import it into the editor window. Non-image files are added as an attachment
+    (see <a href="#attaching-files">Attaching files</a>). Files that are imported this way are stored on the sample manager server, so they stay available
+    even if they are deleted or moved from the file servers.</p>
+    <img src="/static/help/browser.png?version=20191201">
+    <p>When you save a file from a network resource, its folder will be added to your "previous locations" list (see step 2). You can import multiple images
+    and attachments simultaneously if you activate the corresponding switch on the top right of the dialog. In this case you can select/deselect files
+    by clicking on them and then import all of them by clicking the "Save" button.</p>
+    <p>Note that the file browser is also accessible from the image dialog of the editor: When you add a new image using the
+    <img src="/static/images/spacer.png" style="width:16px;height:16px;background:url(/static/ckeditor/skins/moono-lisa/icons_hidpi.png) 0 -360px;background-size:16px 1104px;">-icon,
+    you can open the file browser from the image dialog by clicking on "Browse server". The same button appears in the link dialog when you add a link using the
+    <img src="/static/images/spacer.png" style="width:16px;height:16px;background:url(/static/ckeditor/skins/moono-lisa/icons_hidpi.png) 0 -1056px;background-size:16px 1104px;">-icon.
+    </p>
 
     <h2>Printing</h2>
     <p>By clicking on the <i class="glyphicon glyphicon-print"></i>-icon in the header bar, you get to the printing page, where you can print all

@@ -36,6 +36,9 @@ def check_stored_file(upload):
 
     If a duplicate is found, delete this upload and return the duplicate.
 
+    NB: this means that if we upload two attachments with identical content but different names,
+    the downloaded file will have the name of the first uploaded file
+
     This is separate from the store_file function, because store_file is specific to images right now and
     we might want to use the duplicate check for other file types, too (in the future).
 
@@ -417,7 +420,7 @@ def savefromsmb():
         return jsonify(code=1, message="No path specified.")
 
     # check if type is valid
-    if type is None or type not in ('img', 'att'):
+    if type is None or type not in ('img', 'att', 'auto'):
         return jsonify(code=1, message="Invalid type.")
 
     ext = os.path.splitext(path)[1]
@@ -430,14 +433,21 @@ def savefromsmb():
     # store the file
     if type == 'img':
         upload, uploadurl, dimensions = store_image(file_obj, 'smb:'+path, ext)
-    else:
+    elif type == 'att':
         upload, uploadurl = store_attachment(file_obj, 'smb:'+path, ext)
+    else:
+        # automatically determine if file is stored as image or as attachment
+        type = 'img'
+        upload, uploadurl, dimensions = store_image(file_obj, 'smb:' + path, ext)
+        if upload is None:
+            type = 'att'
+            upload, uploadurl = store_attachment(file_obj, 'smb:' + path, ext)
 
     # record activity
     record_activity('selectsmbfile', current_user, description=path, commit=True)
 
     if upload is not None:
-        return jsonify(code=0, uploadurl=uploadurl, filename=os.path.basename(path))
+        return jsonify(code=0, uploadurl=uploadurl, filename=os.path.basename(path), type=type)
     else:
         return jsonify(code=1, message=uploadurl)
 

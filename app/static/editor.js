@@ -2,7 +2,7 @@ var sample_id;
 var hiddeneditor;
 var showparentactions = false;
 
-CKEDITOR.timestamp='20191201';
+CKEDITOR.timestamp='20191201a';
 
 // polyfill for string startsWith
 if (!String.prototype.startsWith) {

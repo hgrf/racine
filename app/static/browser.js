@@ -56,8 +56,10 @@ function init_browser() {
                     alert("Error: "+data.message);
                     $('#overlay').css("display", "none");
                 } else {
-                    parent.CKEDITOR.dialog.getCurrent().hide();	// hide the file browser
-                    parent.CKEDITOR.fbcallback(data.uploadurl, {'filename': data.filename}); // call the call back
+                    // hide the file browser
+                    parent.CKEDITOR.dialog.getCurrent().hide();
+                    // call the call back function
+                    parent.CKEDITOR.fbcallback(data.uploadurl, {'filename': data.filename, 'type': data.type});
                 }
             }
         });

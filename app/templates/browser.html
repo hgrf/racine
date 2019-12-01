@@ -2,7 +2,7 @@
 
 {% block styles %}
 {{super()}}
-<link rel="stylesheet" href="{{url_for('static', filename='browser.css', version='20191201')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='browser.css', version='20191201s')}}">
 {% endblock %}
 
 {% block title %}Browser{% endblock %}
@@ -13,20 +13,25 @@
 </div>
 <div id="browser-frame">
     {% if smb_path is not defined or smb_path == '' %}
-        {# Display the upload section and the resource list #}
-        {# upload section is only shown if we are using the browser to change the sample image - CKEditor has its own
-           upload function #}
-        {% if request.args.get('upload') is not none and request.args.get('upload').lower() == 'true' %}
-            <div id="upload-frame">
-                <form method="post" action="#" style="margin:0;padding:0;" enctype="multipart/form-data" id="uploadform">
-                    <img class="upload" src="/static/images/upload.png" width="48px" height="48px">
-                    <strong>Upload an image:&nbsp;&nbsp;&nbsp;&nbsp;</strong>
-                    <input style="display:inline;" type="file" name="upload" id="upload">
-                    <input style="display:inline;" type="submit" value="OK">
-                </form>
+        <div id="header">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default folder" data-url="">
+                    <i class="glyphicon glyphicon-home"></i>
+                </button>
             </div>
-            <hr>
-        {% endif %}
+            {# the upload section is only shown if we are using the browser to change the
+            sample image - CKEditor has its own upload function #}
+            {% if request.args.get('upload') is not none and request.args.get('upload').lower() == 'true' %}
+                <div id="upload-frame">
+                    <form method="post" action="#" style="margin:0;padding:0;" enctype="multipart/form-data" id="uploadform">
+                        <img class="upload" src="/static/images/upload.png" width="30px" height="30px">
+                        <strong>Upload:&nbsp;&nbsp;&nbsp;&nbsp;</strong>
+                        <input style="display:inline;" type="file" name="upload" id="upload">
+                        <input style="display:inline;" type="submit" value="OK">
+                    </form>
+                </div>
+            {% endif %}
+        </div>
         {% if browser_history %}
         <div style="margin-bottom:20px"><strong>Previous locations:</strong></div>
         {% for item in browser_history %}
@@ -55,7 +60,18 @@
     {% else %}
         {# Display the folders and files in the current path #}
         <div style="display:none" id="smbpath">{{ smb_path }}</div>
-        <div style="margin-bottom:20px"><strong>Path: </strong>{{ smb_path }}</div>
+        <div id="header">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default folder" data-url="">
+                    <i class="glyphicon glyphicon-home"></i>
+                </button>
+                {% set curr_path = '' %}
+                {% for element in smb_path.split('/') %}
+                    {% set curr_path = curr_path+('/' if curr_path != '' else '')+element %}
+                    <button type="button" class="btn btn-default folder" data-url="{{ curr_path }}">{{ element }}</button>
+                {% endfor %}
+            </div>
+        </div>
         <div>
             <div class="folders">
                 {% for folder in folders %}

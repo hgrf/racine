@@ -98,13 +98,13 @@ def find_deleted_samples_activity():
 
     at = ActivityType.query.filter_by(description='delete:sample').first()
 
-    activity = Activity.query.filter_by(type_id=at.id).all()
+    activity = Activity.query.filter_by(type=at).all()
     for a in activity:
         print "Identified deleted sample:", a.sample_id, "/ deleted", a.timestamp, "/ previous activity:"
         # find all previous activity related to this sample
-        prev_activity = Activity.query.filter(Activity.sample_id == a.sample_id).filter(Activity.id < a.id).all()
+        prev_activity = Activity.query.filter(Activity.sample == a.sample).filter(Activity.id < a.id).all()
         for pa in prev_activity:
-            print "  ", pa.timestamp, pa.type_id
+            print "  ", pa.timestamp, pa.type.description
 
 
 if __name__ == '__main__':

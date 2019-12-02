@@ -315,16 +315,25 @@ def retrieve_smb_image(path):
     # open the image for thumbnail creation
     try:
         image = Image.open(file_obj)
-    except IOError:
-        return send_file(os.path.join(app.config['MSM_FOLDER'], 'app/static/images/file.png'))
 
-    # convert the image to a thumbnail and store it in thumbnail JPEG format in memory before sending it to user
-    image_binary = io.BytesIO()
-    image.thumbnail(THUMBNAIL_SIZE)
-    image.save(image_binary, 'JPEG')
-    image.close()
-    image_binary.seek(0)        # need to go back to beginning of stream
-    return send_file(image_binary)
+        # TODO: very similar code in make_preview(), create a function for this
+        # compress the image to JPG format and preview size
+        # convert to RGB to remove alpha channel from PNG or BMP files
+        if image.mode == 'RGBA':
+            # remove transparency by placing on white background
+            background = Image.new("RGB", image.size, (255, 255, 255))
+            background.paste(image, mask=image.split()[3])  # 3 is the alpha channel
+            image = background
+
+        # convert the image to a thumbnail and store it in thumbnail JPEG format in memory before sending it to user
+        image.thumbnail(THUMBNAIL_SIZE)
+        image_binary = io.BytesIO()
+        image.convert('RGB').save(image_binary, 'JPEG')
+        image.close()
+        image_binary.seek(0)  # need to go back to beginning of stream
+        return send_file(image_binary)
+    except Exception:
+        return send_file(os.path.join(app.config['MSM_FOLDER'], 'app/static/images/file.png'))
 
 
 @browser.route('/', defaults={'smb_path': ''})

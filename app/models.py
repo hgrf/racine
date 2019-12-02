@@ -57,6 +57,7 @@ class User(UserMixin, db.Model):
     actions = db.relationship('Action', backref='owner')
     shares = db.relationship('Share', backref='user')
     uploads = db.relationship('Upload', backref='user')
+    activity = db.relationship('Activity', backref='user')
     heir_id = db.Column(db.Integer, db.ForeignKey('users.id'))      # ID of the user who inherits this users data
 
     inheritance = db.relationship('User', backref=db.backref('heir', remote_side=[id])) # Users who gave their data to this one
@@ -124,9 +125,10 @@ class Sample(db.Model):
     my = db.Column(db.Integer)  # matrix y position (for parent)
 
     children = db.relationship('Sample', backref=db.backref('parent', remote_side=[id]))
-    shares = db.relationship('Share', backref='sample', foreign_keys = 'Share.sample_id', cascade="delete")
-    mountedshares = db.relationship('Share', backref = 'mountpoint', foreign_keys = 'Share.mountpoint_id')
+    shares = db.relationship('Share', backref='sample', foreign_keys='Share.sample_id', cascade="delete")
+    mountedshares = db.relationship('Share', backref='mountpoint', foreign_keys='Share.mountpoint_id')
     actions = db.relationship('Action', backref='sample', cascade="delete")
+    activity = db.relationship('Activity', backref='sample')
 
     def __setattr__(self, name, value):
         if name == 'name':
@@ -257,6 +259,9 @@ class Activity(db.Model):
     type_id = db.Column(db.Integer, db.ForeignKey('activitytypes.id'))
     description = db.Column(db.UnicodeText)
 
+    def __repr__(self):
+        return '<Activity %r>' % self.id
+
 
 # Since the activity table will probably contain a lot of entries, the activity
 # type, e.g. "update:sample:description" should be encoded as an integer ID
@@ -267,6 +272,11 @@ class ActivityType(db.Model):
     __tablename__ = 'activitytypes'
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(256))
+
+    activity = db.relationship('Activity', backref='type')
+
+    def __repr__(self):
+        return '<ActivityType %r>' % self.description
 
 
 def record_activity(type, user=None, sample=None, description=None, commit=False):

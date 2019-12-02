@@ -38,6 +38,7 @@ def find_base64():
         if j != -1:
             print "Found base64 in sample #", item.sample.id, ":", item.sample.name, "/ action #", item.id, "/ belongs to ", item.owner.username
 
+
 @manager.command
 def make_previews():
     """ Helper function to generate previews (smaller versions of images) for all existing
@@ -87,6 +88,23 @@ def make_previews():
                         print '   ', w.message
         except Exception as e:
             print "Could not make preview for upload "+str(upload.id)+":", e
+
+
+@manager.command
+def find_deleted_samples_activity():
+    """ Helper function to identify activity related to deleted samples.
+    """
+    from app.models import Activity, ActivityType
+
+    at = ActivityType.query.filter_by(description='delete:sample').first()
+
+    activity = Activity.query.filter_by(type_id=at.id).all()
+    for a in activity:
+        print "Identified deleted sample:", a.sample_id, "/ deleted", a.timestamp, "/ previous activity:"
+        # find all previous activity related to this sample
+        prev_activity = Activity.query.filter(Activity.sample_id == a.sample_id).filter(Activity.id < a.id).all()
+        for pa in prev_activity:
+            print "  ", pa.timestamp, pa.type_id
 
 
 if __name__ == '__main__':

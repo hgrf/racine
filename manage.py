@@ -107,5 +107,17 @@ def find_deleted_samples_activity():
             print "  ", pa.timestamp, pa.type.description
 
 
+@manager.command
+def update_isdeleted():
+    """ Helper function to mark all existing samples as not deleted.
+    """
+    from app.models import Sample
+
+    for s in Sample.query.all():
+        s.isdeleted = False
+
+    db.session.commit()
+
+
 if __name__ == '__main__':
     manager.run()

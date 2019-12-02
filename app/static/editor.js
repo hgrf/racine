@@ -39,6 +39,8 @@ var ckeditorconfig = {
 
 $.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer
 
+$.ajaxSetup({ cache: false });
+
 function setup_sample_image() {
     $('#sampleimage').zoombutton();
     $('#sampleimage').wrap(lightboxwrapper);

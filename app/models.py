@@ -118,6 +118,7 @@ class Sample(db.Model):
     image = db.Column(db.String(300))  # <----------- a changer
     description = db.Column(db.UnicodeText)
     isarchived = db.Column(db.Boolean)
+    isdeleted = db.Column(db.Boolean)
 
     mwidth = db.Column(db.Integer)  # matrix width (for children)
     mheight = db.Column(db.Integer)  # matrix height (for children)

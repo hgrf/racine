@@ -271,7 +271,7 @@ function load_sample(id, pushstate, scrolltotop, scrollnavbar) {
             }
         },
         error: function() {
-            error_dialog('Sample #'+sample_id+" does not exist or you do not have access to it.");
+            error_dialog('Sample #'+id+" does not exist or you do not have access to it.");
         }
     });
 }

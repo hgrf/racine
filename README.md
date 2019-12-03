@@ -17,11 +17,7 @@ This programme should work an almost any platform (Linux, Windows, MacOS), but I
 instructions for Linux. Seeing that you should install it on a server, I suppose Linux is the target OS in most
 cases anyways.
 
-You should have python 2.x and pip installed on your system. From there on it's quite straightforward:
-
-    $ sudo pip install virtualenv
-
-installs virtualenv for python. This is not absolutely necessary, but I recommend it. You can now create a folder somewhere
+You should have python 3.x and python3-venv installed on your system. Using a virtual environment is not absolutely necessary, but I recommend it. You can now create a folder somewhere
 and clone the git repository:
 
     $ git clone git@github.com:HolgerGraef/MSM.git
@@ -29,8 +25,9 @@ and clone the git repository:
 Now you enter this directory and you create a virtual environment for python - and activate it:
 
     $ cd MSM
-    $ virtualenv venv
+    $ python3 -m venv venv
     $ . venv/bin/activate
+    $ pip install --upgrade pip
 
 Finally, all that remains to do is to install the required python packages:
 

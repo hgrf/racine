@@ -93,11 +93,6 @@ function init_editor(scrolltotop) {
     if(scrolltotop)
         $('html, body').scrollTop(0);
 
-    // handler for matrix view button
-    $('#matrixviewbutton').click(function() {
-        load_matrix_view(sample_id);
-    });
-
     // handler for archive button
     $('#archive').click(function() {
         $.ajax({

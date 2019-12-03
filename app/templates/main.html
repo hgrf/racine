@@ -16,11 +16,6 @@
 <div id="editor-frame">
 </div>
 
-{{ begin_modal_dialog('childbrowser', 'Browser') }}
-<div class="modal-body">Select please:<div id="childbrowser-frame"></div></div>
-<div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button></div>
-{{ end_modal_dialog() }}
-
 {{ begin_modal_dialog('userbrowser', 'Select a user') }}
 <div class="modal-body">
     <div>Select a user you want to share this sample with:<br>&nbsp;</div>
@@ -61,7 +56,6 @@
     <script src="{{ url_for('static', filename='editorhelpers.js') }}"></script>
     <script src="{{ url_for('static', filename='ckeditable.js') }}"></script>
     <script src="{{ url_for('static', filename='editor.js', version='20191202') }}"></script>
-    <script src="{{ url_for('static', filename='matrixview.js') }}"></script>
     <script src="{{ url_for('static', filename='navbar.js') }}"></script>
     <script src="{{ url_for('static', filename='lightbox2-master/src/js/lightbox.js') }}"></script>
 {% endblock %}

@@ -17,8 +17,3 @@ class NewSampleForm(FlaskForm):
     description = TextAreaField('Description:')
     submit = SubmitField('Submit')
 
-
-class NewMatrixForm(FlaskForm):
-    height = StringField('Height:')  # use some sort of integer field here!
-    width = StringField('Width:')  # use some sort of integer field here!
-    submit = SubmitField('Submit')

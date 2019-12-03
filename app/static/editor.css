@@ -166,12 +166,6 @@ img, table {
     font-weight: bold;
 }
 
-table#matrix, table#matrix th, table#matrix td {
-    border-style: solid;
-    border-width: 1px;
-    border-color: #CCCCCC;
-    padding: 5px;
-}
 
 div.user:hover {
     background-color: #CCCCEE;

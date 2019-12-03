@@ -120,11 +120,6 @@ class Sample(db.Model):
     isarchived = db.Column(db.Boolean)
     isdeleted = db.Column(db.Boolean)
 
-    mwidth = db.Column(db.Integer)  # matrix width (for children)
-    mheight = db.Column(db.Integer)  # matrix height (for children)
-    mx = db.Column(db.Integer)  # matrix x position (for parent)
-    my = db.Column(db.Integer)  # matrix y position (for parent)
-
     children = db.relationship('Sample', backref=db.backref('parent', remote_side=[id]))
     shares = db.relationship('Share', backref='sample', foreign_keys='Share.sample_id', cascade="delete")
     mountedshares = db.relationship('Share', backref='mountpoint', foreign_keys='Share.mountpoint_id')

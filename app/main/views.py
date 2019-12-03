@@ -4,7 +4,7 @@ from .. import db
 from .. import plugins
 from ..models import Sample, Action, User, Share, Upload, SMBResource, Activity, record_activity
 from . import main
-from .forms import NewSampleForm, NewActionForm, NewMatrixForm
+from .forms import NewSampleForm, NewActionForm
 from datetime import date, datetime, timedelta
 from .. import smbinterface
 from ..validators import ValidSampleName
@@ -409,70 +409,6 @@ def swapactionorder():          # TODO: sort out permissions for this (e.g. who 
     ordnum = action.ordnum
     action.ordnum = swapaction.ordnum
     swapaction.ordnum = ordnum
-    db.session.commit()
-    return ""
-
-
-@main.route('/resetmatrix/<sampleid>', methods=['POST'])
-@login_required
-def resetmatrix(sampleid):
-    sample = Sample.query.get(int(sampleid))
-    sample.mwidth = None
-    sample.mheight = None
-    for c in sample.children:
-        c.mx = None
-        c.my = None
-
-    return jsonify(code=0)
-
-
-@main.route('/matrixview/<sampleid>', methods=['GET', 'POST'])
-@login_required
-def matrixview(sampleid):
-    sample = Sample.query.get(int(sampleid))
-    form = NewMatrixForm()
-    if form.validate_on_submit():  # TODO: do this with AJAX
-        sample.mheight = int(form.height.data)
-        sample.mwidth = int(form.width.data)
-        db.session.commit()
-    matrix = []
-    children = sample.children
-
-    if (sample.mheight):
-        for y in range(sample.mheight):
-            mrow = []
-            for x in range(sample.mwidth):
-                element = 0
-                for c in range(len(children)):
-                    if children[c].mx == x and children[c].my == y:
-                        element = children[c].id
-                mrow.append(element)
-            matrix.append(mrow)
-
-    return render_template('matrixview.html', sample=sample, form=form, matrix=matrix)
-
-
-@main.route('/childbrowser/<sampleid>')
-@login_required
-def childbrowser(sampleid):
-    sample = Sample.query.get(int(sampleid))
-    return render_template('childbrowser.html', sample=sample)
-
-
-@main.route('/setmatrixcoords/<sampleid>', methods=['POST'])
-@login_required
-def setmatrixcoords(sampleid):
-    sample = Sample.query.get(int(sampleid))
-
-    # check if any sibling has these coords already and remove them if it's the case
-    for c in sample.parent.children:
-        if c.mx == int(request.form.get('mx')) and c.my == int(request.form.get('my')):
-            c.mx = None
-            c.my = None
-
-    # set new coords
-    sample.mx = int(request.form.get('mx'))
-    sample.my = int(request.form.get('my'))
     db.session.commit()
     return ""
 

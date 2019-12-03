@@ -1,15 +1,9 @@
-from flask import render_template, redirect, request, url_for, flash
+from flask import render_template, redirect, request, flash
 from . import profile
 from .. import db
 from flask_login import login_required, current_user
 from .forms import ChangePasswordForm, ChangeDetailsForm
 from ..models import User
-
-
-@profile.route('/overview')
-@login_required
-def overview():
-    return render_template('profile/overview.html')
 
 
 @profile.route('/changedetails', methods=['GET', 'POST'])
@@ -18,14 +12,19 @@ def changedetails():
     form = ChangeDetailsForm()
     if form.validate_on_submit():
         user = current_user
-        if(user.verify_password(form.password.data)):
+        if user.verify_password(form.password.data):
             user.username = form.username.data
             user.email = form.email.data
             db.session.commit()
-            return redirect('/')
+            flash('Details updated.')
         else:
             flash('Password incorrect.')
+
+    form.username.data = current_user.username
+    form.email.data = current_user.email
+
     return render_template('profile/changedetails.html', form=form)
+
 
 @profile.route('/changepassword', methods=['GET', 'POST'])
 @login_required
@@ -33,7 +32,7 @@ def changepassword():
     form = ChangePasswordForm()
     if form.validate_on_submit():
         user = current_user
-        if(user.verify_password(form.oldpassword.data)):
+        if user.verify_password(form.oldpassword.data):
             user.password = form.password.data
             db.session.commit()
             return redirect('/')

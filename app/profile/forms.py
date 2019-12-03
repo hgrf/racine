@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, PasswordField, StringField
 from wtforms.validators import Required, Length, Email, Regexp, EqualTo, ValidationError
+from flask_login import current_user
 from ..models import User
 
 
@@ -13,7 +14,7 @@ class ChangePasswordForm(FlaskForm):
 
 class ChangeDetailsForm(FlaskForm):
     username = StringField('User name:', validators=[
-Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
+Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_. ]*$', 0,
 'Usernames must have only letters, '
 'numbers, dots or underscores')])
     email = StringField('Email', validators=[Required(), Length(1,64), Email()])
@@ -21,9 +22,9 @@ Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
     submit = SubmitField('Submit')
 
     def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
+        if field.data != current_user.email and User.query.filter_by(email=field.data).first():
             raise ValidationError('Email already registered.')
 
     def validate_username(self, field):
-        if User.query.filter_by(username=field.data).first():
+        if field.data != current_user.username and User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in use.')

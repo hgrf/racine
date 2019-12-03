@@ -10,8 +10,6 @@ venv/*
 .idea/*
 # ignore VSCode specific files
 .vscode/*
-# ignore plugins folder
-/plugins
 # ignore usage statistics related files
 usage_stats_key
 usage_stats_site

@@ -1,7 +1,7 @@
 <h1>Welcome</h1>
-{% for p in plugins %}
-    <h2>{{ p.title }}</h2>
-    {{ p.display()|safe }}
+{% for p in plugin_display %}
+    <h2>{{ p[0] }}</h2>
+    {{ p[1]|safe }}
 {% endfor %}
 <h2>Disk space</h2>
 {{ totuploadvol|filesizeformat }} out of {{ (availablevol+totuploadvol)|filesizeformat }} occupied. This only takes into

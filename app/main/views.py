@@ -62,9 +62,18 @@ def welcome():
             .filter(Activity.user_id == current_user.id, Sample.isdeleted == False)\
             .order_by(Activity.id.desc()).distinct().limit(5).all()
 
+    # execute plugin display functions
+    plugin_display = []
+    for p in plugins:
+        try:
+            display = p.display()
+        except Exception:
+            display = 'Error in plugin'
+        plugin_display.append([p.title, display])
+
     return render_template('welcome.html', conns=smbinterface.conns, recent_samples=recent_samples,
                            newactionsallusers=newactionsallusers, maxcountallusers=maxcountallusers,
-                           uploadvols=uploadvols, maxuploadvol=maxuploadvol, plugins=plugins,
+                           uploadvols=uploadvols, maxuploadvol=maxuploadvol, plugin_display=plugin_display,
                            totuploadvol=totuploadvol, availablevol=availablevol)
 
 

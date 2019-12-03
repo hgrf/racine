@@ -109,6 +109,26 @@ def find_deleted_samples_activity():
 
 
 @manager.command
+def remove_deleted_samples_activity():
+    """ Helper function to remove activity related to deleted samples.
+    """
+    from app.models import Activity, ActivityType
+
+    at = ActivityType.query.filter_by(description='delete:sample').first()
+
+    activity = Activity.query.filter_by(type=at).all()
+    for a in activity:
+        print("Identified deleted sample:", a.sample_id, "/ deleted", a.timestamp, "/ previous activity:")
+        # find all previous activity related to this sample
+        prev_activity = Activity.query.filter(Activity.sample == a.sample).filter(Activity.id < a.id).all()
+        for pa in prev_activity:
+            print("  ", pa.timestamp, pa.type.description)
+            db.session.delete(pa)
+        db.session.delete(a)
+    db.session.commit()
+
+
+@manager.command
 def update_isdeleted():
     """ Helper function to mark all existing samples as not deleted.
     """

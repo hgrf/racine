@@ -101,7 +101,8 @@ class User(UserMixin, db.Model):
         """
         return [s.sample for s in self.shares
                 if s.mountpoint_id == 0
-                and s.sample.is_accessible_for(self, direct_only=True)]
+                and s.sample.is_accessible_for(self, direct_only=True)
+                and not s.sample.isdeleted]
 
 
 @login_manager.user_loader
@@ -133,10 +134,17 @@ class Sample(db.Model):
 
     def __setattr__(self, name, value):
         if name == 'name':
-            if value != self.name and self.query.filter_by(owner=current_user, parent_id=self.parent_id, name=value).all():
+            if value != self.name and self.query.filter_by(owner=current_user,
+                                                           parent_id=self.parent_id,
+                                                           name=value,
+                                                           isdeleted=False).all():
                 raise Exception('You already have a sample with this name on this hierarchy level.')
         if name == 'parent_id':
-            if value != self.parent_id and self.name is not None and self.query.filter_by(owner=current_user, parent_id=value, name=self.name).all():
+            if value != self.parent_id and self.name is not None\
+                    and self.query.filter_by(owner=current_user,
+                                             parent_id=value,
+                                             name=self.name,
+                                             isdeleted=False).all():
                 raise Exception('You already have a sample with this name on this hierarchy level.')
         super(Sample, self).__setattr__(name, value)
 
@@ -178,7 +186,9 @@ class Sample(db.Model):
         current user and samples that belong to the current user
         """
 
-        return [s.sample for s in self.mountedshares if s.sample.is_accessible_for(current_user, direct_only=True)]
+        return [s.sample for s in self.mountedshares
+                if s.sample.is_accessible_for(current_user, direct_only=True)
+                and not s.sample.isdeleted]
     
     @property
     def logical_parent(self):

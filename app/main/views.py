@@ -28,7 +28,7 @@ def sample(sampleid):
     if not sampleid:
         return render_template('main.html', sample=None)
     sample = Sample.query.get(sampleid)
-    if sample is None or not sample.is_accessible_for(current_user):
+    if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
         return render_template('404.html'), 404
     return render_template('main.html', sample=sample)
 
@@ -59,7 +59,7 @@ def welcome():
     # get last modified samples
     recent_samples = db.session.query(Sample)\
             .join(Activity)\
-            .filter(Activity.user_id == current_user.id)\
+            .filter(Activity.user_id == current_user.id, Sample.isdeleted == False)\
             .order_by(Activity.id.desc()).distinct().limit(5).all()
 
     return render_template('welcome.html', conns=smbinterface.conns, recent_samples=recent_samples,
@@ -84,7 +84,7 @@ def navbar():
     order = request.args.get('order') if request.args.get('order') else 'id'
 
     # only query root level samples, the template will build the hierarchy
-    samples = Sample.query.filter_by(owner=current_user, parent_id=0).all()
+    samples = Sample.query.filter_by(owner=current_user, parent_id=0, isdeleted=False).all()
     samples.extend(current_user.directshares)
 
     # add timestamps for sorting
@@ -102,7 +102,7 @@ def editor(sampleid):
     shares = sample.shares
     showparentactions = True if request.args.get('showparentactions') != None and int(request.args.get('showparentactions')) else False
 
-    if sample is None or not sample.is_accessible_for(current_user):
+    if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
         return render_template('404.html'), 404
     else:
         form = NewActionForm()
@@ -145,12 +145,14 @@ def search():
             return []
         result = []
         for s in samples:
-            if keyword in s.name.lower():
+            # sample name should never be None, but due to bugs this may happen...
+            if s.name is not None and keyword in s.name.lower():
                 result.append(s)
+            # TODO: does s.children contain deleted samples ?
             result.extend(find_in(s.children+s.mountedsamples, keyword, limit-len(result)))
         return result
 
-    own_samples = Sample.query.filter_by(owner=current_user, parent_id=0).all()
+    own_samples = Sample.query.filter_by(owner=current_user, parent_id=0, isdeleted=False).all()
     shares = current_user.directshares
     results = [{"name": s.name, "id": s.id,
                 "ownername": s.owner.username,
@@ -233,7 +235,7 @@ def login_as():
 @login_required
 def togglearchived():
     sample = Sample.query.get(int(request.form.get("id")))
-    if sample == None or sample.owner != current_user:
+    if sample is None or sample.owner != current_user or sample.isdeleted:
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
     sample.isarchived = not sample.isarchived
     db.session.commit()
@@ -251,7 +253,7 @@ def createshare():
         user = User.query.filter_by(username=(request.form.get("username"))).first()
     if user is None:
         return jsonify(code=1, error="No valid user ID or name given"), 500
-    if sample is None or sample.owner != current_user:
+    if sample is None or sample.owner != current_user or sample.isdeleted:
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it"), 500
     if user in [x.user for x in sample.shares]:
         return jsonify(code=1, error="This share already exists"), 500
@@ -279,10 +281,11 @@ def deleteaction(actionid):
 @login_required
 def deletesample(sampleid):
     sample = Sample.query.get(int(sampleid))
-    if sample == None or sample.owner != current_user:
+    # TODO: put this verification in a function
+    if sample is None or sample.owner != current_user or sample.isdeleted:
         return render_template('404.html'), 404
     record_activity('delete:sample', current_user, sample)
-    db.session.delete(sample)  # delete cascade automatically deletes associated actions
+    sample.isdeleted = True         # mark sample as "deleted"
     db.session.commit()
     return redirect("/")
 
@@ -314,7 +317,7 @@ def deleteshare(shareid):
 @login_required
 def changeparent():
     sample = Sample.query.get(int(request.form.get("id")))
-    if sample is None or not sample.is_accessible_for(current_user):
+    if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
 
     # check if we're not trying to make the snake bite its tail
@@ -362,7 +365,7 @@ def newsample():
             return render_template('newsample.html', form=form, parenterror=True)
         try:
             sample = Sample(owner=current_user, name=form.name.data, parent_id=parentid,
-                            description=form.description.data)
+                            description=form.description.data, isdeleted=False)
             db.session.add(sample)
             db.session.commit()
             record_activity('add:sample', current_user, sample, commit=True)
@@ -376,7 +379,7 @@ def newsample():
 @login_required
 def newaction(sampleid):
     sample = Sample.query.get(int(sampleid))
-    if sample is None or not sample.is_accessible_for(current_user):
+    if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
         return jsonify(code=1, error="Sample does not exist or you do not have the right to access it")
 
     form = NewActionForm()
@@ -562,6 +565,7 @@ supported_targets = {
     }
 }
 
+# TODO: both getfield and setfield should check if the sample is marked as deleted
 
 @main.route('/get/<target>/<field>/<id>', methods=['GET'])
 @login_required

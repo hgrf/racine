@@ -123,7 +123,7 @@ $(document).ready(function() {
                                 draggedItem.appendTo("#nav-mysamples");
                             }
                         } else {
-                            $( "#flashmessages" ).append(begin_flashmsg+data.error+end_flashmsg);
+                            error_dialog(data.error);
                         }
                     }
                 });

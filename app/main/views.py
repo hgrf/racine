@@ -355,16 +355,14 @@ def changeparent():
             share.mountpoint_id = parentid
             db.session.commit()
         except Exception as e:
-            return jsonify(code=1, error="Exception: "+e.message)
+            return jsonify(code=1, error="Exception: "+str(e))
     else:
-    # change parent ID and remove matrix coords
+    # change parent ID
         try:
             sample.parent_id = parentid
-            sample.mx = None
-            sample.my = None
             db.session.commit()
         except Exception as e:
-            return jsonify(code=1, error=e.message)
+            return jsonify(code=1, error=str(e))
     return jsonify(code=0)
 
 
@@ -385,7 +383,7 @@ def newsample():
             record_activity('add:sample', current_user, sample, commit=True)
             return redirect("/sample/" + str(sample.id))
         except Exception as e:
-            flash(e.message)
+            flash(str(e))
     return render_template('newsample.html', form=form)
 
 

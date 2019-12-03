@@ -10,18 +10,15 @@ from ..models import User
 @login_required
 def changedetails():
     form = ChangeDetailsForm()
-    if form.validate_on_submit():
-        user = current_user
-        if user.verify_password(form.password.data):
-            user.username = form.username.data
-            user.email = form.email.data
+    if form.is_submitted():
+        if form.validate():
+            current_user.username = form.username.data
+            current_user.email = form.email.data
             db.session.commit()
             flash('Details updated.')
-        else:
-            flash('Password incorrect.')
-
-    form.username.data = current_user.username
-    form.email.data = current_user.email
+    else:
+        form.username.data = current_user.username
+        form.email.data = current_user.email
 
     return render_template('profile/changedetails.html', form=form)
 

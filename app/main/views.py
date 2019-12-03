@@ -383,6 +383,7 @@ def newsample():
             record_activity('add:sample', current_user, sample, commit=True)
             return redirect("/sample/" + str(sample.id))
         except Exception as e:
+            db.session.rollback()
             flash(str(e))
     return render_template('newsample.html', form=form)
 

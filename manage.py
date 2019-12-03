@@ -153,5 +153,29 @@ def update_isarchived():
     db.session.commit()
 
 
+@manager.command
+def find_parentid_none():
+    """ Helper function to find NULL fields for parent_id
+    """
+    from app.models import Sample
+
+    for s in Sample.query.all():
+        if s.parent_id is None:
+            print('Sample', s, "has parent_id = NULL and contains", s.actions)
+
+
+@manager.command
+def remove_parentid_none():
+    """ Helper function to remove samples with NULL for parent_id
+    """
+    from app.models import Sample
+
+    for s in Sample.query.all():
+        if s.parent_id is None:
+            print('Sample', s, "has parent_id = NULL and contains", s.actions)
+            db.session.delete(s)
+    db.session.commit()
+
+
 if __name__ == '__main__':
     manager.run()

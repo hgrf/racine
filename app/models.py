@@ -1,7 +1,6 @@
 from . import db
 from . import login_manager
-from flask.ext.login import current_user
-from flask.ext.login import UserMixin
+from flask_login import current_user, UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app as app

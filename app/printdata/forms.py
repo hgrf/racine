@@ -1,7 +1,8 @@
-from flask.ext.wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import SubmitField, StringField, HiddenField
 
-class RequestActionsForm(Form):
+
+class RequestActionsForm(FlaskForm):
     datefrom = StringField('From:')
     dateto = StringField('To:')
     sample = StringField('Sample:')

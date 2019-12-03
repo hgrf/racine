@@ -4,7 +4,7 @@ from .. import db
 from .. import plugins
 from ..models import Sample, Action, User, Share, Upload, SMBResource, Activity, record_activity
 from . import main
-from forms import NewSampleForm, NewActionForm, NewMatrixForm
+from .forms import NewSampleForm, NewActionForm, NewMatrixForm
 from datetime import date, datetime, timedelta
 from .. import smbinterface
 from ..validators import ValidSampleName
@@ -45,7 +45,7 @@ def welcome():
     stmt = db.session.query(Action.owner_id, func.count('*').label('action_count')).filter(Action.datecreated > aweekago).group_by(Action.owner_id).subquery()
     newactionsallusers = db.session.query(User, stmt.c.action_count).outerjoin(stmt, User.id==stmt.c.owner_id).order_by(User.id).all()
     maxcountallusers = 0
-    for n in newactionsallusers: maxcountallusers = max(maxcountallusers, n[1])
+    for n in newactionsallusers: maxcountallusers = max(maxcountallusers, n[1] if n[1] is not None else 0)
 
     # get per user upload volume for all users (only admin will see this)
     stmt = db.session.query(Upload.user_id, func.sum(Upload.size).label('upload_volume')).group_by(Upload.user_id).subquery()
@@ -53,7 +53,7 @@ def welcome():
     maxuploadvol = 0
     totuploadvol = 0
     for u in uploadvols:
-        maxuploadvol = max(maxuploadvol, u[1])
+        maxuploadvol = max(maxuploadvol, u[1] if u[1] is not None else 0)
         totuploadvol += u[1] if u[1] is not None else 0
 
     # get last modified samples

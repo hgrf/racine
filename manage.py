@@ -29,14 +29,15 @@ def find_base64():
             continue
         j = desc.find('base64')
         if j != -1:
-            print "Found base64 in sample #", item.id, ":", item.name, "/ belongs to", item.owner.username
+            print("Found base64 in sample #", item.id, ":", item.name, "/ belongs to", item.owner.username)
     for item in Action.query.all():
         desc = item.description
         if desc is None:
             continue
         j = desc.find('base64')
         if j != -1:
-            print "Found base64 in sample #", item.sample.id, ":", item.sample.name, "/ action #", item.id, "/ belongs to ", item.owner.username
+            print("Found base64 in sample #", item.sample.id, ":", item.sample.name,
+                  "/ action #", item.id, "/ belongs to ", item.owner.username)
 
 @manager.command
 def make_previews():
@@ -54,7 +55,7 @@ def make_previews():
     for i, upload in enumerate(uploads):
         # show progress
         if float(i)/len(uploads)*100/10 > progress:
-            print "Progress: "+str(progress*10)+"%"
+            print("Progress: "+str(progress*10)+"%")
             progress += 1
 
         path = os.path.join(app.config['UPLOAD_FOLDER'], str(upload.id) + '.' + upload.ext)
@@ -69,11 +70,11 @@ def make_previews():
                 warnings.simplefilter("always")
                 image = Image.open(path)
                 if len(ws):
-                    print "Warnings for upload "+str(upload.id)+":"
+                    print("Warnings for upload "+str(upload.id)+":")
                     for w in ws:
-                        print '   ', w.message
+                        print('   ', w.message)
         except Exception as e:
-            print "Could not load image or make preview for upload "+str(upload.id)+":", e
+            print("Could not load image or make preview for upload "+str(upload.id)+":", e)
             continue
 
         # create preview
@@ -82,11 +83,11 @@ def make_previews():
                 warnings.simplefilter("always")
                 make_preview(upload, image)
                 if len(ws):
-                    print "Warnings for upload "+str(upload.id)+":"
+                    print("Warnings for upload "+str(upload.id)+":")
                     for w in ws:
-                        print '   ', w.message
+                        print('   ', w.message)
         except Exception as e:
-            print "Could not make preview for upload "+str(upload.id)+":", e
+            print("Could not make preview for upload "+str(upload.id)+":", e)
 
 
 if __name__ == '__main__':

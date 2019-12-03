@@ -1,4 +1,4 @@
-from models import SMBResource
+from .models import SMBResource
 from smb.SMBConnection import SMBConnection
 import socket
 from threading import Lock

@@ -20,7 +20,7 @@ def after_flush(session, flush_context):
     """
     for obj in session.deleted:
         if isinstance(obj, Share):
-            print "Detected share deletion: ", obj
+            print("Detected share deletion: ", obj)
 
             share = obj
 

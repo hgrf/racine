@@ -2,7 +2,7 @@ from flask import render_template, redirect, request, url_for, flash
 from .. import db
 from ..decorators import admin_required
 from ..models import SMBResource, User, Upload, Action, Sample
-from forms import NewSMBResourceForm, ShutdownForm, NewUserForm, EmailSettings
+from forms import NewSMBResourceForm, NewUserForm, EmailSettings
 from . import settings
 from flask_login import login_required
 import git
@@ -12,13 +12,6 @@ from ..email import send_mail, read_mailconfig
 import os
 from .. import plugins
 
-
-# see http://flask.pocoo.org/snippets/67/
-def shutdown_server():
-    func = request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
 
 @settings.route('/overview')
 @login_required

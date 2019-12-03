@@ -15,10 +15,6 @@ class NewSMBResourceForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
-class ShutdownForm(FlaskForm):
-    submit = SubmitField('Confirm shutdown')
-
-
 class NewUserForm(FlaskForm):
     is_admin = BooleanField('Admin')
     username = StringField('User name', validators=[Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_. ]*$', 0,

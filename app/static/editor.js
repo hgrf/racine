@@ -263,7 +263,7 @@ function load_sample(id, pushstate, scrolltotop, scrollnavbar) {
             $( "#editor-frame" ).html(data);
             sample_id = $('#sampleid').text();
             if(this.pushstate)
-                window.history.pushState({"id": sample_id, "pageTitle": data.pageTitle}, "", "/sample/"+ sample_id);
+                window.history.pushState({"id": sample_id}, "", "/sample/"+ sample_id);
             document.title = "MSM - "+$('#samplename').text();
             init_editor(this.scrolltotop);
             // highlight in navbar, if the navbar is already loaded
@@ -289,7 +289,8 @@ function load_welcome(pushstate) {
         url: "/welcome",
         success: function(data) {
             if(pushstate)
-                window.history.pushState({"pageTitle": data.pageTitle},"", "");
+                window.history.pushState({},"", "");
+            document.title = "Mercury Sample Manager";
 
             $("#editor-frame").html(data);
             make_samples_clickable();
@@ -306,8 +307,7 @@ function load_searchresults(term, pushstate) {
         url: "/search?ajax=true&term="+term,
         success: function(data) {
             if(pushstate)
-                window.history.pushState({"term": term, "pageTitle": data.pageTitle},
-                    "", "/search?term="+term);
+                window.history.pushState({"term": term}, "", "/search?term="+term);
             document.title = "MSM - Search";
 
             $("#editor-frame").html(data);

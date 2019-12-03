@@ -365,7 +365,7 @@ def newsample():
             return render_template('newsample.html', form=form, parenterror=True)
         try:
             sample = Sample(owner=current_user, name=form.name.data, parent_id=parentid,
-                            description=form.description.data, isdeleted=False)
+                            description=form.description.data, isarchived=False, isdeleted=False)
             db.session.add(sample)
             db.session.commit()
             record_activity('add:sample', current_user, sample, commit=True)

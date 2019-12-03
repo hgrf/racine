@@ -101,11 +101,11 @@ def find_deleted_samples_activity():
 
     activity = Activity.query.filter_by(type=at).all()
     for a in activity:
-        print "Identified deleted sample:", a.sample_id, "/ deleted", a.timestamp, "/ previous activity:"
+        print("Identified deleted sample:", a.sample_id, "/ deleted", a.timestamp, "/ previous activity:")
         # find all previous activity related to this sample
         prev_activity = Activity.query.filter(Activity.sample == a.sample).filter(Activity.id < a.id).all()
         for pa in prev_activity:
-            print "  ", pa.timestamp, pa.type.description
+            print("  ", pa.timestamp, pa.type.description)
 
 
 @manager.command
@@ -116,6 +116,19 @@ def update_isdeleted():
 
     for s in Sample.query.all():
         s.isdeleted = False
+
+    db.session.commit()
+
+
+@manager.command
+def update_isarchived():
+    """ Helper function to remove NULL fields for isarchived
+    """
+    from app.models import Sample
+
+    for s in Sample.query.all():
+        if s.isarchived is None:
+            s.isarchived = False
 
     db.session.commit()
 

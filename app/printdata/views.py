@@ -1,7 +1,7 @@
 from flask import render_template
 from . import printdata
 from ..models import Sample
-from forms import RequestActionsForm
+from .forms import RequestActionsForm
 from flask_login import login_required, current_user
 from datetime import datetime
 

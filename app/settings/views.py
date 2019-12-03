@@ -2,7 +2,7 @@ from flask import render_template, redirect, request, url_for, flash
 from .. import db
 from ..decorators import admin_required
 from ..models import SMBResource, User, Upload, Action, Sample
-from forms import NewSMBResourceForm, NewUserForm, EmailSettings
+from .forms import NewSMBResourceForm, NewUserForm, EmailSettings
 from . import settings
 from flask_login import login_required
 import git

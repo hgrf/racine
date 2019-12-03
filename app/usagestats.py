@@ -6,7 +6,7 @@ import uuid
 import threading
 from config import basedir
 from . import db
-from models import User, Sample, Action, Upload
+from .models import User, Sample, Action, Upload
 from sqlalchemy.sql import func
 
 start_time = time.time()

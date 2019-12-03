@@ -1,5 +1,6 @@
 from wtforms.validators import ValidationError
-from models import SAMPLE_NAME_LENGTH
+from .models import SAMPLE_NAME_LENGTH
+
 
 class ValidSampleName(object):
     def __init__(self):

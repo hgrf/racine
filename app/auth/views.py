@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, url_for, flash, make_response, jsonify
+from flask import render_template, redirect, request, url_for, flash, make_response, session
 from flask_login import login_user, logout_user, login_required, current_user
 from . import auth
 from ..models import User, record_activity
@@ -12,7 +12,13 @@ def login():
     last_logged_in = request.cookies.get('last_logged_in')
     last_logged_in = last_logged_in.split(',') if last_logged_in else []
 
-    form = LoginForm()
+    # workaround to avoid server error when trying to connect with cookie from python 2 version
+    try:
+        form = LoginForm()
+    except TypeError:
+        # erroneous cookie for testing: session = eyJjc3JmX3Rva2VuIjp7IiBiIjoiT1RKaE4yTmpaRGc0WXpNMlpqZGhPR1ZoTkRSa1lURmxaRGN5TjJZeU1EZzVObUZsT0ROa1pBPT0ifX0.XeZ16g.Y3yco4lf1Ofku9GH_vj4ETg2itk
+        session.pop('csrf_token')
+        form = LoginForm()
     resp = None
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -41,6 +47,7 @@ def login():
 
     resp.set_cookie('last_logged_in', ','.join(last_logged_in), max_age=3600*24*7*4) # 4 week validity for the cookie
     return resp
+
 
 @auth.route('/reset', methods=['GET', 'POST'])
 def password_reset_request():

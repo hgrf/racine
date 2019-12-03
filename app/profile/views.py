@@ -2,8 +2,9 @@ from flask import render_template, redirect, request, url_for, flash
 from . import profile
 from .. import db
 from flask_login import login_required, current_user
-from forms import ChangePasswordForm, ChangeDetailsForm
+from .forms import ChangePasswordForm, ChangeDetailsForm
 from ..models import User
+
 
 @profile.route('/overview')
 @login_required

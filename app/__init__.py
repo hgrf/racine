@@ -15,9 +15,9 @@ login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
 
-from smbinterface import SMBInterface   # has to be here, because it will import db and login_manager from this file
+from .smbinterface import SMBInterface   # has to be here, because it will import db and login_manager from this file
 smbinterface = SMBInterface()
-from usagestats import UsageStatisticsThread   # has to be here, because it will import db from this file
+from .usagestats import UsageStatisticsThread   # has to be here, because it will import db from this file
 
 
 def create_app(config_name):
@@ -44,8 +44,8 @@ def create_app(config_name):
 
     # update activity types table
     with app.app_context():
-        from main.views import supported_targets
-        from models import ActivityType
+        from .main.views import supported_targets
+        from .models import ActivityType
         from sqlalchemy.exc import OperationalError
 
         activity_types = ['selectsmbfile', 'login', 'logout']
@@ -76,7 +76,7 @@ def create_app(config_name):
         p = imp.load_source(f[8:-3], f)
         if not hasattr(p, 'display') or not hasattr(p, 'title'):
             # TODO: report this some other way, e.g. raise Exception or log warning...
-            print "Incompatible plugin: ", f[8:-3]
+            print("Incompatible plugin: ", f[8:-3])
         plugins.append(p)
 
     return app

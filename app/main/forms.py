@@ -1,16 +1,16 @@
-from flask.ext.wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import SubmitField, TextAreaField, StringField, HiddenField
 from wtforms.fields.html5 import DateField
 from ..validators import ValidSampleName
 
 
-class NewActionForm(Form):
+class NewActionForm(FlaskForm):
     timestamp = DateField('Date:')
     description = TextAreaField('Description:')
     submit = SubmitField('Submit')
 
 
-class NewSampleForm(Form):
+class NewSampleForm(FlaskForm):
     name = StringField('Sample name:', validators=[ValidSampleName()])
     parent = StringField('Parent:')
     parentid = HiddenField()
@@ -18,7 +18,7 @@ class NewSampleForm(Form):
     submit = SubmitField('Submit')
 
 
-class NewMatrixForm(Form):
+class NewMatrixForm(FlaskForm):
     height = StringField('Height:')  # use some sort of integer field here!
     width = StringField('Width:')  # use some sort of integer field here!
     submit = SubmitField('Submit')

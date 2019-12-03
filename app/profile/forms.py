@@ -1,17 +1,17 @@
-from flask.ext.wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import SubmitField, PasswordField, StringField
-from wtforms.validators import Required, Length, Email, Regexp, EqualTo
+from wtforms.validators import Required, Length, Email, Regexp, EqualTo, ValidationError
 from ..models import User
 
 
-
-class ChangePasswordForm(Form):
+class ChangePasswordForm(FlaskForm):
     oldpassword = PasswordField('Old password')
     password = PasswordField('New password', validators=[Required(), EqualTo('password2', message='Passwords must match.')])
     password2 = PasswordField('Confirm new password', validators=[Required()])
     submit = SubmitField('Submit')
 
-class ChangeDetailsForm(Form):
+
+class ChangeDetailsForm(FlaskForm):
     username = StringField('User name:', validators=[
 Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
 'Usernames must have only letters, '

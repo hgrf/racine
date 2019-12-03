@@ -1,5 +1,5 @@
 from flask import render_template, redirect, request, jsonify, send_file, flash
-from flask.ext.login import current_user, login_required, login_user, logout_user
+from flask_login import current_user, login_required, login_user, logout_user
 from .. import db
 from .. import plugins
 from ..models import Sample, Action, User, Share, Upload, SMBResource, Activity, record_activity

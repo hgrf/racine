@@ -331,7 +331,7 @@ def retrieve_smb_image(path):
         image.convert('RGB').save(image_binary, 'JPEG')
         image.close()
         image_binary.seek(0)  # need to go back to beginning of stream
-        return send_file(image_binary)
+        return send_file(image_binary, mimetype='image/jpeg')
     except Exception:
         return send_file(os.path.join(app.config['MSM_FOLDER'], 'app/static/images/file.png'))
 

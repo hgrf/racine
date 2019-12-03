@@ -2,8 +2,9 @@ from flask import render_template
 from . import printdata
 from ..models import Sample
 from forms import RequestActionsForm
-from flask.ext.login import login_required, current_user
+from flask_login import login_required, current_user
 from datetime import datetime
+
 
 @printdata.route('/', methods=['GET', 'POST'])
 @login_required

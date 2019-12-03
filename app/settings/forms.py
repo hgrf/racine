@@ -1,10 +1,10 @@
-from flask.ext.wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import SubmitField, StringField, ValidationError, PasswordField, BooleanField, IntegerField
 from wtforms.validators import Required, Length, Email, Regexp, EqualTo, DataRequired
 from ..models import User
 
 
-class NewSMBResourceForm(Form):
+class NewSMBResourceForm(FlaskForm):
     name = StringField('SMB Resource name:')
     servername = StringField('Server name (NetBIOS):')
     serveraddr = StringField('Server address:')
@@ -15,11 +15,11 @@ class NewSMBResourceForm(Form):
     submit = SubmitField('Submit')
 
 
-class ShutdownForm(Form):
+class ShutdownForm(FlaskForm):
     submit = SubmitField('Confirm shutdown')
 
 
-class NewUserForm(Form):
+class NewUserForm(FlaskForm):
     is_admin = BooleanField('Admin')
     username = StringField('User name', validators=[Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_. ]*$', 0,
 'Usernames must contain only letters, numbers, dots, underscores or spaces and start with a letter.')])
@@ -37,7 +37,7 @@ class NewUserForm(Form):
             raise ValidationError('Username already in use.')
 
 
-class EmailSettings(Form):
+class EmailSettings(FlaskForm):
     sender = StringField('Sender:', validators=[DataRequired()])
     server = StringField('Server:', validators=[DataRequired()])
     port = IntegerField('Port:', validators=[DataRequired()])

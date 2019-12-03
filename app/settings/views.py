@@ -4,7 +4,7 @@ from ..decorators import admin_required
 from ..models import SMBResource, User, Upload, Action, Sample
 from forms import NewSMBResourceForm, ShutdownForm, NewUserForm, EmailSettings
 from . import settings
-from flask.ext.login import login_required
+from flask_login import login_required
 import git
 from config import basedir
 from flask import current_app as app

@@ -133,5 +133,16 @@ def update_isarchived():
     db.session.commit()
 
 
+@manager.command
+def find_matrixview_usage():
+    """ Helper function to identify users who have used the matrixview feature.
+    """
+    from app.models import Sample
+
+    for s in Sample.query.all():
+        if s.mwidth is not None:
+            print(s.owner, "has used matrixview in sample", s)
+
+
 if __name__ == '__main__':
     manager.run()

@@ -26,11 +26,11 @@ def index():
 @login_required
 def sample(sampleid):
     if not sampleid:
-        return render_template('main.html', sample=None)
+        return render_template('main.html', sample=None, search_activated=True)
     sample = Sample.query.get(sampleid)
     if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
         return render_template('404.html'), 404
-    return render_template('main.html', sample=sample)
+    return render_template('main.html', sample=sample, search_activated=True)
 
 
 @main.route('/welcome')
@@ -142,7 +142,10 @@ def help():
 @main.route('/search', methods=['GET'])
 @login_required
 def search():
-    keyword = request.args.get('term').lower()
+    keyword = request.args.get('term')
+    if keyword is None or keyword == '':
+        return jsonify(error="Please specify a search term")
+    keyword = keyword.lower()
     # In order to reach really ALL samples that are accessible by the current user, we need to go through the hierarchy.
     # The most tricky samples to catch are the children of a sample that the user shares with someone else and that are
     # not explicitly shared with the user.
@@ -171,8 +174,10 @@ def search():
 
     if request.args.get('autocomplete') is not None:
         return jsonify(results=results)
-    else:
+    elif request.args.get('ajax') is not None:
         return render_template('searchresults.html', results=results, term=keyword)
+    else:
+        return render_template('main.html', sample=None, search_activated=True, term=keyword)
 
 
 @main.route('/userlist', methods=['POST'])

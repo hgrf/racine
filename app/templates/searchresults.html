@@ -1,6 +1,4 @@
-{% extends "base.html" %}
-
-{% block styles %}
+{# {% block styles %}
     {{ super() }}
     <style>
     .resultslist {
@@ -12,25 +10,23 @@
         height: 24px;
     }
     </style>
-{% endblock %}
+{% endblock %} #}
 
-{% block page_content %}
-    <h2><b>Search results:</b> "{{ term }}"</h2>
-    <hr>
-    <div class="resultslist">
-    {% for r in results %}
-        <div class="sample" data-id="{{ r.id }}">
-            <img src="/static/images/sample.png">
-            {{ r.name }} &nbsp;&nbsp;
-            {% if not r.mysample %}
-                <i class="glyphicon glyphicon-user"></i>
-                {{ r.ownername }} &nbsp;&nbsp;
-            {% endif %}
-            {% if r.parentname %}
-                <i class="glyphicon glyphicon-level-up"></i>
-                {{ r.parentname }}
-            {% endif %}
-        </div>
-    {% endfor %}
+<h2><b>Search results:</b> "{{ term }}"</h2>
+<hr>
+<div class="resultslist" style="max-width:500px;">
+{% for r in results %}
+    <div class="sample" data-id="{{ r.id }}">
+        <img src="/static/images/sample.png" width="24px">
+        {{ r.name }} &nbsp;&nbsp;
+        {% if not r.mysample %}
+            <i class="glyphicon glyphicon-user"></i>
+            {{ r.ownername }} &nbsp;&nbsp;
+        {% endif %}
+        {% if r.parentname %}
+            <i class="glyphicon glyphicon-level-up"></i>
+            {{ r.parentname }}
+        {% endif %}
     </div>
-{% endblock %}
+{% endfor %}
+</div>

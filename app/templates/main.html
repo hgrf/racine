@@ -39,6 +39,9 @@
         {% if sample is not none %}
             var sample = {{ sample.id }};
         {% endif %}
+        {% if term %}
+            var term = "{{ term }}";
+        {% endif %}
         var begin_flashmsg = "{{ begin_flashmsg|safe }}";
         var end_flashmsg = "{{ end_flashmsg|safe }}";
     </script>

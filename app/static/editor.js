@@ -1,4 +1,5 @@
 var sample_id;
+var term;
 var hiddeneditor;
 var showparentactions = false;
 
@@ -40,6 +41,13 @@ var ckeditorconfig = {
 $.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer
 
 $.ajaxSetup({ cache: false });
+
+function make_samples_clickable() {
+    // check if load_sample is defined
+    $('div.sample').click(function() {
+       load_sample($(this).data('id'));
+    });
+}
 
 function setup_sample_image() {
     $('#sampleimage').zoombutton();
@@ -271,6 +279,43 @@ function load_sample(id, pushstate, scrolltotop, scrollnavbar) {
     });
 }
 
+function load_welcome(pushstate) {
+    // if currently viewing a sample (not welcome page) then change the navbar background to transparent
+    if(typeof sample_id !== "undefined")
+        $('#nav-entry' + sample_id).css("background-color", "transparent");
+
+    // load welcome page
+    $.ajax({
+        url: "/welcome",
+        success: function(data) {
+            if(pushstate)
+                window.history.pushState({"pageTitle": data.pageTitle},"", "");
+
+            $("#editor-frame").html(data);
+            make_samples_clickable();
+        }
+    });
+}
+
+function load_searchresults(term, pushstate) {
+    // if currently viewing a sample (not welcome page) then change the navbar background to transparent
+    if(typeof sample_id !== "undefined")
+        $('#nav-entry' + sample_id).css("background-color", "transparent");
+
+    $.ajax({
+        url: "/search?ajax=true&term="+term,
+        success: function(data) {
+            if(pushstate)
+                window.history.pushState({"term": term, "pageTitle": data.pageTitle},
+                    "", "/search?term="+term);
+            document.title = "MSM - Search";
+
+            $("#editor-frame").html(data);
+            make_samples_clickable();
+        }
+    });
+}
+
 function before_unload_handler(e) {
     for(var i in CKEDITOR.instances) {
         if(CKEDITOR.instances[i].checkDirty()) {
@@ -284,29 +329,52 @@ function before_unload_handler(e) {
 $(document).ready(function() {
     window.addEventListener("popstate", function(e) {
         if(e.state != null)
-            load_sample(e.state.id, false, false, true);
+            if(typeof e.state.term !== "undefined") {
+                load_searchresults(e.state.term, false);
+            } else if(typeof e.state.id !== "undefined") {
+                load_sample(e.state.id, false, false, true);
+            } else {
+                load_welcome(false);
+            }
         else
             location.href = "/";
     });
 
-    // load sample if we're not on welcome page
-    if(typeof sample == "undefined") {
-        $.ajax({
-            url: "/welcome",
-            success: function(data) {
-                $("#editor-frame").html(data);
-                $(document).trigger("welcome_initialised");
-            }
-        });
+    // figure out what page to load
+    if(typeof sample !== "undefined") {
+        load_sample(sample, true);
+    } else if(typeof term !== "undefined") {
+        load_searchresults(term, true);
     } else {
-        load_sample(sample, false);
+        load_welcome(true);
     }
 
     // add window unload handler (which asks the user to confirm leaving the page when one of the CKEditor instances
     // has been modified
     window.addEventListener('beforeunload', before_unload_handler);
 
-    // TODO: this stuff belongs in "main.js"
+    // set up search field in header bar
+    create_searchsample($('#navbar-search'));
+
+    $('#navbar-search').bind('typeahead:selected', function(event, suggestion) {
+        $(this).typeahead('val', '');    // clear the search field
+        load_sample(suggestion.id);
+    });
+
+    $('#navbar-search').keypress(function(event) {
+        if (event.which == 13) {
+            // if currently viewing a sample (not welcome page) then change the navbar background to transparent
+            if(typeof sample_id !== "undefined")
+                $('#nav-entry' + sample_id).css("background-color", "transparent");
+
+            if($(this).val() === '') {
+                error_dialog('Please specify a search term');
+            } else {
+                load_searchresults($(this).val(), true);  // load the searchresults page
+                $(this).typeahead('val', '');    // clear the search field
+            }
+        }
+    });
 
     function shareselected(event, suggestion) {
         $.ajax({

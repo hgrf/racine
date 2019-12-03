@@ -79,7 +79,11 @@ not populated by JavaScript #}
                     <li><a href="{{ url_for('auth.logout') }}"><i class="hidden-xs glyphicon glyphicon-log-out" title="Sign out"></i><span class="visible-xs-block">Sign out</span></a></li>
                     <li><a href="/help"><i class="hidden-xs glyphicon glyphicon-question-sign" title="Help"></i><span class="visible-xs-block">Help</span></a></li>
                 </ul>
-                <form class="nav navbar-form navbar-right"><input type="text" id="navbar-search" class="form-control" placeholder="Search..."></form>
+                {% if search_activated %}
+                    <form class="nav navbar-form navbar-right">
+                        <input type="text" id="navbar-search" class="form-control" placeholder="Search...">
+                    </form>
+                {% endif %}
             </div>
         </div>
     </nav>
@@ -127,20 +131,8 @@ not populated by JavaScript #}
 
 {% block scripts %}
 {{ super() }}
-    <script src="{{ url_for('static', filename='base.js') }}"></script>
+    <script src="{{ url_for('static', filename='base.js', version='blaX') }}"></script>
     <script src="{{ url_for('static', filename='typeahead.js/typeahead.bundle.min.js') }}"></script>
     <script src="{{ url_for('static', filename='typeahead.js/substringmatcher.js') }}"></script>
     <script src="{{ url_for('static', filename='searchsample.js') }}"></script>
-    <script type="text/javascript" charset="utf-8">
-    $(function() {
-        function make_samples_clickable() {
-            $('div.sample').click(function(event) {
-                location.href = '/sample/'+$(this).data('id');
-            });
-        }
-
-        $(document).ready(make_samples_clickable); // e.g. for searchresults.html
-        $(document).on("welcome_initialised", make_samples_clickable); // for the welcome page
-    });
-    </script>
 {% endblock %}

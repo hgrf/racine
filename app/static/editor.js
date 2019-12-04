@@ -280,16 +280,17 @@ function load_sample(id, pushstate, scrolltotop, scrollnavbar) {
 }
 
 function load_welcome(pushstate) {
-    // if currently viewing a sample (not welcome page) then change the navbar background to transparent
-    if(typeof sample_id !== "undefined")
-        $('#nav-entry' + sample_id).css("background-color", "transparent");
-
     // load welcome page
     $.ajax({
         url: "/welcome",
         success: function(data) {
+            // if currently viewing a sample (not welcome page) then change the navbar background to transparent
+            if(typeof sample_id !== "undefined")
+                $('#nav-entry' + sample_id).css("background-color", "transparent");
+            sample_id = undefined;
+
             if(pushstate)
-                window.history.pushState({},"", "");
+                window.history.pushState({},"", "/");
             document.title = "Mercury Sample Manager";
 
             $("#editor-frame").html(data);
@@ -299,13 +300,14 @@ function load_welcome(pushstate) {
 }
 
 function load_searchresults(term, pushstate) {
-    // if currently viewing a sample (not welcome page) then change the navbar background to transparent
-    if(typeof sample_id !== "undefined")
-        $('#nav-entry' + sample_id).css("background-color", "transparent");
-
     $.ajax({
         url: "/search?ajax=true&term="+term,
         success: function(data) {
+            // if currently viewing a sample (not welcome page) then change the navbar background to transparent
+            if(typeof sample_id !== "undefined")
+                $('#nav-entry' + sample_id).css("background-color", "transparent");
+            sample_id = undefined;
+
             if(pushstate)
                 window.history.pushState({"term": term}, "", "/search?term="+term);
             document.title = "MSM - Search";
@@ -455,14 +457,21 @@ $(document).ready(function() {
         $.ajax({
             url: "/del"+type+"/"+id,
             success: function( data ) {
-                if(type=="sample")
-                    location.href = "/";
-                if(type=="action")
-                    $('#'+id+'.list-entry').remove();
-                if(type=="share") {
-                    if(data.code==2) // if the user removed himself from the sharer list
-                        location.href = "/";
-                    $('#sharelistentry'+data.shareid).remove();
+                switch(type) {
+                    case "sample":
+                        load_welcome(true);
+                        load_navbar(undefined, undefined, false, true);
+                        break;
+                    case "action":
+                        $('#'+id+'.list-entry').remove();
+                        break;
+                    case "share":
+                        $('#sharelistentry'+data.shareid).remove();
+                        if(data.code==2) { // if the user removed himself from the sharer list
+                            load_welcome(true);
+                            load_navbar(undefined, undefined, false, true);
+                        }
+                        break;
                 }
                 $('#confirm-delete').modal('hide');
             }

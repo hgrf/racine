@@ -5,9 +5,10 @@ from .. import plugins
 from ..models import Sample, Action, User, Share, Upload, SMBResource, Activity, record_activity
 from . import main
 from .forms import NewSampleForm, NewActionForm
+from ..settings.forms import NewUserForm
 from datetime import date, datetime, timedelta
 from .. import smbinterface
-from ..validators import ValidSampleName
+from ..validators import validate_form_field
 from sqlalchemy.sql import func
 from sqlalchemy import not_
 import os
@@ -436,21 +437,6 @@ def str_to_bool(str):
         raise Exception('String could not be converted to boolean')
 
 
-# use the email validator from the new user form
-# TODO: this could be generalised for any field by passing the form and the field name as parameters to this function
-#       however, the approach in app/validators.py is also a solution (i.e. writing my own validators that are
-#       compatible both with the below field updating and the WTForms validation
-from ..settings.forms import NewUserForm
-def validate_email(str):
-    form = NewUserForm()
-    form.email.data = str
-    if form.email.validate(form):
-        return str
-    else:
-        # raise exception with first validation error as message
-        raise Exception(form.email.errors[0])
-
-
 def validate_is_admin(str, item):
     b = str_to_bool(str)
     if item.is_admin and not b:
@@ -466,7 +452,7 @@ supported_targets = {
         'dbobject': Sample,
         'auth': 'owner',
         'fields': {
-            'name': ValidSampleName.validate,
+            'name': lambda x: validate_form_field(NewSampleForm(), 'newsamplename', x),
             'description': str,
             'image': str
         }
@@ -501,8 +487,8 @@ supported_targets = {
         'dbobject': User,
         'auth': 'admin',
         'fields': {
-            'username': str,
-            'email': validate_email,
+            'username': lambda x: validate_form_field(NewUserForm(), 'username', x),
+            'email': lambda x: validate_form_field(NewUserForm(), 'email', x),
             'is_admin': validate_is_admin
         }
     }

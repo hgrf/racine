@@ -1,23 +1,21 @@
 from wtforms.validators import ValidationError
-from .models import SAMPLE_NAME_LENGTH
+from .models import User
 
 
-class ValidSampleName(object):
-    def __init__(self):
-        pass
+def email_already_registered(form, field):
+    if User.query.filter_by(email=field.data).first():
+        raise ValidationError('Email already registered.')
 
-    @staticmethod
-    def validate(name):
-        if not len(name):
-            raise ValidationError('Name too short.')
-        if len(name) > SAMPLE_NAME_LENGTH:
-            raise ValidationError('Name too long.')
-        if name[0] == ' ':
-            raise ValidationError('Name must not start with a space.')
-        # TODO: check here if user already has a sample with this name in this hierarchy level
-        #     if Sample.query.filter_by(owner=current_user, name=name).first() is not None:
 
-        return name
+def username_already_registered(form, field):
+    if User.query.filter_by(username=field.data).first():
+        raise ValidationError('Username already in use.')
 
-    def __call__(self, form, field):
-        self.validate(field.data)
+
+def validate_form_field(form, field, value):
+    field = getattr(form, field)
+    field.data = value
+    if field.validate(form):
+        return value
+    else:
+        raise Exception(field.errors[0])

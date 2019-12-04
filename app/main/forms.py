@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, TextAreaField, StringField, HiddenField, ValidationError
+from wtforms.validators import Length, Regexp
 from wtforms.fields.html5 import DateField
-from ..validators import ValidSampleName
-from ..models import Sample
+from ..models import Sample, SAMPLE_NAME_LENGTH
 
 
 class NewActionForm(FlaskForm):
@@ -12,7 +12,9 @@ class NewActionForm(FlaskForm):
 
 
 class NewSampleForm(FlaskForm):
-    newsamplename = StringField('Sample name:', validators=[ValidSampleName()])
+    newsamplename = StringField('Sample name:', validators=[Length(1, SAMPLE_NAME_LENGTH),
+                                                            Regexp('^(?! .*$).*', 0,
+                                                            'Sample name must not start with space.')])
     newsampleparent = StringField('Parent:')
     newsampleparentid = HiddenField()
     newsampledescription = TextAreaField('Description:')

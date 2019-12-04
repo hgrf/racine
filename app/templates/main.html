@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block styles %}
     {{super()}}
@@ -31,6 +32,21 @@
 </div>
 {{ end_modal_dialog() }}
 
+{{ begin_modal_dialog('newsample', 'New sample', 'modal-lg') }}
+<div class="modal-body">
+    <form id="newsampleform">
+        {{ newsampleform.hidden_tag() }}  {# also contains newsampleform.newsampleparentid #}
+        {{ wtf.form_field(newsampleform.newsamplename) }}
+        {{ wtf.form_field(newsampleform.newsampleparent) }}
+        {{ wtf.form_field(newsampleform.newsampledescription) }}
+    </form>
+</div>
+<div class="modal-footer">
+    <button id="newsamplesubmit" type="button" class="btn btn-primary">Submit</button>
+    <button id="newsampleclear" type="button" class="btn btn-default">Clear</button>
+</div>
+{{ end_modal_dialog() }}
+
 {% endblock %}
 
 {% block scripts %}
@@ -58,8 +74,8 @@
     <script src="{{ url_for('static', filename='jquery.jeditable.js') }}"></script>
     <script src="{{ url_for('static', filename='editorhelpers.js') }}"></script>
     <script src="{{ url_for('static', filename='ckeditable.js') }}"></script>
-    <script src="{{ url_for('static', filename='editor.js', version='20191203') }}"></script>
-    <script src="{{ url_for('static', filename='navbar.js') }}"></script>
+    <script src="{{ url_for('static', filename='editor.js', version='20191204') }}"></script>
+    <script src="{{ url_for('static', filename='navbar.js', version='20191204') }}"></script>
     <script src="{{ url_for('static', filename='lightbox2-master/src/js/lightbox.js') }}"></script>
 {% endblock %}
 

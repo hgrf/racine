@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, jsonify, send_file, flash
+from flask import render_template, redirect, request, jsonify, send_file, abort
 from flask_login import current_user, login_required, login_user, logout_user
 from .. import db
 from .. import plugins
@@ -20,11 +20,11 @@ def index(sampleid=0):
     if not current_user.is_authenticated:
         return redirect('/auth/login?next=%2F')
     if not sampleid:
-        return render_template('main.html', sample=None, search_activated=True)
+        return render_template('main.html', sample=None, search_activated=True, newsampleform=NewSampleForm())
     sample = Sample.query.get(sampleid)
     if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
         return render_template('404.html'), 404
-    return render_template('main.html', sample=sample, search_activated=True)
+    return render_template('main.html', sample=sample, search_activated=True, newsampleform=NewSampleForm())
 
 
 @main.route('/welcome')
@@ -171,7 +171,8 @@ def search():
     elif request.args.get('ajax') is not None:
         return render_template('searchresults.html', results=results, term=keyword)
     else:
-        return render_template('main.html', sample=None, search_activated=True, term=keyword)
+        return render_template('main.html', sample=None, search_activated=True, term=keyword,
+                               newsampleform=NewSampleForm())
 
 
 @main.route('/userlist', methods=['POST'])
@@ -360,26 +361,25 @@ def changeparent():
     return jsonify(code=0)
 
 
-@main.route('/newsample', methods=['GET', 'POST'])
+@main.route('/newsample', methods=['POST'])
 @login_required
 def newsample():
     form = NewSampleForm()
     if form.validate_on_submit():
-        parentid = int(form.parentid.data) if form.parentid.data else 0
-        if not Sample.query.get(form.parentid.data) and form.parentid.data:
-            flash("Please select a valid parent sample or leave that field empty.")
-            return render_template('newsample.html', form=form, parenterror=True)
         try:
-            sample = Sample(owner=current_user, name=form.name.data, parent_id=parentid,
-                            description=form.description.data, isarchived=False, isdeleted=False)
+            parent_id = int(form.newsampleparentid.data) if form.newsampleparentid.data else 0
+            sample = Sample(owner=current_user, name=form.newsamplename.data, parent_id=parent_id,
+                            description=form.newsampledescription.data, isarchived=False, isdeleted=False)
             db.session.add(sample)
             db.session.commit()
             record_activity('add:sample', current_user, sample, commit=True)
-            return redirect("/sample/" + str(sample.id))
+            return jsonify(code=0, sampleid=sample.id)
         except Exception as e:
             db.session.rollback()
-            flash(str(e))
-    return render_template('newsample.html', form=form)
+            return jsonify(code=1, error={'newsamplename': [str(e)]})
+    elif form.is_submitted():
+        return jsonify(code=1, error={field: errors for field, errors in form.errors.items()})
+    abort(500)          # this should never happen
 
 
 @main.route('/newaction/<sampleid>', methods=['POST'])

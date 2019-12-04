@@ -394,6 +394,89 @@ $(document).ready(function() {
         });
     }
 
+    // new sample dialog
+    var newsampleparent = $('#newsampleparent');
+    var newsampleparentid = $('#newsampleparentid')
+    create_selectsample(newsampleparent, newsampleparentid);
+    CKEDITOR.replace( 'newsampledescription', ckeditorconfig);
+
+    $('#newsample').on('show.bs.modal', function(event) {
+        // clear the dialog
+        $('#newsampleclear').trigger('click');
+
+        // set the parent field to the current sample
+        if(typeof sample_id !== 'undefined') {
+            $('#newsampleparent').typeahead('val', $('#samplename').text());
+            $('#newsampleparentid').val(sample_id);
+        }
+    });
+
+    $('#newsample').on('shown.bs.modal', function(event) {
+        // workaround for a bug in CKEditor -> if we don't do this after the editor is shown, a <br /> tag is inserted
+        // if we tab to the editor
+        CKEDITOR.instances['newsampledescription'].setData('');
+
+        // put the cursor in the sample name field
+        $('#newsamplename').focus();
+    });
+
+    $('#newsampleclear').click(function(event) {
+        event.preventDefault();
+
+        $('#newsamplename').val('');
+        newsampleparent.typeahead('val', '');
+        newsampleparent.markvalid();
+        newsampleparentid.val('');
+        CKEDITOR.instances['newsampledescription'].setData('');
+    });
+    $('#newsamplesubmit').click(function(event) {
+        event.preventDefault();
+
+        var newsampleform = $('#newsampleform');
+
+        // clean up error messages
+        newsampleform.find('.form-group').removeClass('has-error');
+        newsampleform.find('span.help-block').remove();
+
+        // make sure content of editor is transmitted
+        CKEDITOR.instances['newsampledescription'].updateElement();
+
+        $.ajax({
+            url: "/newsample",
+            type: "post",
+            data: newsampleform.serialize(),
+            success: function(data) {
+                if (data.code === 0) {
+                    $('#newsampleclear').trigger('click');
+                    $('#newsample').modal('hide');
+                    load_sample(data.sampleid);
+                    load_navbar();
+                } else {
+                    console.log(data.error);
+                    // form failed validation; because of invalid data or expired CSRF token
+                    for(field in data.error) {
+                        if(field === 'csrf_token') {
+                            error_dialog('The CSRF token has expired. Please reload the page to create a new sample.');
+                            continue;
+                        }
+                        // get form group
+                        var formgroupid = (field !== 'newsampleparentid' ? field : 'newsampleparent');
+                        var formgroup = $('#'+formgroupid).closest('.form-group');
+                        // add the has-error to the form group
+                        formgroup.addClass('has-error')
+                        // add the error message to the form group
+                        for(i in data.error[field]) {
+                            formgroup.append('<span class="help-block">'+data.error[field][i]+'</span>');
+                        }
+                    }
+                }
+            },
+            error: function( jqXHR, textStatus ) {
+                error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
+            }
+        });
+    });
+
     // set up the OK button and the enter button
     $('#userbrowserok').click(shareselected);
     $('#username').keyup(function(ev) { if(ev.keyCode == 13) shareselected(); });

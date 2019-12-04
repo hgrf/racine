@@ -52,18 +52,25 @@ function create_selectsample(searchfield, hiddenfield, valid, placeholder) {
     indicatorspan.append(indicator);
     searchfield.after(indicatorspan);
 
-    searchfield.keyup(function(ev) {
-        if(ev.keyCode == 13) return;
+    searchfield.markvalid = function() {
+        hiddenfield.attr('value', '');
+        indicator.removeClass('glyphicon-alert');
+        indicator.addClass('glyphicon-ok');
+        indicator.css('color', 'green');
+    };
+
+    searchfield.markinvalid = function() {
+        hiddenfield.attr('value', -1);
+        indicator.removeClass('glyphicon-ok');
+        indicator.addClass('glyphicon-alert');
+        indicator.css('color', 'red');
+    };
+
+    searchfield.on('input', function() {
         if(searchfield.val() == '') {
-            hiddenfield.attr('value', '');
-            indicator.removeClass('glyphicon-alert');
-            indicator.addClass('glyphicon-ok');
-            indicator.css('color', 'green');
+            searchfield.markvalid();
         } else {
-            hiddenfield.attr('value', -1);
-            indicator.removeClass('glyphicon-ok');
-            indicator.addClass('glyphicon-alert');
-            indicator.css('color', 'red');
+            searchfield.markinvalid();
         }
     });
 

@@ -15,16 +15,10 @@ import inspect
 
 
 @main.route('/')
-def index():
-    if current_user.is_authenticated:
-        return sample(0)
-    else:
-        return redirect('/auth/login?next=%2F')
-
-
 @main.route('/sample/<sampleid>')
-@login_required
-def sample(sampleid):
+def index(sampleid=0):
+    if not current_user.is_authenticated:
+        return redirect('/auth/login?next=%2F')
     if not sampleid:
         return render_template('main.html', sample=None, search_activated=True)
     sample = Sample.query.get(sampleid)

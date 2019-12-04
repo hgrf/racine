@@ -1,12 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, TextAreaField, StringField, HiddenField, ValidationError
+from wtforms import SubmitField, TextAreaField, StringField, HiddenField, ValidationError, DateField
 from wtforms.validators import Length, Regexp
-from wtforms.fields.html5 import DateField
 from ..models import Sample, SAMPLE_NAME_LENGTH
 
 
 class NewActionForm(FlaskForm):
-    timestamp = DateField('Date:')
+    timestamp = DateField('Date:', format='%Y-%m-%d', render_kw={"placeholder": "yyyy-mm-dd"})
     description = TextAreaField('Description:')
     submit = SubmitField('Submit')
 

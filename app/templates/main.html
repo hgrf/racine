@@ -53,7 +53,7 @@
 {{ super() }}
     <script>// because Jinja does not work in the JS files
         {% if sample is not none %}
-            var sample = {{ sample.id }};
+            var sample_id = {{ sample.id }};
         {% endif %}
         {% if term %}
             var term = "{{ term }}";

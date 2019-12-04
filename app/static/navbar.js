@@ -41,16 +41,7 @@ function init_navbar(scrolltocurrent, scrolltotop) {
             return;
         }
 
-        // use the before_unload_handler function in editor.js to check if any CKEditor is being edited
-        // if yes, ask the user if he really wants to load a different sample
-        confirm_message = before_unload_handler(0);
-        if(confirm_message) {
-            if (confirm(confirm_message)) {
-                load_sample($(this).data('id'));
-            }
-        } else {
-            load_sample($(this).data('id'));
-        }
+        load_sample($(this).data('id'));
         mobile_hide_sidebar();   // on the small screen, hide the sidebar after a sample has been selected
     });
 

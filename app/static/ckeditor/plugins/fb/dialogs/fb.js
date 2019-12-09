@@ -61,12 +61,12 @@ CKEDITOR.dialog.add( 'fbDialog', function(editor) {
             this.resize(0.8*window.innerWidth, 0.7*window.innerHeight);
             this.fire('resize');
             // update the iframe content
-            iframe.contentWindow.location.href = "/browser?type="+CKEDITOR.fbtype+
-                "&upload="+CKEDITOR.fbupload+(sample_id ? "&sample="+sample_id : "");
+            iframe.contentWindow.location.replace("/browser?type="+CKEDITOR.fbtype+
+                "&upload="+CKEDITOR.fbupload+(sample_id ? "&sample="+sample_id : ""));
         },
         onHide: function(event) {
             var iframe = document.getElementById(this.getContentElement('tab-basic', 'fbiframe').domId);
-            iframe.contentWindow.location.href = "about:blank";
+            iframe.contentWindow.location.replace("about:blank");
         }
     };
 });

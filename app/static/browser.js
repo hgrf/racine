@@ -142,7 +142,7 @@ function init_browser() {
     function folderclickhandler(event) {
         if(document.getElementById('multiswitch-checkbox') !== null)
             queryDict['multi'] = document.getElementById('multiswitch-checkbox').checked;
-        location.href = '/browser/'+$(this).data('url')+'?'+dictToURI(queryDict);
+        location.replace('/browser/'+$(this).data('url')+'?'+dictToURI(queryDict));
         event.preventDefault();
     }
 

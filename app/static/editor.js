@@ -3,7 +3,7 @@ var term;
 var hiddeneditor;
 var showparentactions = false;
 
-CKEDITOR.timestamp='20191201h';
+CKEDITOR.timestamp='20191209';
 
 // polyfill for string startsWith
 if (!String.prototype.startsWith) {

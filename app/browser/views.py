@@ -357,6 +357,7 @@ def imagebrowser(smb_path):
     browser_history = browser_history[:5]
 
     # process address
+    smb_path = smb_path.strip('/')      # this is necessary for Internet Explorer when going to xxx/..
     resource, path_on_server = smbinterface.process_smb_path(smb_path)
 
     if resource is None:

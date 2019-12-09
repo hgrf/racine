@@ -3,6 +3,15 @@
     font-weight:bold;
 }
 
+#samplename > form > input {
+    width:30% !important;
+}
+
+.actiondate > form > input {
+    width:100% !important;
+    max-width:200px;
+}
+
 .editor-shortcut {
     float: right;
     width: 32px;

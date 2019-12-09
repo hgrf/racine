@@ -7,7 +7,6 @@
             field.editable(field.data('setter'), {
                 style: 'inherit',
                 event: 'edit',
-                width: '8ex',
                 placeholder: '&nbsp;',
                 callback: function (value, settings) {
                     var json = $.parseJSON(value);
@@ -39,7 +38,7 @@
                 callback : function(value, settings) {
                     var json = $.parseJSON(value);
                     field.html(choice[json.value]);
-                    // display error message if error occured
+                    // display error message if error occurred
                     if(json.code)
                         error_dialog(json.message);
                     field.trigger('editableupdate', json);

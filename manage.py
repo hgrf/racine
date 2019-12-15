@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+import datetime
 from app import create_app, db
 from app.models import User
 from flask_script import Manager, Shell
@@ -174,6 +175,22 @@ def remove_parentid_none():
         if s.parent_id is None:
             print('Sample', s, "has parent_id = NULL and contains", s.actions)
             db.session.delete(s)
+    db.session.commit()
+
+
+@manager.command
+def update_last_modified():
+    """ Helper function to set the last_modified column of the samples table
+    """
+    from app.models import Sample
+    samples = Sample.query.all()
+    some_date_in_the_past = datetime.date(2015, 1, 1)
+
+    for s in samples:
+        if s.last_modified is None:
+            actions = sorted(s.actions, key=lambda a: a.timestamp)
+            timestamp = actions[-1].timestamp if actions != [] else some_date_in_the_past
+            s.last_modified = datetime.datetime.combine(timestamp, datetime.datetime.min.time())
     db.session.commit()
 
 

@@ -79,13 +79,6 @@ def welcome():
                            totuploadvol=totuploadvol, availablevol=availablevol, dbsize=dbsize)
 
 
-def recursive_add_timestamp(samples):
-    for s in samples:
-        actions = sorted(s.actions, key=lambda a: a.timestamp if a.timestamp else date.today())
-        s.last_action_date = actions[-1].timestamp if actions != [] and actions[-1].timestamp is not None else date.today()
-        recursive_add_timestamp(s.children+s.mountedsamples)
-
-
 @main.route('/navbar', methods=['GET'])
 @login_required
 def navbar():
@@ -97,10 +90,6 @@ def navbar():
     # only query root level samples, the template will build the hierarchy
     samples = Sample.query.filter_by(owner=current_user, parent_id=0, isdeleted=False).all()
     samples.extend(current_user.directshares)
-
-    # add timestamps for sorting
-    if order == 'last_action_date':
-        recursive_add_timestamp(samples)
 
     return render_template('navbar.html', samples=samples, inheritance=inheritance,
                            showarchived=showarchived, order=order)

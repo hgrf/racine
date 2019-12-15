@@ -119,6 +119,7 @@ class Sample(db.Model):
     description = db.Column(db.UnicodeText)
     isarchived = db.Column(db.Boolean)
     isdeleted = db.Column(db.Boolean)
+    last_modified = db.Column(db.DateTime)
 
     children = db.relationship('Sample', backref=db.backref('parent', remote_side=[id]))
     shares = db.relationship('Share', backref='sample', foreign_keys='Share.sample_id', cascade="delete")
@@ -285,14 +286,17 @@ class ActivityType(db.Model):
 
 
 def record_activity(type, user=None, sample=None, description=None, commit=False):
+    timestamp = datetime.now()
     atype = ActivityType.query.filter_by(description=type).first()
     if atype is None:
         raise Exception('Unknown activity type: '+type)
-    activity = Activity(timestamp=datetime.now(),
+    activity = Activity(timestamp=timestamp,
                         user_id=user.id if user is not None else 0,
                         sample_id=sample.id if sample is not None else 0,
                         type_id=atype.id,
                         description=description)
     db.session.add(activity)
+    if sample is not None:
+        sample.last_modified = timestamp
     if commit:
         db.session.commit()

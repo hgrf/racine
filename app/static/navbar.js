@@ -126,11 +126,11 @@ function init_navbar(scrolltocurrent, scrolltotop) {
        location.href = '/loginas?userid='+$(this).data('userid');
     });
 
-    $('.navbar-togglearchived').click(function(event) { load_navbar(order, !showarchived, false); });
-    $('.navbar-sort-az').click(function(event) { load_navbar('name', showarchived, false); });
-    $('.navbar-sort-id').click(function(event) { load_navbar('id', showarchived, false); });
-    $('.navbar-sort-lastaction').click(function(event) {
-        load_navbar('last_action_date', showarchived, false);
+    $('.navbar-togglearchived').click(function() { load_navbar(order, !showarchived, false); });
+    $('.navbar-sort-az').click(function() { load_navbar('name', showarchived, false); });
+    $('.navbar-sort-id').click(function() { load_navbar('id', showarchived, false); });
+    $('.navbar-sort-lastmodified').click(function() {
+        load_navbar('last_modified', showarchived, false);
     });
 }
 

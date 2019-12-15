@@ -11,6 +11,7 @@ from flask import current_app as app
 from ..email import send_mail, read_mailconfig
 import os
 from .. import plugins
+import base64
 
 
 @settings.route('/overview')
@@ -83,7 +84,8 @@ def email():
     'MAIL_USERNAME': '{}',
     'MAIL_PASSWORD': '{}'
 }}'''.format(form.sender.data, form.server.data, form.port.data, form.use_ssl.data,
-           form.use_tls.data, form.username.data, form.password.data))
+             form.use_tls.data, form.username.data, base64.b64encode(form.password.data.encode('utf8')).decode('utf8')
+))
         except Exception:
             flash('Could not save settings. Make sure MSM has write privileges in its main directory.')
 

@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, jsonify, send_file, abort
+from flask import render_template, redirect, request, jsonify, send_file, abort, current_app
 from flask_login import current_user, login_required, login_user, logout_user
 from .. import db
 from .. import plugins
@@ -34,6 +34,9 @@ def welcome():
     # get free disk space
     statvfs = os.statvfs(os.path.dirname(__file__))
     availablevol = statvfs.f_frsize*statvfs.f_bavail
+
+    # get size of the SQLite database
+    dbsize = os.path.getsize(current_app.config['SQLALCHEMY_DATABASE_URI'][10:])
 
     # get user activity for all users (only admin will see this)
     aweekago = date.today()-timedelta(weeks=1)
@@ -73,7 +76,7 @@ def welcome():
     return render_template('welcome.html', conns=smbinterface.conns, recent_samples=recent_samples,
                            newactionsallusers=newactionsallusers, maxcountallusers=maxcountallusers,
                            uploadvols=uploadvols, maxuploadvol=maxuploadvol, plugin_display=plugin_display,
-                           totuploadvol=totuploadvol, availablevol=availablevol)
+                           totuploadvol=totuploadvol, availablevol=availablevol, dbsize=dbsize)
 
 
 def recursive_add_timestamp(samples):

@@ -4,10 +4,11 @@
     {{ p[1]|safe }}
 {% endfor %}
 <h2>Disk space</h2>
-{{ totuploadvol|filesizeformat }} out of {{ (availablevol+totuploadvol)|filesizeformat }} occupied. This only takes into
-account uploads, since the database size is typically negligible.
+{{ (totuploadvol+dbsize)|filesizeformat }} out of {{ (availablevol+totuploadvol+dbsize)|filesizeformat }} occupied.
 <div class="progress" style="width: 200px;">
-<div class="progress-bar" role="progressbar" style="width:{{ totuploadvol/(totuploadvol+availablevol)*100 }}%;color:#000000";></div>
+    <div class="progress-bar" role="progressbar"
+         style="width:{{ (totuploadvol+dbsize)/(totuploadvol+availablevol+dbsize)*100 }}%;color:#000000;">
+    </div>
 </div>
 <h2>Recent samples:</h2>
 {% for s in recent_samples %}

@@ -53,9 +53,13 @@ def welcome():
 
     # get last modified samples
     recent_samples = db.session.query(Sample)\
-            .join(Activity)\
-            .filter(Activity.user_id == current_user.id, Sample.isdeleted == False)\
-            .order_by(Activity.id.desc()).distinct().limit(5).all()
+                       .join(Activity)\
+                       .filter(Activity.user_id == current_user.id, Sample.isdeleted == False)\
+                       .order_by(Activity.id.desc()).distinct().limit(5).all()
+
+    # remove samples that are not shared with the user anymore
+    # NB: this might reduce the recent_samples list to less than five elements
+    recent_samples = [s for s in recent_samples if s.is_accessible_for(current_user)]
 
     # execute plugin display functions
     plugin_display = []
@@ -104,7 +108,9 @@ def navbar():
 def editor(sampleid):
     sample = Sample.query.get(sampleid)
     shares = sample.shares
-    showparentactions = True if request.args.get('showparentactions') != None and int(request.args.get('showparentactions')) else False
+    showparentactions = True\
+        if request.args.get('showparentactions') is not None and int(request.args.get('showparentactions'))\
+        else False
 
     if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
         return render_template('404.html'), 404

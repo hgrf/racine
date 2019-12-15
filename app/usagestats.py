@@ -46,7 +46,7 @@ class UsageStatisticsThread(threading.Thread):
         git_rev = str(repo.rev_parse('HEAD'))
         git_clean = str(not repo.is_dirty())
 
-        totuploadvol, availablevol = filesystem_usage(self.app)
+        dbsize, totuploadvol, availablevol = filesystem_usage(self.app)
 
         while True:
             with self.app.app_context():
@@ -59,6 +59,7 @@ class UsageStatisticsThread(threading.Thread):
                         'uptime': time.time()-start_time,
                         'gitrev': git_rev,
                         'gitclean': git_clean,
+                        'dbsize': dbsize,
                         'uploadvol': totuploadvol,
                         'availablevol': availablevol}
 
@@ -76,14 +77,13 @@ class UsageStatisticsThread(threading.Thread):
 
 def filesystem_usage(app):
     with app.app_context():
+        # get size of the SQLite database
+        dbsize = os.path.getsize(app.config['SQLALCHEMY_DATABASE_URI'][10:])
+
         # get total upload volume (code redundant with main/views.py)
-        stmt = db.session.query(Upload.user_id, func.sum(Upload.size).label('upload_volume')).group_by(Upload.user_id).subquery()
-        uploadvols = db.session.query(User, stmt.c.upload_volume).outerjoin(stmt, User.id == stmt.c.user_id).order_by(User.id).all()
-        totuploadvol = 0
-        for u in uploadvols:
-            totuploadvol += u[1] if u[1] is not None else 0
+        totuploadvol = db.session.query(func.sum(Upload.size)).first()[0]
 
         # get free disk space (code redundant with main/views.py)
         statvfs = os.statvfs(os.path.dirname(__file__))
         availablevol = statvfs.f_frsize * statvfs.f_bavail
-    return totuploadvol, availablevol
+    return dbsize, totuploadvol, availablevol

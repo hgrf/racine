@@ -1,3 +1,13 @@
+div.sample {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+div.sample:hover {
+    background-color: #CCCCEE;
+    cursor: pointer;"
+}
+
 /*
  * Set up scrollable side bar
  *

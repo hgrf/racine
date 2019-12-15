@@ -6,47 +6,27 @@ not populated by JavaScript #}
     <li {% if name==active %} class="active"><a href="#">{% else %}><a href="{{ name }}">{% endif %}{{ title }}{% if name==active %} <span class="sr-only">(current)</span>{% endif %}</a></li>
 {% endmacro %}
 
-{# macros for quick creation of modal dialogs #}
-{% macro begin_modal_dialog(id, title, class='') %}
-    <div class="modal fade" id="{{ id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog {{ class }}">
-        <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" id="myModalLabel">{{ title }}</h4>
-            </div>
-{% endmacro %}
-{% macro end_modal_dialog() %}
-            </div>
-        </div>
-    </div>
-{% endmacro %}
-
-{% block title %}{% if sample is defined and sample is not none %}MSM - {{ sample.name }}{% else %}Mercury Sample Manager{% endif %}{% endblock %}
+{% block title %}
+    {% if sample is defined and sample is not none %}
+        MSM - {{ sample.name }}
+    {% else %}
+        Mercury Sample Manager
+    {% endif %}
+{% endblock %}
 
 {% block styles %}
     {{super()}}
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="{{url_for('static', filename='base.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='typeahead.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css', version='20191210') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='typeahead.css') }}">
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
     <style>
-    div.sample {
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
-
-    div.sample:hover {
-        background-color: #CCCCEE;
-        cursor: pointer;"
-    }
-
-    {% if config['DEBUG'] %}
-    .navbar-fixed-top {
-        background-color: #660000;
-    }
-    {% endif %}
+        {% if config['DEBUG'] %}
+            .navbar-fixed-top {
+                background-color: #660000;
+            }
+        {% endif %}
     </style>
 {% endblock %}
 
@@ -105,23 +85,7 @@ not populated by JavaScript #}
           </div>
         {% block page_content %}{% endblock %}
 
-        {# The confirmation dialog for deletion is the most important modal dialog. #}
-        {{ begin_modal_dialog('confirm-delete', 'Confirm delete') }}
-        <div class="modal-body">
-          <p>You are about to delete an item, this procedure is irreversible.</p>
-          <p>Do you want to proceed?</p>
-          <p class="debug-id"></p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-danger btn-ok">Delete</a>
-        </div>
-        {{ end_modal_dialog() }}
-
-        {{ begin_modal_dialog('errordialog', 'Error') }}
-          <div class="modal-body"></div>
-          <div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">OK</button></div>
-        {{ end_modal_dialog() }}
+        <div id="modal-dialogs">
         </div>
       </div>
     </div>

@@ -17,37 +17,6 @@
 {% block page_content %}
 <div id="editor-frame">
 </div>
-
-{{ begin_modal_dialog('userbrowser', 'Select a user') }}
-<div class="modal-body">
-    <div>Select a user you want to share this sample with:<br>&nbsp;</div>
-    <div class="form-group input-group">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-        <input type="text" id="username" class="form-control" placeholder="username">
-    </div>
-    <div id="recent-collaborators"></div>
-</div>
-<div class="modal-footer">
-    <button id="userbrowserok" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-</div>
-{{ end_modal_dialog() }}
-
-{{ begin_modal_dialog('newsample', 'New sample', 'modal-lg') }}
-<div class="modal-body">
-    <form id="newsampleform">
-        {{ newsampleform.hidden_tag() }}  {# also contains newsampleform.newsampleparentid #}
-        {{ wtf.form_field(newsampleform.newsamplename) }}
-        {{ wtf.form_field(newsampleform.newsampleparent) }}
-        {{ wtf.form_field(newsampleform.newsampledescription) }}
-    </form>
-</div>
-<div class="modal-footer">
-    <button id="newsamplesubmit" type="button" class="btn btn-primary">Submit</button>
-    <button id="newsampleclear" type="button" class="btn btn-default">Clear</button>
-</div>
-{{ end_modal_dialog() }}
-
 {% endblock %}
 
 {% block scripts %}
@@ -59,7 +28,8 @@
         {% if term %}
             var term = "{{ term }}";
         {% endif %}
-        var begin_flashmsg = "{{ begin_flashmsg|safe }}";
+        var csrf_token = "{{ newsampleform.csrf_token.current_token }}";
+        var begin_flashmsg = "{{ begin_flashmsg|safe }}";       // TODO: check where this is still used and remove
         var end_flashmsg = "{{ end_flashmsg|safe }}";
     </script>
     <script type="text/x-mathjax-config">
@@ -76,6 +46,8 @@
     <script src="{{ url_for('static', filename='editorhelpers.js') }}"></script>
     <script src="{{ url_for('static', filename='ckeditable.js') }}"></script>
     <script src="{{ url_for('static', filename='jquery-ui.min.js') }}"></script> {# for the date picker #}
+    <script src="{{ url_for('static', filename='newsample.js', version='20191209') }}"></script>
+    <script src="{{ url_for('static', filename='userbrowser.js', version='20191209') }}"></script>
     <script src="{{ url_for('static', filename='editor.js', version='20191209') }}"></script>
     <script src="{{ url_for('static', filename='navbar.js', version='20191204') }}"></script>
     <script src="{{ url_for('static', filename='lightbox2-master/src/js/lightbox.js') }}"></script>

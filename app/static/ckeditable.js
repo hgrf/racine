@@ -13,7 +13,7 @@
                     field.html(json.value);
                     // display error message if error occured
                     if (json.code)
-                        error_dialog(json.message);
+                        errordialog.showMessage(json.message);
                     field.trigger('editableupdate', json);
                     field.trigger('editabledone');
                 },
@@ -40,7 +40,7 @@
                     field.html(choice[json.value]);
                     // display error message if error occurred
                     if(json.code)
-                        error_dialog(json.message);
+                        errordialog.showMessage(json.message);
                     field.trigger('editableupdate', json);
                     field.trigger('editabledone');
                 },
@@ -138,11 +138,11 @@
                 type: "post",
                 data: {"value": data},
                 success: function( data ) {
-                    if(data.code) error_dialog("An error occured.");
+                    if(data.code) errordialog.showMessage("An error occured.");
                     ckeditable_finish(editor, field);
                 },
                 error: function( jqXHR, textStatus ) {
-                    error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
+                    errordialog.showMessage("Could not connect to the server. Please make sure you are connected and try again.");
                 }
             });
         } else {
@@ -185,7 +185,7 @@
                 field.trigger('editabledone');
             },
             error: function( jqXHR, textStatus ) {
-                error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
+                errordialog.showMessage("Could not connect to the server. Please make sure you are connected and try again.");
             }
         });
     }

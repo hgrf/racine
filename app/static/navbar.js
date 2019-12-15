@@ -115,7 +115,7 @@ function init_navbar(scrolltocurrent, scrolltotop) {
                             draggedItem.appendTo("#nav-mysamples");
                         }
                     } else {
-                        error_dialog(data.error);
+                        errordialog.showMessage(data.error);
                     }
                 }
             });

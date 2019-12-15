@@ -7,7 +7,9 @@
         {{ menu_entry("revision", "Revision") }}
         {{ menu_entry("smbresources", "SMB resources") }}
         {{ menu_entry("users", "Users") }}
-        {{ menu_entry("uploads", "Uploads") }}
+        {% if config['DEBUG'] %}
+            {{ menu_entry("uploads", "Uploads") }}
+        {% endif %}
         {{ menu_entry("email", "Email") }}
         {{ menu_entry("log", "Log") }}
     </ul>

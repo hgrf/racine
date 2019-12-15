@@ -9,7 +9,7 @@ from ..email import send_mail
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    last_logged_in = request.cookies.get('last_logged_in')
+    last_logged_in = request.cookies.get('last_logins')
     last_logged_in = last_logged_in.split(',') if last_logged_in else []
 
     # workaround to avoid server error when trying to connect with cookie from python 2 version
@@ -30,9 +30,9 @@ def login():
             record_activity('login', current_user, commit=True)
 
             # make user first in list of last logged in users and trim the list to 5 users
-            while user.username in last_logged_in:
-                last_logged_in.remove(user.username)
-            last_logged_in.insert(0, user.username)
+            while str(user.id) in last_logged_in:
+                last_logged_in.remove(str(user.id))
+            last_logged_in.insert(0, str(user.id))
             last_logged_in = last_logged_in[0:5]
 
             resp = redirect(request.args.get('next') or url_for('main.index'))
@@ -41,11 +41,20 @@ def login():
     elif form.is_submitted():
         flash('Please enter a valid username and a password.')
 
-    if not resp:
-        resp = make_response(render_template('auth/login.html', form=form,users=User.query.all(),
-                                             last_logged_in=last_logged_in))
+    last_logged_in_names = []
+    for user_id in last_logged_in:
+        user = User.query.get(user_id)
+        if user:
+            last_logged_in_names.append(user.username)
 
-    resp.set_cookie('last_logged_in', ','.join(last_logged_in), max_age=3600*24*7*4) # 4 week validity for the cookie
+    if not resp:
+        resp = make_response(render_template('auth/login.html', form=form, users=User.query.all(),
+                                             last_logged_in=last_logged_in_names))
+
+    resp.set_cookie('last_logins', ','.join(last_logged_in),
+                    path='/auth/login',     # store only for /auth/login path
+                    max_age=3600*24*7*4)    # 4 week validity for the cookie
+
     return resp
 
 

@@ -6,6 +6,11 @@ function init_navbar(scrolltocurrent, scrolltotop) {
     var scrolltocurrent = typeof scrolltocurrent !== 'undefined' ? scrolltocurrent : true;
     var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : false;
 
+    if(!showarchived) {
+        $('.nav-entry-archived').css('display', 'none');
+        $('.nav-children-archived').css('display', 'none');
+    }
+
     // make sure the current sample is highlighted in the navbar (this is redundant in editor.js, but we need to do
     // it here too if editor.js is executed before navbar.js
     if(typeof sample_id !== 'undefined') {
@@ -126,6 +131,7 @@ function init_navbar(scrolltocurrent, scrolltotop) {
        location.href = '/loginas?userid='+$(this).data('userid');
     });
 
+    // TODO: togglearchived could now be achieved without reloading the navbar
     $('.navbar-togglearchived').click(function() { load_navbar(order, !showarchived, false); });
     $('.navbar-sort-az').click(function() { load_navbar('name', showarchived, false); });
     $('.navbar-sort-id').click(function() { load_navbar('id', showarchived, false); });
@@ -161,8 +167,12 @@ function scroll_to_sample(id, flash) {
     var naventry = $('#nav-entry'+id);
 
     if(!naventry.is(':visible')) {
-        console.error('cannot scroll to hidden sample');
-        return;
+        showarchived = true;
+        $('.nav-entry-archived').css('display', 'block');
+        $('.nav-children-archived').css('display', 'block');
+        $('.navbar-togglearchived').removeClass('glyphicon-eye-close');
+        $('.navbar-togglearchived').addClass('glyphicon-eye-open');
+        $('.navbar-togglearchived').attr('title', 'Hide archived');
     }
 
     var top = naventry.offset().top-$('#navbar').height()-$('html, body').scrollTop();

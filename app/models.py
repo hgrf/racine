@@ -177,12 +177,12 @@ class Sample(db.Model):
 
     @property
     def mountedsamples(self):
-        """ make a list of samples that are mounted in this one but exclude samples that are indirectly shared with the
-        current user and samples that belong to the current user
+        """ make a list of samples that are mounted in this one by the current user
         """
 
         return [s.sample for s in self.mountedshares
-                if s.sample.is_accessible_for(current_user, direct_only=True)
+                if s.user == current_user     # make sure it's mounted by the current user
+                and s.sample.is_accessible_for(current_user, direct_only=True)    # exclude indirect shares
                 and not s.sample.isdeleted]
     
     @property

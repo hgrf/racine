@@ -116,7 +116,7 @@ body {
     }
 }
 
-/* Sidebar navigation */
+/* Sidebar navigation for settings and profile pages */
 .nav-sidebar {
   margin-right: -21px; /* 20px padding + 1px border */
   margin-bottom: 20px;

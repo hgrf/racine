@@ -3,7 +3,7 @@
     {% for s in samps|sort(attribute=order, reverse=True if order=='last_modified' else False) %}
         {% if not s.isdeleted %}
             <div class="nav-container" id="nav-container{{ s.id }}">
-                <div id="nav-entry{{ s.id }}" class="row nav-entry nav-dropzone
+                <div id="nav-entry{{ s.id }}" class="nav-entry nav-dropzone
                                                      {% if s.isarchived %}
                                                      nav-entry-archived
                                                      {% endif %}"
@@ -19,7 +19,7 @@
                         </div>
                     {% endif %}
                 </div>
-                <div id="nav-children{{ s.id }}" class="row-fluid collapse out nav-children
+                <div id="nav-children{{ s.id }}" class="collapse out nav-children
                                                         {% if s.isarchived %}
                                                         nav-children-archived
                                                         {% endif %}">
@@ -52,13 +52,14 @@
                  title="Sort by last modification"></i>
     </span>
 </div>
-<div class="navbar-clear"></div>
-<div class="nav-main-container container-fluid nav-dropzone" data-id="0">
+
+{# <div class="navbar-clear"></div>  #}
+<div class="nav-main-container nav-dropzone" data-id="0">
     <div id="nav-mysamples">{{ render_branch(samples) }}</div>
     {% if inheritance %}
-        <div class="row nav-heading">Inheritance:</div>
+        <div class="nav-heading">Inheritance:</div>
         {% for i in inheritance %}
-            <div class="row inheritance" data-userid="{{ i.id }}">
+            <div class="inheritance" data-userid="{{ i.id }}">
                 <img src="/static/images/user.png" width="30">{{ i.username }}
             </div>
         {% endfor %}

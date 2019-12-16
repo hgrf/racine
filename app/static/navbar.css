@@ -1,4 +1,17 @@
+.sidebar {
+    padding: 10px !important;  /* override padding set up in base.css */
+    padding-top: 0 !important;
+}
+
 .navbar-shortcuts {
+    position: sticky;
+    position: -webkit-sticky; /* Safari */
+    top: 0;
+    height: 40px;
+    z-index: 9999;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #CCCCCC;
+    padding: 10px;
     font-weight: bold;
 }
 
@@ -19,12 +32,6 @@
     border: 1px solid black;
 }
 
-.navbar-clear {
-    clear: both;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #CCCCCC;
-}
-
 .nav-heading {
     padding-bottom: 10px;
     font-weight: bold;
@@ -42,11 +49,12 @@
     cursor: pointer;
     padding-top: 10px;
     padding-bottom: 10px;
-    padding-left: 10px;
 }
 
-.nav-entry .glyphicon {
-    margin-left: -20px;
+.nav-entry > .glyphicon {
+    margin-right: 8px;
+    width: 10px;
+    height: 10px;
     float: left;
 }
 
@@ -64,13 +72,12 @@
 
 .nav-entry-owner {
     font-style: italic;
-}
-
-.nav-entry-owner .glyphicon {
-    margin-left: 0;
-    margin-right: 5px;
+    font-size: small;
+    padding-left: 18px;
 }
 
 .nav-children {
-    padding-left: 10px;
+    border-left: 1px dotted #666666;
+    margin-left: 5px;
+    padding-left: 5px;
 }

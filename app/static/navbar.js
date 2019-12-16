@@ -52,9 +52,7 @@ function init_navbar(scrolltocurrent, scrolltotop) {
 
     // add glyphicons to expandable items in the navbar
     $('.nav-entry').each(function () {
-        if ($($(this).data('target')).children().length > 0) {
-            addGlyphicon($(this));
-        }
+        addGlyphicon($(this));
     });
 
     // enable sample drag and drop in navigation bar
@@ -95,30 +93,26 @@ function init_navbar(scrolltocurrent, scrolltotop) {
             $(this).css("background-color", "transparent");
             $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
 
-            if(draggedId == parentId) return;
+            if(draggedId === parentId) return;
 
             $.ajax({
                 url: "/changeparent",
                 type: "post",
                 data: { "id": draggedId, "parent": parentId },
                 success: function( data ) {
-                    if(data.code==0) {
-                        var draggedItem = $( "#nav-container"+draggedId );
-                        if(draggedItem.parent().children().length == 1) {
-                            // there will be no children left after drag/drop, so remove glyphicon
-                            removeGlyphicon(draggedItem.parent().prev());
-                        }
-                        if(parentId != '0') {
+                    if(data.code === 0) {
+                        let draggedItem = $('#nav-container'+draggedId);
+                        let oldParent = draggedItem.parent().prev();
+                        if(parentId !== '0') {
                             // moving to a regular nav-entry
-                            draggedItem.appendTo("#nav-children" + parentId);
-                            if ($("#children" + parentId).children().length == 0) {
-                                // no children yet, so need to put glyphicon
-                                addGlyphicon($("#nav-children" + parentId).prev());
-                            }
+                            draggedItem.appendTo('#nav-children'+parentId);
+                            updateGlyphicon($('#nav-entry'+parentId));
                         } else {
                             // moving to root
-                            draggedItem.appendTo("#nav-mysamples");
+                            draggedItem.appendTo('#nav-mysamples');
                         }
+                        if(oldParent.length)        // if it's not the root entry
+                            updateGlyphicon(oldParent);
                     } else {
                         error_dialog(data.error);
                     }
@@ -228,36 +222,44 @@ function show_in_navbar(id, flash) {
     }
 }
 
-// this function adds a glyphicon to the nav-entry $target
-function addGlyphicon($target) {
-    if ($($target.data('target')).is(":hidden"))
-        $target.prepend('<span class="glyphicon glyphicon-expand"></span>');
-    else
-        $target.prepend('<span class="glyphicon glyphicon-collapse-down"></span>');
+// this function updates the glyphicon as a function of the number of children
+function updateGlyphicon(naventry) {
+    let glyph = naventry.find('i.glyphicon').first();
+    let target = $(naventry.data('target'));
 
-    // change the glyphicons when items are expanded or collapsed
-    $($target.data('target')).on("show.bs.collapse", function (e) {
-        // the event goes up like a bubble and so it can affect parent nav-entries, if we do not pay
-        // attention where the event comes from
-        if ($(this).attr('id') != e.target.id)
-            return;
-        // $(this) now corresponds to the children container, we need to access the corresponding
-        // nav-entry using $(this).prev()
-        $(this).prev().children('.glyphicon').remove();
-        $(this).prev().prepend('<span class="glyphicon glyphicon-collapse-down"></span>');
-    });
-    $($target.data('target')).on("hide.bs.collapse", function (e) {
-        if ($(this).attr('id') != e.target.id)
-            return;
-        $(this).prev().children('.glyphicon').remove();
-        $(this).prev().prepend('<span class="glyphicon glyphicon-expand"></span>');
-    });
+    if (target.children().length > 0) {
+        glyph.removeClass('glyphicon-invisible');
+        if (target.is(':hidden'))
+            glyph.addClass('glyphicon-expand');
+        else
+            glyph.addClass('glyphicon-collapse-down');
+
+        // change the glyphicons when items are expanded or collapsed
+        target.on("show.bs.collapse", function (e) {
+            // the event goes up like a bubble and so it can affect parent nav-entries, stop this
+            e.stopPropagation();
+            glyph.removeClass('glyphicon-expand');
+            glyph.addClass('glyphicon-collapse-down');
+        });
+        target.on("hide.bs.collapse", function (e) {
+            e.stopPropagation();
+            glyph.addClass('glyphicon-expand');
+            glyph.removeClass('glyphicon-collapse-down');
+        });
+    } else {
+        // switch off existing handlers and update classes
+        target.off('show.bs.collapse');
+        target.off('hide.bs.collapse');
+        glyph.removeClass('glyphicon-expand');
+        glyph.removeClass('glyphicon-collapse-down');
+        glyph.addClass('glyphicon-invisible');
+    }
 }
 
-function removeGlyphicon($target) {
-    $target.children('.glyphicon').remove();
-    $($target.data('target')).off('show.bs.collapse');
-    $($target.data('target')).off('hide.bs.collapse');
+// this function adds a glyphicon to naventry
+function addGlyphicon(naventry) {
+    naventry.prepend('<i class="glyphicon"></i>');
+    updateGlyphicon(naventry);
 }
 
 $(document).ready(function() {

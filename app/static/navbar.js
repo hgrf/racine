@@ -84,8 +84,8 @@ function init_navbar(scrolltocurrent, scrolltotop) {
             $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
         },
         drop: function(event) {
-            var draggedId = event.dataTransfer.getData('sampleid');
-            var parentId = $(this).data('id');
+            let draggedId = parseInt(event.dataTransfer.getData('sampleid'));
+            let parentId = parseInt($(this).data('id'));
             event.preventDefault();
             event.stopPropagation();
 
@@ -103,7 +103,7 @@ function init_navbar(scrolltocurrent, scrolltotop) {
                     if(data.code === 0) {
                         let draggedItem = $('#nav-container'+draggedId);
                         let oldParent = draggedItem.parent().prev();
-                        if(parentId !== '0') {
+                        if(parentId !== 0) {
                             // moving to a regular nav-entry
                             draggedItem.appendTo('#nav-children'+parentId);
                             updateGlyphicon($('#nav-entry'+parentId));

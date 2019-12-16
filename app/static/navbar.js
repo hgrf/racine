@@ -169,7 +169,10 @@ function scroll_to_sample(id, flash) {
         $('.navbar-togglearchived').attr('title', 'Hide archived');
     }
 
-    var top = naventry.offset().top-$('#navbar').height()-$('html, body').scrollTop();
+    var top = (naventry.offset().top
+        - $('#navbar').height()
+        - $('div.navbar-shortcuts').outerHeight()
+        - $('html, body').scrollTop());
     var isInView = top >= 0 && top+naventry.outerHeight() <= $('div#sidebar').outerHeight();
     if(!isInView) {
         $('div#sidebar')

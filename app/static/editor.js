@@ -272,6 +272,26 @@ function push_current_state() {
     }
 }
 
+function watchdog() {
+    $.ajax({
+       url: "/watchdog/" + sample_id + "?lastactivity="+$('#lastactivity').text(),
+       type: "post",
+       success: function(data) {
+           if(data.length) {
+               error_dialog("Detected activity on this sample, please reload the page.");
+               console.log(data);
+           }
+       }
+    });
+    /* TODO:
+       - show summary of detected activity in dialog and update lastactivity so that we do not receive duplicate
+         notifications
+       - if the activity originates from this window, there should be a way to register it (i.e. API calls should
+         send back the activity they generated, so that the client can update the field)
+     */
+    window.setTimeout(watchdog, 5000);
+}
+
 function load_sample(id, pushstate, scrolltotop, scrollnavbar) {
     // define default values for arguments
     var pushstate = typeof pushstate !== 'undefined' ?  pushstate : true;
@@ -306,6 +326,7 @@ function load_sample(id, pushstate, scrolltotop, scrollnavbar) {
                 if(scrollnavbar)
                     show_in_navbar(sample_id, false);
             }
+            window.setTimeout(watchdog, 5000);
         },
         error: function() {
             error_dialog('Sample #'+id+" does not exist or you do not have access to it.");

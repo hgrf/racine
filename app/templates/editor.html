@@ -3,6 +3,7 @@
 {# TODO: are these fields still required if we have everything in JS ? #}
 <div id="sampleid" style="display: none">{{ sample.id }}</div>
 <div id="samplename" style="display: none">{{ sample.name }}</div>
+<div id="lastactivity" style="display: none">{{ lastactivity }}</div>
 <h2 class="page-header">
     <div id="samplename" class="{% if sample.owner == current_user %}editable{% endif %}" data-setter="/set/sample/name/{{ sample.id }}">{{ sample.name }}</div>
     {% if sample.owner == current_user %}

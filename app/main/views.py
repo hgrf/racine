@@ -122,7 +122,20 @@ def editor(sampleid):
         actions = sorted(actions, key=lambda a: a.ordnum)
 
         return render_template('editor.html', sample=sample, actions=actions, form=form, shares=shares,
-                               showparentactions=showparentactions)
+                               showparentactions=showparentactions,
+                               lastactivity=Activity.query.filter_by(sample=sample).order_by(Activity.id.desc()).first().id)
+
+
+@main.route('/watchdog/<sampleid>', methods=['POST'])
+def watchdog(sampleid):
+    sample = Sample.query.get(sampleid)
+    lastact = int(request.args.get('lastactivity'))
+    activity_since = Activity.query.filter(Activity.sample_id == sample.id,
+                                           Activity.id > lastact)
+    return jsonify([{'id': a.id,
+                     'user': a.user.username,
+                     'timestamp': a.timestamp,
+                     'type': a.type.description} for a in activity_since])
 
 
 @main.route('/help')

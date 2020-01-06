@@ -13,6 +13,7 @@
     <i id="showparentactions" class="editor-shortcut glyphicon glyphicon-eye-{{ 'open' if showparentactions else 'close' }}" title="{{ 'Hide' if showparentactions else 'Show' }} parent actions"></i>
     {% endif %}
     <i id="scrolltobottom" class="editor-shortcut glyphicon glyphicon-arrow-down" title="Scroll to the bottom"></i>
+    <i id="invertactionorder" class="editor-shortcut glyphicon glyphicon-resize-vertical" title="Invert action order"></i>
     <i id="showinnavigator" class="editor-shortcut glyphicon glyphicon-search" title="Show in navigator"></i>
     <div style="clear:both;"></div>
 </h2>
@@ -67,6 +68,18 @@
 </div>
 
 <div class="container-fluid">
+    {% if invertactionorder %}
+    <div class="row list-entry">
+        <form id="newactionform">
+            {{ form.hidden_tag() }}
+            <div class="col-md-2">
+                {{ wtf.form_field(form.timestamp) }}
+                {{ wtf.form_field(form.submit) }}
+            </div>
+            <div class="col-md-10">{{ wtf.form_field(form.description) }}</div>
+        </form>
+    </div>
+    {% endif %}
     {% for i in range(actions|length)%}
     {% set action=actions[i] %}
     <div class="row list-entry {% if action.sample != sample %}parentaction{% endif %}" id="{{ action.id }}" {% if action.sample != sample %}style="background: #F0FFF0;"{% endif %}>
@@ -89,6 +102,7 @@
         <div class="col-md-10 actiondescription{% if action.owner == current_user %} editable ckeditable{% endif %}" data-getter="/get/action/description/{{ action.id }}" data-setter="/set/action/description/{{ action.id }}">{{ action.description|safe }}</div>
     </div>
     {% endfor %}
+    {% if not invertactionorder %}
     <div class="row list-entry">
         <form id="newactionform">
             {{ form.hidden_tag() }}
@@ -99,5 +113,6 @@
             <div class="col-md-10">{{ wtf.form_field(form.description) }}</div>
         </form>
     </div>
+    {% endif %}
 </div>
 

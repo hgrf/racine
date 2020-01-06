@@ -101,7 +101,10 @@ def editor(sampleid):
     sample = Sample.query.get(sampleid)
     shares = sample.shares
     showparentactions = True\
-        if request.args.get('showparentactions') is not None and int(request.args.get('showparentactions'))\
+        if request.args.get('showparentactions') is not None and request.args.get('showparentactions') == 'true'\
+        else False
+    invertactionorder = True\
+        if request.args.get('invertactionorder') is not None and request.args.get('invertactionorder') == 'true'\
         else False
 
     if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
@@ -119,10 +122,10 @@ def editor(sampleid):
             s = s.parent
             if not showparentactions:
                 break
-        actions = sorted(actions, key=lambda a: a.ordnum)
+        actions = sorted(actions, key=lambda a: a.ordnum, reverse=invertactionorder)
 
         return render_template('editor.html', sample=sample, actions=actions, form=form, shares=shares,
-                               showparentactions=showparentactions)
+                               showparentactions=showparentactions, invertactionorder=invertactionorder)
 
 
 @main.route('/help')

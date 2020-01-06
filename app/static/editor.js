@@ -2,6 +2,7 @@ var sample_id;
 var term;
 var hiddeneditor;
 var showparentactions = false;
+var invertactionorder = false;
 
 CKEDITOR.timestamp='20191209';
 
@@ -126,6 +127,11 @@ function init_editor(scrolltotop) {
 
     $('#scrolltobottom').click(function() {
        $('html, body').stop().animate({scrollTop: $('div#editor-frame').height()}, 1000);
+    });
+
+    $('#invertactionorder').click(function() {
+        invertactionorder = !invertactionorder; // toggle
+        load_sample(sample_id, false, false, false);
     });
 
     $('#showparentactions').click(function() {
@@ -288,7 +294,7 @@ function load_sample(id, pushstate, scrolltotop, scrollnavbar) {
 
     // load the sample data and re-initialise the editor
     $.ajax({
-        url: "/editor/"+id+(showparentactions ? "?showparentactions=1" : ""),
+        url: "/editor/"+id+"?invertactionorder="+invertactionorder+"&showparentactions="+showparentactions,
         pushstate: pushstate,
         scrolltotop: scrolltotop,
         scrollnavbar: scrollnavbar,

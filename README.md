@@ -52,6 +52,24 @@ You can start the development server by simply executing the "run script":
 
     $ ./run
 
+# Using GitHub deploy keys
+
+As long as this is a private repository, access can be granted using deploy keys. You can generate a public/private key
+pair by executing `ssh-keygen -t rsa -C "[email address]"` and copy the content of the corresponding public key file to
+the "Deploy Keys" section in the repository's settings page on GitHub. Note that if the key is not the default key
+(`~/.ssh/id_rsa`), you need to set up a config file for ssh (`~/.ssh/config`), e.g.:
+
+    Host msm.github.com
+      HostName github.com
+      User git
+      IdentityFile /home/[user]/.ssh/msm_rsa
+      IdentitiesOnly yes
+      
+In this case, we defined a new hostname for github.com (msm.github.com) for the key file `msm_rsa` and the above
+`git clone` command has to be modified as follows:
+
+    git clone git@msm.github.com:HolgerGraef/MSM.git
+
 # Deployment with gunicorn and nginx
 
 Carry out the steps described above in order to set up the development server. Then configure gunicorn autostart
@@ -107,6 +125,9 @@ Create the file /lib/systemd/system/msm.service and copy the following code into
     WantedBy=multi-user.target
 
 Where you will have to replace [user name] by your user name and [path] by the path where you installed the programme. The second path (/usr/bin) is where you should have installed the git executable.
+
+Note that for the execution of gunicorn, the group has to be set to `www-data` so that the `msm.sock` file is accessible
+for the nginx server (this also applies to the upstart configuration above).
 
 Now activate autostart:
 

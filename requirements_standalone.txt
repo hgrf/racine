@@ -1,0 +1,6 @@
+PyFladesk==1.1
+PyInstaller==3.5
+PyQt5==5.12.3
+PyQt5-sip==12.7.0
+PyQtWebEngine==5.12.1
+pywin32-ctypes==0.2.0

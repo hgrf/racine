@@ -15,3 +15,6 @@ reports/
 # ignore generated site
 build/
 _site/
+# ignore standalone .exe file related stuff
+build/
+dist/

@@ -91,6 +91,14 @@ licenses:
 * pyasn1 - https://github.com/etingof/pyasn1/blob/master/LICENSE.rst (BSD 2-Clause)
 * python-dateutil  https://github.com/dateutil/dateutil/blob/master/LICENSE (Apache v2.0 + BSD)
 
+The following external libraries are used only for the creation of a standalone .exe file:
+
+* PyFladesk - Copyright (c) 2015 Saeed Moqadam - MIT License
+* PyInstaller - https://github.com/pyinstaller/pyinstaller/blob/master/COPYING.txt
+* PyQt5 - GPL v3
+* PyQtWebEngine - GPL v3 
+* pywin32-ctypes - BSD 3-Clause
+
 Appendix A: The GPL License v3
 ------------------------------
 

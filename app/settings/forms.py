@@ -35,6 +35,6 @@ class EmailSettings(FlaskForm):
     port = IntegerField('Port:', validators=[DataRequired()])
     use_ssl = BooleanField('Use SSL')
     use_tls = BooleanField('Use TLS')
-    username = StringField('User name:', validators=[DataRequired()])
-    password = PasswordField('Password:', validators=[DataRequired()])
+    username = StringField('User name:')
+    password = PasswordField('Password:')
     submit = SubmitField('Save changes and send test email')

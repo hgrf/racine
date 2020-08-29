@@ -290,7 +290,7 @@ def createshare():
 @login_required
 def deleteaction(actionid):
     action = Action.query.get(int(actionid))
-    if action == None or action.owner != current_user:
+    if action == None or not action.has_write_access(current_user):
         return render_template('404.html'), 404
     sampleid = action.sample_id
     db.session.delete(action)

@@ -92,7 +92,7 @@
             <div class="actionicons">
                 {% if action.owner != current_user %}<div style="font-style: italic">{{ action.owner.username }}</div>{% endif %}
                 {% if action.sample != sample %}<div style="font-style: italic;">{{ action.sample.name }}</div>{% endif %}
-                {% if action.owner == current_user %}
+                {% if action.owner == current_user or sample.iscollaborative %}
                     <i class="actionicon glyphicon glyphicon-trash" data-type="action" data-id="{{ action.id }}" data-toggle="modal" data-target="#confirm-delete"></i>
                 {% if not i == 0 %} {# can  be moved up #}
                     <i class="actionicon glyphicon glyphicon-arrow-up swapaction" data-id="{{ action.id }}" data-swapid="{{ actions[i-1].id }}"></i>

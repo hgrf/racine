@@ -35,8 +35,9 @@ The following libraries are included in Mercury Sample Manager under the Apache 
 The following icons from the Open Icon Library (https://sourceforge.net/projects/openiconlibrary/)
 are included in Mercury Sample Manager under various open source licenses:
 
-* archive.png, dearchive.png, delete.png, edit.png, file.png, folder.png, folder_inaccessible.png
-  insertimage.png, resource.png, sample.png, upload.png, user.png
+* archive.png, collaborative.png, dearchive.png, delete.png, edit.png, file.png, folder.png,
+  folder_inaccessible.png, insertimage.png, non-collaborative.png, resource.png, sample.png,
+  upload.png, user.png
 
 External sources of Intellectual Property used by Mercury Sample Manager
 ------------------------------------------------------------------------

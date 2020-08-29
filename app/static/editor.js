@@ -121,6 +121,24 @@ function init_editor(scrolltotop) {
         });
     });
 
+    // handler for collaborative button
+    $('#collaborate').click(function() {
+        $.ajax({
+            url: "/togglecollaborative",
+            type: "post",
+            data: {"id": sample_id},
+            success: function(data) {
+                if(data.iscollaborative) {
+                    $('#collaborate').attr('title', 'Make non-collaborative');
+                    $('#collaborate').attr('src', '/static/images/non-collaborative.png');
+                } else {
+                    $('#collaborate').attr('title', 'Make collaborative');
+                    $('#collaborate').attr('src', '/static/images/collaborative.png');
+                }
+            }
+        });
+    });
+
     $('#showinnavigator').click(function() {
         show_in_navbar(sample_id, true);
     });

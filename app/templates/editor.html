@@ -8,6 +8,7 @@
     {% if sample.owner == current_user %}
         <img class="editor-shortcut" title="Delete sample" src="/static/images/delete.png" data-href="/delsample/{{ sample.id }}" data-type="sample" data-id="{{ sample.id }}" data-toggle="modal" data-target="#confirm-delete">
         <img class="editor-shortcut" title="{% if sample.isarchived %}De-archive{% else %}Archive{% endif %}" id="archive" src="{% if sample.isarchived %}/static/images/dearchive.png{% else %}/static/images/archive.png{% endif %}">
+        <img class="editor-shortcut" title="{% if sample.iscollaborative %}Make non-collaborative{% else %}Make collaborative{% endif %}" id="collaborate" src="{% if sample.iscollaborative %}/static/images/non-collaborative.png{% else %}/static/images/collaborative.png{% endif %}">
     {% endif %}
     {% if sample.parent_id != 0 and sample.parent.actions != [] %}
     <i id="showparentactions" class="editor-shortcut glyphicon glyphicon-eye-{{ 'open' if showparentactions else 'close' }}" title="{{ 'Hide' if showparentactions else 'Show' }} parent actions"></i>

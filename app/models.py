@@ -150,6 +150,8 @@ class Sample(db.Model):
     description = db.Column(db.UnicodeText)
     isarchived = db.Column(db.Boolean)
     isdeleted = db.Column(db.Boolean)
+    # in collaborative samples, all sharing users can edit all actions
+    iscollaborative = db.Column(db.Boolean)
     last_modified = db.Column(db.DateTime)
 
     # NB: the cascade delete for shares and actions is no longer used because we delete samples by

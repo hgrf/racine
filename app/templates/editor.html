@@ -4,6 +4,9 @@
 <div id="sampleid" style="display: none">{{ sample.id }}</div>
 <div id="samplename" style="display: none">{{ sample.name }}</div>
 <h2 class="page-header">
+    {% if sample.owner != current_user and sample.iscollaborative %}
+        <img class="sample-attr" title="Collaborative" src="/static/images/collaborative.png">
+    {% endif %}
     <div id="samplename" class="{% if sample.owner == current_user %}editable{% endif %}" data-setter="/set/sample/name/{{ sample.id }}">{{ sample.name }}</div>
     {% if sample.owner == current_user %}
         <img class="editor-shortcut" title="Delete sample" src="/static/images/delete.png" data-href="/delsample/{{ sample.id }}" data-type="sample" data-id="{{ sample.id }}" data-toggle="modal" data-target="#confirm-delete">

@@ -12,6 +12,11 @@
     max-width:200px;
 }
 
+img.sample-attr {
+    width: 28px;
+    height: 28px;
+}
+
 .editor-shortcut {
     float: right;
     width: 28px;

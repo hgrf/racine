@@ -100,7 +100,7 @@
                 {% endif %}
             </div>
         </div>
-        <div class="col-md-10 actiondescription{% if action.owner == current_user %} editable ckeditable{% endif %}" data-getter="/get/action/description/{{ action.id }}" data-setter="/set/action/description/{{ action.id }}">{{ action.description|safe }}</div>
+        <div class="col-md-10 actiondescription{% if action.owner == current_user or sample.iscollaborative %} editable ckeditable{% endif %}" data-getter="/get/action/description/{{ action.id }}" data-setter="/set/action/description/{{ action.id }}">{{ action.description|safe }}</div>
     </div>
     {% endfor %}
     {% if not invertactionorder %}

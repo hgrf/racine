@@ -251,6 +251,17 @@ class Action(db.Model):
     def __repr__(self):
         return '<Action %r>' % self.id
 
+    def has_read_access(self, user):
+        if self.owner == user:
+            return True
+
+        if self.sample.iscollaborative and self.sample.is_accessible_for(user):
+            return True
+
+        return False
+
+    def has_write_access(self, user):
+        return self.has_read_access(user)
 
 class SMBResource(db.Model):
     __tablename__ = 'smbresources'

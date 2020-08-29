@@ -471,7 +471,7 @@ supported_targets = {
     },
     'action': {
         'dbobject': Action,
-        'auth': 'owner',
+        'auth': 'action_auth',
         'fields': {
             'timestamp': lambda x: datetime.strptime(x, '%Y-%m-%d'),
             'description': str
@@ -526,7 +526,8 @@ def getfield(target, field, id):
 
     # check if the current user is authorized to access this item
     if      not (target['auth'] == 'owner' and item.owner == current_user)\
-        and not (target['auth'] == 'admin' and current_user.is_admin):
+        and not (target['auth'] == 'admin' and current_user.is_admin)\
+        and not (target['auth'] == 'action_auth' and item.has_read_access(current_user)):
         return jsonify(code=1)
 
     # return value
@@ -557,7 +558,8 @@ def updatefield(target, field, id):
 
     # check if the current user is authorized to access this item
     if      not (target['auth'] == 'owner' and item.owner == current_user)\
-        and not (target['auth'] == 'admin' and current_user.is_admin):
+        and not (target['auth'] == 'admin' and current_user.is_admin)\
+        and not (target['auth'] == 'action_auth' and item.has_write_access(current_user)):
         return jsonify(code=1, value='', message='Invalid request')
 
     # try to assign value

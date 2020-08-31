@@ -17,6 +17,9 @@ under the GPL license (see Appendix A):
 
 * CKEditor 4 - Copyright (c) 2003-2019, CKSource - Frederico Knabben.
 
+The image rotate plugin is based on madis' work (https://ckeditor.com/cke4/addon/imagerotate),
+released under the GPL license (see Appendix A).
+
 The following libraries are included in Mercury Sample Manager under the MIT license
 (see Appendix B):
 

@@ -83,7 +83,7 @@
     }
 
     try {
-      rotateByAngle(domImageElement, angle);
+      rotateByAngle(editor, domImageElement, angle);
     } catch (err) {
       if (err.code === 18) {
         editor.showNotification("Image is from other domain and can't be rotated", "warning");
@@ -91,54 +91,47 @@
     }
   }
 
-  function rotateByAngle(imageElement, angle) {
-    var canvas = createRotatedImageCanvas(imageElement, angle);
-    //document.body.appendChild(canvas); // dont use this, it's for debugging only
-    _putCanvasToImage(canvas, imageElement);
-  }
-
-  function _putCanvasToImage(canvas, image) {
-    var dataURL = canvas.toDataURL();
-    image.src = dataURL;
-    image.setAttribute("data-cke-saved-src", dataURL);
-
-    image.style.width = canvas.width + "px";
-    image.style.height = canvas.height + "px";
-
-    // TODO: should I support width and height attributes explicitly if inline style is disallowed?
-    // see http://docs.ckeditor.com/#!/guide/dev_acf-section-example%3A-disallow-inline-styles-and-use-attributes-instead
-    //image.width = canvas.width;
-    //image.height = canvas.height;
-  }
-
-  function createRotatedImageCanvas(image, angle) {
-    angle = angle < 0 ? 360 + angle : angle;
-
-    var canvasWidth = image.width;
-    var canvasHeight = image.height;
-    if (angle == 90 || angle == 270) {
-      canvasWidth = image.height;
-      canvasHeight = image.width;
+  function rotateByAngle(editor, imageElement, angle) {
+    if(angle != 90 && angle != -90) {
+      editor.showNotification("Invalid angle.", "warning");
     }
 
-    var x = canvasWidth / 2;
-    var y = canvasHeight / 2;
-    var width = image.width;
-    var height = image.height;
+    const url = imageElement.src.split("?")[0];
+    var urlParams = new URLSearchParams(imageElement.src.split("?")[1]);
 
-    var canvas = _createCanvas(canvasWidth, canvasHeight);
-    var context = canvas.getContext('2d');
-    context.translate(x, y);
-    context.rotate(angle * TO_RADIANS);
-    context.drawImage(image, -width / 2, -height / 2, width, height);
-    return canvas;
-  }
+    if(urlParams.has('rot')) {
+      angle += parseInt(urlParams.get('rot'));
+    }
 
-  function _createCanvas(width, height) {
-    var canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    return canvas;
+    if(angle > 360) {
+      angle = angle % 360;
+    }
+
+    if(angle < 0) {
+      angle = 360 + angle;
+    }
+
+    urlParams.set('rot', angle);
+
+    $.ajax({
+      url: url + "?" + urlParams.toString(),
+      type: "post",
+      success: function( data ) {
+        if(data.code) {
+          editor.showNotification(data.message, "warning");
+        } else {
+          imageElement.src = url + "?" + urlParams.toString();
+          imageElement.setAttribute("data-cke-saved-src", url + "?" + urlParams.toString());
+
+          // we always rotate by +/- 90°, so we have to flip the width and the height of the image
+          var width = imageElement.height;
+          var height = imageElement.width;
+
+          imageElement.style.height = height + "px";
+          imageElement.style.width = width + "px";
+        }
+      }
+    });
   }
 
 })();

@@ -138,6 +138,26 @@ def make_preview(upload, image):
     image.convert('RGB').save(path)    # default quality for JPEG according to pillow doc is 75
 
 
+def make_rotated(upload, angle, fullsize):
+    ext = '.' + upload.ext if fullsize else '.preview.jpg'
+    rot_file = str(upload.id) + '.rot{}'.format(angle) + ext
+    rot_path = os.path.join(app.config['UPLOAD_FOLDER'], rot_file)
+
+    # check if a rotated version already exists
+    if os.path.exists(rot_path):
+        return rot_file
+
+    # try to rotate the image
+    try:
+        file_obj = open(os.path.join(app.config['UPLOAD_FOLDER'], str(upload.id) + ext), 'rb')
+        image = Image.open(file_obj)
+        image.rotate(-angle, expand=True).save(rot_path)
+        file_obj.close()
+        return rot_file
+    except Exception:
+        return None
+
+
 def store_image(file_obj, source, ext):
     """Stores an image file in the upload database and saves it in the upload folder, checking for duplicates.
 
@@ -235,12 +255,13 @@ def store_attachment(file_obj, source, ext):
 # View functions
 ########################################################################################################################
 
-@browser.route('/ulimg/<upload_id>')
+@browser.route('/ulimg/<upload_id>', methods=['GET', 'POST'])
 @login_required
 def retrieve_image(upload_id):
     """Retrieves an image that was uploaded to the server,
 
-    either by uploading through the browser or by transfer from a SMB resource.
+    either by uploading through the browser or by transfer from a SMB resource. The POST request is used by the
+    CKEditor plugin imagerotate to retrieve potential error messages.
 
     Parameters
     ----------
@@ -250,12 +271,44 @@ def retrieve_image(upload_id):
 
     # TODO: check that user has right to view the image (this might be tricky because the sample might be a shared one)
 
+    def retrieve_image_error(message):
+        if request.method == 'GET':
+            return render_template('404.html'), 404
+        else:
+            return jsonify(code=1, message=message)
+
+    # determine rotation angle and fullsize from query parameters
+    if request.args.get('rot') is None:
+        rot = 0
+    else:
+        try:
+            rot = int(request.args.get('rot'))
+        except Exception:
+            return retrieve_image_error("Could not parse angle")
+    if rot not in [0, 90, 180, 270]:
+        return retrieve_image_error("Invalid rotation angle")
+    fullsize = 'fullsize' in request.args
+
+    # find the upload in the database
     dbentry = Upload.query.get(upload_id)
     if dbentry is None:
-        return render_template('404.html'), 404
+        return retrieve_image_error('File not found.')
 
-    if 'fullsize' in request.args:
-        return send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext)
+    # cannot get a rotated version of SVG images
+    if dbentry.ext == 'svg' and rot:
+        return retrieve_image_error("SVG images cannot be rotated.")
+
+    # rotate if requested
+    if rot:
+        rot_file = make_rotated(dbentry, rot, fullsize)
+        if rot_file:
+            return send_from_directory(app.config['UPLOAD_FOLDER'], rot_file)
+        else:
+            return retrieve_image_error("Failed to rotate image.")
+
+    # otherwise return original image
+    if fullsize:
+        return send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id) + '.' + dbentry.ext)
     else:
         # check if preview exists, otherwise send full size
         if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.preview.jpg')):

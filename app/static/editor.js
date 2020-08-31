@@ -4,7 +4,7 @@ var hiddeneditor;
 var showparentactions = false;
 var invertactionorder = false;
 
-CKEDITOR.timestamp='20191209';
+CKEDITOR.timestamp='20200831';
 
 // polyfill for string startsWith
 if (!String.prototype.startsWith) {
@@ -16,7 +16,7 @@ if (!String.prototype.startsWith) {
 
 // configure the CKEditor
 var ckeditorconfig = {
-    extraPlugins: 'save,fb',
+    extraPlugins: 'save,fb,imagerotate',
     imageUploadUrl: '/browser/upload?type=img',
     uploadUrl: '/browser/upload?type=att',
     filebrowserImageUploadUrl: '/browser/upload?type=img',

@@ -116,6 +116,19 @@
     lock next to the owner's name in the other user's navigation bar. These indirect shares cannot be mounted in a different location.</p>
     <img src="/static/help/sharing.png">
 
+    <h2>Collaborative samples</h2>
+    <p>A sample can be marked as "collaborative" by clicking on the <img src="/static/images/collaborative.png" width="16" height="16">-button
+    at the top of the editor. This enables the users that share this sample to edit all actions, even the ones that are not their own. However,
+    you should take into account the following limitations of this functionality:
+    <ul>
+        <li>On the collaborative samples, only the actions can be modified by the collaborating users, not the sample description or its name.</li>
+        <li>Even if an action is modified by a collaborating user, the name of the original owner of the action will still appear next to it.</li>
+        <li><b>Collaborative samples have to be used carefully:</b> At the beginning of the modification of an action, the current version of the
+        action is loaded from the database. At the end, the modified version is stored to the database. This also applies when two users
+        simultaneously edit an action. Only the latest version (i.e. of the user who last clicks "Save") will be stored.</li>
+    </ul>
+    </p>
+
     <h2>Using LaTeX</h2>
     <p>You can use LaTeX to typeset mathematical expressions in the sample description and in the actions. You can use \(...\) for in-line math,
     and \[...\] for displayed equations. The software also recognizes the TeX delimiters $$...$$ for displayed equations. The type-setting

@@ -41,14 +41,15 @@ class UsageStatisticsThread(threading.Thread):
             with open('usage_stats_key', 'w') as f:
                 f.write(key)
 
-        # obtain git revision and check if repo is clean
-        repo = git.Repo(basedir)  # get Sample Manager git repo
-        git_rev = str(repo.rev_parse('HEAD'))
-        git_clean = str(not repo.is_dirty())
-
-        dbsize, totuploadvol, availablevol = filesystem_usage(self.app)
-
         while True:
+            # obtain git revision and check if repo is clean
+            repo = git.Repo(basedir)  # get Sample Manager git repo
+            git_rev = str(repo.rev_parse('HEAD'))
+            git_clean = str(not repo.is_dirty())
+
+            # obtain file system usage
+            dbsize, totuploadvol, availablevol = filesystem_usage(self.app)
+
             with self.app.app_context():
                 data = {'key': key,
                         'site': usage_statistics_site_name,

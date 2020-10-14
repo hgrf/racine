@@ -4,6 +4,7 @@ import git
 import requests
 import uuid
 import threading
+import psutil
 from config import basedir
 from . import db
 from .models import User, Sample, Action, Upload
@@ -50,6 +51,9 @@ class UsageStatisticsThread(threading.Thread):
             # obtain file system usage
             dbsize, totuploadvol, availablevol = filesystem_usage(self.app)
 
+            # obtain RAM usage
+            ram_used = psutil.virtual_memory().used
+
             with self.app.app_context():
                 data = {'key': key,
                         'site': usage_statistics_site_name,
@@ -62,7 +66,8 @@ class UsageStatisticsThread(threading.Thread):
                         'gitclean': git_clean,
                         'dbsize': dbsize,
                         'uploadvol': totuploadvol,
-                        'availablevol': availablevol}
+                        'availablevol': availablevol,
+                        'ramused': ram_used}
 
             # get usage statistics script url from GitHub
             try:

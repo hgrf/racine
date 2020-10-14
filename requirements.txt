@@ -26,6 +26,7 @@ pyasn1==0.4.8
 pysmb==1.1.28
 python-dateutil==2.8.1
 python-editor==1.0.4
+psutil==5.7.2
 requests==2.22.0
 six==1.13.0
 smmap2==2.0.5

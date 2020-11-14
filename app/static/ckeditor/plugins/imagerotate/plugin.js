@@ -103,7 +103,7 @@
       angle += parseInt(urlParams.get('rot'));
     }
 
-    if(angle > 360) {
+    if(angle >= 360) {
       angle = angle % 360;
     }
 

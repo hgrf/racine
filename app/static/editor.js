@@ -4,7 +4,7 @@ var hiddeneditor;
 var showparentactions = false;
 var invertactionorder = false;
 
-CKEDITOR.timestamp='20200831';
+CKEDITOR.timestamp='20201114';
 
 // polyfill for string startsWith
 if (!String.prototype.startsWith) {

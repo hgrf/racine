@@ -339,7 +339,13 @@ def retrieve_attachment(upload_id):
             att_filename = os.path.basename(src)
         else:
             att_filename = 'unknown.'+dbentry.ext
-        return send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext,
+        if dbentry.ext.lower() == 'pdf':
+            response = send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext,
+                                   as_attachment=False)
+            response.headers['Content-Disposition'] = 'inline; filename={}'.format(att_filename)
+            return response
+        else:
+            return send_from_directory(app.config['UPLOAD_FOLDER'], str(dbentry.id)+'.'+dbentry.ext,
                                    as_attachment=True, attachment_filename=att_filename)
     else:
         return render_template('404.html'), 404

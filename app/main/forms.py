@@ -22,3 +22,10 @@ class NewSampleForm(FlaskForm):
         parentid = int(field.data) if field.data else 0
         if parentid and not Sample.query.get(parentid):
             raise ValidationError('Please select a valid parent sample or leave that field empty.')
+
+
+class MarkActionAsNewsForm(FlaskForm):
+    title = StringField('Title:')
+    expires = DateField('Expires:', format='%Y-%m-%d', render_kw={"placeholder": "yyyy-mm-dd"})
+
+    action_id = HiddenField()

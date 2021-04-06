@@ -2,9 +2,9 @@ from flask import render_template, redirect, request, jsonify, send_file, abort,
 from flask_login import current_user, login_required, login_user, logout_user
 from .. import db
 from .. import plugins
-from ..models import Sample, Action, User, Share, Upload, SMBResource, Activity, record_activity
+from ..models import Sample, Action, User, Share, Upload, SMBResource, Activity, record_activity, News
 from . import main
-from .forms import NewSampleForm, NewActionForm
+from .forms import NewSampleForm, NewActionForm, MarkActionAsNewsForm
 from ..settings.forms import NewUserForm
 from datetime import date, datetime, timedelta
 from .. import smbinterface
@@ -20,12 +20,14 @@ import inspect
 def index(sampleid=0):
     if not current_user.is_authenticated:
         return redirect('/auth/login?next=%2F')
+
+    # TODO: reduce redundance in call to render_template
     if not sampleid:
-        return render_template('main.html', sample=None, search_activated=True, newsampleform=NewSampleForm())
+        return render_template('main.html', sample=None, search_activated=True, newsampleform=NewSampleForm(), dlg_markasnews_form=MarkActionAsNewsForm())
     sample = Sample.query.get(sampleid)
     if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
         return render_template('404.html'), 404
-    return render_template('main.html', sample=sample, search_activated=True, newsampleform=NewSampleForm())
+    return render_template('main.html', sample=sample, search_activated=True, newsampleform=NewSampleForm(), dlg_markasnews_form=MarkActionAsNewsForm())
 
 
 @main.route('/welcome')
@@ -73,10 +75,26 @@ def welcome():
             display = 'Error in plugin'
         plugin_display.append([p.title, display])
 
+    # assemble news
+    news = [link.news for link in current_user.news_links]
+    news = sorted(news, key=lambda n: n.id, reverse=True)
+
+    # check for expired news
+    expired = []
+    not_expired = []
+    for n in news:
+        if datetime.today().date() > n.expires:
+            expired.append(n)
+            db.session.delete(n)
+        else:
+            not_expired.append(n)
+    db.session.commit()
+    news = not_expired
+
     return render_template('welcome.html', conns=smbinterface.conns, recent_samples=recent_samples,
                            newactionsallusers=newactionsallusers, maxcountallusers=maxcountallusers,
                            uploadvols=uploadvols, maxuploadvol=maxuploadvol, plugin_display=plugin_display,
-                           totuploadvol=totuploadvol, availablevol=availablevol, dbsize=dbsize)
+                           totuploadvol=totuploadvol, availablevol=availablevol, dbsize=dbsize, news=news)
 
 
 @main.route('/navbar', methods=['GET'])
@@ -283,6 +301,16 @@ def createshare():
     db.session.add(share)
     record_activity('add:share', current_user, sample)
     db.session.commit()
+
+    # re-dispatch news for this sample and for all children
+    affected_samples = [sample]
+    while affected_samples:
+        s = affected_samples.pop()
+        affected_samples.extend(s.children)
+        news = News.query.filter_by(sample_id=s.id).all()
+        for n in news:
+            n.dispatch()
+
     return jsonify(code=0, username=user.username, userid=user.id, shareid=share.id)
 
 
@@ -329,6 +357,15 @@ def deleteshare(shareid):
     db.session.delete(share)
     db.session.commit()
 
+    # re-dispatch news for this sample and for all children
+    affected_samples = [share.sample]
+    while affected_samples:
+        s = affected_samples.pop()
+        affected_samples.extend(s.children)
+        news = News.query.filter_by(sample_id=s.id).all()
+        for n in news:
+            n.dispatch()
+
     if user == current_user:      # in this case the sample does not exist anymore for this user
         return jsonify(code=2)
 
@@ -369,6 +406,15 @@ def changeparent():
         try:
             sample.parent_id = parentid
             db.session.commit()
+
+            # re-dispatch news for this sample and for all children
+            affected_samples = [sample]
+            while affected_samples:
+                s = affected_samples.pop()
+                affected_samples.extend(s.children)
+                news = News.query.filter_by(sample_id=s.id).all()
+                for n in news:
+                    n.dispatch()
         except Exception as e:
             return jsonify(code=1, error=str(e))
     return jsonify(code=0)
@@ -394,6 +440,60 @@ def newsample():
         return jsonify(code=1, error={field: errors for field, errors in form.errors.items()})
     abort(500)          # this should never happen
 
+
+@main.route('/markasnews', methods=['POST'])
+@login_required
+def markasnews():
+    form = MarkActionAsNewsForm()
+    if form.validate_on_submit():
+        # get action from database
+        action = Action.query.get(form.action_id.data)
+        if action is None:
+            return jsonify(code=1, error="Action does not exist")
+
+        # check if action is already marked as news
+        if action.news_id:
+            return jsonify(code=1, error="Action is already marked as news")
+
+        # mark action as news
+        news = News(sender_id=current_user.id, sample_id=action.sample_id, title=form.title.data, 
+                    content="action:{}".format(action.id), published=datetime.today(), expires=form.expires.data)
+        db.session.add(news)
+        db.session.commit()
+        action.news_id = news.id
+        db.session.commit()
+
+        news.dispatch()
+
+        return jsonify(code=0)
+    elif form.is_submitted():
+        return jsonify(code=1, error={field: errors for field, errors in form.errors.items()})
+    abort(500)          # this should never happen
+
+
+@main.route('/unmarkasnews', methods=['POST'])
+@login_required
+def unmarkasnews():
+    action = Action.query.get(request.form.get("actionid"))
+    if action is None:
+        return jsonify(code=1, error="Action does not exist")
+    
+    # check if action is really marked as news
+    if not action.news_id:
+        return jsonify(code=1, error="Action is not marked as news")
+
+    if action.news.sender != current_user:
+        return jsonify(code=1, error="Only the sender of the news ({}) can unmark this action as news".format(action.news.sender.username))
+    
+    # by cascade deletion, this will also remove all corresponding items from the linkusernews table
+    db.session.delete(action.news)
+
+    # unmark action as news
+    # TODO: record activity
+    action.news_id = None
+    db.session.commit()
+
+    return jsonify(code=0)
 
 @main.route('/newaction/<sampleid>', methods=['POST'])
 @login_required

@@ -5,7 +5,7 @@
     {{super()}}
     <link rel="stylesheet" href="{{url_for('static', filename='lightbox2-master/src/css/lightbox.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='navbar.css', version='20191215')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='editor.css', version='20200829')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='editor.css', version='20210406')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='jquery-ui.min.css')}}"> {# for the date picker #}
 {% endblock %}
 
@@ -48,6 +48,20 @@
 </div>
 {{ end_modal_dialog() }}
 
+{{ begin_modal_dialog('dlg_markasnews', 'Mark as news', 'modal-lg') }}
+<div class="modal-body">
+    <p>
+        Mark this action as news to all users who share this sample.
+    </p>
+    <form id="dlg_markasnews_form">
+        {{ wtf.quick_form(dlg_markasnews_form) }}
+    </form>
+</div>
+<div class="modal-footer">
+    <button id="dlg_markasnews_submit" type="button" class="btn btn-primary">Submit</button>
+</div>
+{{ end_modal_dialog() }}
+
 {% endblock %}
 
 {% block scripts %}
@@ -76,7 +90,7 @@
     <script src="{{ url_for('static', filename='editorhelpers.js', version='20200831') }}"></script>
     <script src="{{ url_for('static', filename='ckeditable.js') }}"></script>
     <script src="{{ url_for('static', filename='jquery-ui.min.js') }}"></script> {# for the date picker #}
-    <script src="{{ url_for('static', filename='editor.js', version='20201114') }}"></script>
+    <script src="{{ url_for('static', filename='editor.js', version='20210406') }}"></script>
     <script src="{{ url_for('static', filename='navbar.js', version='20191215') }}"></script>
     <script src="{{ url_for('static', filename='lightbox2-master/src/js/lightbox.js') }}"></script>
 {% endblock %}

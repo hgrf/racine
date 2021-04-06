@@ -23,6 +23,11 @@ def deleted_sample_handler(session, sample):
             if s.owner == current_user:
                 # if the sample down the hierarchy belongs to the current user, also mark it as deleted
                 session.execute(Sample.__table__.update().values(isdeleted=True).where(Sample.id == s.id))
+                # delete all corresponding news
+                for news in session.execute(News.__table__.select().where(News.sample_id == s.id)):
+                    news_id = news[0]
+                    session.execute(LinkUserNews.__table__.delete().where(LinkUserNews.news_id == news_id))
+                session.execute(News.__table__.delete().where(News.sample_id == s.id))
                 # and delete all corresponding shares
                 session.execute(Share.__table__.delete().where(Share.sample_id == s.id))
                 # NB: if another user has children underneath this sample, they have been taken care of previously
@@ -30,10 +35,22 @@ def deleted_sample_handler(session, sample):
             else:
                 # otherwise it belongs to someone else and we move it back to that person's root
                 session.execute(Sample.__table__.update().values(parent_id=0).where(Sample.id == s.id))
+                # If there is some news associated with the sample or a subsample, this is not really an issue.
+                # Everybody who has access to the sample - and the person who created the news, will still see
+                # the news - but the person who created the news will not be able to access the sample (and therefore
+                # not be able to deactivate the news). Two possible solutions:
+                # - wait for the news to expire
+                # - give the user access again so he/she can deactivate the news
                 # TODO: careful with duplicate sample names here
 
     # delete all corresponding shares
     session.execute(Share.__table__.delete().where(Share.sample_id == sample.id))
+
+    # delete all corresponding news
+    for news in session.execute(News.__table__.select().where(News.sample_id == sample.id)):
+        news_id = news[0]
+        session.execute(LinkUserNews.__table__.delete().where(LinkUserNews.news_id == news_id))
+    session.execute(News.__table__.delete().where(News.sample_id == sample.id))
 
     recursive(sample)
 
@@ -51,6 +68,12 @@ def deleted_share_handler(session, share):
             # check if child or mounted sample belongs to the user whose share we remove and move it back to his tree
             if s.owner == share.user:
                 session.execute(Sample.__table__.update().values(parent_id=0).where(Sample.id == s.id))
+                # If there is some news associated with the sample or a subsample, this is not really an issue.
+                # Everybody who has access to the sample - and the person who created the news, will still see
+                # the news - but the person who created the news will not be able to access the sample (and therefore
+                # not be able to deactivate the news). Two possible solutions:
+                # - wait for the news to expire
+                # - give the user access again so he/she can deactivate the news
                 # TODO: careful with duplicate sample names here
 
     recursive(share.sample)
@@ -160,6 +183,8 @@ class Sample(db.Model):
     shares = db.relationship('Share', backref='sample', foreign_keys='Share.sample_id', cascade="delete")
     mountedshares = db.relationship('Share', backref='mountpoint', foreign_keys='Share.mountpoint_id')
     actions = db.relationship('Action', backref='sample', cascade="delete")
+
+    news = db.relationship('News', backref='sample', cascade="delete")
     activity = db.relationship('Activity', backref='sample')
 
     def __setattr__(self, name, value):
@@ -246,7 +271,10 @@ class Action(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     timestamp = db.Column(db.Date)
     sample_id = db.Column(db.Integer, db.ForeignKey('samples.id'))
+    news_id = db.Column(db.Integer, db.ForeignKey('news.id'))
     description = db.Column(db.UnicodeText)
+
+    news = db.relationship('News', backref="action", cascade="delete")
 
     def __repr__(self):
         return '<Action %r>' % self.id
@@ -262,6 +290,78 @@ class Action(db.Model):
 
     def has_write_access(self, user):
         return self.has_read_access(user)
+
+
+class News(db.Model):
+    __tablename__ = 'news'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.UnicodeText)
+    content = db.Column(db.UnicodeText)
+
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    sender = db.relationship('User', foreign_keys=[sender_id])
+
+    # recipient can be either all users, a specific user, or all users who share a given sample
+    recipient_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    sample_id = db.Column(db.Integer, db.ForeignKey('samples.id'))
+
+    published = db.Column(db.Date)
+    expires = db.Column(db.Date)
+
+    #action = db.relationship('Action', backref="news")
+    recipients = db.relationship('LinkUserNews', backref='news', foreign_keys='LinkUserNews.news_id', cascade="delete")
+
+    def dispatch(self):
+        # remove all existing links
+        links = LinkUserNews.query.filter_by(news_id=self.id).all()
+        for link in links:
+            db.session.delete(link)
+        db.session.commit()
+
+        # construct list of recipients
+        recipients = []
+        if self.sample:
+            # dispatch the news to all users who have access to this sample, i.e.
+            # all users who share the sample directly or who share a parent sample
+            recipients.append(self.sample.owner)
+
+            sample = self.sample
+            while sample:
+                recipients.append(sample.owner)
+                recipients.extend([s.user for s in sample.shares])
+                sample = sample.parent
+
+        # remove duplicates from recipients
+        recipients = set(recipients)
+
+        # create links
+        for recipient in recipients:
+            link = LinkUserNews(user_id=recipient.id, news_id=self.id)
+            db.session.add(link)
+            db.session.commit()
+    
+    def render_content(self):
+        # TODO: here we could also support other prefixes
+        if not self.content or not self.content.startswith("action:"):
+            return "Invalid news content"
+
+        actionid = int(self.content[len("action:"):])
+        action = Action.query.get(actionid)
+        if action is None:
+            return "Invalid action link"
+        
+        return f"""{action.timestamp} <i>{action.owner.username}</i> {action.description}"""
+
+
+class LinkUserNews(db.Model):
+    __tablename__ = 'linkusernews'
+    id = db.Column(db.Integer, primary_key=True)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    news_id = db.Column(db.Integer, db.ForeignKey('news.id'))
+
+    user = db.relationship('User', backref="news_links")
+
 
 class SMBResource(db.Model):
     __tablename__ = 'smbresources'

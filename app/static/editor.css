@@ -107,6 +107,10 @@ div.sampleshares {
     font-size:large;
 }
 
+.unmarkasnews {
+    color: #FF0000;
+}
+
 @media (min-width: 992px) {
     .actionicons {
         margin-top: 10px;
@@ -197,4 +201,36 @@ div.user > img {
     border-top-style: solid;
     border-top-width: 1px;
     border-top-color: #CCCCCC;
+}
+
+div.news {
+    background-color: #EEEEFF;
+    margin-bottom: 20px;
+    padding: 10px;
+    max-width: 1000px;
+}
+
+div.news > div.news-header-item {
+    float: right;
+    height: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+div.news > div.news-title {
+    float: left;
+    padding-left: 0px;
+    font-weight: bold;
+    font-size: larger;
+    cursor: pointer;
+}
+
+div.news > div.news-title > i.glyphicon {
+    color: #FF0000;
+}
+
+div.news > div.news-clear {
+    clear: both;
 }

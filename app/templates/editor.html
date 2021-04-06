@@ -101,6 +101,7 @@
                     <i class="actionicon glyphicon glyphicon-arrow-down swapaction" data-id="{{ action.id }}" data-swapid="{{ actions[i+1].id }}"></i>
                 {% endif %}
                 {% endif %}
+                <i id="togglenews-{{ action.id }}" class="actionicon glyphicon glyphicon-flag togglenews {% if not action.news_id %}markasnews{% else %}unmarkasnews{% endif %}" data-id="{{ action.id }}"></i>
             </div>
         </div>
         <div class="col-md-10 actiondescription{% if action.owner == current_user or sample.iscollaborative %} editable ckeditable{% endif %}" data-getter="/get/action/description/{{ action.id }}" data-setter="/set/action/description/{{ action.id }}">{{ action.description|safe }}</div>

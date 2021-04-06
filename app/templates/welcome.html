@@ -1,4 +1,25 @@
-<h1>Welcome</h1>
+{% if news %}
+    <h2>News</h2>
+{% endif %}
+{% for n in news %}
+    <div class="news">
+        <div class="news-title news-header-item" data-toggle="collapse" data-target="#news-content{{ n.id }}">
+            <i class="glyphicon glyphicon-flag togglenews"></i>
+            {{ n.title if n.title else "[no title]"}}
+        </div>
+        <div class="news-expires news-header-item">Expires: {{ n.expires }}</div>
+        <div class="news-sender news-header-item">Sent {{ n.published }} by {{ n.sender.username }}</div>
+        {% if n.sample %}
+        <div class="sample news-sample news-header-item" data-id="{{ n.sample.id }}" style="max-width: 300px;">
+            <img src="/static/images/sample.png" height="20">
+            {{ n.sample.name }}
+        </div>
+        {% endif %}
+        <div class="news-clear"></div>
+        <div id="news-content{{ n.id }}" class="news-content collapse out">{{ n.render_content()|safe }}</div>
+    </div>
+{% endfor %}
+
 {% for p in plugin_display %}
     <h2>{{ p[0] }}</h2>
     {{ p[1]|safe }}
@@ -10,8 +31,11 @@
          style="width:{{ (totuploadvol+dbsize)/(totuploadvol+availablevol+dbsize)*100 }}%;color:#000000;">
     </div>
 </div>
-<h2>Recent samples:</h2>
+{% if recent_samples %}
+    <h2>Recent samples</h2>
+{% endif %}
 {% for s in recent_samples %}
+    {# TODO: might want to rather use CSS for style #}
     <div class="sample" data-id="{{ s.id }}" style="max-width: 300px;">
         <img src="/static/images/sample.png" width="40">
         {{ s.name }}
@@ -20,6 +44,7 @@
 
 {# information only for the administrator #}
 {% if current_user.is_admin %}
+{% if conns %}
     <h2>Active SMB connections</h2>
     <table>
     {% for c in conns %}
@@ -29,6 +54,7 @@
         </td></tr>
     {% endfor %}
     </table>
+{% endif %}
     <h2>Upload volume per user</h2>
     <table>
     {% for u in uploadvols %}
@@ -48,6 +74,7 @@
         {% endif %}
     {% endfor %}
     </table>
+{% if newactionsallusers %}
     <h2>Recent activity per user (actions added in the last 7 days):</h2>
     <table>
     {% for n in newactionsallusers %}
@@ -65,4 +92,5 @@
         {% endif %}
     {% endfor %}
     </table>
+{% endif %}
 {% endif %}

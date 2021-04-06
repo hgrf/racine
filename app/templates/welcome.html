@@ -78,18 +78,16 @@
     <h2>Recent activity per user (actions added in the last 7 days):</h2>
     <table>
     {% for n in newactionsallusers %}
-        {% if n[1] %}
-            <tr>
-                <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="/static/images/user.png" width="40">{{ n[0].username }}</td>
-                <td style="padding-top: 10px;">
-                    <div class="progress" style="width: 200px;">
-                        <div class="progress-bar" role="progressbar" style="width:{{ n[1]/maxcountallusers*100 }}%;">
-                            {{ n[1] }}
-                        </div>
+        <tr>
+            <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="/static/images/user.png" width="40">{{ n[0].username }}</td>
+            <td style="padding-top: 10px;">
+                <div class="progress" style="width: 200px;">
+                    <div class="progress-bar" role="progressbar" style="width:{{ n[1]/maxcountallusers*100 }}%;">
+                        {{ n[1] }}
                     </div>
-                </td>
-            </tr>
-        {% endif %}
+                </div>
+            </td>
+        </tr>
     {% endfor %}
     </table>
 {% endif %}

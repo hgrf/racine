@@ -43,9 +43,13 @@ def welcome():
     # get user activity for all users (only admin will see this)
     aweekago = date.today()-timedelta(weeks=1)
     stmt = db.session.query(Action.owner_id, func.count('*').label('action_count')).filter(Action.datecreated > aweekago).group_by(Action.owner_id).subquery()
-    newactionsallusers = db.session.query(User, stmt.c.action_count).outerjoin(stmt, User.id==stmt.c.owner_id).order_by(User.id).all()
+    user_vs_count = db.session.query(User, stmt.c.action_count).outerjoin(stmt, User.id==stmt.c.owner_id).order_by(User.id).all()
+    newactionsallusers = []
     maxcountallusers = 0
-    for n in newactionsallusers: maxcountallusers = max(maxcountallusers, n[1] if n[1] is not None else 0)
+    for n in user_vs_count:
+        if n[1] is not None:
+            newactionsallusers.append(n)
+            maxcountallusers = max(maxcountallusers, n[1])
 
     # get per user upload volume for all users (only admin will see this)
     stmt = db.session.query(Upload.user_id, func.sum(Upload.size).label('upload_volume')).group_by(Upload.user_id).subquery()

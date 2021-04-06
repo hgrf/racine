@@ -32,6 +32,7 @@ not populated by JavaScript #}
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
     <style>
+    /* TODO: this should be in something like base.css */
     div.sample {
         padding-top: 10px;
         padding-bottom: 10px;
@@ -39,7 +40,7 @@ not populated by JavaScript #}
 
     div.sample:hover {
         background-color: #CCCCEE;
-        cursor: pointer;"
+        cursor: pointer;
     }
 
     {% if config['DEBUG'] %}

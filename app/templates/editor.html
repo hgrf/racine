@@ -47,6 +47,8 @@
             </div>
         </div>
         <div class="col-md-3 sampleshares">
+            {# workaround to only collapse the share list when it is "sufficiently" long; note that this depends on window width... #}
+            <div id="sharelistcontainer" {% if shares|length > 4 %}class="collapse" aria-expanded="false"{% endif %}>
             <div id="sharelist">
             <div><strong>Shared with:</strong></div>
             {% for share in shares %}
@@ -62,7 +64,12 @@
                 </div>
             {% endfor %}
             </div>
-            <div class="newsharelistentry">
+            <div class="sharelistbottom"></div>
+            </div>
+            <div class="sharelistbuttons">
+                {% if shares|length > 4 %}
+                    <a id="collapsebutton" role="button" class="collapsed" data-toggle="collapse" href="#sharelistcontainer" aria-expanded="false" aria-controls="sharelistcontainer"></a>
+                {% endif %}
                 {% if sample.owner == current_user %}
                     <a data-toggle="modal" data-target="#userbrowser" href=""><i class="glyphicon glyphicon-plus"></i> add share</a>
                 {% endif %}

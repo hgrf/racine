@@ -170,6 +170,35 @@ img, table {
 	background-color: Yellow;
 }
 
+#sharelist {
+    display: block;
+}
+
+#sharelistcontainer {
+    display: block;
+}
+
+#sharelistcontainer.collapse[aria-expanded="false"] {
+    height: 50px !important;
+    overflow: hidden;
+}
+
+#sharelistcontainer.collapsing[aria-expanded="false"] {
+    height: 50px !important;
+}
+
+a#collapsebutton {
+    margin-right: 10px;
+}
+
+a#collapsebutton.collapsed:after  {
+    content: '+ show more';
+}
+
+a#collapsebutton:not(.collapsed):after {
+    content: '- show less';
+}
+
 .sharelistentry {
     display: inline;
     float: left;
@@ -178,8 +207,11 @@ img, table {
     margin-right: 1em;
 }
 
-.newsharelistentry {
+.sharelistbottom {
     clear: both;
+}
+
+.sharelistbuttons {
     padding-top: 10px;
     font-weight: bold;
 }

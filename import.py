@@ -1,3 +1,6 @@
+# This file is obsolete (still Python 2)
+# pylint: skip-file
+
 import os
 from app import create_app, db
 from flask.ext.script import Manager

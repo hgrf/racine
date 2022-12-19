@@ -1,5 +1,5 @@
 # This file is obsolete (still Python 2)
-# pylint: skip-file
+# flake8: noqa
 
 import os
 from app import create_app, db

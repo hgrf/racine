@@ -1,3 +1,5 @@
+![build](https://github.com/HolgerGraef/MSM/actions/workflows/python-app.yml/badge.svg)
+
 # Mercury Sample Manager
 
 This is Mercury Sample Manager, a sample management tool that enables researchers

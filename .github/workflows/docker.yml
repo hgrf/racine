@@ -1,13 +1,16 @@
 # based on https://stackoverflow.com/a/64373702
 
-name: Docker build and deploy
+name: Docker
+
 on:
+  push: 
+    branches: [ "master" ]
   pull_request:
-  push: { branches: master }
+    branches: [ "master" ]
 
 jobs:
-  test:
-    name: Build the docker image and run tests
+  build:
+    name: Build docker image & run tests
     runs-on: ubuntu-latest
     env:
       COMPOSE_FILE: .ci/docker-compose.yml
@@ -25,7 +28,8 @@ jobs:
       run: |
         docker-compose build test
         docker-compose run test
-
+  
+  deploy:
     - name: Login to DockerHub
       run: docker login -u $DOCKER_USER -p $DOCKER_PASS
 

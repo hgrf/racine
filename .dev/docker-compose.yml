@@ -1,0 +1,19 @@
+version: "3.9"
+services:  
+  web:
+    build:
+      context: ..
+      dockerfile: .dev/Dockerfile
+    ports:
+      - "56733:80"
+    volumes:
+      - ..:/app
+  test:
+    build:
+      context: ..
+      dockerfile: .dev/Dockerfile
+    depends_on:
+      - web
+    command: python -m pytest
+    volumes:
+      - ..:/app

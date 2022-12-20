@@ -9,17 +9,17 @@ jobs:
   test:
     name: Build the docker image and run tests
     runs-on: ubuntu-latest
-#    env:
-#      COMPOSE_FILE: .ci/docker-compose.yml
-#      DOCKER_USER: ${{ secrets.DOCKER_USER }}
-#      DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+    env:
+      COMPOSE_FILE: .ci/docker-compose.yml
+      DOCKER_USER: ${{ secrets.DOCKER_USER }}
+      DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-#    - name: Login to DockerHub
-#      run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - name: Login to DockerHub
+      run: docker login -u $DOCKER_USER -p $DOCKER_PASS
 
     - name: Build docker images
       run: docker-compose build test

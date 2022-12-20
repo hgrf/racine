@@ -9,3 +9,4 @@ COPY ./requirements.txt /var/www/requirements.txt
 RUN apk add build-base linux-headers zlib-dev jpeg-dev
 RUN pip install --upgrade pip
 RUN pip install -r /var/www/requirements.txt
+RUN pip install pytest

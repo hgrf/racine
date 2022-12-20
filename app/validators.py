@@ -4,12 +4,12 @@ from .models import User
 
 def email_already_registered(form, field):
     if User.query.filter_by(email=field.data).first():
-        raise ValidationError('Email already registered.')
+        raise ValidationError("Email already registered.")
 
 
 def username_already_registered(form, field):
     if User.query.filter_by(username=field.data).first():
-        raise ValidationError('Username already in use.')
+        raise ValidationError("Username already in use.")
 
 
 def validate_form_field(form, field, value):

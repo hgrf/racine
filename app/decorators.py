@@ -10,5 +10,7 @@ def admin_required(f):
             if not current_user.is_admin:
                 abort(403)
             return f(*args, **kwargs)
+
         return decorated_function
+
     return decorator(f)

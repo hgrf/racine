@@ -6,7 +6,7 @@ from .forms import ChangePasswordForm, ChangeDetailsForm
 from ..models import User
 
 
-@profile.route('/changedetails', methods=['GET', 'POST'])
+@profile.route("/changedetails", methods=["GET", "POST"])
 @login_required
 def changedetails():
     form = ChangeDetailsForm()
@@ -15,15 +15,15 @@ def changedetails():
             current_user.username = form.username.data
             current_user.email = form.email.data
             db.session.commit()
-            flash('Details updated.')
+            flash("Details updated.")
     else:
         form.username.data = current_user.username
         form.email.data = current_user.email
 
-    return render_template('profile/changedetails.html', form=form)
+    return render_template("profile/changedetails.html", form=form)
 
 
-@profile.route('/changepassword', methods=['GET', 'POST'])
+@profile.route("/changepassword", methods=["GET", "POST"])
 @login_required
 def changepassword():
     form = ChangePasswordForm()
@@ -32,13 +32,13 @@ def changepassword():
         if user.verify_password(form.oldpassword.data):
             user.password = form.password.data
             db.session.commit()
-            return redirect('/')
+            return redirect("/")
         else:
-            flash('Password incorrect.')
-    return render_template('profile/changepassword.html', form=form)
+            flash("Password incorrect.")
+    return render_template("profile/changepassword.html", form=form)
 
 
-@profile.route('/leave', methods=['GET'])
+@profile.route("/leave", methods=["GET"])
 @login_required
 def leave():
     user = None
@@ -48,7 +48,7 @@ def leave():
         user = User.query.filter_by(username=heirname).first()
         if user is None or user.heir is not None or user == current_user:
             flash("Please name a valid user that is still part of the laboratory.")
-            return render_template('profile/leave.html', user=None)
+            return render_template("profile/leave.html", user=None)
 
     confirm = request.args.get("confirm")
     reactivate = request.args.get("reactivate")
@@ -67,4 +67,4 @@ def leave():
             u.heir = user
         db.session.commit()
 
-    return render_template('profile/leave.html', user=user)
+    return render_template("profile/leave.html", user=user)

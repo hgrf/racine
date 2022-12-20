@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-settings = Blueprint('settings', __name__)
+settings = Blueprint("settings", __name__)
 
 from . import views

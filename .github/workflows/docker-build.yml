@@ -1,0 +1,25 @@
+# based on https://stackoverflow.com/a/64373702
+
+name: Docker
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    name: Build docker image & run tests
+    runs-on: ubuntu-latest
+    env:
+      COMPOSE_FILE: .ci/docker-compose.yml
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build docker images
+      run: docker-compose build web
+
+    - name: Run tests
+      run: |
+        docker-compose build test
+        docker-compose run test

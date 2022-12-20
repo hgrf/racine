@@ -8,7 +8,7 @@ from flask_login import login_required
 import git
 from ..config import basedir
 from flask import current_app as app
-from ..email import send_mail, read_mailconfig
+from ..emailing import send_mail, read_mailconfig
 import os
 from .. import plugins
 import base64

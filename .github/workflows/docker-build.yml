@@ -9,8 +9,8 @@ jobs:
   test:
     name: Build the docker image and run tests
     runs-on: ubuntu-latest
-    env:
-      COMPOSE_FILE: .ci/docker-compose.yml
+#    env:
+#      COMPOSE_FILE: .ci/docker-compose.yml
 #      DOCKER_USER: ${{ secrets.DOCKER_USER }}
 #      DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
 

@@ -12,17 +12,12 @@ jobs:
   deploy:
     name: Deploy docker image
     runs-on: ubuntu-latest
+    uses: ./.github/workflows/docker-build.yml
     env:
       DOCKER_USER: ${{ secrets.DOCKER_USER }}
       DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Build
-      uses: ./.github/workflows/docker-build.yml
-
     - name: Login to DockerHub
       run: docker login -u $DOCKER_USER -p $DOCKER_PASS
 

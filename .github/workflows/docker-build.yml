@@ -1,6 +1,6 @@
 # based on https://stackoverflow.com/a/64373702
 
-name: Docker build
+name: Docker build and deploy
 on:
   pull_request:
   push: { branches: master }

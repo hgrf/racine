@@ -6,7 +6,7 @@ from .forms import NewSMBResourceForm, NewUserForm, EmailSettings
 from . import settings
 from flask_login import login_required
 import git
-from config import basedir
+from ..config import basedir
 from flask import current_app as app
 from ..email import send_mail, read_mailconfig
 import os

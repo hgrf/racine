@@ -5,7 +5,7 @@ import requests
 import uuid
 import threading
 import psutil
-from config import basedir
+from .config import basedir
 from . import db
 from .models import User, Sample, Action, Upload
 from sqlalchemy.sql import func

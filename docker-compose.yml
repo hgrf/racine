@@ -6,8 +6,14 @@ services:
       - "56733:80"
     volumes:
       - .:/app
+  dist:
+    build:
+      context: .
+      dockerfile: .ci/Dockerfile
   test:
     build:
       context: .
       dockerfile: .ci/Dockerfile
+    depends_on:
+      - dist
     command: python -m pytest

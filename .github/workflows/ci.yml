@@ -19,7 +19,7 @@ jobs:
           python-version: "3.8"
 
       - name: Install everything, run the tests, produce the .coverage file
-        run: make test
+        run: make test-dependencies test
 
       - name: Coverage comment
         id: coverage_comment

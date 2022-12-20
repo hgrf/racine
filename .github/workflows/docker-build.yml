@@ -22,7 +22,12 @@ jobs:
       run: docker login -u $DOCKER_USER -p $DOCKER_PASS
 
     - name: Build docker images
-      run: docker-compose build test
+      run: docker-compose build web
 
     - name: Run tests
-      run: docker-compose run test
+      run: |
+        docker-compose build test
+        docker-compose run test
+    
+    - name: Push to DockerHub
+      run: docker push holgergraef/msm

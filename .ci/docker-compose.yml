@@ -6,6 +6,7 @@ services:
       dockerfile: .ci/Dockerfile
     ports:
       - "56733:80"
+    image: holgergraef/msm
   test:
     build:
       context: ..

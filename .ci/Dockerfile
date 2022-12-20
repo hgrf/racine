@@ -18,6 +18,11 @@ COPY ./migrations /app/migrations/
 COPY ./manage.py /app/
 COPY ./uwsgi.ini /app/
 
+RUN git clone -b 3.3.7.1 --depth 1 https://github.com/mbr/flask-bootstrap.git
+RUN ls flask-bootstrap
+RUN mv ./flask-bootstrap/flask_bootstrap/static /app/app/static/bootstrap
+RUN rm -rf flask-bootstrap
+
 RUN mkdir /app/database
 RUN mkdir /app/uploads
 RUN python manage.py db upgrade

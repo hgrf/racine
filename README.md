@@ -76,6 +76,11 @@ In this case, we defined a new hostname for github.com (msm.github.com) for the 
 
     git clone git@msm.github.com:HolgerGraef/MSM.git
 
+# Deployment with docker
+
+    docker pull holgergraef/msm:latest
+    docker run -p 8080:80 holgergraef/msm:latest
+
 # Deployment with gunicorn and nginx
 
 Carry out the steps described above in order to set up the development server. Then configure gunicorn autostart

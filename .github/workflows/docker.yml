@@ -27,10 +27,6 @@ jobs:
         docker-compose build test
         docker-compose run test
 
-    env:
-      DOCKER_USER: ${{ secrets.DOCKER_USER }}
-      DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
-
   deploy:
     needs: build
     name: Deploy docker image

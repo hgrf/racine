@@ -18,9 +18,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Login to DockerHub
-      run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-
     - name: Build docker images
       run: docker-compose build web
 
@@ -28,6 +25,15 @@ jobs:
       run: |
         docker-compose build test
         docker-compose run test
-    
+
+    - name: Login to DockerHub
+      run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+
     - name: Push to DockerHub
       run: docker push holgergraef/msm
+
+    - name: Login to ghcr
+      run: echo ${{ github.token }} | docker login ghcr.io -u HolgerGraef --password-stdin
+
+    - name: Push to ghcr
+      run: docker push ghcr.io/HolgerGraef/msm:latest

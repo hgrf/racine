@@ -17,3 +17,8 @@ usage_stats_site
 mailconfig.py
 # ignore coverage reports
 .coverage
+# markdown documentation
+docsmd/
+# generated files (documetation)
+.readthedocs.yml
+mkdocs.yml

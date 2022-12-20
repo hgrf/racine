@@ -2,6 +2,8 @@
 
 ![coverage](https://raw.githubusercontent.com/HolgerGraef/MSM/python-coverage-comment-action-data/badge.svg)
 
+[documentation](https://holgergraef.github.io/MSM/)
+
 # Mercury Sample Manager
 
 This is Mercury Sample Manager, a sample management tool that enables researchers

@@ -35,5 +35,8 @@ jobs:
     - name: Login to ghcr
       run: echo ${{ github.token }} | docker login ghcr.io -u HolgerGraef --password-stdin
 
+    - name: Tag image for ghcr
+      run: docker tag holgergraef/msm:latest ghcr.io/holgergraef/msm:latest
+
     - name: Push to ghcr
-      run: docker push ghcr.io/HolgerGraef/msm:latest
+      run: docker push ghcr.io/holgergraef/msm:latest

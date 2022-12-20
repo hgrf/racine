@@ -1,0 +1,6 @@
+# code formatting
+black
+pre-commit
+
+# testing
+pytest

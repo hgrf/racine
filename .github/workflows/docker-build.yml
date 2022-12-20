@@ -36,4 +36,4 @@ jobs:
       run: echo ${{ github.token }} | docker login ghcr.io -u HolgerGraef --password-stdin
 
     - name: Push to ghcr
-      run: docker push ghcr.io/holgergraef/msm:latest
+      run: docker push holgergraef/msm

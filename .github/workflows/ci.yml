@@ -7,7 +7,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  test:
+  build:
     name: Run tests & display coverage
     runs-on: ubuntu-latest
     steps:
@@ -18,8 +18,14 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: Install everything, run the tests, produce the .coverage file
-        run: make test-dependencies test
+      - name: Install dependencies, run the tests, produce the .coverage file
+        run: make test-dependencies
+
+      - name: Lint with flake8
+        run: make flake8
+
+      - name: Run tests and produce .coverage file
+        run: make test
 
       - name: Coverage comment
         id: coverage_comment

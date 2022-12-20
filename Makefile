@@ -1,10 +1,13 @@
 test-dependencies:
 	python -m pip install --upgrade pip
 	pip install -r requirements.txt
-	pip install coverage pytest
+	pip install coverage pytest flake8
 
 test:
 	coverage run -m pytest
+
+coverage-report: test
+	coverage html
 
 flake8:
 	# stop the build if there are Python syntax errors or undefined names

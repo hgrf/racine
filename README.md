@@ -78,8 +78,7 @@ In this case, we defined a new hostname for github.com (msm.github.com) for the 
 
 # Deployment with docker
 
-    docker pull holgergraef/msm:latest
-    docker run -p 8080:80 holgergraef/msm:latest
+    docker run -p 8080:80 ghcr.io/holgergraef/msm:latest
 
 # Deployment with gunicorn and nginx
 

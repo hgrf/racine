@@ -22,7 +22,7 @@ jobs:
 #      run: docker login -u $DOCKER_USER -p $DOCKER_PASS
 
     - name: Build docker images
-      run: docker-compose build
+      run: docker-compose build test
 
     - name: Run tests
       run: docker-compose run test

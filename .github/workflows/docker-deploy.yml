@@ -17,7 +17,11 @@ jobs:
       DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
 
     steps:
-    - uses: ./.github/workflows/docker-build.yml@build
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build
+      uses: ./.github/workflows/docker-build.yml
 
     - name: Login to DockerHub
       run: docker login -u $DOCKER_USER -p $DOCKER_PASS

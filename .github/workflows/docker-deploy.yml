@@ -22,7 +22,6 @@ jobs:
 
     - name: Build
       uses: ./.github/workflows/docker-build.yml
-      secrets: inherit
 
     - name: Login to DockerHub
       run: docker login -u $DOCKER_USER -p $DOCKER_PASS

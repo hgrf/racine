@@ -4,6 +4,9 @@ name: Docker
 
 on:
   workflow_call:
+    secrets:
+      token:
+        required: true
 
 jobs:
   build:

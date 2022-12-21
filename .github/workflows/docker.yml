@@ -28,7 +28,7 @@ jobs:
         docker-compose run test
         
     - name: Export image
-      run: docker save --output /tmp/dockerimage.tar web
+      run: docker save --output /tmp/dockerimage.tar ci_web:latest
     
     - name: Upload artifact
       uses: actions/upload-artifact@v3

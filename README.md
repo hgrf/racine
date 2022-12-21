@@ -1,4 +1,4 @@
-![build](https://github.com/HolgerGraef/MSM/actions/workflows/build.yml/badge.svg)
+![build](https://github.com/HolgerGraef/MSM/actions/workflows/ci.yml/badge.svg)
 
 ![coverage](https://raw.githubusercontent.com/HolgerGraef/MSM/python-coverage-comment-action-data/badge.svg)
 

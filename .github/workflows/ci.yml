@@ -41,3 +41,69 @@ jobs:
           name: python-coverage-comment-action
           # If you use a different name, update COMMENT_FILENAME accordingly
           path: python-coverage-comment-action.txt
+          
+  # based on https://stackoverflow.com/a/64373702
+  build-docker:
+    name: Build docker image & run tests
+    runs-on: ubuntu-latest
+    env:
+      COMPOSE_FILE: .ci/docker-compose.yml
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build docker images
+      run: docker-compose build web
+
+    - name: Run tests
+      run: |
+        docker-compose build test
+        docker-compose run test
+        
+    - name: Export image
+      run: |
+        docker image ls
+        docker save --output /tmp/dockerimage.tar holgergraef/msm
+    
+    # https://docs.docker.com/build/ci/github-actions/examples/#share-built-image-between-jobs
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: dockerimage
+        path: /tmp/dockerimage.tar
+
+  push:
+    needs: build-docker
+    name: Push docker image
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_USER: ${{ secrets.DOCKER_USER }}
+      DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: dockerimage
+        path: /tmp
+        
+    - name: Import image
+      run: |
+        docker load --input /tmp/dockerimage.tar
+        docker image ls
+    
+    - name: Login to DockerHub
+      run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+
+    - name: Push to DockerHub
+      run: docker push holgergraef/msm
+
+    - name: Login to ghcr
+      run: echo ${{ github.token }} | docker login ghcr.io -u HolgerGraef --password-stdin
+
+    - name: Tag image for ghcr
+      run: docker tag holgergraef/msm:latest ghcr.io/holgergraef/msm:latest
+
+    - name: Push to ghcr
+      run: docker push ghcr.io/holgergraef/msm:latest

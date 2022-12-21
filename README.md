@@ -2,6 +2,8 @@
 
 ![coverage](https://raw.githubusercontent.com/HolgerGraef/MSM/python-coverage-comment-action-data/badge.svg)
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 [documentation](https://holgergraef.github.io/MSM/)
 
 # Mercury Sample Manager
@@ -16,6 +18,10 @@ same network using the normal web browser (should be a recent browser though).
 The developers take no responsibility for the loss or theft of data managed by this software.
 The software sends anonymous usage statistics to the developers, including the software version, the number of users,
 samples and actions stored in the database, the server uptime and the used/available disk space.
+
+# Coding style
+
+    black app --line-length=100
 
 # Installation of development server
 

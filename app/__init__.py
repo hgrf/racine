@@ -12,12 +12,17 @@ plugins = []
 bootstrap = Bootstrap()
 db = SQLAlchemy()
 login_manager = LoginManager()
-login_manager.session_protection = 'strong'
-login_manager.login_view = 'auth.login'
+login_manager.session_protection = "strong"
+login_manager.login_view = "auth.login"
 
-from .smbinterface import SMBInterface   # has to be here, because it will import db and login_manager from this file
+from .smbinterface import (
+    SMBInterface,
+)  # has to be here, because it will import db and login_manager from this file
+
 smbinterface = SMBInterface()
-from .usagestats import UsageStatisticsThread   # has to be here, because it will import db from this file
+from .usagestats import (
+    UsageStatisticsThread,
+)  # has to be here, because it will import db from this file
 
 
 def create_app(config_name):
@@ -35,12 +40,13 @@ def create_app(config_name):
     from .settings import settings as settings_blueprint
     from .profile import profile as profile_blueprint
     from .printdata import printdata as printdata_blueprint
+
     app.register_blueprint(main_blueprint)
-    app.register_blueprint(auth_blueprint, url_prefix='/auth')
-    app.register_blueprint(browser_blueprint, url_prefix='/browser')
-    app.register_blueprint(settings_blueprint, url_prefix='/settings')
-    app.register_blueprint(profile_blueprint, url_prefix='/profile')
-    app.register_blueprint(printdata_blueprint, url_prefix='/print')
+    app.register_blueprint(auth_blueprint, url_prefix="/auth")
+    app.register_blueprint(browser_blueprint, url_prefix="/browser")
+    app.register_blueprint(settings_blueprint, url_prefix="/settings")
+    app.register_blueprint(profile_blueprint, url_prefix="/profile")
+    app.register_blueprint(printdata_blueprint, url_prefix="/print")
 
     # update activity types table
     with app.app_context():
@@ -48,15 +54,15 @@ def create_app(config_name):
         from .models import ActivityType
         from sqlalchemy.exc import OperationalError
 
-        activity_types = ['selectsmbfile', 'login', 'logout']
+        activity_types = ["selectsmbfile", "login", "logout"]
         try:
             registered_activity_types = [at.description for at in ActivityType.query.all()]
 
             for key, target in supported_targets.items():
-                activity_types.append('add:' + key)
-                activity_types.append('delete:' + key)
-                for field in target['fields']:
-                    activity_types.append('update:' + key + ':' + field)
+                activity_types.append("add:" + key)
+                activity_types.append("delete:" + key)
+                for field in target["fields"]:
+                    activity_types.append("update:" + key + ":" + field)
 
             for at in activity_types:
                 if at not in registered_activity_types:
@@ -71,10 +77,10 @@ def create_app(config_name):
     UsageStatisticsThread(app)
 
     # look for plugins
-    plugin_files = glob('plugins/*/*.py')
+    plugin_files = glob("plugins/*/*.py")
     for f in plugin_files:
         p = imp.load_source(f[8:-3], f)
-        if not hasattr(p, 'display') or not hasattr(p, 'title'):
+        if not hasattr(p, "display") or not hasattr(p, "title"):
             # TODO: report this some other way, e.g. raise Exception or log warning...
             print("Incompatible plugin: ", f[8:-3])
         plugins.append(p)

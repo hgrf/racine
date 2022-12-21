@@ -4,6 +4,7 @@ import socket
 from threading import Lock
 import tempfile
 
+
 class SMBInterface:
     def __init__(self):
         self.conns = []
@@ -37,8 +38,10 @@ class SMBInterface:
         # retrieve the requested file from the resource
         file_obj = tempfile.NamedTemporaryFile()
         try:
-            file_attributes, filesize = conn.retrieveFile(resource.sharename, path_on_server, file_obj)
-            file_obj.seek(0)    # go back to the beginning
+            file_attributes, filesize = conn.retrieveFile(
+                resource.sharename, path_on_server, file_obj
+            )
+            file_obj.seek(0)  # go back to the beginning
         except Exception:  # if we have any problem retrieving the file
             # TODO: specify exception
             self._free_connection(conn)
@@ -86,20 +89,20 @@ class SMBInterface:
 
         # we want to be as tolerant as possible and accept paths like "/ResourceName/path_in_resource", but also
         # "ResourceName/path_in_resource" or "" or "/"
-        toks = path.strip('/').split('/')
+        toks = path.strip("/").split("/")
 
         # check if we have at least a resource name
         if len(toks) == 0:
-            return None, ''  # no resource name given
+            return None, ""  # no resource name given
 
         resource = SMBResource.query.filter_by(name=toks[0]).first()
         if resource is None:  # resource not found in database
-            return None, ''
+            return None, ""
 
-        path_in_resource = '' if len(toks) == 1 else '/'.join(toks[1:])
+        path_in_resource = "" if len(toks) == 1 else "/".join(toks[1:])
 
         # make sure the path is constructed correctly even if resource.path or path_in_resource are empty or None
-        path_on_server = '/'.join(filter(None, [resource.path.strip('/'), path_in_resource]))
+        path_on_server = "/".join(filter(None, [resource.path.strip("/"), path_in_resource]))
 
         return resource, path_on_server
 
@@ -122,8 +125,8 @@ class SMBInterface:
         need_new_conn = True
         if conn is not None:
             try:
-                echo = conn.echo('0', timeout=1)  # 1 second timeout
-                if echo == '0':
+                echo = conn.echo("0", timeout=1)  # 1 second timeout
+                if echo == "0":
                     return conn
                 else:
                     self.conns.remove(conn)
@@ -151,14 +154,16 @@ class SMBInterface:
         except Exception:  # if host unknown
             return None
         # need to convert unicode -> string apparently...
-        conn = SMBConnection(str(resource.userid), str(resource.password),
-                             self.client_machine_name, str(resource.servername), use_ntlm_v2=True)
+        conn = SMBConnection(
+            str(resource.userid),
+            str(resource.password),
+            self.client_machine_name,
+            str(resource.servername),
+            use_ntlm_v2=True,
+        )
         try:
             connected = conn.connect(server_ip, 139, timeout=1)  # 1 second timeout
         except:
             connected = False
 
         return conn if connected else None
-
-
-

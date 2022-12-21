@@ -2,8 +2,10 @@
 
 FROM tiangolo/uwsgi-nginx-flask:python3.8-alpine
 RUN apk --update add bash nano git
+
 ENV STATIC_URL /static
 ENV STATIC_PATH /app/app/static
+
 COPY ./requirements.txt /var/www/requirements.txt
 # for Pillow (see also https://github.com/python-pillow/Pillow/issues/1763) and other python packages that require building
 RUN apk add build-base linux-headers zlib-dev jpeg-dev

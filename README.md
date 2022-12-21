@@ -1,4 +1,4 @@
-![build](https://github.com/HolgerGraef/MSM/actions/workflows/build.yml/badge.svg)
+![build](https://github.com/HolgerGraef/MSM/actions/workflows/ci.yml/badge.svg)
 
 ![coverage](https://raw.githubusercontent.com/HolgerGraef/MSM/python-coverage-comment-action-data/badge.svg)
 
@@ -81,6 +81,10 @@ In this case, we defined a new hostname for github.com (msm.github.com) for the 
 `git clone` command has to be modified as follows:
 
     git clone git@msm.github.com:HolgerGraef/MSM.git
+
+# Deployment with docker
+
+    docker run -p 8080:80 ghcr.io/holgergraef/msm:latest
 
 # Deployment with gunicorn and nginx
 

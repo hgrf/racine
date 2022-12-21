@@ -4,3 +4,8 @@ pre-commit
 
 # testing
 pytest
+
+# doc
+handsdown
+mkdocs
+mkdocs-material

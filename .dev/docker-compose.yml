@@ -5,7 +5,7 @@ services:
       context: ..
       dockerfile: .dev/Dockerfile
     ports:
-      - "56733:80"
+      - "8080:80"
     volumes:
       - ..:/app
   test:

@@ -98,7 +98,7 @@ jobs:
         docker image ls
     
     - name: Login to DockerHub
-      run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      run: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
 
     - name: Push to DockerHub
       run: docker push holgergraef/msm

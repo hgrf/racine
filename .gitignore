@@ -22,3 +22,4 @@ docsmd/
 # generated files (documetation)
 .readthedocs.yml
 mkdocs.yml
+requirements.mkdocs.txt

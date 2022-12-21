@@ -28,8 +28,11 @@ jobs:
         docker-compose run test
         
     - name: Export image
-      run: docker save --output /tmp/dockerimage.tar ci_web:latest
+      run: |
+        docker image ls
+        docker save --output /tmp/dockerimage.tar ci_web:latest
     
+    # https://docs.docker.com/build/ci/github-actions/examples/#share-built-image-between-jobs
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
@@ -52,7 +55,9 @@ jobs:
         path: /tmp
         
     - name: Import image
-      run: docker load --input /tmp/dockerimage.tar
+      run: |
+        docker load --input /tmp/dockerimage.tar
+        docker image ls
     
     - name: Login to DockerHub
       run: docker login -u $DOCKER_USER -p $DOCKER_PASS

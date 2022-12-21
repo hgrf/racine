@@ -30,13 +30,13 @@ jobs:
     - name: Export image
       run: |
         docker image ls
-        docker save --output /tmp/dockerimage.tar ci_web:latest
+        docker save --output /tmp/dockerimage.tar holgergraef/msm
     
     # https://docs.docker.com/build/ci/github-actions/examples/#share-built-image-between-jobs
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: web
+        name: dockerimage
         path: /tmp/dockerimage.tar
 
   deploy:
@@ -51,7 +51,7 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v3
       with:
-        name: web
+        name: dockerimage
         path: /tmp
         
     - name: Import image

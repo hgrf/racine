@@ -77,6 +77,7 @@ jobs:
         path: /tmp/dockerimage.tar
 
   push:
+    if: github.event_name == 'push'
     needs: build-docker
     name: Push docker image
     runs-on: ubuntu-latest

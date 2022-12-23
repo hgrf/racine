@@ -43,7 +43,8 @@ def deleted_sample_handler(session, sample):
             recursive(s)
 
             if s.owner == user:
-                # if the sample down the hierarchy belongs to the current user, also mark it as deleted
+                # if the sample down the hierarchy belongs to the current user,
+                # also mark it as deleted
                 session.execute(
                     Sample.__table__.update().values(isdeleted=True).where(Sample.id == s.id)
                 )
@@ -56,17 +57,19 @@ def deleted_sample_handler(session, sample):
                 session.execute(News.__table__.delete().where(News.sample_id == s.id))
                 # and delete all corresponding shares
                 session.execute(Share.__table__.delete().where(Share.sample_id == s.id))
-                # NB: if another user has children underneath this sample, they have been taken care of previously
-                #     idem if another user has mounted samples underneath this sample
+                # NB: if another user has children underneath this sample, they have been taken
+                #     care of previously; idem if another user has mounted samples underneath
+                #     this sample
             else:
                 # otherwise it belongs to someone else and we move it back to that person's root
                 session.execute(
                     Sample.__table__.update().values(parent_id=0).where(Sample.id == s.id)
                 )
-                # If there is some news associated with the sample or a subsample, this is not really an issue.
-                # Everybody who has access to the sample - and the person who created the news, will still see
-                # the news - but the person who created the news will not be able to access the sample (and therefore
-                # not be able to deactivate the news). Two possible solutions:
+                # If there is some news associated with the sample or a subsample, this is not
+                # really an issue. Everybody who has access to the sample - and the person who
+                # created the news, will still see the news - but the person who created the
+                # news will not be able to access the sample (and therefore not be able to
+                # deactivate the news). Two possible solutions:
                 # - wait for the news to expire
                 # - give the user access again so he/she can deactivate the news
                 # TODO: careful with duplicate sample names here
@@ -96,15 +99,17 @@ def deleted_share_handler(session, share):
         for s in sample.children:
             recursive(s)
 
-            # check if child or mounted sample belongs to the user whose share we remove and move it back to his tree
+            # check if child or mounted sample belongs to the user whose share we remove
+            # and move it back to his tree
             if s.owner == share.user:
                 session.execute(
                     Sample.__table__.update().values(parent_id=0).where(Sample.id == s.id)
                 )
-                # If there is some news associated with the sample or a subsample, this is not really an issue.
-                # Everybody who has access to the sample - and the person who created the news, will still see
-                # the news - but the person who created the news will not be able to access the sample (and therefore
-                # not be able to deactivate the news). Two possible solutions:
+                # If there is some news associated with the sample or a subsample, this is not
+                # really an issue. Everybody who has access to the sample - and the person who
+                # created the news, will still see the news - but the person who created the
+                # news will not be able to access the sample (and therefore not be able to
+                # deactivate the news). Two possible solutions:
                 # - wait for the news to expire
                 # - give the user access again so he/she can deactivate the news
                 # TODO: careful with duplicate sample names here
@@ -177,7 +182,7 @@ class User(UserMixin, db.Model):
         s = Serializer(app.config["SECRET_KEY"])
         try:
             data = s.loads(token.encode("utf-8"))
-        except:
+        except Exception:
             return False
         user = User.query.get(data.get("reset"))
         if user is None:
@@ -277,13 +282,14 @@ class Sample(db.Model):
         return "<Sample %r>" % self.name
 
     def is_accessible_for(self, user, indirect_only=False, direct_only=False):
-        """go through the owner and shares of this sample and check in the hierarchy (i.e. all parents)
-        if it can be accessed by user
+        """go through the owner and shares of this sample and check in the hierarchy
+        (i.e. all parents) if it can be accessed by user
 
         - if indirect_only is True, only look for indirect shares, i.e. parent shares
         - if direct_only is True, only look for direct shares
 
-        indirect sharing has priority over direct sharing in order to avoid clogging up the hierarchy
+        indirect sharing has priority over direct sharing in order to avoid clogging
+        up the hierarchy
         """
 
         # check for invalid flag usage
@@ -324,9 +330,11 @@ class Sample(db.Model):
     @property
     def logical_parent(self):
         user = token_auth.current_user() or current_user
-        # determine the sample's logical parent in the current user's tree (i.e. the parent or the mountpoint)
+        # determine the sample's logical parent in the current user's tree (i.e. the parent or
+        # the mountpoint)
 
-        # first find out if the sample belongs to the current user (in this case just return the real parent)
+        # first find out if the sample belongs to the current user (in this case just return
+        # the real parent)
         if self.owner == user:
             return self.parent
 

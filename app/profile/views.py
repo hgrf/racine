@@ -60,7 +60,8 @@ def leave():
     if confirm == "1" and user is not None:
         current_user.heir = user
         inheritance = []
-        # need to create a list of inheritance first, because apparently database changes mess up the for-loop
+        # need to create a list of inheritance first,
+        # because apparently database changes mess up the for-loop
         for u in current_user.inheritance:
             inheritance.append(u)
         for u in inheritance:

@@ -62,7 +62,7 @@ class UsageStatisticsThread(threading.Thread):
                     "site": usage_statistics_site_name,
                     "users": User.query.count(),
                     "samples": Sample.query.filter_by(isdeleted=False).count(),
-                    "actions": Action.query.join(Sample).filter(Sample.isdeleted == False).count(),
+                    "actions": Action.query.join(Sample).filter(not Sample.isdeleted).count(),
                     "starttime": start_time,
                     "uptime": time.time() - start_time,
                     "gitrev": git_rev,
@@ -79,7 +79,7 @@ class UsageStatisticsThread(threading.Thread):
                 if response.status_code == 200:
                     url = response.content.strip()
                     requests.post(url, json=data)
-            except Exception as e:
+            except Exception:
                 pass  # do not crash when there is e.g. a ConnectionError, simply keep trying
 
             time.sleep(usage_statistics_sleep_time)

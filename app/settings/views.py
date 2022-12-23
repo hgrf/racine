@@ -185,7 +185,7 @@ def revision():
     )
 
 
-### two helper functions for the settings/uploads page
+# ----- two helper functions for the settings/uploads page
 def handle_img(loc, src, refdlist):
     if src[:15] == "/browser/ulimg/":
         # print loc, "uploaded image ID", src[15:]
@@ -219,7 +219,7 @@ def handle_img_tags(text, itemid, refdlist):
 @login_required
 @admin_required
 def uploads():
-    ##### Find duplicates and empty files
+    # ----- Find duplicates and empty files
     # could probably do this much better with an elegant DB query
     uploads = Upload.query.all()
     emptyfiles = []
@@ -230,7 +230,7 @@ def uploads():
         # check file size
         try:
             stat = os.stat(os.path.join(app.config["UPLOAD_FOLDER"], str(u1.id) + "." + u1.ext))
-        except:
+        except Exception:
             nofiles.append(u1)
             continue
         if stat.st_size == 0:
@@ -247,7 +247,7 @@ def uploads():
                 # print "Upload ID {} is a duplicate of {}.".format(u1.id, u2.id)
                 duplicates.append((u1, u2))
 
-    ##### Scan all referenced images and find unused uploads
+    # ----- Scan all referenced images and find unused uploads
     refdlist = []  # list of referenced images
     unused = []  # list of unused uploads
 

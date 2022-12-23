@@ -102,7 +102,7 @@ def welcome():
     recent_samples = (
         db.session.query(Sample)
         .join(Activity)
-        .filter(Activity.user_id == current_user.id, Sample.isdeleted == False)
+        .filter(Activity.user_id == current_user.id, not Sample.isdeleted)
         .order_by(Activity.id.desc())
         .distinct()
         .limit(5)
@@ -204,7 +204,7 @@ def editor(sampleid):
         form.description.data = ""
         form.timestamp.data = date.today()
 
-        ##### get actions for this sample and all parent samples and order them by ordnum
+        # ----- get actions for this sample and all parent samples and order them by ordnum
         actions = []
         s = sample
         while s is not None:
@@ -240,12 +240,13 @@ def search():
         return jsonify(error="Please specify a search term")
     keyword = keyword.lower()
 
-    # In order to reach really ALL samples that are accessible by the current user, we need to go through the hierarchy.
-    # The most tricky samples to catch are the children of a sample that the user shares with someone else and that are
-    # not explicitly shared with the user.
+    # In order to reach really ALL samples that are accessible by the current user, we need to
+    # go through the hierarchy. The most tricky samples to catch are the children of a sample
+    # that the user shares with someone else and that are not explicitly shared with the user.
     #
-    # The problem with the following strategy is that samples on the same hierarchy level are not given the same
-    # priority in the results list. Instead the first "tree" will be given highest priority.
+    # The problem with the following strategy is that samples on the same hierarchy level are
+    # not given the same priority in the results list. Instead the first "tree" will be given
+    # highest priority.
     def find_in(samples, keyword, limit):
         if not samples or limit < 1:
             return []

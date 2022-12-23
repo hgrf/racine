@@ -21,7 +21,18 @@ samples and actions stored in the database, the server uptime and the used/avail
 
 # Coding style
 
+Install the developer requirements for MSM:
+
+    python -m pip install --upgrade pip
+    pip install -r requirements_dev.txt
+
+In order to auto-correct coding style, use:
+
     black app --line-length=100
+
+In order to run this as a pre-commit hook, use:
+
+    pre-commit install
 
 # Installation of development server
 

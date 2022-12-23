@@ -21,6 +21,9 @@ jobs:
         with:
           python-version: "3.8"
 
+      - name: Install developer dependencies
+        run: make install-dependencies
+
       - name: Lint with flake8
         run: make flake8
 

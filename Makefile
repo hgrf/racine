@@ -10,7 +10,13 @@ coverage-report: test
 	coverage html
 
 black:
+	# workaround for https://github.com/psf/black/issues/3111
+	pip uninstall black
+	pip uninstall click
+	pip install black
+	pip install click
 	black app --line-length=100 --check
+	pip install Click==7.0	# see requirements.txt
 
 flake8:
 	# stop the build if there are Python syntax errors or undefined names

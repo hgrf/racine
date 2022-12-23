@@ -1,7 +1,7 @@
-test-dependencies:
+install-dependencies:
 	python -m pip install --upgrade pip
 	pip install -r requirements.txt
-	pip install coverage pytest flake8
+	pip install -r requirements-dev.txt
 
 test:
 	coverage run -m pytest

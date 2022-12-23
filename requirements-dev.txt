@@ -2,7 +2,11 @@
 black
 pre-commit
 
+# linting
+flake8
+
 # testing
+coverage
 pytest
 
 # doc

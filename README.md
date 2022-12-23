@@ -23,8 +23,7 @@ samples and actions stored in the database, the server uptime and the used/avail
 
 Install the developer requirements for MSM:
 
-    python -m pip install --upgrade pip
-    pip install -r requirements_dev.txt
+    make install-dependencies
 
 In order to auto-correct coding style, use:
 

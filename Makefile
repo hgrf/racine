@@ -11,8 +11,8 @@ coverage-report: test
 
 black:
 	# workaround for https://github.com/psf/black/issues/3111
-	pip uninstall black
-	pip uninstall click
+	pip uninstall -y black
+	pip uninstall -y click
 	pip install black
 	pip install click
 	black app --line-length=100 --check

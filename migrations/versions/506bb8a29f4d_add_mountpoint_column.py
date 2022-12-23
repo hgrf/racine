@@ -18,12 +18,12 @@ def upgrade():
     op.execute(
         """
         CREATE TABLE shares_new (
-            id INTEGER NOT NULL, 
-            sample_id INTEGER, 
+            id INTEGER NOT NULL,
+            sample_id INTEGER,
             user_id INTEGER,
             mountpoint_id INTEGER,
-            PRIMARY KEY (id), 
-            FOREIGN KEY(sample_id) REFERENCES samples (id), 
+            PRIMARY KEY (id),
+            FOREIGN KEY(sample_id) REFERENCES samples (id),
             FOREIGN KEY(user_id) REFERENCES users (id),
             FOREIGN KEY(mountpoint_id) REFERENCES samples (id)
     );"""

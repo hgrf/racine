@@ -15,7 +15,7 @@ black:
 	pip uninstall -y click
 	pip install black
 	pip install click
-	black app --line-length=100 --check
+	black app migrations --line-length=100 --check
 	pip install Click==7.0	# see requirements.txt
 
 flake8:

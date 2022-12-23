@@ -4,4 +4,4 @@ repos:
     hooks:
     - id: black
       language_version: python3.10
-      args: [app, --line-length=100]
+      args: [app, migrations, --line-length=100]

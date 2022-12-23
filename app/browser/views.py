@@ -1,4 +1,4 @@
-from flask import render_template, send_file, request, send_from_directory, jsonify, abort
+from flask import render_template, send_file, request, send_from_directory, jsonify
 from flask_login import current_user, login_required
 from flask import current_app as app
 from .. import db
@@ -16,9 +16,9 @@ CONVERSION_REQUIRED = set([".tif", ".tiff"])
 THUMBNAIL_SIZE = [120, 120]
 PREVIEW_SIZE = [800, 800]
 
-########################################################################################################################
+####################################################################################################
 # Classes that contain the file/folder or resource info for easy transfer to the template
-########################################################################################################################
+####################################################################################################
 
 
 class FileTile:
@@ -28,9 +28,9 @@ class FileTile:
     path = ""
 
 
-########################################################################################################################
+####################################################################################################
 # Helper functions
-########################################################################################################################
+####################################################################################################
 
 
 def check_stored_file(upload):
@@ -41,8 +41,8 @@ def check_stored_file(upload):
     NB: this means that if we upload two attachments with identical content but different names,
     the downloaded file will have the name of the first uploaded file
 
-    This is separate from the store_file function, because store_file is specific to images right now and
-    we might want to use the duplicate check for other file types, too (in the future).
+    This is separate from the store_file function, because store_file is specific to images right
+    now and we might want to use the duplicate check for other file types, too (in the future).
 
     Parameters
     ----------
@@ -79,7 +79,8 @@ def check_stored_file(upload):
 
 
 def store_file(file_obj, source, ext, type):
-    """Stores a file in the upload database and saves it in the upload folder, checking for duplicates.
+    """Stores a file in the upload database and saves it in the upload folder,
+    checking for duplicates.
 
     Parameters
     ----------
@@ -163,7 +164,8 @@ def make_rotated(upload, angle, fullsize):
 
 
 def store_image(file_obj, source, ext):
-    """Stores an image file in the upload database and saves it in the upload folder, checking for duplicates.
+    """Stores an image file in the upload database and saves it in the upload folder,
+    checking for duplicates.
 
     Parameters
     ----------
@@ -232,7 +234,7 @@ def store_image(file_obj, source, ext):
     # make a preview image
     try:
         make_preview(upload, image)
-    except Exception as e:
+    except Exception:
         # for now we ignore the exceptions, since even if no preview can be generated,
         # Racine will still serve the fullsize image instead
         pass
@@ -242,7 +244,8 @@ def store_image(file_obj, source, ext):
 
 # TODO: implement this for SMB? (right now not possible, because no support for normal file object)
 def store_attachment(file_obj, source, ext):
-    """Stores an image file in the upload database and saves it in the upload folder, checking for duplicates.
+    """Stores an image file in the upload database and saves it in the upload folder,
+    checking for duplicates.
 
     Parameters
     ----------
@@ -260,9 +263,9 @@ def store_attachment(file_obj, source, ext):
     return store_file(file_obj, source, ext, "att")
 
 
-########################################################################################################################
+####################################################################################################
 # View functions
-########################################################################################################################
+####################################################################################################
 
 
 @browser.route("/ulimg/<upload_id>", methods=["GET", "POST"])
@@ -270,8 +273,8 @@ def store_attachment(file_obj, source, ext):
 def retrieve_image(upload_id):
     """Retrieves an image that was uploaded to the server,
 
-    either by uploading through the browser or by transfer from a SMB resource. The POST request is used by the
-    CKEditor plugin imagerotate to retrieve potential error messages.
+    either by uploading through the browser or by transfer from a SMB resource. The POST request is
+    used by the CKEditor plugin imagerotate to retrieve potential error messages.
 
     Parameters
     ----------
@@ -279,7 +282,8 @@ def retrieve_image(upload_id):
         The ID of the image to be retrieved, corresponding to a row in the uploads database table.
     """
 
-    # TODO: check that user has right to view the image (this might be tricky because the sample might be a shared one)
+    # TODO: check that user has right to view the image (this might be tricky because the sample
+    #       might be a shared one)
 
     def retrieve_image_error(message):
         if request.method == "GET":
@@ -341,7 +345,8 @@ def retrieve_attachment(upload_id):
     Parameters
     ----------
     upload_id : int
-        The ID of the attachment to be retrieved, corresponding to a row in the uploads database table.
+        The ID of the attachment to be retrieved, corresponding to a row in the
+        uploads database table.
     """
 
     # TODO: check that user has right to view the attachment
@@ -377,13 +382,14 @@ def retrieve_attachment(upload_id):
 @browser.route("/smbimg/<path:path>")
 @login_required
 def retrieve_smb_image(path):
-    """Retrieves an image from a SMB resource. This is only for the browser, so we will send back thumbnails to speed
-    up the communication a bit.
+    """Retrieves an image from a SMB resource. This is only for the browser, so we will send
+    back thumbnails to speed up the communication a bit.
 
     Parameters
     ----------
     path : str
-        The path to the image, consisting of the name of the SMB resource and the address within the resource.
+        The path to the image, consisting of the name of the SMB resource and the address
+        within the resource.
     """
 
     # get a file object for the requested path and try to open it with PIL
@@ -407,7 +413,8 @@ def retrieve_smb_image(path):
             background.paste(image, mask=image.split()[3])  # 3 is the alpha channel
             image = background
 
-        # convert the image to a thumbnail and store it in thumbnail JPEG format in memory before sending it to user
+        # convert the image to a thumbnail and store it in thumbnail JPEG format in memory
+        # before sending it to user
         image.thumbnail(THUMBNAIL_SIZE)
         image_binary = io.BytesIO()
         image.convert("RGB").save(image_binary, "JPEG")
@@ -433,7 +440,8 @@ def imagebrowser(smb_path):
         .all()
     ]
     # remove duplicates and limit to 5 elements
-    # NB: here I assume that in the 20 elements selected above the user has at least 5 different locations
+    # NB: here I assume that in the 20 elements selected above the user has
+    # at least 5 different locations
     seen = set()
     browser_history = [x for x in browser_history if not (x in seen or seen.add(x))]
     browser_history = browser_history[:5]
@@ -572,8 +580,8 @@ def save_from_smb():
 @browser.route("/inspectpath", methods=["POST"])
 @login_required
 def inspectpath():
-    # TODO: smbinterface.list_path should clearly communicate why it could not list the path, the following is more of
-    # a workaround
+    # TODO: smbinterface.list_path should clearly communicate why it could not list the path,
+    # the following is more of a workaround
     try:
         listpath = smbinterface.list_path(request.form.get("smbpath"))
         if listpath is None:
@@ -597,7 +605,8 @@ def inspectresource():
     if resource is None:
         return jsonify(code=1, resourceid=request.form.get("resourceid"))
 
-    # we want to display a shortcut either to the current user's or to the sample owner's folder in the resource
+    # we want to display a shortcut either to the current user's or to the
+    # sample owner's folder in the resource
     user = sample.owner if sample is not None else current_user
 
     # initialise attributes to return

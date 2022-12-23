@@ -1,7 +1,7 @@
-test-dependencies:
+install-dependencies:
 	python -m pip install --upgrade pip
+	pip install -r requirements-dev.txt
 	pip install -r requirements.txt
-	pip install coverage pytest flake8
 
 test:
 	coverage run -m pytest
@@ -10,7 +10,13 @@ coverage-report: test
 	coverage html
 
 black:
+	# workaround for https://github.com/psf/black/issues/3111
+	pip uninstall -y black
+	pip uninstall -y click
+	pip install black
+	pip install click
 	black app --line-length=100 --check
+	pip install Click==7.0	# see requirements.txt
 
 flake8:
 	# stop the build if there are Python syntax errors or undefined names

@@ -21,8 +21,8 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: Install dependencies, run the tests, produce the .coverage file
-        run: make test-dependencies
+      - name: Install developer dependencies
+        run: make install-dependencies
 
       - name: Lint with flake8
         run: make flake8

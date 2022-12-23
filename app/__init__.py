@@ -15,12 +15,12 @@ login_manager = LoginManager()
 login_manager.session_protection = "strong"
 login_manager.login_view = "auth.login"
 
-from .smbinterface import (
+from .smbinterface import (  # noqa: E402
     SMBInterface,
 )  # has to be here, because it will import db and login_manager from this file
 
 smbinterface = SMBInterface()
-from .usagestats import (
+from .usagestats import (  # noqa: E402
     UsageStatisticsThread,
 )  # has to be here, because it will import db from this file
 
@@ -71,8 +71,9 @@ def create_app(config_name):
                     newat = ActivityType(description=at)
                     db.session.add(newat)
                     db.session.commit()
-        except OperationalError as e:
-            # in case the table is not created yet, do nothing (this happens when we do 'python manage.py db upgrade')
+        except OperationalError:
+            # in case the table is not created yet, do nothing (this happens
+            # when we do 'python manage.py db upgrade')
             pass
 
     # run usage statistics thread

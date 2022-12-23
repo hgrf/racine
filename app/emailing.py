@@ -16,7 +16,7 @@ def send_mail(to, subject, **kwargs):
 
     # send email
     mail = Mail(app)
-    msg = mail.send_message(
+    mail.send_message(
         subject, sender=("Racine Admin", app.config["MAIL_SENDER"]), recipients=to, **kwargs
     )
 

@@ -115,9 +115,12 @@ def upgrade():
     )
     ### end Alembic commands ###
     op.execute(
-        'INSERT INTO "users"(email, username, password_hash, is_admin) VALUES ("admin@admin.com", "admin", "'
-        + generate_password_hash("admin")
-        + '", 1);'
+        """
+        INSERT INTO "users"(email, username, password_hash, is_admin)
+        VALUES ("admin@admin.com", "admin", "{}", 1);'
+        """.format(
+            generate_password_hash("admin")
+        )
     )
 
 

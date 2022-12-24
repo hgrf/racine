@@ -3,6 +3,19 @@ install-dependencies:
 	pip install -r requirements-dev.txt
 	pip install -r requirements.txt
 
+build-dev: down
+	docker compose -f misc/docker-compose.yml build web-dev
+
+run-dev:
+	docker compose -f misc/docker-compose.yml up web-dev -d
+	watchman-make -p 'app/**/*.py' -s 1 --run 'touch uwsgi-reload'
+
+down:
+	docker compose -f misc/docker-compose.yml down
+
+logs:
+	docker compose -f misc/docker-compose.yml logs -f
+
 copy-bootstrap:
 	mkdir -p /static/
 	git clone -b 3.3.7.1 --depth 1 https://github.com/mbr/flask-bootstrap.git

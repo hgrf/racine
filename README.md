@@ -92,6 +92,21 @@ In this case, we defined a new hostname for github.com (msm.github.com) for the 
 
     git clone git@msm.github.com:HolgerGraef/MSM.git
 
+# Development with docker
+
+Set up some tools:
+
+1. install Docker, see https://docs.docker.com/engine/install/ubuntu/
+2. install pywatchman:
+    - sudo apt install watchman
+    - `pip install -i https://test.pypi.org/simple/ pywatchman==1.4.2.dev1` (c.f. https://github.com/facebook/watchman/issues/970)
+
+
+Build and run:
+
+    make build-dev
+    make run-dev
+
 # Deployment with docker
 
     docker run -p 8080:80 ghcr.io/holgergraef/msm:latest

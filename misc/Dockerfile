@@ -21,7 +21,7 @@ FROM msm-base AS msm
 COPY ./app /app/app/
 COPY ./migrations /app/migrations/
 COPY ./manage.py /app/
-COPY ./misc/uwsgi.ini /app/
+COPY ./uwsgi.ini /app/
 
 RUN make copy-bootstrap
 

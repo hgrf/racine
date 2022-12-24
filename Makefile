@@ -3,6 +3,13 @@ install-dependencies:
 	pip install -r requirements-dev.txt
 	pip install -r requirements.txt
 
+copy-bootstrap:
+	mkdir -p /static/
+	git clone -b 3.3.7.1 --depth 1 https://github.com/mbr/flask-bootstrap.git
+	ls -la ./flask-bootstrap
+	mv ./flask-bootstrap/flask_bootstrap/static /static/bootstrap
+	rm -rf flask-bootstrap
+
 test:
 	coverage run -m pytest
 

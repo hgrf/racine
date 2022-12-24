@@ -12,7 +12,8 @@ RUN apk --update add bash nano git
 COPY ./Makefile /app/Makefile
 COPY ./requirements.txt /app/requirements.txt
 COPY ./requirements-dev.txt /app/requirements-dev.txt
-# for Pillow (see also https://github.com/python-pillow/Pillow/issues/1763) and other python packages that require building
+# for Pillow (see also https://github.com/python-pillow/Pillow/issues/1763) and
+# other python packages that require building
 RUN apk add build-base linux-headers zlib-dev jpeg-dev
 RUN make install-dependencies
 

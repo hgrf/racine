@@ -1,6 +1,6 @@
 # based on https://www.digitalocean.com/community/tutorials/how-to-build-and-deploy-a-flask-application-using-docker-on-ubuntu-20-04
 
-FROM tiangolo/uwsgi-nginx-flask:python3.8-alpine
+FROM tiangolo/uwsgi-nginx-flask:python3.8-alpine AS msm-base
 
 ENV STATIC_URL /static
 ENV STATIC_PATH /app/app/static
@@ -16,10 +16,12 @@ COPY ./requirements-dev.txt /app/requirements-dev.txt
 RUN apk add build-base linux-headers zlib-dev jpeg-dev
 RUN make install-dependencies
 
+FROM msm-base AS msm
+
 COPY ./app /app/app/
 COPY ./migrations /app/migrations/
 COPY ./manage.py /app/
-COPY ./uwsgi.ini /app/
+COPY ./misc/uwsgi.ini /app/
 
 RUN make copy-bootstrap
 

@@ -7,14 +7,15 @@ Create Date: 2019-12-15 19:21:54.212347
 """
 
 # revision identifiers, used by Alembic.
-revision = '31fd4405fcd2'
-down_revision = '70dd6f0306c4'
+revision = "31fd4405fcd2"
+down_revision = "70dd6f0306c4"
 
 from alembic import op
 
 
 def upgrade():
-    op.execute('''
+    op.execute(
+        """
         CREATE TABLE "samples_new" (
             id INTEGER NOT NULL,
             owner_id INTEGER,
@@ -29,16 +30,20 @@ def upgrade():
             FOREIGN KEY(owner_id) REFERENCES users (id),
             FOREIGN KEY(parent_id) REFERENCES samples (id)
         );
-    ''')
-    op.execute('''
+    """
+    )
+    op.execute(
+        """
         INSERT INTO samples_new (id, owner_id, name, parent_id, image, description, isarchived, isdeleted,
                                  last_modified)
         SELECT id, owner_id, name, parent_id, image, description, isarchived, isdeleted, last_modified FROM samples;
-    ''')
-    op.execute('DROP TABLE samples;')
-    op.execute('ALTER TABLE samples_new RENAME TO samples;')
+    """
+    )
+    op.execute("DROP TABLE samples;")
+    op.execute("ALTER TABLE samples_new RENAME TO samples;")
 
-    op.execute('''
+    op.execute(
+        """
         CREATE TABLE "actions_new" (
             id INTEGER NOT NULL, 
             timestamp DATE, 
@@ -51,16 +56,19 @@ def upgrade():
             CONSTRAINT actions FOREIGN KEY(owner_id) REFERENCES users (id), 
             FOREIGN KEY(sample_id) REFERENCES samples (id)
         );
-    ''')
-    op.execute('''
+    """
+    )
+    op.execute(
+        """
         INSERT INTO actions_new (id, timestamp, sample_id, description, owner_id, datecreated, ordnum)
         SELECT id, timestamp, sample_id, description, owner_id, datecreated, ordnum FROM actions;       
-    ''')
-    op.execute('DROP TABLE actions;')
-    op.execute('ALTER TABLE actions_new RENAME TO actions;')
+    """
+    )
+    op.execute("DROP TABLE actions;")
+    op.execute("ALTER TABLE actions_new RENAME TO actions;")
 
-    op.drop_table('sampletypes')
-    op.drop_table('actiontypes')
+    op.drop_table("sampletypes")
+    op.drop_table("actiontypes")
 
 
 def downgrade():

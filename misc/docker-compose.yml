@@ -9,6 +9,7 @@ services:
     ports:
       - "8080:80"
   web-dev:
+    container_name: msm-dev
     image: msm-dev
     build:
       context: ..

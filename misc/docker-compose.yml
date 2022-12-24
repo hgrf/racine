@@ -8,6 +8,12 @@ services:
       target: msm
     ports:
       - "8080:80"
+  test:
+    build:
+      context: ..
+      dockerfile: misc/Dockerfile
+      target: msm
+    command: python -m pytest
   web-dev:
     container_name: msm-dev
     image: msm-dev

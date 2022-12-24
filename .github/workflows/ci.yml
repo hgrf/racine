@@ -64,9 +64,8 @@ jobs:
 
     - name: Run tests
       run: |
-        docker-compose run -d web
-        docker-compose exec -T web python -m pytest
-        docker-compose kill web
+        docker-compose build test
+        docker-compose run test
         
     - name: Export image
       run: docker save --output /tmp/dockerimage.tar holgergraef/msm

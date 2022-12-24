@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  web:
+    image: holgergraef/msm
+    build:
+      context: ..
+      dockerfile: misc/Dockerfile
+      target: msm
+    ports:
+      - "8080:80"
+  test:
+    build:
+      context: ..
+      dockerfile: misc/Dockerfile
+      target: msm
+    command: python -m pytest
+  web-dev:
+    container_name: msm-dev
+    image: msm-dev
+    build:
+      context: ..
+      dockerfile: misc/Dockerfile
+      target: msm-base
+    ports:
+      - "8080:80"
+    volumes:
+      - ..:/app

@@ -9,6 +9,7 @@ services:
     ports:
       - "8080:80"
   web-dev:
+    image: msm-dev
     build:
       context: ..
       dockerfile: misc/Dockerfile

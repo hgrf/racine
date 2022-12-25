@@ -32,6 +32,8 @@ CMD ["/start.sh"]
 
 FROM msm-base AS msm
 
+ENV FLASK_CONFIG production
+
 COPY ./app /app/app/
 COPY ./migrations /app/migrations/
 COPY ./manage.py /app/

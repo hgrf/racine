@@ -8,6 +8,9 @@ services:
       target: msm
     ports:
       - "8080:80"
+    volumes:
+      - uploads:/app/uploads
+      - database:/app/database
   test:
     build:
       context: ..
@@ -25,3 +28,6 @@ services:
       - "8080:80"
     volumes:
       - ..:/app
+volumes:
+  uploads:
+  database:

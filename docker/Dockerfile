@@ -37,7 +37,3 @@ COPY ./app /app/app/
 COPY ./migrations /app/migrations/
 COPY ./manage.py /app/
 COPY ./uwsgi.ini /app/
-
-RUN mkdir /app/database
-RUN mkdir /app/uploads
-RUN python manage.py db upgrade

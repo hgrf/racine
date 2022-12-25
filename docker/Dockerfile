@@ -14,10 +14,6 @@ COPY ./requirements-dev.txt /app/requirements-dev.txt
 
 RUN make install-dependencies PIP_OPTIONS=--no-cache-dir
 
-# here we just make flask-bootstrap available, it is copied later, because the dev image
-# has to place it in the mounted volume
-RUN git clone -b 3.3.7.1 --depth 1 https://github.com/mbr/flask-bootstrap.git /flask-bootstrap
-
 # remove prestart script from base image
 RUN rm /app/prestart.sh
 

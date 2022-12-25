@@ -1,7 +1,7 @@
 install-dependencies:
-	python -m pip install --upgrade pip
-	pip install -r requirements-dev.txt
-	pip install -r requirements.txt
+	python -m pip install ${PIP_OPTIONS} --upgrade pip
+	pip install ${PIP_OPTIONS} -r requirements-dev.txt
+	pip install ${PIP_OPTIONS} -r requirements.txt
 
 build-dev: down
 	docker compose -f misc/docker-compose.yml build web-dev

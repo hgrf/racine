@@ -18,6 +18,9 @@ RUN make install-dependencies PIP_OPTIONS=--no-cache-dir
 # has to place it in the mounted volume
 RUN git clone -b 3.3.7.1 --depth 1 https://github.com/mbr/flask-bootstrap.git /flask-bootstrap
 
+# remove prestart script from base image
+RUN rm /app/prestart.sh
+
 # Move the base entrypoint to reuse it
 RUN mv /entrypoint.sh /uwsgi-nginx-flask-entrypoint.sh
 COPY ./docker/entrypoint.sh /entrypoint.sh

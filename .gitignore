@@ -17,9 +17,5 @@ usage_stats_site
 mailconfig.py
 # ignore coverage reports
 .coverage
-# markdown documentation
-docsmd/
-# generated files (documetation)
-.readthedocs.yml
-mkdocs.yml
-requirements.mkdocs.txt
+# ignore file that is used to trigger UWSGI reload
+uwsgi-reload

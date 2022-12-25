@@ -16,6 +16,9 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
       target: msm
+    volumes:
+      - uploads:/app/uploads
+      - database:/app/database
     command: python -m pytest
   web-dev:
     container_name: msm-dev

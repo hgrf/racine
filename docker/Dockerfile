@@ -20,7 +20,7 @@ RUN git clone -b 3.3.7.1 --depth 1 https://github.com/mbr/flask-bootstrap.git /f
 
 # Move the base entrypoint to reuse it
 RUN mv /entrypoint.sh /uwsgi-nginx-flask-entrypoint.sh
-COPY ./misc/entrypoint.sh /entrypoint.sh
+COPY ./docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]

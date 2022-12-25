@@ -4,14 +4,14 @@ services:
     image: holgergraef/msm
     build:
       context: ..
-      dockerfile: misc/Dockerfile
+      dockerfile: docker/Dockerfile
       target: msm
     ports:
       - "8080:80"
   test:
     build:
       context: ..
-      dockerfile: misc/Dockerfile
+      dockerfile: docker/Dockerfile
       target: msm
     command: python -m pytest
   web-dev:
@@ -19,7 +19,7 @@ services:
     image: msm-dev
     build:
       context: ..
-      dockerfile: misc/Dockerfile
+      dockerfile: docker/Dockerfile
       target: msm-base
     ports:
       - "8080:80"

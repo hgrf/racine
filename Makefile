@@ -6,6 +6,9 @@ install-dependencies:
 build-dev: down
 	docker compose -f misc/docker-compose.yml build web-dev
 
+test-dev:
+	docker compose -f misc/docker-compose.yml exec web-dev python -m pytest
+
 run-dev:
 	docker compose -f misc/docker-compose.yml up web-dev -d
 	watchman-make -p 'app/**/*.py' -s 1 --run 'touch uwsgi-reload'
@@ -30,9 +33,8 @@ black:
 	pip uninstall -y black
 	pip uninstall -y click
 	pip install black
-	pip install click
 	black app migrations --line-length=100 --check
-	pip install Click==7.0	# see requirements.txt
+	python -m pip install -r requirements.txt
 
 flake8:
 	# stop the build if there are Python syntax errors or undefined names
@@ -50,19 +52,27 @@ doc:
 	pip uninstall -y black
 	pip uninstall -y click
 	pip install black
-	pip install click
 	
 	pip uninstall -y mkdocs-material
 	pip uninstall -y requests
 	pip install mkdocs-material
-	pip install requests
 
-	# Generate documentation that points to main branch
-	# do not use custom output location, as `GitHub Pages`
-	# works only with `docs` directory
-	handsdown --external `git config --get remote.origin.url` --create-configs app --theme material -n "Mercury Sample Manager" -o docsmd
-	# generate html files to docs folder
+	# generate markdown documentation
+	handsdown \
+		--external `git config --get remote.origin.url` \
+		--create-configs app \
+		--theme material \
+		--name "Mercury Sample Manager" \
+		--output-path docsmd
+
+	# convert to HTML documentation
 	python -m mkdocs build
 
-	pip install Click==7.0	# see requirements.txt
-	pip install requests==2.22.0  # see requirements.txt
+	# clean up
+	rm .readthedocs.yml
+	rm mkdocs.yml
+	rm requirements.mkdocs.txt
+	rm -rf docsmd
+
+	# restore environment
+	python -m pip install -r requirements.txt

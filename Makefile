@@ -33,9 +33,8 @@ black:
 	pip uninstall -y black
 	pip uninstall -y click
 	pip install black
-	pip install click
 	black app migrations --line-length=100 --check
-	pip install Click==7.0	# see requirements.txt
+	python -m pip install -r requirements.txt
 
 flake8:
 	# stop the build if there are Python syntax errors or undefined names

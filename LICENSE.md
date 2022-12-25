@@ -3,7 +3,7 @@ Software License Agreement
 
 Mercury Sample Manager - A collaborative lab book in your web browser.
 
-Copyright (c) 2015-2019 Holger Graef. All rights reserved.
+Copyright (c) 2015-2022 Holger Graef. All rights reserved.
 
 Licensed under the terms of the GNU General Public License version 3:
 http://www.gnu.org/licenses/gpl.html (see also Appendix A).

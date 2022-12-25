@@ -7,12 +7,18 @@ services:
       dockerfile: docker/Dockerfile
       target: msm
     ports:
-      - "8080:80"
+      - "80:80"
+    volumes:
+      - uploads:/app/uploads
+      - database:/app/database
   test:
     build:
       context: ..
       dockerfile: docker/Dockerfile
       target: msm
+    volumes:
+      - uploads:/app/uploads
+      - database:/app/database
     command: python -m pytest
   web-dev:
     container_name: msm-dev
@@ -25,3 +31,6 @@ services:
       - "8080:80"
     volumes:
       - ..:/app
+volumes:
+  uploads:
+  database:

@@ -14,9 +14,8 @@ COPY ./requirements-dev.txt /app/requirements-dev.txt
 
 RUN make install-dependencies PIP_OPTIONS=--no-cache-dir
 
-# here we just make flask-bootstrap available, it is copied later, because the dev image
-# has to place it in the mounted volume
-RUN git clone -b 3.3.7.1 --depth 1 https://github.com/mbr/flask-bootstrap.git /flask-bootstrap
+# remove prestart script from base image
+RUN rm /app/prestart.sh
 
 # Move the base entrypoint to reuse it
 RUN mv /entrypoint.sh /uwsgi-nginx-flask-entrypoint.sh
@@ -32,11 +31,9 @@ CMD ["/start.sh"]
 
 FROM msm-base AS msm
 
+ENV FLASK_CONFIG production
+
 COPY ./app /app/app/
 COPY ./migrations /app/migrations/
 COPY ./manage.py /app/
 COPY ./uwsgi.ini /app/
-
-RUN mkdir /app/database
-RUN mkdir /app/uploads
-RUN python manage.py db upgrade

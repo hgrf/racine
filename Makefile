@@ -6,6 +6,9 @@ install-dependencies:
 build-dev: down
 	docker compose -f misc/docker-compose.yml build web-dev
 
+test-dev:
+	docker compose -f misc/docker-compose.yml exec web-dev python -m pytest
+
 run-dev:
 	docker compose -f misc/docker-compose.yml up web-dev -d
 	watchman-make -p 'app/**/*.py' -s 1 --run 'touch uwsgi-reload'

@@ -117,7 +117,7 @@ def upgrade():
     op.execute(
         """
         INSERT INTO "users"(email, username, password_hash, is_admin)
-        VALUES ("admin@admin.com", "admin", "{}", 1);'
+        VALUES ("admin@admin.com", "admin", "{}", 1);
         """.format(
             generate_password_hash("admin")
         )

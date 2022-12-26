@@ -44,8 +44,16 @@ class ProductionConfig(Config):
     LOG_EXCEPTIONS = True
 
 
+class TestingConfig(Config):
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or "sqlite:///" + os.path.join(
+        basedir, "database/testing.sqlite"
+    )
+    LOG_EXCEPTIONS = True
+
+
 config = {
     "development": DevelopmentConfig,
     "production": ProductionConfig,
+    "testing": TestingConfig,
     "default": DevelopmentConfig,
 }

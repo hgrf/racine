@@ -206,11 +206,11 @@ def handle_img_tags(text, itemid, refdlist):
             j = text.find(">", i)  # end of img tag
             k = text.find("src=", i)
             assert k < j  # make sure the src attr. belongs to the img tag
-            l = k + 4
-            invcomma = text[l]
-            m = text.find(invcomma, l + 1)
+            z = k + 4
+            invcomma = text[z]
+            m = text.find(invcomma, z + 1)
             assert m < j  # make sure the string ends before the end of the img tag
-            handle_img("{} position {}".format(itemid, i), text[l + 1 : m], refdlist)
+            handle_img("{} position {}".format(itemid, i), text[z + 1 : m], refdlist)
         else:
             break
 

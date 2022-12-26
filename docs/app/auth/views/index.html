@@ -234,7 +234,7 @@
   
     <li class="md-nav__item">
       <a href="../../.." class="md-nav__link">
-        Mercury Sample Manager Index
+        Home
       </a>
     </li>
   
@@ -1147,17 +1147,17 @@
 <a href="../#auth">Auth</a> /
 Views</p>
 <blockquote>
-<p>Auto-generated documentation for <a href="https://github.com/HolgerGraef/MSM/blob/main/app/auth/views.py">app.auth.views</a> module.</p>
+<p>Auto-generated documentation for <a href="https://github.com/HolgerGraef/MSM/blob/master/app/auth/views.py">app.auth.views</a> module.</p>
 </blockquote>
 <h2 id="login">login</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/auth/views.py#L10">Show source in views.py:10</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/auth/views.py#L10">Show source in views.py:10</a></p>
 <h4 id="signature">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nd">@auth</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/login&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">def</span> <span class="nf">login</span><span class="p">():</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="logout">logout</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/auth/views.py#L100">Show source in views.py:100</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/auth/views.py#L112">Show source in views.py:112</a></p>
 <h4 id="signature_1">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nd">@auth</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/logout&quot;</span><span class="p">)</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nd">@login_required</span>
@@ -1165,14 +1165,14 @@ Views</p>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="password_reset">password_reset</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/auth/views.py#L85">Show source in views.py:85</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/auth/views.py#L97">Show source in views.py:97</a></p>
 <h4 id="signature_2">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nd">@auth</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/reset/&lt;token&gt;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">def</span> <span class="nf">password_reset</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="password_reset_request">password_reset_request</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/auth/views.py#L61">Show source in views.py:61</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/auth/views.py#L70">Show source in views.py:70</a></p>
 <h4 id="signature_3">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nd">@auth</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/reset&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">def</span> <span class="nf">password_reset_request</span><span class="p">():</span>

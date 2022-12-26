@@ -234,7 +234,7 @@
   
     <li class="md-nav__item">
       <a href="../../.." class="md-nav__link">
-        Mercury Sample Manager Index
+        Home
       </a>
     </li>
   
@@ -1781,16 +1781,16 @@
 <a href="../#browser">Browser</a> /
 Views</p>
 <blockquote>
-<p>Auto-generated documentation for <a href="https://github.com/HolgerGraef/MSM/blob/main/app/browser/views.py">app.browser.views</a> module.</p>
+<p>Auto-generated documentation for <a href="https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py">app.browser.views</a> module.</p>
 </blockquote>
 <h2 id="filetile">FileTile</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/browser/views.py#L23">Show source in views.py:23</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L24">Show source in views.py:24</a></p>
 <h4 id="signature">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">class</span> <span class="nc">FileTile</span><span class="p">:</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="check_stored_file">check_stored_file</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/browser/views.py#L34">Show source in views.py:34</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L36">Show source in views.py:36</a></p>
 <p>Checks file size and SHA-256 hash for an upload and looks for duplicates in the database.</p>
 <p>If a duplicate is found, delete this upload and return the duplicate.</p>
 <p>NB: this means that if we upload two attachments with identical content but different names,
@@ -1807,7 +1807,7 @@ we might want to use the duplicate check for other file types, too (in the futur
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="imagebrowser">imagebrowser</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/browser/views.py#L398">Show source in views.py:398</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L421">Show source in views.py:421</a></p>
 <h4 id="signature_2">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nd">@browser</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;smb_path&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">})</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nd">@browser</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/&lt;path:smb_path&gt;&quot;</span><span class="p">)</span>
@@ -1816,7 +1816,7 @@ we might want to use the duplicate check for other file types, too (in the futur
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="inspectpath">inspectpath</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/browser/views.py#L529">Show source in views.py:529</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L572">Show source in views.py:572</a></p>
 <h4 id="signature_3">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nd">@browser</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/inspectpath&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nd">@login_required</span>
@@ -1824,7 +1824,7 @@ we might want to use the duplicate check for other file types, too (in the futur
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="inspectresource">inspectresource</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/browser/views.py#L544">Show source in views.py:544</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L587">Show source in views.py:587</a></p>
 <h4 id="signature_4">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nd">@browser</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/inspectresource&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nd">@login_required</span>
@@ -1832,19 +1832,19 @@ we might want to use the duplicate check for other file types, too (in the futur
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="make_preview">make_preview</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/browser/views.py#L124">Show source in views.py:124</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L128">Show source in views.py:128</a></p>
 <h4 id="signature_5">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">def</span> <span class="nf">make_preview</span><span class="p">(</span><span class="n">upload</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="make_rotated">make_rotated</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/browser/views.py#L141">Show source in views.py:141</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L145">Show source in views.py:145</a></p>
 <h4 id="signature_6">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">def</span> <span class="nf">make_rotated</span><span class="p">(</span><span class="n">upload</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">fullsize</span><span class="p">):</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="retrieve_attachment">retrieve_attachment</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/browser/views.py#L320">Show source in views.py:320</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L336">Show source in views.py:336</a></p>
 <p>Retrieves an attachment that was uploaded to the server.</p>
 <h2 id="parameters_1">Parameters</h2>
 <p>upload_id : int
@@ -1856,7 +1856,7 @@ we might want to use the duplicate check for other file types, too (in the futur
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="retrieve_image">retrieve_image</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/browser/views.py#L258">Show source in views.py:258</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L268">Show source in views.py:268</a></p>
 <p>Retrieves an image that was uploaded to the server,</p>
 <p>either by uploading through the browser or by transfer from a SMB resource. The POST request is used by the
 CKEditor plugin imagerotate to retrieve potential error messages.</p>
@@ -1870,7 +1870,7 @@ CKEditor plugin imagerotate to retrieve potential error messages.</p>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="retrieve_smb_image">retrieve_smb_image</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/browser/views.py#L354">Show source in views.py:354</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L377">Show source in views.py:377</a></p>
 <p>Retrieves an image from a SMB resource. This is only for the browser, so we will send back thumbnails to speed
 up the communication a bit.</p>
 <h2 id="parameters_3">Parameters</h2>
@@ -1883,7 +1883,7 @@ up the communication a bit.</p>
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="save_from_smb">save_from_smb</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/browser/views.py#L484">Show source in views.py:484</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L525">Show source in views.py:525</a></p>
 <h4 id="signature_10">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nd">@browser</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/savefromsmb&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nd">@login_required</span>
@@ -1891,7 +1891,7 @@ up the communication a bit.</p>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="store_attachment">store_attachment</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/browser/views.py#L236">Show source in views.py:236</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L244">Show source in views.py:244</a></p>
 <p>Stores an image file in the upload database and saves it in the upload folder, checking for duplicates.</p>
 <h2 id="parameters_4">Parameters</h2>
 <p>file_obj : FileStorage object or any other object with save() function
@@ -1906,7 +1906,7 @@ message : str
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="store_file">store_file</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/browser/views.py#L79">Show source in views.py:79</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L81">Show source in views.py:81</a></p>
 <p>Stores a file in the upload database and saves it in the upload folder, checking for duplicates.</p>
 <h2 id="parameters_5">Parameters</h2>
 <p>file_obj : FileStorage or Image object, or any other object with save() function
@@ -1923,7 +1923,7 @@ message : str
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="store_image">store_image</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/browser/views.py#L161">Show source in views.py:161</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L165">Show source in views.py:165</a></p>
 <p>Stores an image file in the upload database and saves it in the upload folder, checking for duplicates.</p>
 <h2 id="parameters_6">Parameters</h2>
 <p>file_obj : file object
@@ -1940,13 +1940,13 @@ dimensions : tuple
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="strip_unit">strip_unit</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/browser/views.py#L586">Show source in views.py:586</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L629">Show source in views.py:629</a></p>
 <h4 id="signature_14">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">def</span> <span class="nf">strip_unit</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="uploadfile">uploadfile</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/browser/views.py#L458">Show source in views.py:458</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L491">Show source in views.py:491</a></p>
 <h4 id="signature_15">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nd">@browser</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/upload&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nd">@login_required</span>

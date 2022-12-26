@@ -234,7 +234,7 @@
   
     <li class="md-nav__item">
       <a href="../../.." class="md-nav__link">
-        Mercury Sample Manager Index
+        Home
       </a>
     </li>
   
@@ -2001,14 +2001,14 @@
 <a href="../#main">Main</a> /
 Views</p>
 <blockquote>
-<p>Auto-generated documentation for <a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py">app.main.views</a> module.</p>
+<p>Auto-generated documentation for <a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py">app.main.views</a> module.</p>
 </blockquote>
 <h4 id="attributes">Attributes</h4>
 <ul>
 <li><code>supported_targets</code> - define supported fields: <code>{'sample': {'dbobject': Sample, 'auth': 'owner', 'fields': {'name': lambda x,: validate_form_field(NewSampleForm(), 'newsamplename', x), 'description': str, 'image': str}}, 'action': {'dbobject': Action, 'auth': 'action_auth', 'fields': {'timestamp': lambda x,: datetime.strptime(x, '%Y-%m-%d'), 'description': str}}, 'share': {'dbobject': Share, 'auth': None, 'fields': {}}, 'smbresource': {'dbobject': SMBResource, 'auth': 'admin', 'fields': {'name': str, 'servername': str, 'serveraddr': str, 'sharename': str, 'path': str, 'userid': str, 'password': str}}, 'user': {'dbobject': User, 'auth': 'admin', 'fields': {'username': lambda x,: validate_form_field(NewUserForm(), 'username', x), 'email': lambda x,: validate_form_field(NewUserForm(), 'email', x), 'is_admin': validate_is_admin}}}</code></li>
 </ul>
 <h2 id="changeparent">changeparent</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L379">Show source in views.py:379</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L484">Show source in views.py:484</a></p>
 <h4 id="signature">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/changeparent&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nd">@login_required</span>
@@ -2016,7 +2016,7 @@ Views</p>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="createshare">createshare</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L289">Show source in views.py:289</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L389">Show source in views.py:389</a></p>
 <h4 id="signature_1">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/createshare&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nd">@login_required</span>
@@ -2024,7 +2024,7 @@ Views</p>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="deleteaction">deleteaction</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L321">Show source in views.py:321</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L426">Show source in views.py:426</a></p>
 <h4 id="signature_2">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/delaction/&lt;actionid&gt;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nd">@login_required</span>
@@ -2032,7 +2032,7 @@ Views</p>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="deletesample">deletesample</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L334">Show source in views.py:334</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L439">Show source in views.py:439</a></p>
 <h4 id="signature_3">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/delsample/&lt;sampleid&gt;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nd">@login_required</span>
@@ -2040,7 +2040,7 @@ Views</p>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="deleteshare">deleteshare</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L347">Show source in views.py:347</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L452">Show source in views.py:452</a></p>
 <h4 id="signature_4">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/delshare/&lt;shareid&gt;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nd">@login_required</span>
@@ -2048,7 +2048,7 @@ Views</p>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="editor">editor</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L120">Show source in views.py:120</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L185">Show source in views.py:185</a></p>
 <h4 id="signature_5">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/editor/&lt;sampleid&gt;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nd">@login_required</span>
@@ -2056,7 +2056,7 @@ Views</p>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="getfield">getfield</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L615">Show source in views.py:615</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L746">Show source in views.py:746</a></p>
 <h4 id="signature_6">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/get/&lt;target&gt;/&lt;field&gt;/&lt;id&gt;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">])</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nd">@login_required</span>
@@ -2064,7 +2064,7 @@ Views</p>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="help">help</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L153">Show source in views.py:153</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L231">Show source in views.py:231</a></p>
 <h4 id="signature_7">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/help&quot;</span><span class="p">)</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nd">@login_required</span>
@@ -2072,7 +2072,7 @@ Views</p>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="index">index</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L18">Show source in views.py:18</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L28">Show source in views.py:28</a></p>
 <h4 id="signature_8">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/sample/&lt;sampleid&gt;&quot;</span><span class="p">)</span>
@@ -2080,7 +2080,7 @@ Views</p>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="login_as">login_as</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L252">Show source in views.py:252</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L348">Show source in views.py:348</a></p>
 <h4 id="signature_9">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/loginas&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">])</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nd">@login_required</span>
@@ -2088,7 +2088,7 @@ Views</p>
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="markasnews">markasnews</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L448">Show source in views.py:448</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L566">Show source in views.py:566</a></p>
 <h4 id="signature_10">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/markasnews&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nd">@login_required</span>
@@ -2096,7 +2096,7 @@ Views</p>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="navbar">navbar</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L104">Show source in views.py:104</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L160">Show source in views.py:160</a></p>
 <h4 id="signature_11">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/navbar&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">])</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nd">@login_required</span>
@@ -2104,7 +2104,7 @@ Views</p>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="newaction">newaction</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L502">Show source in views.py:502</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L632">Show source in views.py:632</a></p>
 <h4 id="signature_12">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/newaction/&lt;sampleid&gt;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nd">@login_required</span>
@@ -2112,7 +2112,7 @@ Views</p>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="newsample">newsample</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L427">Show source in views.py:427</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L539">Show source in views.py:539</a></p>
 <h4 id="signature_13">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/newsample&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nd">@login_required</span>
@@ -2120,7 +2120,7 @@ Views</p>
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="search">search</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L160">Show source in views.py:160</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L238">Show source in views.py:238</a></p>
 <h4 id="signature_14">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/search&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">])</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nd">@login_required</span>
@@ -2128,7 +2128,7 @@ Views</p>
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="static_file">static_file</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L540">Show source in views.py:540</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L677">Show source in views.py:677</a></p>
 <h4 id="signature_15">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/plugins/&lt;path:path&gt;&quot;</span><span class="p">)</span>
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nd">@login_required</span>
@@ -2136,13 +2136,13 @@ Views</p>
 <a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="str_to_bool">str_to_bool</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L547">Show source in views.py:547</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L684">Show source in views.py:684</a></p>
 <h4 id="signature_16">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">def</span> <span class="nf">str_to_bool</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="swapactionorder">swapactionorder</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L528">Show source in views.py:528</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L665">Show source in views.py:665</a></p>
 <h4 id="signature_17">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/swapactionorder&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nd">@login_required</span>
@@ -2150,7 +2150,7 @@ Views</p>
 <a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="togglearchived">togglearchived</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L267">Show source in views.py:267</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L363">Show source in views.py:363</a></p>
 <h4 id="signature_18">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/togglearchived&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nd">@login_required</span>
@@ -2158,7 +2158,7 @@ Views</p>
 <a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="togglecollaborative">togglecollaborative</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L278">Show source in views.py:278</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L376">Show source in views.py:376</a></p>
 <h4 id="signature_19">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/togglecollaborative&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nd">@login_required</span>
@@ -2166,7 +2166,7 @@ Views</p>
 <a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="unmarkasnews">unmarkasnews</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L478">Show source in views.py:478</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L602">Show source in views.py:602</a></p>
 <h4 id="signature_20">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/unmarkasnews&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nd">@login_required</span>
@@ -2174,7 +2174,7 @@ Views</p>
 <a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="updatefield">updatefield</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L644">Show source in views.py:644</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L777">Show source in views.py:777</a></p>
 <h4 id="signature_21">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/set/&lt;target&gt;/&lt;field&gt;/&lt;id&gt;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nd">@login_required</span>
@@ -2182,7 +2182,7 @@ Views</p>
 <a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="userlist">userlist</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L202">Show source in views.py:202</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L290">Show source in views.py:290</a></p>
 <h4 id="signature_22">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/userlist&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nd">@login_required</span>
@@ -2190,13 +2190,13 @@ Views</p>
 <a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="validate_is_admin">validate_is_admin</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L556">Show source in views.py:556</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L693">Show source in views.py:693</a></p>
 <h4 id="signature_23">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">def</span> <span class="nf">validate_is_admin</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
 <a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="welcome">welcome</h2>
-<p><a href="https://github.com/HolgerGraef/MSM/blob/main/app/main/views.py#L33">Show source in views.py:33</a></p>
+<p><a href="https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L55">Show source in views.py:55</a></p>
 <h4 id="signature_24">Signature</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nd">@main</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/welcome&quot;</span><span class="p">)</span>
 <a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="nd">@login_required</span>

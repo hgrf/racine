@@ -1,10 +1,7 @@
 ![build](https://github.com/HolgerGraef/MSM/actions/workflows/ci.yml/badge.svg)
-
 ![coverage](https://raw.githubusercontent.com/HolgerGraef/MSM/python-coverage-comment-action-data/badge.svg)
-
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-
-[documentation](https://holgergraef.github.io/MSM/)
+[![Documentation Status](https://readthedocs.org/projects/msm/badge/?version=latest)](https://msm.readthedocs.io/en/latest/?badge=latest)
 
 # Mercury Sample Manager
 
@@ -13,13 +10,13 @@ to keep track of their samples from any PC in a laboratory. The programme is a F
 central server on the local network of your research institute and that can be accessed from all other computers on the
 same network using the normal web browser (should be a recent browser though).
 
-# Disclaimer
+## Disclaimer
 
 The developers take no responsibility for the loss or theft of data managed by this software.
 The software sends anonymous usage statistics to the developers, including the software version, the number of users,
 samples and actions stored in the database, the server uptime and the used/available disk space.
 
-# Coding style
+## Coding style
 
 Install the developer requirements for MSM:
 
@@ -33,7 +30,7 @@ In order to run this as a pre-commit hook, use:
 
     pre-commit install
 
-# Installation of development server
+## Installation of development server
 
 This programme should work an almost any platform (Linux, Windows, MacOS), but I only provide the installation
 instructions for Linux. Seeing that you should install it on a server, I suppose Linux is the target OS in most
@@ -74,7 +71,7 @@ You can start the development server by simply executing the "run script":
 
     $ ./run
 
-# Using GitHub deploy keys
+## Using GitHub deploy keys
 
 As long as this is a private repository, access can be granted using deploy keys. You can generate a public/private key
 pair by executing `ssh-keygen -t rsa -C "[email address]"` and copy the content of the corresponding public key file to
@@ -92,7 +89,7 @@ In this case, we defined a new hostname for github.com (msm.github.com) for the 
 
     git clone git@msm.github.com:HolgerGraef/MSM.git
 
-# Development with docker
+## Development with docker
 
 Set up some tools:
 
@@ -107,11 +104,12 @@ Build and run:
     make build-dev
     make run-dev
 
-# Deployment with docker
+## Running with docker
 
-    docker run -p 8080:80 ghcr.io/holgergraef/msm:latest
+docker compose -f docker/docker-compose.yml build web
+docker compose -f docker/docker-compose.yml up web
 
-# Deployment with gunicorn and nginx
+## Deployment with gunicorn and nginx
 
 Carry out the steps described above in order to set up the development server. Then configure gunicorn autostart
 by setting up a corresponding autostart file. This is explained below either for upstart or for systemd.

@@ -49,30 +49,28 @@ flake8:
 
 
 doc:
-	pip uninstall -y black
-	pip uninstall -y click
-	pip install black
-	
-	pip uninstall -y mkdocs-material
-	pip uninstall -y requests
-	pip install mkdocs-material
+	# install dev requirements
+	pip install --upgrade -r requirements-dev.txt > /dev/null
 
 	# generate markdown documentation
 	handsdown \
+		--branch master \
 		--external `git config --get remote.origin.url` \
-		--create-configs app \
+		--cleanup \
+		--create-configs \
 		--theme material \
 		--name "Mercury Sample Manager" \
-		--output-path docsmd
+		--output-path docsmd \
+		app
+
+	# replace main page of documentation
+	cp README.md docsmd/README.md
 
 	# convert to HTML documentation
 	python -m mkdocs build
 
 	# clean up
-	rm .readthedocs.yml
-	rm mkdocs.yml
-	rm requirements.mkdocs.txt
 	rm -rf docsmd
 
 	# restore environment
-	python -m pip install -r requirements.txt
+	python -m pip install -r requirements.txt > /dev/null

@@ -69,8 +69,5 @@ doc:
 	# convert to HTML documentation
 	python -m mkdocs build
 
-	# clean up
-	rm -rf docsmd
-
 	# restore environment
 	python -m pip install -r requirements.txt > /dev/null

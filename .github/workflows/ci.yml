@@ -37,7 +37,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: Check coding style
-        run: make black
+        run: make black-check
 
       - name: Store Pull Request comment to be posted
         uses: actions/upload-artifact@v3

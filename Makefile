@@ -30,23 +30,22 @@ coverage-report: test
 
 black:
 	# workaround for https://github.com/psf/black/issues/3111
-	pip uninstall -y black
-	pip uninstall -y click
-	pip install black
+	python -m pip install --upgrade -r requirements-dev.txt
 	black app migrations --line-length=100 --check
+	python -m pip install -r requirements.txt
+
+black-check:
+	# workaround for https://github.com/psf/black/issues/3111
+	python -m pip install --upgrade -r requirements-dev.txt
+	black . --check
 	python -m pip install -r requirements.txt
 
 flake8:
 	# stop the build if there are Python syntax errors or undefined names
 	flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-	# exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-	flake8 . --count \
-		--exit-zero \
-		--max-complexity=10 \
-		--max-line-length=127 \
-		--statistics \
-		--per-file-ignores="migrations/versions/*.py:E266,E402"
 
+	# don't stop the build on other linting issues
+	flake8 . --exit-zero
 
 doc:
 	# install dev requirements

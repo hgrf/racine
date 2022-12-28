@@ -28,10 +28,9 @@ jobs:
         run: make flake8
 
       - name: Determine badge message and color
-        run: make flake8-badge | tail -1 |
-          (IFS="@" read MESSAGE COLOR;
-            export FLAKE8_BADGE_MESSAGE=$$MESSAGE;
-            export FLAKE8_BADGE_COLOR=$$COLOR)
+        run: make flake8-badge | tail -1 | (IFS="@" read MESSAGE COLOR;
+            echo "FLAKE8_BADGE_MESSAGE=$MESSAGE" >> $GITHUB_ENV;
+            echo "FLAKE8_BADGE_COLOR=$COLOR" >> $GITHUB_ENV)
 
       - name: Set up JSON file for badge
         uses: schneegans/dynamic-badges-action@v1.6.0
@@ -40,8 +39,8 @@ jobs:
           gistID: 1cfaee423c85504cd204cf4649e2cf29
           filename: flake8-badge.json
           label: flake8
-          message: $FLAKE8_BADGE_MESSAGE
-          color: $FLAKE8_BADGE_COLOR
+          message: ${{ env.FLAKE8_BADGE_MESSAGE }}
+          color: ${{ env.FLAKE8_BADGE_COLOR }}
 
       - name: Run tests and produce .coverage file
         run: make test

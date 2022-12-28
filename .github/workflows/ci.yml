@@ -28,9 +28,9 @@ jobs:
         run: make flake8
 
       - name: Determine badge message and color
-        run: make flake8-badge | tail -1 | \
-          (IFS="@" read MESSAGE COLOR; \
-            export FLAKE8_BADGE_MESSAGE=$$MESSAGE; \
+        run: make flake8-badge | tail -1 |
+          (IFS="@" read MESSAGE COLOR;
+            export FLAKE8_BADGE_MESSAGE=$$MESSAGE;
             export FLAKE8_BADGE_COLOR=$$COLOR)
 
       - name: Set up JSON file for badge

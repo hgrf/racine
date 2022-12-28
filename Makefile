@@ -44,7 +44,13 @@ flake8:
 	# stop the build if there are Python syntax errors or undefined names
 	flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
+	# make sure flake8 report folder exists
+	mkdir -p ./reports/flake8
+
+	# make sure no previous report exists (otherwise flake8 will append to it)
 	rm ./reports/flake8/flake8stats.txt || true
+
+	# run flake8 and generate report
 	flake8 . \
 		--exit-zero \
 		--format=html --htmldir ./reports/flake8/ \

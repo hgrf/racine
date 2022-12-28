@@ -25,7 +25,7 @@ Install the developer requirements for MSM:
 
 In order to auto-correct coding style, use:
 
-    black app --line-length=100
+    make black
 
 In order to run this as a pre-commit hook, use:
 

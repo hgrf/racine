@@ -1,0 +1,15 @@
+[flake8]
+count = True
+statistics = True
+
+max-complexity = 10
+max-line-length = 100
+
+extend-ignore = E203
+
+per-file-ignores =
+    migrations/versions/*.py:E266,E402
+exclude = 
+    .git
+    uploads
+    venv

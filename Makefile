@@ -3,6 +3,12 @@ install-dependencies:
 	pip install ${PIP_OPTIONS} -r requirements-dev.txt
 	pip install ${PIP_OPTIONS} -r requirements.txt
 
+build: down
+	docker compose -f docker/docker-compose.yml build web
+
+run:
+	docker compose -f docker/docker-compose.yml up web
+
 build-dev: down
 	docker compose -f docker/docker-compose.yml build web-dev
 

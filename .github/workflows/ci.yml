@@ -27,6 +27,16 @@ jobs:
       - name: Lint with flake8
         run: make flake8
 
+      - name: Create Awesome Badge
+        uses: schneegans/dynamic-badges-action@v1.6.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 1cfaee423c85504cd204cf4649e2cf29
+          filename: flake8-badge.json
+          label: Hello
+          message: World
+          color: orange
+
       - name: Run tests and produce .coverage file
         run: make test
 

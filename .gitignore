@@ -19,3 +19,5 @@ mailconfig.py
 .coverage
 # ignore file that is used to trigger UWSGI reload
 uwsgi-reload
+# ignore flake8 reports
+reports/

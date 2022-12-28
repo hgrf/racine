@@ -44,8 +44,19 @@ flake8:
 	# stop the build if there are Python syntax errors or undefined names
 	flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
-	# don't stop the build on other linting issues
-	flake8 . --exit-zero
+	rm ./reports/flake8/flake8stats.txt || true
+	flake8 . \
+		--exit-zero \
+		--format=html --htmldir ./reports/flake8/ \
+		--tee --output-file ./reports/flake8/flake8stats.txt
+
+flake8-badge:
+	printf " \
+		\rimport os\n \
+		\rfrom genbadge.utils_flake8 import get_flake8_badge, get_flake8_stats\n \
+		\rbadge = get_flake8_badge(get_flake8_stats('./reports/flake8/flake8stats.txt'))\n \
+		\rprint(f'{badge.right_txt}@{badge.color}')\n \
+		\r\n" | python
 
 doc:
 	# install dev requirements

@@ -4,6 +4,7 @@ pre-commit
 
 # linting
 flake8
+genbadge[flake8]
 
 # testing
 coverage

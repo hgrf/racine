@@ -30,15 +30,15 @@ coverage-report: test
 
 black:
 	# workaround for https://github.com/psf/black/issues/3111
-	python -m pip install --upgrade -r requirements-dev.txt
-	black app migrations --line-length=100 --check
-	python -m pip install -r requirements.txt
+	python -m pip install --upgrade -r requirements-dev.txt > /dev/null
+	black .
+	python -m pip install -r requirements.txt > /dev/null
 
 black-check:
 	# workaround for https://github.com/psf/black/issues/3111
-	python -m pip install --upgrade -r requirements-dev.txt
+	python -m pip install --upgrade -r requirements-dev.txt > /dev/null
 	black . --check
-	python -m pip install -r requirements.txt
+	python -m pip install -r requirements.txt > /dev/null
 
 flake8:
 	# stop the build if there are Python syntax errors or undefined names

@@ -3,6 +3,50 @@ install-dependencies:
 	pip install ${PIP_OPTIONS} -r requirements-dev.txt
 	pip install ${PIP_OPTIONS} -r requirements.txt
 
+install-lightbox:
+	rm -rf app/static/lightbox2-master
+
+	git clone -b v2.8.2 --depth 1 \
+		git@github.com:lokesh/lightbox2.git \
+		app/static/lightbox2-master
+
+	rm -rf app/static/lightbox2-master/.git
+
+install-mathjax:
+	rm -rf app/static/mathjax
+
+	git clone -b 2.7.1 --depth 1 \
+		git@github.com:mathjax/MathJax.git \
+		app/static/mathjax
+
+	rm -rf app/static/mathjax/.git
+
+install-typeahead:
+	rm -rf app/static/typeahead.js
+
+	rm -rf /tmp/typeahead.js
+	git clone -b v0.11.1 --depth 1 \
+		git@github.com:twitter/typeahead.js.git \
+		/tmp/typeahead.js
+	cp -r /tmp/typeahead.js/dist app/static/typeahead.js
+	rm -rf /tmp/typeahead.js
+
+	# c.f. https://github.com/HolgerGraef/MSM/commit/19fc41b1797112d2980b08ad53d1f945d9e36b17
+	#      https://github.com/twitter/typeahead.js/issues/1218
+	#      https://github.com/HolgerGraef/MSM/commit/2d892a4a2f6a9bdb9465730a64670277e35698a8
+	git apply patches/typeahead.patch
+
+	wget -O yuicompressor.jar https://github.com/yui/yuicompressor/releases/download/v2.4.8/yuicompressor-2.4.8.jar
+	java -jar yuicompressor.jar \
+		--type js \
+		--charset utf-8 \
+		app/static/typeahead.js/typeahead.bundle.js \
+		> app/static/typeahead.js/typeahead.bundle.min.js
+	rm yuicompressor.jar
+
+install-js-dependencies: install-lightbox install-mathjax install-typeahead
+	echo ""
+
 build: down
 	docker compose -f docker/docker-compose.yml build web
 

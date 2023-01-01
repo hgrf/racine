@@ -1,0 +1,47 @@
+diff --git b/app/static/typeahead.js/substringmatcher.js a/app/static/typeahead.js/substringmatcher.js
+new file mode 100644
+index 00000000..f6198696
+--- /dev/null
++++ a/app/static/typeahead.js/substringmatcher.js
+@@ -0,0 +1,21 @@
++var substringMatcher = function(strs) {
++  return function findMatches(q, cb) {
++    var matches, substringRegex;
++
++    // an array that will be populated with substring matches
++    matches = [];
++
++    // regex used to determine if a string contains the substring `q`
++    substrRegex = new RegExp(q, 'i');
++
++    // iterate through the pool of strings and for any string that
++    // contains the substring `q`, add it to the `matches` array
++    $.each(strs, function(i, str) {
++      if (substrRegex.test(str)) {
++        matches.push(str);
++      }
++    });
++
++    cb(matches);
++  };
++};
+\ No newline at end of file
+diff --git b/app/static/typeahead.js/typeahead.bundle.js a/app/static/typeahead.js/typeahead.bundle.js
+index bb0c8aed..0ec3e748 100644
+--- b/app/static/typeahead.js/typeahead.bundle.js
++++ a/app/static/typeahead.js/typeahead.bundle.js
+@@ -1720,8 +1720,12 @@
+                     suggestions = suggestions || [];
+                     if (!canceled && rendered < that.limit) {
+                         that.cancel = $.noop;
+-                        rendered += suggestions.length;
+-                        that._append(query, suggestions.slice(0, that.limit - rendered));
++                        //rendered += suggestions.length;
++                        //that._append(query, suggestions.slice(0, that.limit - rendered));
++                        suggestions = (suggestions || []).slice(0, that.limit);
++                        rendered = suggestions.length;
++                        that._append(query, suggestions);
++                        ////
+                         that.async && that.trigger("asyncReceived", query);
+                     }
+                 }

@@ -20,6 +20,14 @@ install-jquery:
 
 	wget -O app/static/jquery-1.11.3.min.js https://code.jquery.com/jquery-1.11.3.min.js
 
+install-jquery.jeditable:
+	rm -f app/static/jquery.jeditable.js
+
+	wget -O app/static/jquery.jeditable.js https://sscdn.net/js/jquery/latest/jeditable/1.7.1/jeditable.js
+
+	# c.f. https://github.com/HolgerGraef/MSM/commit/89d8b57e795ccfbeb73dc18faecc1d0016a8a008#diff-5f8e3a2bd35e7f0079090b176e06d0568d5c8e4468c0febbfa61014d72b16246
+	git apply patches/jquery.jeditable.patch
+
 install-jquery-ui:
 	rm -f app/static/jquery-ui.min.css
 	rm -f app/static/jquery-ui.min.js
@@ -74,7 +82,7 @@ install-typeahead:
 		> app/static/typeahead.js/typeahead.bundle.min.js
 	rm yuicompressor.jar
 
-install-js-dependencies: install-bootstrap-toc install-jquery-ui install-lightbox install-mathjax install-typeahead
+install-js-dependencies: install-bootstrap-toc install-jquery install-jquery.jeditable install-jquery-ui install-lightbox install-mathjax install-typeahead
 	echo ""
 
 clean-js-dependencies:

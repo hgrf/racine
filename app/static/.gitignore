@@ -2,3 +2,6 @@ bootstrap/
 lightbox2-master/
 mathjax/
 typeahead.js/
+
+jquery-ui.min.css
+jquery-ui.min.js

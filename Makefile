@@ -3,6 +3,18 @@ install-dependencies:
 	pip install ${PIP_OPTIONS} -r requirements-dev.txt
 	pip install ${PIP_OPTIONS} -r requirements.txt
 
+install-bootstrap-toc:
+	rm -f app/static/bootstrap-toc.min.css
+	rm -f app/static/bootstrap-toc.min.js
+
+	rm -rf /tmp/bootstrap-toc
+	git clone -b v0.4.1 --depth 1 \
+		git@github.com:afeld/bootstrap-toc.git \
+		/tmp/bootstrap-toc
+	cp /tmp/bootstrap-toc/dist/bootstrap-toc.min.css app/static/bootstrap-toc.min.css
+	cp /tmp/bootstrap-toc/dist/bootstrap-toc.min.js app/static/bootstrap-toc.min.js
+	rm -rf /tmp/bootstrap-toc
+
 install-jquery-ui:
 	rm -f app/static/jquery-ui.min.css
 	rm -f app/static/jquery-ui.min.js
@@ -57,7 +69,7 @@ install-typeahead:
 		> app/static/typeahead.js/typeahead.bundle.min.js
 	rm yuicompressor.jar
 
-install-js-dependencies: install-lightbox install-mathjax install-typeahead
+install-js-dependencies: install-bootstrap-toc install-jquery-ui install-lightbox install-mathjax install-typeahead
 	echo ""
 
 clean-js-dependencies:

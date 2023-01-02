@@ -3,6 +3,19 @@ install-dependencies:
 	pip install ${PIP_OPTIONS} -r requirements-dev.txt
 	pip install ${PIP_OPTIONS} -r requirements.txt
 
+install-jquery-ui:
+	rm -f app/static/jquery-ui.min.css
+	rm -f app/static/jquery-ui.min.js
+
+	wget -O jquery-ui.zip https://jqueryui.com/resources/download/jquery-ui-1.11.4.zip
+	rm -rf /tmp/jquery-ui-*
+	unzip -d /tmp jquery-ui.zip
+	rm jquery-ui.zip
+
+	cp /tmp/jquery-ui-*/jquery-ui.min.css app/static/jquery-ui.min.css
+	cp /tmp/jquery-ui-*/jquery-ui.min.js app/static/jquery-ui.min.js
+	rm -rf /tmp/jquery-ui-*
+
 install-lightbox:
 	rm -rf app/static/lightbox2-master
 

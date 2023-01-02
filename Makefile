@@ -80,6 +80,7 @@ install-js-dependencies: install-bootstrap-toc install-jquery-ui install-lightbo
 clean-js-dependencies:
 	rm  -f app/static/bootstrap-toc.min.css
 	rm  -f app/static/bootstrap-toc.min.js
+	rm -f app/static/jquery-1.11.3.min.js
 	rm  -f app/static/jquery-ui.min.css
 	rm  -f app/static/jquery-ui.min.js
 	rm -rf app/static/lightbox2-master

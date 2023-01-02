@@ -47,6 +47,11 @@ install-typeahead:
 install-js-dependencies: install-lightbox install-mathjax install-typeahead
 	echo ""
 
+clean-js-dependencies:
+	rm -rf app/static/lightbox2-master
+	rm -rf app/static/mathjax
+	rm -rf app/static/typeahead.js
+
 build: down
 	docker compose -f docker/docker-compose.yml build web
 

@@ -89,6 +89,7 @@ clean-js-dependencies:
 	rm  -f app/static/bootstrap-toc.min.css
 	rm  -f app/static/bootstrap-toc.min.js
 	rm -f app/static/jquery-1.11.3.min.js
+	rm -f app/static/jquery.jeditable.js
 	rm  -f app/static/jquery-ui.min.css
 	rm  -f app/static/jquery-ui.min.js
 	rm -rf app/static/lightbox2-master

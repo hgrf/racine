@@ -15,6 +15,11 @@ install-bootstrap-toc:
 	cp /tmp/bootstrap-toc/dist/bootstrap-toc.min.js app/static/bootstrap-toc.min.js
 	rm -rf /tmp/bootstrap-toc
 
+install-jquery:
+	rm -f app/static/jquery-1.11.3.min.js
+
+	wget -O app/static/jquery-1.11.3.min.js https://code.jquery.com/jquery-1.11.3.min.js
+
 install-jquery-ui:
 	rm -f app/static/jquery-ui.min.css
 	rm -f app/static/jquery-ui.min.js

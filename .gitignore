@@ -21,3 +21,5 @@ mailconfig.py
 uwsgi-reload
 # ignore flake8 reports
 reports/
+# ignore generated doc
+docs/

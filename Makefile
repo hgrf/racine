@@ -73,6 +73,10 @@ install-js-dependencies: install-bootstrap-toc install-jquery-ui install-lightbo
 	echo ""
 
 clean-js-dependencies:
+	rm  -f app/static/bootstrap-toc.min.css
+	rm  -f app/static/bootstrap-toc.min.js
+	rm  -f app/static/jquery-ui.min.css
+	rm  -f app/static/jquery-ui.min.js
 	rm -rf app/static/lightbox2-master
 	rm -rf app/static/mathjax
 	rm -rf app/static/typeahead.js

@@ -3,6 +3,41 @@ install-dependencies:
 	pip install ${PIP_OPTIONS} -r requirements-dev.txt
 	pip install ${PIP_OPTIONS} -r requirements.txt
 
+website:
+	# clone bootstrap
+	rm -rf build/bootstrap
+	git clone -b v5.2.3 --depth 1 git@github.com:twbs/bootstrap.git build/bootstrap
+	rm -rf build/bootstrap/.git
+
+	rm -rf build/bootstrap/site/content/docs
+	rm -rf build/bootstrap/site/static/docs
+	rm build/bootstrap/site/.eslintrc.json
+	rm build/bootstrap/site/static/CNAME
+	rm build/bootstrap/site/layouts/partials/docs-versions.html
+
+	cd build/bootstrap && npm install
+
+	cp site/config.yml build/bootstrap/config.yml
+	cp site/docs-navbar.html build/bootstrap/site/layouts/partials/docs-navbar.html
+	cp site/favicons.html build/bootstrap/site/layouts/partials/favicons.html
+	cp site/footer.html build/bootstrap/site/layouts/partials/footer.html
+	cp site/header.html build/bootstrap/site/layouts/partials/header.html
+	cp site/masthead.html build/bootstrap/site/layouts/partials/home/masthead.html
+	cp site/masthead-followup.html \
+		build/bootstrap/site/layouts/partials/home/masthead-followup.html
+	mkdir -p build/bootstrap/site/static/images
+	cp app/static/images/sample.png build/bootstrap/site/static/images/sample.png
+
+	# build website
+	cd build/bootstrap && hugo --cleanDestinationDir
+
+	# copy build to MSM
+	rm -rf ./_site
+	cp -r build/bootstrap/_site ./_site
+
+hugo-serve:
+	cd build/bootstrap && hugo server --port 9001 --disableFastRender
+
 install-ckeditor:
 	# clone CKEditor 4.9.2
 	rm -rf /tmp/ckeditor4
@@ -34,6 +69,9 @@ install-ckeditor:
 		/tmp/ckeditor4/plugins/imagerotate
 	cd /tmp/ckeditor4/plugins/imagerotate && \
 		git checkout f2ba8746bcf0b31df4791008f2bf37ba7e958aca
+
+	# remove BOM from build.sh
+	dos2unix /tmp/ckeditor4/dev/builder/build.sh
 
 	# build CKEditor release
 	cp patches/build-config.js /tmp/ckeditor4/dev/builder/build-config.js

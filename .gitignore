@@ -23,3 +23,6 @@ uwsgi-reload
 reports/
 # ignore generated doc
 docs/
+# ignore generated site
+build/
+_site/

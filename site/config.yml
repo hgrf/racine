@@ -1,0 +1,68 @@
+languageCode:           "en"
+title:                  "Mercury Sample Manager"
+baseURL:                "https://holgergraef.github.io/MSM"
+
+relativeURLs:           true
+canonifyURLs:           true
+
+security:
+  enableInlineShortcodes: true
+  funcs:
+    getenv:
+      - ^HUGO_
+      - NETLIFY
+
+markup:
+  goldmark:
+    renderer:
+      unsafe:           true
+  highlight:
+    noClasses:          false
+  tableOfContents:
+    startLevel:         2
+    endLevel:           6
+
+buildDrafts:            true
+buildFuture:            true
+
+enableRobotsTXT:        true
+metaDataFormat:         "yaml"
+disableKinds:           ["404", "taxonomy", "term", "RSS"]
+
+publishDir:             "_site"
+
+module:
+  mounts:
+    - source:           dist
+      target:           static/docs/5.2/dist
+    - source:           site/assets
+      target:           assets
+    - source:           site/content
+      target:           content
+    - source:           site/data
+      target:           data
+    - source:           site/layouts
+      target:           layouts
+    - source:           site/static
+      target:           static
+    - source:           site/static/docs/5.2/assets/img/favicons/apple-touch-icon.png
+      target:           static/apple-touch-icon.png
+    - source:           site/static/docs/5.2/assets/img/favicons/favicon.ico
+      target:           static/favicon.ico
+
+params:
+  subtitle:             "A collaborative lab book in your web browser"
+  description:          "MSM is a Flask-based web app that can run in the local network. Features include file import from Samba servers, sharing samples while protecting individual users' notes, LaTeX typesetting and many more..."
+  authors:              "Holger Graef"
+
+  current_version:      "0.1.0-dev"
+  docs_version:         "5.2"
+  github_org:           "https://github.com/HolgerGraef"
+  repo:                 "https://github.com/HolgerGraef/MSM"
+
+  download:
+    source:             "https://github.com/HolgerGraef/MSM/archive/refs/heads/master.zip"
+
+  anchors:
+    min: 2
+    max: 5

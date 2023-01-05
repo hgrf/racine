@@ -18,6 +18,7 @@ website:
 	cd build/bootstrap && npm install
 
 	cp site/config.yml build/bootstrap/config.yml
+	cp site/linkedin.svg build/bootstrap/site/layouts/partials/icons/linkedin.svg
 	cp site/docs-navbar.html build/bootstrap/site/layouts/partials/docs-navbar.html
 	cp site/favicons.html build/bootstrap/site/layouts/partials/favicons.html
 	cp site/footer.html build/bootstrap/site/layouts/partials/footer.html

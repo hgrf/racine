@@ -59,6 +59,7 @@ params:
   docs_version:         "5.2"
   github_org:           "https://github.com/HolgerGraef"
   repo:                 "https://github.com/HolgerGraef/MSM"
+  linkedin:             "https://www.linkedin.com/in/holgergraef"
 
   download:
     source:             "https://github.com/HolgerGraef/MSM/archive/refs/heads/master.zip"

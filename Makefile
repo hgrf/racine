@@ -35,6 +35,14 @@ website:
 	rm -rf ./_site
 	cp -r build/bootstrap/_site ./_site
 
+website-prepare-deploy: website
+	pre-commit uninstall
+	git stash
+	git checkout gh-pages
+	rm -rf docs
+	mv _site docs
+	git add docs
+
 hugo-serve:
 	cd build/bootstrap && hugo server --port 9001 --disableFastRender
 

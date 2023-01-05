@@ -185,6 +185,8 @@ install-ckeditor:
 	cp patches/build-config.js app/static/ckeditor/build-config.js
 	cp patches/pastefromexcel.js app/static/ckeditor/plugins/pastefromexcel/tests/pastefromexcel.js
 	cp patches/imagerotate/NOTES.md app/static/ckeditor/plugins/imagerotate/NOTES.md
+	python patches/langorder.py
+	python patches/timestamp.py
 
 	# remove unneeded files
 	rm -rf app/static/ckeditor/.github
@@ -195,8 +197,6 @@ install-ckeditor:
 	rm app/static/ckeditor/plugins/imagerotate/README.md
 
 	# replace strings
-	# TODO: the timestamp value is dynamic!
-	sed -i 's/N023/95e5d83/g' app/static/ckeditor/skins/moono-lisa/editor.css
 	sed -i 's/px!/px !/g' app/static/ckeditor/skins/moono-lisa/editor.css
 	sed -i 's/:url/: url/g' app/static/ckeditor/skins/moono-lisa/editor.css
 	sed -i 's/important}/important;}/g' app/static/ckeditor/skins/moono-lisa/editor.css

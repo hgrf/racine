@@ -67,6 +67,7 @@
 {% block scripts %}
 {{ super() }}
     <script>// because Jinja does not work in the JS files
+        var api_token = "{{ api_token }}";
         {% if sample is not none %}
             var sample_id = {{ sample.id }};
         {% endif %}

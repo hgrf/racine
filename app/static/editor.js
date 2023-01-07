@@ -711,27 +711,35 @@ $(document).ready(function() {
     $('.btn-ok').click( function(event) {
         var type = $(this).data('type');
         var id = $(this).attr('id');
+
         $.ajax({
-            url: "/del"+type+"/"+id,
-            success: function( data ) {
+            url: "/api/"+type+"/"+id,
+            type: "delete",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader ("Authorization", "Bearer " + api_token);
+            },
+            success: function( data, textStatus, jqXHR ) {
                 switch(type) {
+                    case "action":
+                        $('#'+id+'.list-entry').remove();
+                        break;
                     case "sample":
                         load_welcome(true);
                         load_navbar(undefined, undefined, false, true);
                         break;
-                    case "action":
-                        $('#'+id+'.list-entry').remove();
-                        break;
                     case "share":
                         $('#sharelistentry'+data.shareid).remove();
-                        if(data.code==2) { // if the user removed himself from the sharer list
+                        if(jqXHR.status == 205) { // if the user removed himself from the sharer list
                             load_welcome(true);
                             load_navbar(undefined, undefined, false, true);
                         }
                         break;
                 }
                 $('#confirm-delete').modal('hide');
+            },
+            error: function( jqXHR, textStatus ) {
+                error_dialog("Failed to execute request: "+jqXHR.responseText);
             }
-        });
+        })
     });
 });

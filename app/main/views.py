@@ -35,6 +35,7 @@ def index(sampleid=0):
     if not sampleid:
         return render_template(
             "main.html",
+            api_token=current_user.get_token(),
             sample=None,
             search_activated=True,
             newsampleform=NewSampleForm(),
@@ -45,6 +46,7 @@ def index(sampleid=0):
         return render_template("404.html"), 404
     return render_template(
         "main.html",
+        api_token=current_user.get_token(),
         sample=sample,
         search_activated=True,
         newsampleform=NewSampleForm(),
@@ -421,64 +423,6 @@ def createshare():
             n.dispatch()
 
     return jsonify(code=0, username=user.username, userid=user.id, shareid=share.id)
-
-
-@main.route("/delaction/<actionid>", methods=["GET", "POST"])
-@login_required
-def deleteaction(actionid):
-    action = Action.query.get(int(actionid))
-    if action == None or not action.has_write_access(current_user):
-        return render_template("404.html"), 404
-    sampleid = action.sample_id
-    db.session.delete(action)
-    record_activity("delete:action", current_user, Sample.query.get(sampleid))
-    db.session.commit()
-    return redirect("/sample/" + str(sampleid))
-
-
-@main.route("/delsample/<sampleid>", methods=["GET", "POST"])
-@login_required
-def deletesample(sampleid):
-    sample = Sample.query.get(int(sampleid))
-    # TODO: put this verification in a function
-    if sample is None or sample.owner != current_user or sample.isdeleted:
-        return render_template("404.html"), 404
-    record_activity("delete:sample", current_user, sample)
-    sample.isdeleted = True  # mark sample as "deleted"
-    db.session.commit()
-    return redirect("/")
-
-
-@main.route("/delshare/<shareid>", methods=["GET", "POST"])
-@login_required
-def deleteshare(shareid):
-    share = Share.query.get(int(shareid))
-
-    if share is None or share.sample is None:
-        return jsonify(code=1, error="Share or sample does not exist")
-
-    if share.sample.owner != current_user and share.user != current_user:
-        return jsonify(code=1, error="You do not have the right to perform this operation")
-
-    user = share.user
-
-    record_activity("delete:share", current_user, share.sample)
-    db.session.delete(share)
-    db.session.commit()
-
-    # re-dispatch news for this sample and for all children
-    affected_samples = [share.sample]
-    while affected_samples:
-        s = affected_samples.pop()
-        affected_samples.extend(s.children)
-        news = News.query.filter_by(sample_id=s.id).all()
-        for n in news:
-            n.dispatch()
-
-    if user == current_user:  # in this case the sample does not exist anymore for this user
-        return jsonify(code=2)
-
-    return jsonify(code=0, shareid=share.id)
 
 
 @main.route("/changeparent", methods=["POST"])

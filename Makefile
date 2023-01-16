@@ -50,11 +50,11 @@ hugo-serve:
 install-ckeditor:
 	# clone CKEditor 4.9.2
 	rm -rf /tmp/ckeditor4
-	git clone -b 4.9.2 --depth 1 git@github.com:ckeditor/ckeditor4.git /tmp/ckeditor4
+	git clone -b 4.9.2 --depth 1 https://github.com/ckeditor/ckeditor4.git /tmp/ckeditor4
 
 	# add scayt plugin
 	git clone -b release.4.9.2.0 --depth 1 \
-		git@github.com:WebSpellChecker/ckeditor-plugin-scayt.git \
+		https://github.com/WebSpellChecker/ckeditor-plugin-scayt.git \
 		/tmp/ckeditor4/plugins/scayt
 	cp patches/scayt.patch /tmp/ckeditor4/plugins/scayt/scayt.patch
 	cd /tmp/ckeditor4/plugins/scayt && git apply scayt.patch
@@ -62,19 +62,19 @@ install-ckeditor:
 
 	# add wsc plugin
 	git clone -b release.4.9.5 --depth 1 \
-		git@github.com:WebSpellChecker/ckeditor-plugin-wsc.git \
+		https://github.com/WebSpellChecker/ckeditor-plugin-wsc.git \
 		/tmp/ckeditor4/plugins/wsc
 
 	# add pastefromexcel plugin
 	git clone \
-		git@github.com:devlog/pastefromexcel.git \
+		https://github.com/devlog/pastefromexcel.git \
 		/tmp/ckeditor4/plugins/pastefromexcel
 	cd /tmp/ckeditor4/plugins/pastefromexcel && \
 		git checkout 74c5b19d68c4d0f2a5e781e3d27208c5379d5195
 
 	# add imagerotate plugin
 	git clone \
-		git@github.com:liias/imagerotate.git \
+		https://github.com/liias/imagerotate.git \
 		/tmp/ckeditor4/plugins/imagerotate
 	cd /tmp/ckeditor4/plugins/imagerotate && \
 		git checkout f2ba8746bcf0b31df4791008f2bf37ba7e958aca
@@ -228,7 +228,7 @@ install-bootstrap-toc:
 
 	rm -rf /tmp/bootstrap-toc
 	git clone -b v0.4.1 --depth 1 \
-		git@github.com:afeld/bootstrap-toc.git \
+		https://github.com/afeld/bootstrap-toc.git \
 		/tmp/bootstrap-toc
 	cp /tmp/bootstrap-toc/dist/bootstrap-toc.min.css app/static/bootstrap-toc.min.css
 	cp /tmp/bootstrap-toc/dist/bootstrap-toc.min.js app/static/bootstrap-toc.min.js
@@ -264,7 +264,7 @@ install-lightbox:
 	rm -rf app/static/lightbox2-master
 
 	git clone -b v2.8.2 --depth 1 \
-		git@github.com:lokesh/lightbox2.git \
+		https://github.com/lokesh/lightbox2.git \
 		app/static/lightbox2-master
 
 	rm -rf app/static/lightbox2-master/.git
@@ -273,7 +273,7 @@ install-mathjax:
 	rm -rf app/static/mathjax
 
 	git clone -b 2.7.1 --depth 1 \
-		git@github.com:mathjax/MathJax.git \
+		https://github.com/mathjax/MathJax.git \
 		app/static/mathjax
 
 	rm -rf app/static/mathjax/.git
@@ -283,7 +283,7 @@ install-typeahead:
 
 	rm -rf /tmp/typeahead.js
 	git clone -b v0.11.1 --depth 1 \
-		git@github.com:twitter/typeahead.js.git \
+		https://github.com/twitter/typeahead.js.git \
 		/tmp/typeahead.js
 	cp -r /tmp/typeahead.js/dist app/static/typeahead.js
 	rm -rf /tmp/typeahead.js
@@ -306,7 +306,7 @@ install-typeahead.js-bootstrap3.less:
 
 	rm -rf /tmp/typeahead.js-bootstrap3.less
 	git clone -b v0.2.3 --depth 1 \
-		git@github.com:hyspace/typeahead.js-bootstrap3.less.git \
+		https://github.com/hyspace/typeahead.js-bootstrap3.less.git \
 		/tmp/typeahead.js-bootstrap3.less
 	cp /tmp/typeahead.js-bootstrap3.less/typeahead.css app/static/typeahead.css
 	rm -rf /tmp/typeahead.js-bootstrap3.less

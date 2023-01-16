@@ -68,9 +68,9 @@ You can update the details (user name, email and password) of the administrator 
 
 You can set up a site name for usage statistics by writing it into a file "usage_stats_site" in the MSM folder.
 
-You can start the development server by simply executing the "run script":
+You can start the development server by simply executing:
 
-    $ ./run
+    $ make run-no-docker
 
 ## Using GitHub deploy keys
 

@@ -1,3 +1,4 @@
+var API;
 var sample_id;
 var term;
 var hiddeneditor;
@@ -436,6 +437,10 @@ function before_unload_handler(event, ignore, message) {
 }
 
 $(document).ready(function() {
+    var apiClient = new MsmApi.ApiClient(basePath="http://localhost:5000");
+    apiClient.authentications["bearerAuth"].accessToken = api_token;
+    API = new MsmApi.DefaultApi(apiClient);
+
     // Switch of automatic scroll restoration...
     // so that, if a popstate event occurs but the user does not want to leave the page, automatic scrolling to the top
     // is avoided. However, this means that if we navigate back to some page that was previously scrolled to a specific
@@ -712,6 +717,18 @@ $(document).ready(function() {
         var type = $(this).data('type');
         var id = $(this).attr('id');
 
+        if (type == "action") {
+            API.apiActionIdDelete(id, function(error, data, response) {
+                if (response.error) {
+                    error_dialog(response.error);
+                } else {
+                    $('#'+id+'.list-entry').remove();
+                }
+                $('#confirm-delete').modal('hide');
+            });
+            return;
+        }
+
         $.ajax({
             url: "/api/"+type+"/"+id,
             type: "delete",
@@ -720,9 +737,6 @@ $(document).ready(function() {
             },
             success: function( data, textStatus, jqXHR ) {
                 switch(type) {
-                    case "action":
-                        $('#'+id+'.list-entry').remove();
-                        break;
                     case "sample":
                         load_welcome(true);
                         load_navbar(undefined, undefined, false, true);

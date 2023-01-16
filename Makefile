@@ -3,6 +3,29 @@ install-dependencies:
 	pip install ${PIP_OPTIONS} -r requirements-dev.txt
 	pip install ${PIP_OPTIONS} -r requirements.txt
 
+api-client:
+	python -m pip install -r requirements.txt > /dev/null
+	python patches/generate-api-spec.py
+
+	cat patches/api.yaml >> api.yaml
+
+	rm -rf build/api-client
+	wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/6.2.1/openapi-generator-cli-6.2.1.jar \
+		-O build/openapi-generator-cli.jar
+	
+	java -jar build/openapi-generator-cli.jar generate -i api.yaml -g javascript -o build/api-client
+	cd build/api-client && npm install
+	cd build/api-client && npm install \
+		rollup \
+		rollup-plugin-polyfill-node \
+		@rollup/plugin-node-resolve \
+		@rollup/plugin-commonjs \
+		@rollup/plugin-json \
+		@rollup/plugin-terser
+
+	cp patches/rollup.config.js build/api-client/rollup.config.js
+	cd build/api-client && npx rollup -c --bundleConfigAsCjs
+
 website:
 	# clone bootstrap
 	rm -rf build/bootstrap

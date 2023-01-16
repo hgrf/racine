@@ -51,3 +51,14 @@ COPY ./uwsgi.ini /app/
 
 RUN cp -r /tmp/app_static/app/static /app/app/
 
+COPY ./patches/generate-api-spec.py /app/patches/generate-api-spec.py
+COPY ./patches/api.yaml /app/patches/api.yaml
+COPY ./patches/rollup.config.js /app/patches/rollup.config.js
+
+RUN apt install -y npm
+RUN npm install -g n
+RUN n stable
+RUN mkdir build && \
+    make api-client
+
+# RUN rm -rf /tmp/app_static

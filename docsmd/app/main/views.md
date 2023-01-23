@@ -14,7 +14,7 @@ Views
 
 ## changeparent
 
-[Show source in views.py:484](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L484)
+[Show source in views.py:428](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L428)
 
 #### Signature
 
@@ -29,7 +29,7 @@ def changeparent():
 
 ## createshare
 
-[Show source in views.py:389](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L389)
+[Show source in views.py:391](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L391)
 
 #### Signature
 
@@ -42,54 +42,9 @@ def createshare():
 
 
 
-## deleteaction
-
-[Show source in views.py:426](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L426)
-
-#### Signature
-
-```python
-@main.route("/delaction/<actionid>", methods=["GET", "POST"])
-@login_required
-def deleteaction(actionid):
-    ...
-```
-
-
-
-## deletesample
-
-[Show source in views.py:439](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L439)
-
-#### Signature
-
-```python
-@main.route("/delsample/<sampleid>", methods=["GET", "POST"])
-@login_required
-def deletesample(sampleid):
-    ...
-```
-
-
-
-## deleteshare
-
-[Show source in views.py:452](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L452)
-
-#### Signature
-
-```python
-@main.route("/delshare/<shareid>", methods=["GET", "POST"])
-@login_required
-def deleteshare(shareid):
-    ...
-```
-
-
-
 ## editor
 
-[Show source in views.py:185](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L185)
+[Show source in views.py:187](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L187)
 
 #### Signature
 
@@ -104,7 +59,7 @@ def editor(sampleid):
 
 ## getfield
 
-[Show source in views.py:746](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L746)
+[Show source in views.py:690](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L690)
 
 #### Signature
 
@@ -119,7 +74,7 @@ def getfield(target, field, id):
 
 ## help
 
-[Show source in views.py:231](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L231)
+[Show source in views.py:233](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L233)
 
 #### Signature
 
@@ -149,7 +104,7 @@ def index(sampleid=0):
 
 ## login_as
 
-[Show source in views.py:348](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L348)
+[Show source in views.py:350](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L350)
 
 #### Signature
 
@@ -164,7 +119,7 @@ def login_as():
 
 ## markasnews
 
-[Show source in views.py:566](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L566)
+[Show source in views.py:510](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L510)
 
 #### Signature
 
@@ -179,7 +134,7 @@ def markasnews():
 
 ## navbar
 
-[Show source in views.py:160](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L160)
+[Show source in views.py:162](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L162)
 
 #### Signature
 
@@ -194,7 +149,7 @@ def navbar():
 
 ## newaction
 
-[Show source in views.py:632](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L632)
+[Show source in views.py:576](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L576)
 
 #### Signature
 
@@ -209,7 +164,7 @@ def newaction(sampleid):
 
 ## newsample
 
-[Show source in views.py:539](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L539)
+[Show source in views.py:483](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L483)
 
 #### Signature
 
@@ -224,7 +179,7 @@ def newsample():
 
 ## search
 
-[Show source in views.py:238](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L238)
+[Show source in views.py:240](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L240)
 
 #### Signature
 
@@ -239,7 +194,7 @@ def search():
 
 ## static_file
 
-[Show source in views.py:677](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L677)
+[Show source in views.py:621](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L621)
 
 #### Signature
 
@@ -254,7 +209,7 @@ def static_file(path):
 
 ## str_to_bool
 
-[Show source in views.py:684](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L684)
+[Show source in views.py:628](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L628)
 
 #### Signature
 
@@ -267,7 +222,7 @@ def str_to_bool(str):
 
 ## swapactionorder
 
-[Show source in views.py:665](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L665)
+[Show source in views.py:609](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L609)
 
 #### Signature
 
@@ -282,7 +237,7 @@ def swapactionorder():
 
 ## togglearchived
 
-[Show source in views.py:363](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L363)
+[Show source in views.py:365](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L365)
 
 #### Signature
 
@@ -297,7 +252,7 @@ def togglearchived():
 
 ## togglecollaborative
 
-[Show source in views.py:376](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L376)
+[Show source in views.py:378](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L378)
 
 #### Signature
 
@@ -312,7 +267,7 @@ def togglecollaborative():
 
 ## unmarkasnews
 
-[Show source in views.py:602](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L602)
+[Show source in views.py:546](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L546)
 
 #### Signature
 
@@ -327,7 +282,7 @@ def unmarkasnews():
 
 ## updatefield
 
-[Show source in views.py:777](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L777)
+[Show source in views.py:721](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L721)
 
 #### Signature
 
@@ -342,7 +297,7 @@ def updatefield(target, field, id):
 
 ## userlist
 
-[Show source in views.py:290](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L290)
+[Show source in views.py:292](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L292)
 
 #### Signature
 
@@ -357,7 +312,7 @@ def userlist():
 
 ## validate_is_admin
 
-[Show source in views.py:693](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L693)
+[Show source in views.py:637](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L637)
 
 #### Signature
 
@@ -370,7 +325,7 @@ def validate_is_admin(str, item):
 
 ## welcome
 
-[Show source in views.py:55](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L55)
+[Show source in views.py:57](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L57)
 
 #### Signature
 

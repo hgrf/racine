@@ -28,6 +28,10 @@ website:
 		build/bootstrap/site/layouts/partials/home/masthead-followup.html
 	mkdir -p build/bootstrap/site/static/images
 	cp app/static/images/sample.png build/bootstrap/site/static/images/sample.png
+	cp site/IMGP8279.JPG build/bootstrap/site/static/images/IMGP8279.JPG
+	cp site/EB-FDP3_v3.jpeg build/bootstrap/site/static/images/EB-FDP3_v3.jpeg
+	cp site/IMG_7415_portrait.jpg build/bootstrap/site/static/images/IMG_7415_portrait.jpg
+	cp site/icons.html build/bootstrap/site/layouts/partials/icons.html
 
 	# build website
 	cd build/bootstrap && hugo --cleanDestinationDir

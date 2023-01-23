@@ -436,8 +436,16 @@ doc:
 	# replace main page of documentation
 	cp README.md docsmd/README.md
 
+	# add API page
+	mv swagger.json docsmd/swagger.json
+	cp patches/api.md docsmd/API.md
+
 	# convert to HTML documentation
+	echo -n "\nplugins:\n  - render_swagger" >> mkdocs.yml
 	python -m mkdocs build
 
 	# restore environment
 	python -m pip install -r requirements.txt > /dev/null
+
+doc-serve:
+	cd docs && python -m  http.server 8000

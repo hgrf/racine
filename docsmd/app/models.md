@@ -8,7 +8,7 @@ Models
 
 ## Action
 
-[Show source in models.py:300](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L300)
+[Show source in models.py:325](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L325)
 
 #### Signature
 
@@ -19,7 +19,7 @@ class Action(db.Model):
 
 ### Action().has_read_access
 
-[Show source in models.py:318](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L318)
+[Show source in models.py:343](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L343)
 
 #### Signature
 
@@ -30,7 +30,7 @@ def has_read_access(self, user):
 
 ### Action().has_write_access
 
-[Show source in models.py:327](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L327)
+[Show source in models.py:352](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L352)
 
 #### Signature
 
@@ -43,7 +43,7 @@ def has_write_access(self, user):
 
 ## Activity
 
-[Show source in models.py:443](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L443)
+[Show source in models.py:468](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L468)
 
 #### Signature
 
@@ -56,7 +56,7 @@ class Activity(db.Model):
 
 ## ActivityType
 
-[Show source in models.py:461](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L461)
+[Show source in models.py:486](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L486)
 
 #### Signature
 
@@ -69,7 +69,7 @@ class ActivityType(db.Model):
 
 ## LinkUserNews
 
-[Show source in models.py:394](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L394)
+[Show source in models.py:419](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L419)
 
 #### Signature
 
@@ -82,7 +82,7 @@ class LinkUserNews(db.Model):
 
 ## News
 
-[Show source in models.py:331](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L331)
+[Show source in models.py:356](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L356)
 
 #### Attributes
 
@@ -100,7 +100,7 @@ class News(db.Model):
 
 ### News().dispatch
 
-[Show source in models.py:352](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L352)
+[Show source in models.py:377](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L377)
 
 #### Signature
 
@@ -111,7 +111,7 @@ def dispatch(self):
 
 ### News().render_content
 
-[Show source in models.py:381](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L381)
+[Show source in models.py:406](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L406)
 
 #### Signature
 
@@ -124,7 +124,7 @@ def render_content(self):
 
 ## SMBResource
 
-[Show source in models.py:404](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L404)
+[Show source in models.py:429](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L429)
 
 #### Signature
 
@@ -137,7 +137,7 @@ class SMBResource(db.Model):
 
 ## Sample
 
-[Show source in models.py:186](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L186)
+[Show source in models.py:211](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L211)
 
 #### Attributes
 
@@ -156,7 +156,7 @@ class Sample(db.Model):
 
 ### Sample().is_accessible_for
 
-[Show source in models.py:237](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L237)
+[Show source in models.py:262](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L262)
 
 go through the owner and shares of this sample and check in the hierarchy (i.e. all parents)
 if it can be accessed by user
@@ -175,7 +175,7 @@ def is_accessible_for(self, user, indirect_only=False, direct_only=False):
 
 ### Sample().logical_parent
 
-[Show source in models.py:282](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L282)
+[Show source in models.py:307](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L307)
 
 #### Signature
 
@@ -187,7 +187,7 @@ def logical_parent(self):
 
 ### Sample().mountedsamples
 
-[Show source in models.py:268](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L268)
+[Show source in models.py:293](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L293)
 
 make a list of samples that are mounted in this one by the current user
 
@@ -203,7 +203,7 @@ def mountedsamples(self):
 
 ## Share
 
-[Show source in models.py:419](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L419)
+[Show source in models.py:444](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L444)
 
 #### Signature
 
@@ -216,7 +216,7 @@ class Share(db.Model):
 
 ## Upload
 
-[Show source in models.py:430](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L430)
+[Show source in models.py:455](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L455)
 
 #### Signature
 
@@ -229,7 +229,7 @@ class Upload(db.Model):
 
 ## User
 
-[Show source in models.py:115](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L115)
+[Show source in models.py:119](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L119)
 
 #### Signature
 
@@ -238,9 +238,21 @@ class User(UserMixin, db.Model):
     ...
 ```
 
+### User.check_token
+
+[Show source in models.py:198](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L198)
+
+#### Signature
+
+```python
+@staticmethod
+def check_token(token):
+    ...
+```
+
 ### User().directshares
 
-[Show source in models.py:167](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L167)
+[Show source in models.py:173](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L173)
 
 determine the user's direct shares that are not mounted anywhere in his tree
 (i.e. they are at the top level)
@@ -255,7 +267,7 @@ def directshares(self):
 
 ### User().generate_reset_token
 
-[Show source in models.py:149](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L149)
+[Show source in models.py:155](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L155)
 
 #### Signature
 
@@ -264,9 +276,20 @@ def generate_reset_token(self, expiration=3600):
     ...
 ```
 
+### User().get_token
+
+[Show source in models.py:186](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L186)
+
+#### Signature
+
+```python
+def get_token(self, expires_in=3600):
+    ...
+```
+
 ### User().password
 
-[Show source in models.py:138](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L138)
+[Show source in models.py:144](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L144)
 
 #### Signature
 
@@ -278,7 +301,7 @@ def password(self):
 
 ### User().password
 
-[Show source in models.py:142](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L142)
+[Show source in models.py:148](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L148)
 
 #### Signature
 
@@ -290,7 +313,7 @@ def password(self, password):
 
 ### User.reset_password
 
-[Show source in models.py:153](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L153)
+[Show source in models.py:159](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L159)
 
 #### Signature
 
@@ -300,9 +323,20 @@ def reset_password(token, new_password):
     ...
 ```
 
+### User().revoke_token
+
+[Show source in models.py:195](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L195)
+
+#### Signature
+
+```python
+def revoke_token(self):
+    ...
+```
+
 ### User().verify_password
 
-[Show source in models.py:146](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L146)
+[Show source in models.py:152](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L152)
 
 #### Signature
 
@@ -315,7 +349,7 @@ def verify_password(self, password):
 
 ## after_flush
 
-[Show source in models.py:97](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L97)
+[Show source in models.py:101](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L101)
 
 - check for any deleted samples or shares
 NB: This had to be done after the flush, because if a parent sample / mountpoint was deleted,
@@ -333,7 +367,7 @@ def after_flush(session, flush_context):
 
 ## deleted_sample_handler
 
-[Show source in models.py:14](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L14)
+[Show source in models.py:18](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L18)
 
 #### Signature
 
@@ -346,7 +380,7 @@ def deleted_sample_handler(session, sample):
 
 ## deleted_share_handler
 
-[Show source in models.py:66](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L66)
+[Show source in models.py:70](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L70)
 
 #### Signature
 
@@ -359,7 +393,7 @@ def deleted_share_handler(session, share):
 
 ## load_user
 
-[Show source in models.py:181](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L181)
+[Show source in models.py:206](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L206)
 
 #### Signature
 
@@ -373,7 +407,7 @@ def load_user(user_id):
 
 ## record_activity
 
-[Show source in models.py:472](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L472)
+[Show source in models.py:497](https://github.com/HolgerGraef/MSM/blob/master/app/models.py#L497)
 
 #### Signature
 
@@ -381,6 +415,3 @@ def load_user(user_id):
 def record_activity(type, user=None, sample=None, description=None, commit=False):
     ...
 ```
-
-
-

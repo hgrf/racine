@@ -49,6 +49,3 @@ def changepassword():
 def leave():
     ...
 ```
-
-
-

@@ -2,7 +2,7 @@
 ![coverage](https://raw.githubusercontent.com/HolgerGraef/MSM/python-coverage-comment-action-data/badge.svg)
 ![flake8](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/HolgerGraef/1cfaee423c85504cd204cf4649e2cf29/raw/flake8-badge.json)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Documentation Status](https://readthedocs.org/projects/msm/badge/?version=latest)](https://msm.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/msm/badge/?version=latest)](https://msm.readthedocs.io/en/latest/?badge=latest) [![Join the chat at https://gitter.im/Mercury-Sample-Manager/community](https://badges.gitter.im/Mercury-Sample-Manager/community.svg)](https://gitter.im/Mercury-Sample-Manager/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Mercury Sample Manager
 
@@ -68,9 +68,9 @@ You can update the details (user name, email and password) of the administrator 
 
 You can set up a site name for usage statistics by writing it into a file "usage_stats_site" in the MSM folder.
 
-You can start the development server by simply executing the "run script":
+You can start the development server by simply executing:
 
-    $ ./run
+    $ make run-no-docker
 
 ## Using GitHub deploy keys
 

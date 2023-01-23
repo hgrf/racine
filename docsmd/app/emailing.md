@@ -29,6 +29,3 @@ def read_mailconfig():
 def send_mail(to, subject, **kwargs):
     ...
 ```
-
-
-

@@ -43,6 +43,3 @@ class NewSMBResourceForm(FlaskForm):
 class NewUserForm(FlaskForm):
     ...
 ```
-
-
-

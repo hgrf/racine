@@ -43,6 +43,3 @@ class PasswordResetForm(FlaskForm):
 class PasswordResetRequestForm(FlaskForm):
     ...
 ```
-
-
-

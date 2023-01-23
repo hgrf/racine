@@ -19,6 +19,3 @@ Views
 def overview():
     ...
 ```
-
-
-

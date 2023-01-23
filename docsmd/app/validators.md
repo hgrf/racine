@@ -42,6 +42,3 @@ def username_already_registered(form, field):
 def validate_form_field(form, field, value):
     ...
 ```
-
-
-

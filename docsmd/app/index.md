@@ -20,6 +20,7 @@ def create_app(config_name):
 
 ## Modules
 
+- [Api](api/index.md)
 - [Auth](auth/index.md)
 - [Browser](browser/index.md)
 - [Config](./config.md)

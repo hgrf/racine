@@ -63,6 +63,3 @@ def validate_username(self, field):
 class ChangePasswordForm(FlaskForm):
     ...
 ```
-
-
-

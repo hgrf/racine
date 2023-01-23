@@ -79,6 +79,3 @@ class TestingConfig(Config):
 #### See also
 
 - [Config](#config)
-
-
-

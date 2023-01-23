@@ -3,12 +3,11 @@ install-dependencies:
 	pip install ${PIP_OPTIONS} -r requirements-dev.txt
 	pip install ${PIP_OPTIONS} -r requirements.txt
 
-api-client:
-	python -m pip install -r requirements.txt > /dev/null
+api-spec:
 	python patches/generate-api-spec.py
-
 	cat patches/api.yaml >> api.yaml
 
+api-client: api-spec
 	rm -rf build/api-client
 	wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/6.2.1/openapi-generator-cli-6.2.1.jar \
 		-O build/openapi-generator-cli.jar
@@ -443,7 +442,7 @@ flake8-badge:
 		\rprint(f'{badge.right_txt}@{badge.color}')\n \
 		\r\n" | python
 
-doc:
+doc: api-spec
 	# install dev requirements
 	pip install --upgrade -r requirements-dev.txt > /dev/null
 
@@ -469,13 +468,19 @@ doc:
 	mkdir -p docsmd/app/static/images
 	cp app/static/images/racine.svg docsmd/app/static/images/racine.svg
 
+	# enable code copy in documentation
 	sed -i 's/- content.code.annotate/- content.code.annotate\n    - content.code.copy/g' mkdocs.yml
 
+	# add API page
+	mv swagger.json docsmd/swagger.json
+	cp patches/api.md docsmd/API.md
+
 	# convert to HTML documentation
+	echo -n "\nplugins:\n  - render_swagger" >> mkdocs.yml
 	python -m mkdocs build
 
 	# restore environment
 	python -m pip install -r requirements.txt > /dev/null
 
 doc-serve:
-	cd docs && python -m  http.server 8000
+	cd docs && python -m http.server 8000

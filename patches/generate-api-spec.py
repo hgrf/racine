@@ -9,7 +9,7 @@ from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
 from apispec_webframeworks.flask import FlaskPlugin
 
-# import json
+import json
 
 
 spec = APISpec(
@@ -34,8 +34,8 @@ app = create_app("testing")
 with app.test_request_context():
     spec.path(view=api.actions.deleteaction)
 
-# with open("swagger.json", "w") as f:
-#    json.dump(spec.to_dict(), f)
+with open("swagger.json", "w") as f:
+    json.dump(spec.to_dict(), f)
 
 with open("api.yaml", "w") as f:
     f.write(spec.to_yaml())

@@ -49,9 +49,10 @@ Now you enter this directory and you create a virtual environment for python - a
     $ . venv/bin/activate
     $ pip install --upgrade pip
 
-Finally, all that remains to do is to install the required python packages:
+Finally, all that remains to do is to install the required python packages and JavaScript dependencies:
 
     $ pip install -r requirements.txt
+    $ make install-js-dependencies
     
 Now you have to initialise the database by running:
 
@@ -107,8 +108,14 @@ Build and run:
 
 ## Running with docker
 
-docker compose -f docker/docker-compose.yml build web
-docker compose -f docker/docker-compose.yml up web
+    make build
+    make run
+
+## Using pre-built images
+
+    mkdir msm && cd msm
+    wget holgergraef.github.io/MSM/docker-compose.yml
+    docker compose up web
 
 ## Deployment with gunicorn and nginx
 

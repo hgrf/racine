@@ -742,7 +742,7 @@ $(document).ready(function() {
                         load_navbar(undefined, undefined, false, true);
                         break;
                     case "share":
-                        $('#sharelistentry'+data.shareid).remove();
+                        $('#sharelistentry'+id).remove();
                         if(jqXHR.status == 205) { // if the user removed himself from the sharer list
                             load_welcome(true);
                             load_navbar(undefined, undefined, false, true);

@@ -7,11 +7,26 @@
 
 # Mercury Sample Manager
 
-This is Mercury Sample Manager, a sample management tool that enables researchers to keep track of
-their samples from any PC in a laboratory. The programme is a Flask-based web service that runs on a
-central server on the local network of your research institute and that can be accessed from all
-other computers on the same network using the normal web browser (should be a recent browser
-though).
+## Introduction
+
+Mercury Sample Manager is a tool that enables researchers to keep track of their samples from any PC
+in a laboratory. It is a Flask-based web service that runs on a central server in the local network
+of your research institute and that can be accessed from all other computers on the same network
+using the normal web browser.
+
+## Features
+
+* open source software
+* central data storage on a server in your lab
+* simple interface in your web browser
+* easy to set up using a pre-built docker image
+* hierarchical sample ordering
+* sample sharing between users
+* dated entries (actions) that can only be edited by the creator
+* image and attachment upload
+* image import from SMB servers
+* LaTeX type setting
+* print summaries for specific samples or time periods
 
 ## Disclaimer
 
@@ -27,20 +42,6 @@ used/available disk space.
     docker compose up web
 
 ## For developers: getting started
-
-### Coding style
-
-Install the developer requirements for MSM:
-
-    make install-dependencies
-
-In order to auto-correct coding style, use:
-
-    make black
-
-In order to run this as a pre-commit hook, use:
-
-    pre-commit install
 
 ### Installation of development server
 
@@ -59,12 +60,11 @@ Now you enter this directory and you create a virtual environment for python - a
     cd MSM
     python3 -m venv venv
     . venv/bin/activate
-    pip install --upgrade pip
 
 Finally, all that remains to do is to install the required python packages and JavaScript
 dependencies:
 
-    pip install -r requirements.txt
+    make install-dependencies
     make install-js-dependencies
     
 Now you have to initialise the database by running:
@@ -111,11 +111,21 @@ Build and run:
     make build
     make run
 
+### Coding style
+
+In order to auto-correct coding style, use:
+
+    make black
+
+In order to run this as a pre-commit hook, use:
+
+    pre-commit install
+
 ## Deployment with gunicorn and nginx
 
-Carry out the steps described above in order to set up the development server. Then configure
-gunicorn autostart by setting up a corresponding autostart file. This is explained below either for
-upstart or for systemd.
+Carry out the steps described above in order to [set up the development
+server](#installation-of-development-server). Then configure gunicorn autostart by setting up a
+corresponding autostart file. This is explained below either for upstart or for systemd.
 
 Please note that the app should be executed in the HTTP root, bugs should be expected when you
 install MSM in a subfolder.

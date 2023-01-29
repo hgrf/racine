@@ -22,6 +22,53 @@
 
 <link href="./docs/5.2/assets/css/docs.css" rel="stylesheet">
 
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+
+<style>
+    .carousel-inner .carousel-item div p {
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 20px;
+      padding-right: 20px;
+      max-width: 400px;
+    }
+
+    @media (max-width: 767px) {
+        .carousel-inner .carousel-item > div {
+            display: none;
+        }
+        .carousel-inner .carousel-item > div:first-child {
+            display: block;
+        }
+    }
+    
+    .carousel-inner .carousel-item.active,
+    .carousel-inner .carousel-item-next,
+    .carousel-inner .carousel-item-prev {
+        display: flex;
+    }
+    
+     
+    @media (min-width: 768px) {
+        .carousel-inner .carousel-item-end.active,
+        .carousel-inner .carousel-item-next {
+          transform: translateX(50%);
+        }
+        
+        .carousel-inner .carousel-item-start.active, 
+        .carousel-inner .carousel-item-prev {
+          transform: translateX(-50%);
+        }
+
+        .carousel-inner .carousel-item-end,
+        .carousel-inner .carousel-item-start { 
+          transform: translateX(0);
+        }
+    }
+</style>
+
 <!-- Favicons -->
 <link rel="apple-touch-icon" href="./images/sample.png" sizes="180x180">
 <link rel="icon" href="./images/sample.png" sizes="32x32" type="image/png">
@@ -244,6 +291,7 @@
   </div>
 
   
+  
   <div id="carouselMultiItemExample" class="carousel slide carousel-dark text-center" data-bs-ride="false">
     
     <div class="d-flex justify-content-center mb-4">
@@ -259,37 +307,24 @@
       </button>
     </div>
     
-    <div class="carousel-inner py-4">
+    <div class="carousel-inner" role="listbox">
       
-      <div class="carousel-item active">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-2"></div>
-
-            <div class="col-lg-4">
+        <div class="carousel-item active">
+            <div class="col-md-6 col-12">
               <img class="rounded-circle shadow-1-strong mb-4"
                 src="./images/IMGP8279.JPG" alt="avatar"
                 style="width: 150px;" />
               <h5 class="mb-3">Dr. Rebeca Ribeiro-Palau</h5>
-              <p>
-                CNRS Researcher, Center for Nanoscience and Nanotechnology, Palaiseau, France
-              </p>
+              <p>CNRS Researcher, Center for Nanoscience and Nanotechnology, Palaiseau, France</p>
               <p class="text-muted">
                 <i class="fas fa-quote-left pe-2"></i>
-                MSM is a great lab tool! We use it as a log book for samples, equipment and data
-                treatment, and to keep everybody updated. Everything in our lab is always on
-                Mercury!
+                MSM is a great lab tool! We use it as a log book for samples, equipment and data treatment, and to keep everybody updated. Everything in our lab is always on Mercury!
               </p>
-              <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-              </ul>
             </div>
-
-            <div class="col-lg-4 d-none d-lg-block">
+        </div>
+      
+        <div class="carousel-item">
+            <div class="col-md-6 col-12">
               <img class="rounded-circle shadow-1-strong mb-4"
                 src="./images/EB-FDP3_v3.jpeg" alt="avatar"
                 style="width: 150px;" />
@@ -297,32 +332,13 @@
               <p>University Professor, ML4Q, University of Cologne, Germany</p>
               <p class="text-muted">
                 <i class="fas fa-quote-left pe-2"></i>
-                User friendly and easily administrable, simple and powerful, the Mercury Sample
-                Manager is perfectly suited to our needs. A great tool for our group! 
+                User friendly and easily administrable, simple and powerful, the Mercury Sample Manager is perfectly suited to our needs. A great tool for our group!
               </p>
-              <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li>
-                  <i class="fas fa-star-half-alt fa-sm"></i>
-                </li>
-              </ul>
             </div>
-
-            <div class="col-lg-2 d-none d-lg-block"></div>
-          </div>
         </div>
-      </div>
-
       
-      <div class="carousel-item">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-4"></div>
-
-            <div class="col-lg-4 d-none d-lg-block">
+        <div class="carousel-item">
+            <div class="col-md-6 col-12">
               <img class="rounded-circle shadow-1-strong mb-4"
                 src="./images/IMG_7415_portrait.jpg" alt="avatar"
                 style="width: 150px;" />
@@ -330,24 +346,11 @@
               <p>Developer of MSM</p>
               <p class="text-muted">
                 <i class="fas fa-quote-left pe-2"></i>
-                When I realized that keeping track of multiple samples over numerous fabrication
-                and characterization steps inside and outside of the cleanroom using paper
-                notebooks was rather tedious, I started developing MSM and have used it myself for
-                over four years.
+                When I realized that keeping track of multiple samples over numerous fabrication and characterization steps inside and outside of the cleanroom using paper notebooks was rather tedious, I started developing MSM and have used it myself for over four years.
               </p>
-              <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="far fa-star fa-sm"></i></li>
-              </ul>
             </div>
-
-            <div class="col-lg-4"></div>
-          </div>
         </div>
-      </div>
+      
     </div>
     
   </div>
@@ -392,6 +395,25 @@
 
 
 
+
+
+<script>
+  let items = document.querySelectorAll('.carousel .carousel-item')
+
+  items.forEach((el) => {
+    const minPerSlide = 2
+    let next = el.nextElementSibling
+    for (var i=1; i<minPerSlide; i++) {
+      if (!next) {
+        
+        next = items[0]
+      }
+      let cloneChild = next.cloneNode(true)
+      el.appendChild(cloneChild.children[0])
+      next = next.nextElementSibling
+    }
+  })
+</script>
 
 <script src="./docs/5.2/assets/js/docs.min.js"></script>
 

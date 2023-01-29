@@ -22,6 +22,53 @@
 
 <link href="./docs/5.2/assets/css/docs.css" rel="stylesheet">
 
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+
+<style>
+    .carousel-inner .carousel-item div p {
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 20px;
+      padding-right: 20px;
+      max-width: 400px;
+    }
+
+    @media (max-width: 767px) {
+        .carousel-inner .carousel-item > div {
+            display: none;
+        }
+        .carousel-inner .carousel-item > div:first-child {
+            display: block;
+        }
+    }
+    
+    .carousel-inner .carousel-item.active,
+    .carousel-inner .carousel-item-next,
+    .carousel-inner .carousel-item-prev {
+        display: flex;
+    }
+    
+     
+    @media (min-width: 768px) {
+        .carousel-inner .carousel-item-end.active,
+        .carousel-inner .carousel-item-next {
+          transform: translateX(50%);
+        }
+        
+        .carousel-inner .carousel-item-start.active, 
+        .carousel-inner .carousel-item-prev {
+          transform: translateX(-50%);
+        }
+
+        .carousel-inner .carousel-item-end,
+        .carousel-inner .carousel-item-start { 
+          transform: translateX(0);
+        }
+    }
+</style>
+
 <!-- Favicons -->
 <link rel="apple-touch-icon" href="./images/sample.png" sizes="180x180">
 <link rel="icon" href="./images/sample.png" sizes="32x32" type="image/png">
@@ -212,6 +259,25 @@
 
 
 
+
+
+<script>
+  let items = document.querySelectorAll('.carousel .carousel-item')
+
+  items.forEach((el) => {
+    const minPerSlide = 2
+    let next = el.nextElementSibling
+    for (var i=1; i<minPerSlide; i++) {
+      if (!next) {
+        
+        next = items[0]
+      }
+      let cloneChild = next.cloneNode(true)
+      el.appendChild(cloneChild.children[0])
+      next = next.nextElementSibling
+    }
+  })
+</script>
 
 <script src="./docs/5.2/assets/js/docs.min.js"></script>
 

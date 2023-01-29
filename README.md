@@ -7,18 +7,28 @@
 
 # Mercury Sample Manager
 
-This is Mercury Sample Manager, a sample management tool that enables researchers
-to keep track of their samples from any PC in a laboratory. The programme is a Flask-based web service that runs on a
-central server on the local network of your research institute and that can be accessed from all other computers on the
-same network using the normal web browser (should be a recent browser though).
+This is Mercury Sample Manager, a sample management tool that enables researchers to keep track of
+their samples from any PC in a laboratory. The programme is a Flask-based web service that runs on a
+central server on the local network of your research institute and that can be accessed from all
+other computers on the same network using the normal web browser (should be a recent browser
+though).
 
 ## Disclaimer
 
-The developers take no responsibility for the loss or theft of data managed by this software.
-The software sends anonymous usage statistics to the developers, including the software version, the number of users,
-samples and actions stored in the database, the server uptime and the used/available disk space.
+The developers take no responsibility for the loss or theft of data managed by this software. The
+software sends anonymous usage statistics to the developers, including the software version, the
+number of users, samples and actions stored in the database, the server uptime and the
+used/available disk space.
 
-## Coding style
+## Using pre-built images
+
+    mkdir msm && cd msm
+    wget holgergraef.github.io/MSM/docker-compose.yml
+    docker compose up web
+
+## For developers: getting started
+
+### Coding style
 
 Install the developer requirements for MSM:
 
@@ -32,14 +42,15 @@ In order to run this as a pre-commit hook, use:
 
     pre-commit install
 
-## Installation of development server
+### Installation of development server
 
-This programme should work an almost any platform (Linux, Windows, MacOS), but I only provide the installation
-instructions for Linux. Seeing that you should install it on a server, I suppose Linux is the target OS in most
-cases anyways.
+This programme should work an almost any platform (Linux, Windows, MacOS), but I only provide the
+installation instructions for Linux. Seeing that you should install it on a server, I suppose Linux
+is the target OS in most cases anyways.
 
-You should have python 3.x and python3-venv installed on your system. Using a virtual environment is not absolutely necessary, but I recommend it. You can now create a folder somewhere
-and clone the git repository:
+You should have python 3.x and python3-venv installed on your system. Using a virtual environment is
+not absolutely necessary, but I recommend it. You can now create a folder somewhere and clone the
+git repository:
 
     git clone git@github.com:HolgerGraef/MSM.git
 
@@ -50,7 +61,8 @@ Now you enter this directory and you create a virtual environment for python - a
     . venv/bin/activate
     pip install --upgrade pip
 
-Finally, all that remains to do is to install the required python packages and JavaScript dependencies:
+Finally, all that remains to do is to install the required python packages and JavaScript
+dependencies:
 
     pip install -r requirements.txt
     make install-js-dependencies
@@ -59,29 +71,34 @@ Now you have to initialise the database by running:
 
     python manage.py db upgrade
     
-Note that, if you want to initialise the database for deployment (i.e. in the "production" configuration), you should
-first set up the FLASK_CONFIG variable accordingly:
+Note that, if you want to initialise the database for deployment (i.e. in the "production"
+configuration), you should first set up the FLASK_CONFIG variable accordingly:
 
     export FLASK_CONFIG=production && python manage.py db upgrade
 
-This will also create the admin user that you will use for your first login (admin@admin.com, password is admin).
+This will also create the admin user that you will use for your first login (admin@admin.com,
+password is admin).
 
-You can update the details (user name, email and password) of the administrator in the "Profile" section (you will find the corresponding button on the top right after logging in). Also remember to set up an email account in the corresponding subsection of the "Settings" page.
+You can update the details (user name, email and password) of the administrator in the "Profile"
+section (you will find the corresponding button on the top right after logging in). Also remember to
+set up an email account in the corresponding subsection of the "Settings" page.
 
-You can set up a site name for usage statistics by writing it into a file "usage_stats_site" in the MSM folder.
+You can set up a site name for usage statistics by writing it into a file "usage_stats_site" in the
+MSM folder.
 
 You can start the development server by simply executing:
 
     make run-no-docker
 
-## Development with docker
+### Development with docker
 
 Set up some tools:
 
 1. install Docker, see https://docs.docker.com/engine/install/ubuntu/
 2. install pywatchman:
     - sudo apt install watchman
-    - `pip install -i https://test.pypi.org/simple/ pywatchman==1.4.2.dev1` (c.f. https://github.com/facebook/watchman/issues/970)
+    - `pip install -i https://test.pypi.org/simple/ pywatchman==1.4.2.dev1` (c.f.
+      https://github.com/facebook/watchman/issues/970)
 
 
 Build and run:
@@ -89,32 +106,30 @@ Build and run:
     make build-dev
     make run-dev
 
-## Running with docker
+### Build and run production version with docker
 
     make build
     make run
 
-## Using pre-built images
-
-    mkdir msm && cd msm
-    wget holgergraef.github.io/MSM/docker-compose.yml
-    docker compose up web
-
 ## Deployment with gunicorn and nginx
 
-Carry out the steps described above in order to set up the development server. Then configure gunicorn autostart
-by setting up a corresponding autostart file. This is explained below either for upstart or for systemd.
+Carry out the steps described above in order to set up the development server. Then configure
+gunicorn autostart by setting up a corresponding autostart file. This is explained below either for
+upstart or for systemd.
 
-Please note that the app should be executed in the HTTP root, bugs should be expected when you install MSM in a
-subfolder.
+Please note that the app should be executed in the HTTP root, bugs should be expected when you
+install MSM in a subfolder.
 
-Note the use of the `--preload` option for gunicorn in the following, which ensures that the thread for reporting
-usage statistics is only started once (before the worker processes are forked). Also note that you can test the
-multiprocessing behaviour in your development environment by running e.g.:
+Note the use of the `--preload` option for gunicorn in the following, which ensures that the thread
+for reporting usage statistics is only started once (before the worker processes are forked). Also
+note that you can test the multiprocessing behaviour in your development environment by running
+e.g.:
 
     gunicorn [--preload] --workers 4 --bind 127.0.0.1 manage:app
 
-## For upstart
+### Setting up the MSM service
+
+#### with upstart
 
 Create the file /etc/init/msm.conf and copy the following code into it:
 
@@ -132,9 +147,11 @@ Create the file /etc/init/msm.conf and copy the following code into it:
     chdir [path]/MSM
     exec gunicorn --preload --workers 4 --bind unix:msm.sock -m 007 manage:app
 
-Where you will have to replace [user name] by your user name and [path] by the path where you installed the programme. The second path (/usr/bin) is where you should have installed the git executable.
+Where you will have to replace [user name] by your user name and [path] by the path where you
+installed the programme. The second path (/usr/bin) is where you should have installed the git
+executable.
 
-## For systemd
+#### with systemd
 
 Create the file /lib/systemd/system/msm.service and copy the following code into it:
 
@@ -154,16 +171,19 @@ Create the file /lib/systemd/system/msm.service and copy the following code into
     [Install]
     WantedBy=multi-user.target
 
-Where you will have to replace [user name] by your user name and [path] by the path where you installed the programme. The second path (/usr/bin) is where you should have installed the git executable.
+Where you will have to replace [user name] by your user name and [path] by the path where you
+installed the programme. The second path (/usr/bin) is where you should have installed the git
+executable.
 
-Note that for the execution of gunicorn, the group has to be set to `www-data` so that the `msm.sock` file is accessible
-for the nginx server (this also applies to the upstart configuration above).
+Note that for the execution of gunicorn, the group has to be set to `www-data` so that the
+`msm.sock` file is accessible for the nginx server (this also applies to the upstart configuration
+above).
 
 Now activate autostart:
 
     sudo systemctl enable msm
 
-## in both cases, continue here:
+### Setting up nginx
 
 Now install nginx:
 
@@ -174,9 +194,11 @@ Create an SSL certificate and key in the following folder:
     sudo mkdir /etc/nginx/ssl
     cd /etc/nginx/ssl
 
-In order to create SSL certificate and key follow the steps given in https://www.digitalocean.com/community/tutorials/how-to-create-a-ssl-certificate-on-nginx-for-ubuntu-12-04
+In order to create SSL certificate and key follow the steps given in
+https://www.digitalocean.com/community/tutorials/how-to-create-a-ssl-certificate-on-nginx-for-ubuntu-12-04
 
-You then want to configure your nginx server. Create a file "msm" in /etc/nginx/sites-available and copy the following content into it:
+You then want to configure your nginx server. Create a file "msm" in /etc/nginx/sites-available and
+copy the following content into it:
 
     server {
         listen 80;
@@ -201,14 +223,14 @@ You then want to configure your nginx server. Create a file "msm" in /etc/nginx/
         }
     }
 
-Where - again - you have to replace [path] by the path to the application's directory. Then create a symbolic link to
-this file in /etc/nginx/sites-enabled and delete the default entry:
+Where - again - you have to replace [path] by the path to the application's directory. Then create a
+symbolic link to this file in /etc/nginx/sites-enabled and delete the default entry:
 
     sudo ln -s /etc/nginx/sites-available/msm /etc/nginx/sites-enabled
     sudo rm /etc/nginx/sites-enabled/default
 
-If you want your server to support large file uploads, you have to change /etc/nginx/nginx.conf and add the following
-line to the http context to increase the size limit (in this example 5 Megabytes):
+If you want your server to support large file uploads, you have to change /etc/nginx/nginx.conf and
+add the following line to the http context to increase the size limit (in this example 5 Megabytes):
 
     # set client body size to 5M #
     client_max_body_size 5M;
@@ -225,4 +247,5 @@ If you use upstart, for systemd type:
 
 The server will now automatically - i.e. also after a reboot - be available on localhost.
 
-More details: https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-14-04
+More details:
+https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-14-04

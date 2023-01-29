@@ -24,6 +24,7 @@ theme:
     - navigation.instant
     - navigation.tracking
     - content.code.annotate
+    - content.code.copy
 markdown_extensions:
   - admonition
   - pymdownx.details

@@ -421,6 +421,8 @@ doc:
 	# replace main page of documentation
 	cp README.md docsmd/README.md
 
+	sed -i 's/- content.code.annotate/- content.code.annotate\n    - content.code.copy/g' mkdocs.yml
+
 	# convert to HTML documentation
 	python -m mkdocs build
 

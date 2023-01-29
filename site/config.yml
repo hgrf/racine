@@ -80,3 +80,17 @@ params:
   anchors:
     min: 2
     max: 5
+
+  testimonials:
+    - name:           "Dr. Rebeca Ribeiro-Palau"
+      img:            "IMGP8279.JPG"
+      role:           "CNRS Researcher, Center for Nanoscience and Nanotechnology, Palaiseau, France"
+      text:           "MSM is a great lab tool! We use it as a log book for samples, equipment and data treatment, and to keep everybody updated. Everything in our lab is always on Mercury!"
+    - name:           "Prof. Dr. Erwann Bocquillon"
+      img:            "EB-FDP3_v3.jpeg"
+      role:           "University Professor, ML4Q, University of Cologne, Germany"
+      text:           "User friendly and easily administrable, simple and powerful, the Mercury Sample Manager is perfectly suited to our needs. A great tool for our group!"
+    - name:           "Holger Graef"
+      img:            "IMG_7415_portrait.jpg"
+      role:           "Developer of MSM"
+      text:           "When I realized that keeping track of multiple samples over numerous fabrication and characterization steps inside and outside of the cleanroom using paper notebooks was rather tedious, I started developing MSM and have used it myself for over four years."

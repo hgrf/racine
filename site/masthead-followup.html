@@ -44,6 +44,7 @@
     <h2 class="display-5 mb-3 fw-semibold lh-sm">Testimonials</h2>
   </div>
 
+  <!-- credit: https://mdbootstrap.com/docs/standard/extended/testimonial-slider/#section-multiitem-carousel -->
   <!-- Carousel wrapper -->
   <div id="carouselMultiItemExample" class="carousel slide carousel-dark text-center" data-bs-ride="false">
     <!-- Controls -->
@@ -60,95 +61,22 @@
       </button>
     </div>
     <!-- Inner -->
-    <div class="carousel-inner py-4">
-      <!-- Single item -->
-      <div class="carousel-item active">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-2"></div>
-
-            <div class="col-lg-4">
+    <div class="carousel-inner" role="listbox">
+      {{ range $i, $t := .Site.Params.testimonials }}
+        <div class="carousel-item{{ if eq $i 0 }} active{{ end }}">
+            <div class="col-md-6 col-12">
               <img class="rounded-circle shadow-1-strong mb-4"
-                src="./images/IMGP8279.JPG" alt="avatar"
+                src="./images/{{ $t.img }}" alt="avatar"
                 style="width: 150px;" />
-              <h5 class="mb-3">Dr. Rebeca Ribeiro-Palau</h5>
-              <p>
-                CNRS Researcher, Center for Nanoscience and Nanotechnology, Palaiseau, France
-              </p>
+              <h5 class="mb-3">{{ $t.name }}</h5>
+              <p>{{ $t.role }}</p>
               <p class="text-muted">
                 <i class="fas fa-quote-left pe-2"></i>
-                MSM is a great lab tool! We use it as a log book for samples, equipment and data
-                treatment, and to keep everybody updated. Everything in our lab is always on
-                Mercury!
+                {{ $t.text }}
               </p>
-              <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-              </ul>
             </div>
-
-            <div class="col-lg-4 d-none d-lg-block">
-              <img class="rounded-circle shadow-1-strong mb-4"
-                src="./images/EB-FDP3_v3.jpeg" alt="avatar"
-                style="width: 150px;" />
-              <h5 class="mb-3">Prof. Dr. Erwann Bocquillon</h5>
-              <p>University Professor, ML4Q, University of Cologne, Germany</p>
-              <p class="text-muted">
-                <i class="fas fa-quote-left pe-2"></i>
-                User friendly and easily administrable, simple and powerful, the Mercury Sample
-                Manager is perfectly suited to our needs. A great tool for our group! 
-              </p>
-              <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li>
-                  <i class="fas fa-star-half-alt fa-sm"></i>
-                </li>
-              </ul>
-            </div>
-
-            <div class="col-lg-2 d-none d-lg-block"></div>
-          </div>
         </div>
-      </div>
-
-      <!-- Single item -->
-      <div class="carousel-item">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-4"></div>
-
-            <div class="col-lg-4 d-none d-lg-block">
-              <img class="rounded-circle shadow-1-strong mb-4"
-                src="./images/IMG_7415_portrait.jpg" alt="avatar"
-                style="width: 150px;" />
-              <h5 class="mb-3">Holger Graef</h5>
-              <p>Developer of MSM</p>
-              <p class="text-muted">
-                <i class="fas fa-quote-left pe-2"></i>
-                When I realized that keeping track of multiple samples over numerous fabrication
-                and characterization steps inside and outside of the cleanroom using paper
-                notebooks was rather tedious, I started developing MSM and have used it myself for
-                over four years.
-              </p>
-              <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="fas fa-star fa-sm"></i></li>
-                <li><i class="far fa-star fa-sm"></i></li>
-              </ul>
-            </div>
-
-            <div class="col-lg-4"></div>
-          </div>
-        </div>
-      </div>
+      {{ end }}
     </div>
     <!-- Inner -->
   </div>

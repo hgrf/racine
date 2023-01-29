@@ -11,13 +11,56 @@
 
 <link rel="canonical" href="{{ .Permalink }}">
 
-{{- if eq .Page.Layout "docs" -}}
-<link rel="preconnect" href="https://AK7KMZKZHQ-dsn.algolia.net" crossorigin>
-{{- end }}
-
 {{ with .Params.robots -}}
 <meta name="robots" content="{{ . }}">
 {{- end }}
 
 {{ partial "stylesheet" . }}
+
+<!-- TODO: should be in stylesheet.html-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+
+<style>
+    .carousel-inner .carousel-item div p {
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 20px;
+      padding-right: 20px;
+      max-width: 400px;
+    }
+
+    @media (max-width: 767px) {
+        .carousel-inner .carousel-item > div {
+            display: none;
+        }
+        .carousel-inner .carousel-item > div:first-child {
+            display: block;
+        }
+    }
+    
+    .carousel-inner .carousel-item.active,
+    .carousel-inner .carousel-item-next,
+    .carousel-inner .carousel-item-prev {
+        display: flex;
+    }
+    
+    /* medium and up screens */
+    @media (min-width: 768px) {
+        .carousel-inner .carousel-item-end.active,
+        .carousel-inner .carousel-item-next {
+          transform: translateX(50%);
+        }
+        
+        .carousel-inner .carousel-item-start.active, 
+        .carousel-inner .carousel-item-prev {
+          transform: translateX(-50%);
+        }
+
+        .carousel-inner .carousel-item-end,
+        .carousel-inner .carousel-item-start { 
+          transform: translateX(0);
+        }
+    }
+</style>
+
 {{ partial "favicons" . }}

@@ -32,6 +32,7 @@ website:
 	cp site/EB-FDP3_v3.jpeg build/bootstrap/site/static/images/EB-FDP3_v3.jpeg
 	cp site/IMG_7415_portrait.jpg build/bootstrap/site/static/images/IMG_7415_portrait.jpg
 	cp site/icons.html build/bootstrap/site/layouts/partials/icons.html
+	cp site/scripts.html build/bootstrap/site/layouts/partials/scripts.html
 
 	# build website
 	cd build/bootstrap && hugo --cleanDestinationDir

@@ -437,7 +437,7 @@ function before_unload_handler(event, ignore, message) {
 }
 
 $(document).ready(function() {
-    var apiClient = new MsmApi.ApiClient(basePath="http://localhost:5000");
+    var apiClient = new MsmApi.ApiClient(basePath=window.location.origin);
     apiClient.authentications["bearerAuth"].accessToken = api_token;
     API = new MsmApi.DefaultApi(apiClient);
 

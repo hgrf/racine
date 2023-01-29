@@ -41,6 +41,9 @@ website:
 	rm -rf ./_site
 	cp -r build/bootstrap/_site ./_site
 
+	# add docker-compose.yml
+	cp docker/docker-compose.yml ./_site/docker-compose.yml
+
 website-prepare-deploy: website
 	pre-commit uninstall
 	git stash

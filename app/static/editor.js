@@ -718,7 +718,7 @@ $(document).ready(function() {
         var id = $(this).attr('id');
 
         if (type == "action") {
-            API.apiActionIdDelete(id, function(error, data, response) {
+            API.deleteAction(id, function(error, data, response) {
                 if (response.error) {
                     error_dialog(response.error);
                 } else {

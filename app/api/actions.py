@@ -24,6 +24,7 @@ def deleteaction(id):
     """Delete an action from the database.
     ---
     delete:
+      operationId: deleteAction
       parameters:
       - in: path
         schema: IdParameter

@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  web:
+    image: holgergraef/msm
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: msm
+    ports:
+      - "80:80"
+    volumes:
+      - uploads:/app/uploads
+      - database:/app/database
+  web-dev:
+    container_name: msm-dev
+    image: msm-dev
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: msm-base
+    ports:
+      - "8080:80"
+    volumes:
+      - ..:/app
+volumes:
+  uploads:
+  database:

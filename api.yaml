@@ -13,6 +13,7 @@ tags:
 paths:
   /api/action/{id}:
     delete:
+      operationId: deleteAction
       parameters:
       - in: path
         name: id

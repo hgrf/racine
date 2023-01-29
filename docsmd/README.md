@@ -2,7 +2,8 @@
 ![coverage](https://raw.githubusercontent.com/HolgerGraef/MSM/python-coverage-comment-action-data/badge.svg)
 ![flake8](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/HolgerGraef/1cfaee423c85504cd204cf4649e2cf29/raw/flake8-badge.json)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Documentation Status](https://readthedocs.org/projects/msm/badge/?version=latest)](https://msm.readthedocs.io/en/latest/?badge=latest) [![Join the chat at https://gitter.im/Mercury-Sample-Manager/community](https://badges.gitter.im/Mercury-Sample-Manager/community.svg)](https://gitter.im/Mercury-Sample-Manager/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Documentation Status](https://readthedocs.org/projects/msm/badge/?version=latest)](https://msm.readthedocs.io/en/latest/?badge=latest)
+[![Join the chat at https://gitter.im/Mercury-Sample-Manager/community](https://badges.gitter.im/Mercury-Sample-Manager/community.svg)](https://gitter.im/Mercury-Sample-Manager/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Mercury Sample Manager
 
@@ -40,28 +41,28 @@ cases anyways.
 You should have python 3.x and python3-venv installed on your system. Using a virtual environment is not absolutely necessary, but I recommend it. You can now create a folder somewhere
 and clone the git repository:
 
-    $ git clone git@github.com:HolgerGraef/MSM.git
+    git clone git@github.com:HolgerGraef/MSM.git
 
 Now you enter this directory and you create a virtual environment for python - and activate it:
 
-    $ cd MSM
-    $ python3 -m venv venv
-    $ . venv/bin/activate
-    $ pip install --upgrade pip
+    cd MSM
+    python3 -m venv venv
+    . venv/bin/activate
+    pip install --upgrade pip
 
 Finally, all that remains to do is to install the required python packages and JavaScript dependencies:
 
-    $ pip install -r requirements.txt
-    $ make install-js-dependencies
+    pip install -r requirements.txt
+    make install-js-dependencies
     
 Now you have to initialise the database by running:
 
-    $ python manage.py db upgrade
+    python manage.py db upgrade
     
 Note that, if you want to initialise the database for deployment (i.e. in the "production" configuration), you should
 first set up the FLASK_CONFIG variable accordingly:
 
-    $ export FLASK_CONFIG=production && python manage.py db upgrade
+    export FLASK_CONFIG=production && python manage.py db upgrade
 
 This will also create the admin user that you will use for your first login (admin@admin.com, password is admin).
 
@@ -71,7 +72,7 @@ You can set up a site name for usage statistics by writing it into a file "usage
 
 You can start the development server by simply executing:
 
-    $ make run-no-docker
+    make run-no-docker
 
 ## Development with docker
 
@@ -111,21 +112,21 @@ Note the use of the `--preload` option for gunicorn in the following, which ensu
 usage statistics is only started once (before the worker processes are forked). Also note that you can test the
 multiprocessing behaviour in your development environment by running e.g.:
 
-    gunicorn [--preload] --workers 4 --bind 127.0.0.1 manage:app 
+    gunicorn [--preload] --workers 4 --bind 127.0.0.1 manage:app
 
 ## For upstart
 
 Create the file /etc/init/msm.conf and copy the following code into it:
- 
+
     description "Gunicorn application server running Mercury Sample Manager"
-    
+
     start on runlevel [2345]
     stop on runlevel [!2345]
-    
+
     respawn
     setuid [user name]
     setgid www-data
-    
+
     env FLASK_CONFIG=production
     env PATH=[path]/MSM/venv/bin:/usr/bin
     chdir [path]/MSM
@@ -166,12 +167,12 @@ Now activate autostart:
 
 Now install nginx:
 
-    $ sudo apt-get install nginx
+    sudo apt-get install nginx
 
 Create an SSL certificate and key in the following folder:
 
-    $ sudo mkdir /etc/nginx/ssl
-    $ cd /etc/nginx/ssl
+    sudo mkdir /etc/nginx/ssl
+    cd /etc/nginx/ssl
 
 In order to create SSL certificate and key follow the steps given in https://www.digitalocean.com/community/tutorials/how-to-create-a-ssl-certificate-on-nginx-for-ubuntu-12-04
 
@@ -203,8 +204,8 @@ You then want to configure your nginx server. Create a file "msm" in /etc/nginx/
 Where - again - you have to replace [path] by the path to the application's directory. Then create a symbolic link to
 this file in /etc/nginx/sites-enabled and delete the default entry:
 
-    $ sudo ln -s /etc/nginx/sites-available/msm /etc/nginx/sites-enabled
-    $ sudo rm /etc/nginx/sites-enabled/default
+    sudo ln -s /etc/nginx/sites-available/msm /etc/nginx/sites-enabled
+    sudo rm /etc/nginx/sites-enabled/default
 
 If you want your server to support large file uploads, you have to change /etc/nginx/nginx.conf and add the following
 line to the http context to increase the size limit (in this example 5 Megabytes):
@@ -214,13 +215,13 @@ line to the http context to increase the size limit (in this example 5 Megabytes
 
 You can now start your server by executing:
  
-    $ sudo start msm
-    $ sudo service nginx restart
+    sudo start msm
+    sudo service nginx restart
     
 If you use upstart, for systemd type:
 
-    $ sudo systemctl start msm
-    $ sudo systemctl restart nginx
+    sudo systemctl start msm
+    sudo systemctl restart nginx
 
 The server will now automatically - i.e. also after a reboot - be available on localhost.
 

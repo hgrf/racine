@@ -2,7 +2,7 @@
 ![coverage](https://raw.githubusercontent.com/HolgerGraef/MSM/python-coverage-comment-action-data/badge.svg)
 ![flake8](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/HolgerGraef/1cfaee423c85504cd204cf4649e2cf29/raw/flake8-badge.json)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Documentation Status](https://readthedocs.org/projects/msm/badge/?version=latest)](https://msm.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/msm/badge/?version=latest)](https://msm.readthedocs.io/en/latest/?badge=latest) [![Join the chat at https://gitter.im/Mercury-Sample-Manager/community](https://badges.gitter.im/Mercury-Sample-Manager/community.svg)](https://gitter.im/Mercury-Sample-Manager/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Mercury Sample Manager
 
@@ -49,9 +49,10 @@ Now you enter this directory and you create a virtual environment for python - a
     $ . venv/bin/activate
     $ pip install --upgrade pip
 
-Finally, all that remains to do is to install the required python packages:
+Finally, all that remains to do is to install the required python packages and JavaScript dependencies:
 
     $ pip install -r requirements.txt
+    $ make install-js-dependencies
     
 Now you have to initialise the database by running:
 
@@ -68,27 +69,9 @@ You can update the details (user name, email and password) of the administrator 
 
 You can set up a site name for usage statistics by writing it into a file "usage_stats_site" in the MSM folder.
 
-You can start the development server by simply executing the "run script":
+You can start the development server by simply executing:
 
-    $ ./run
-
-## Using GitHub deploy keys
-
-As long as this is a private repository, access can be granted using deploy keys. You can generate a public/private key
-pair by executing `ssh-keygen -t rsa -C "[email address]"` and copy the content of the corresponding public key file to
-the "Deploy Keys" section in the repository's settings page on GitHub. Note that if the key is not the default key
-(`~/.ssh/id_rsa`), you need to set up a config file for ssh (`~/.ssh/config`), e.g.:
-
-    Host msm.github.com
-      HostName github.com
-      User git
-      IdentityFile /home/[user]/.ssh/msm_rsa
-      IdentitiesOnly yes
-      
-In this case, we defined a new hostname for github.com (msm.github.com) for the key file `msm_rsa` and the above
-`git clone` command has to be modified as follows:
-
-    git clone git@msm.github.com:HolgerGraef/MSM.git
+    $ make run-no-docker
 
 ## Development with docker
 
@@ -107,8 +90,14 @@ Build and run:
 
 ## Running with docker
 
-docker compose -f docker/docker-compose.yml build web
-docker compose -f docker/docker-compose.yml up web
+    make build
+    make run
+
+## Using pre-built images
+
+    mkdir msm && cd msm
+    wget holgergraef.github.io/MSM/docker-compose.yml
+    docker compose up web
 
 ## Deployment with gunicorn and nginx
 

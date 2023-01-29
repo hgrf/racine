@@ -380,6 +380,3 @@ def validate_is_admin(str, item):
 def welcome():
     ...
 ```
-
-
-

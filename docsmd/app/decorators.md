@@ -16,6 +16,3 @@ Decorators
 def admin_required(f):
     ...
 ```
-
-
-

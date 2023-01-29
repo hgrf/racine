@@ -381,6 +381,3 @@ def load_user(user_id):
 def record_activity(type, user=None, sample=None, description=None, commit=False):
     ...
 ```
-
-
-

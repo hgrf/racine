@@ -34,6 +34,3 @@ Test that the app can be instantiated.
 def test_instantiate_app():
     ...
 ```
-
-
-

@@ -17,6 +17,3 @@ Forms
 class RequestActionsForm(FlaskForm):
     ...
 ```
-
-
-

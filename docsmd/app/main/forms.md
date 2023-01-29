@@ -54,6 +54,3 @@ class NewSampleForm(FlaskForm):
 def validate_newsampleparentid(self, field):
     ...
 ```
-
-
-

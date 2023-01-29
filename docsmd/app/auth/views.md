@@ -61,6 +61,3 @@ def password_reset(token):
 def password_reset_request():
     ...
 ```
-
-
-

@@ -77,6 +77,3 @@ path_on_server : str
 def process_smb_path(self, path):
     ...
 ```
-
-
-

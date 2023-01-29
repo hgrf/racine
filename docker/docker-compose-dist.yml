@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  web:
+    image: holgergraef/msm
+    ports:
+      - "80:80"
+    volumes:
+      - uploads:/app/uploads
+      - database:/app/database
+volumes:
+  uploads:
+  database:

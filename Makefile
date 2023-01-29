@@ -33,6 +33,8 @@ website:
 	cp site/IMG_7415_portrait.jpg build/bootstrap/site/static/images/IMG_7415_portrait.jpg
 	cp site/icons.html build/bootstrap/site/layouts/partials/icons.html
 	cp site/scripts.html build/bootstrap/site/layouts/partials/scripts.html
+	cp site/_navbar.scss build/bootstrap/site/assets/scss/_navbar.scss
+	cp site/_variables.scss build/bootstrap/site/assets/scss/_variables.scss
 
 	# build website
 	cd build/bootstrap && hugo --cleanDestinationDir

@@ -428,3 +428,6 @@ doc:
 
 	# restore environment
 	python -m pip install -r requirements.txt > /dev/null
+
+doc-serve:
+	cd docs && python -m  http.server 8000

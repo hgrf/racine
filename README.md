@@ -73,24 +73,6 @@ You can start the development server by simply executing:
 
     $ make run-no-docker
 
-## Using GitHub deploy keys
-
-As long as this is a private repository, access can be granted using deploy keys. You can generate a public/private key
-pair by executing `ssh-keygen -t rsa -C "[email address]"` and copy the content of the corresponding public key file to
-the "Deploy Keys" section in the repository's settings page on GitHub. Note that if the key is not the default key
-(`~/.ssh/id_rsa`), you need to set up a config file for ssh (`~/.ssh/config`), e.g.:
-
-    Host msm.github.com
-      HostName github.com
-      User git
-      IdentityFile /home/[user]/.ssh/msm_rsa
-      IdentitiesOnly yes
-      
-In this case, we defined a new hostname for github.com (msm.github.com) for the key file `msm_rsa` and the above
-`git clone` command has to be modified as follows:
-
-    git clone git@msm.github.com:HolgerGraef/MSM.git
-
 ## Development with docker
 
 Set up some tools:

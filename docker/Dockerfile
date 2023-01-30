@@ -23,17 +23,11 @@ COPY ./patches /tmp/app_static/patches
 
 RUN cd /tmp/app_static && \
     mkdir -p app/static && \
-    make install-js-dependencies
+    make install-js-dependencies && \
+    make install-bootstrap
 
-# remove prestart script from base image
-RUN rm /app/prestart.sh
-
-# Move the base entrypoint to reuse it
-RUN mv /entrypoint.sh /uwsgi-nginx-flask-entrypoint.sh
-COPY ./docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]
+# replace prestart script from base image
+COPY ./docker/prestart.sh /app/prestart.sh
 
 # Run the start script provided by the parent image tiangolo/uwsgi-nginx.
 # It will check for an /app/prestart.sh script (e.g. for migrations)
@@ -50,4 +44,3 @@ COPY ./manage.py /app/
 COPY ./uwsgi.ini /app/
 
 RUN cp -r /tmp/app_static/app/static /app/app/
-

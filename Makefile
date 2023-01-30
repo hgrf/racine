@@ -335,6 +335,11 @@ clean-js-dependencies:
 	rm -rf app/static/mathjax
 	rm -rf app/static/typeahead.js
 
+install-bootstrap:	# only for docker build
+	git clone -b 3.3.7.1 --depth 1 https://github.com/mbr/flask-bootstrap.git /tmp/flask-bootstrap
+	mv /tmp/flask-bootstrap/flask_bootstrap/static ./app/static/bootstrap
+	rm -rf /tmp/flask-bootstrap
+
 build: down
 	docker compose -f docker/docker-compose.yml build web
 

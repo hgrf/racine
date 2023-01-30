@@ -321,6 +321,8 @@ install-typeahead.js-bootstrap3.less:
 	cp /tmp/typeahead.js-bootstrap3.less/typeahead.css app/static/typeahead.css
 	rm -rf /tmp/typeahead.js-bootstrap3.less
 
+	git apply patches/typeahead.css.patch
+
 install-js-dependencies: install-bootstrap-toc install-ckeditor install-jquery install-jquery.jeditable install-jquery-ui install-lightbox install-mathjax install-typeahead install-typeahead.js-bootstrap3.less
 	echo ""
 

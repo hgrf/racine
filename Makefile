@@ -31,6 +31,7 @@ website:
 	cp site/IMGP8279.JPG build/bootstrap/site/static/images/IMGP8279.JPG
 	cp site/EB-FDP3_v3.jpeg build/bootstrap/site/static/images/EB-FDP3_v3.jpeg
 	cp site/IMG_7415_portrait.jpg build/bootstrap/site/static/images/IMG_7415_portrait.jpg
+	cp site/IMG_20230201_133822_575.jpg build/bootstrap/site/static/images/IMG_20230201_133822_575.jpg
 	cp site/icons.html build/bootstrap/site/layouts/partials/icons.html
 	cp site/scripts.html build/bootstrap/site/layouts/partials/scripts.html
 	cp site/_navbar.scss build/bootstrap/site/assets/scss/_navbar.scss

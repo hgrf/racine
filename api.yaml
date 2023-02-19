@@ -82,11 +82,11 @@ components:
       properties:
         csrf_token:
           type: string
-        description:
-          type: string
         timestamp:
           type: string
           format: date
+        description:
+          type: string
     CreateActionError:
       type: object
       properties:

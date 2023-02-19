@@ -455,7 +455,8 @@ doc: api-spec
 		--theme material \
 		--name "Racine" \
 		--output-path docsmd \
-		app
+		app \
+		--exclude app/api
 
 	rm requirements.mkdocs.txt
 	sed -i 's/requirements.mkdocs.txt/requirements.txt/g' .readthedocs.yml

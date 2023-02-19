@@ -720,7 +720,8 @@ $(document).ready(function() {
         var type = $(this).data('type');
         var id = $(this).attr('id');
 
-        if (type == "action") {
+        switch(type) {
+        case "action":
             API.deleteAction(id, function(error, data, response) {
                 if (response.error) {
                     error_dialog(response.error);
@@ -729,8 +730,8 @@ $(document).ready(function() {
                 }
                 $('#confirm-delete').modal('hide');
             });
-            return;
-        } else if(type == "sample") {
+            break;
+        case "sample":
             API.deleteSample(id, function(error, data, response) {
                 if (response.error) {
                     error_dialog(response.error);
@@ -740,30 +741,17 @@ $(document).ready(function() {
                 }
                 $('#confirm-delete').modal('hide');
             });
-            return;
-        }
-
-        $.ajax({
-            url: "/api/"+type+"/"+id,
-            type: "delete",
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader ("Authorization", "Bearer " + api_token);
-            },
-            success: function( data, textStatus, jqXHR ) {
-                switch(type) {
-                    case "share":
-                        $('#sharelistentry'+id).remove();
-                        if(jqXHR.status == 205) { // if the user removed himself from the sharer list
-                            load_welcome(true);
-                            load_navbar(undefined, undefined, false, true);
-                        }
-                        break;
+            break;
+        case "share":
+            API.deleteShare(id, function(error, data, response) {
+                $('#sharelistentry'+id).remove();
+                if(response.status == 205) { // if the user removed himself from the sharer list
+                    load_welcome(true);
+                    load_navbar(undefined, undefined, false, true);
                 }
                 $('#confirm-delete').modal('hide');
-            },
-            error: function( jqXHR, textStatus ) {
-                error_dialog("Failed to execute request: "+jqXHR.responseText);
-            }
-        })
+            });
+            break;
+        }
     });
 });

@@ -1,5 +1,6 @@
 from . import api
 from .auth import token_auth
+from .common import IdParameter, EmptySchema
 from .errors import bad_request
 
 from .. import db
@@ -10,6 +11,25 @@ from ..models import News, Share, record_activity
 @api.route("/share/<int:id>", methods=["DELETE"])
 @token_auth.login_required
 def deleteshare(id):
+    """Delete a share from the database.
+    ---
+    delete:
+      operationId: deleteShare
+      parameters:
+      - in: path
+        schema: IdParameter
+      responses:
+        204:
+          content:
+            application/json:
+              schema: EmptySchema
+          description: Share deleted
+        205:
+          content:
+            application/json:
+              schema: EmptySchema
+          description: Share deleted, sample no longer accessible for current user
+    """
     share = Share.query.get(id)
     if share is None or share.sample is None:
         return bad_request("Share or sample does not exist")

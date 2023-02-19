@@ -1,11 +1,78 @@
+from flask import jsonify, request
+from marshmallow import Schema, fields
+
 from . import api
 from .auth import token_auth
 from .common import IdParameter, EmptySchema
 from .errors import bad_request
 
 from .. import db
+from ..models import Sample, User
 
 from ..models import News, Share, record_activity
+
+
+class CreateShareContent(Schema):
+    sampleid = fields.Int()
+    userid = fields.Int()
+    username = fields.Str()
+
+
+class CreateShareError(Schema):
+    pass
+
+
+@api.route("/share", methods=["PUT"])
+@token_auth.login_required
+def createshare():
+    """Create a share in the database.
+    ---
+    put:
+      operationId: createShare
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema: CreateShareContent
+      responses:
+        201:
+          content:
+            application/json:
+              schema: EmptySchema
+          description: Share created
+        400:
+          content:
+            application/json:
+              schema: CreateShareError
+          description: Failed to create share
+    """
+    sample = Sample.query.get(int(request.form.get("sampleid")))
+    user = None
+    if request.form.get("userid"):
+        user = User.query.get(int(request.form.get("userid")))
+    elif request.form.get("username"):
+        user = User.query.filter_by(username=(request.form.get("username"))).first()
+    if user is None:
+        return bad_request("No valid user ID or name given")
+    if sample is None or sample.owner != token_auth.current_user() or sample.isdeleted:
+        return bad_request("Sample does not exist or you do not have the right to access it")
+    if user in [x.user for x in sample.shares]:
+        return bad_request("This share already exists")
+    share = Share(sample=sample, user=user, mountpoint_id=0)
+    db.session.add(share)
+    record_activity("add:share", token_auth.current_user(), sample)
+    db.session.commit()
+
+    # re-dispatch news for this sample and for all children
+    affected_samples = [sample]
+    while affected_samples:
+        s = affected_samples.pop()
+        affected_samples.extend(s.children)
+        news = News.query.filter_by(sample_id=s.id).all()
+        for n in news:
+            n.dispatch()
+
+    return jsonify(username=user.username, userid=user.id, shareid=share.id), 201
 
 
 @api.route("/share/<int:id>", methods=["DELETE"])

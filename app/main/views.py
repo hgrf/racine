@@ -244,6 +244,7 @@ def search():
     if keyword is None or keyword == "":
         return jsonify(error="Please specify a search term")
     keyword = keyword.lower()
+
     # In order to reach really ALL samples that are accessible by the current user, we need to go through the hierarchy.
     # The most tricky samples to catch are the children of a sample that the user shares with someone else and that are
     # not explicitly shared with the user.
@@ -386,43 +387,6 @@ def togglecollaborative():
     sample.iscollaborative = not sample.iscollaborative
     db.session.commit()
     return jsonify(code=0, iscollaborative=sample.iscollaborative)
-
-
-@main.route("/createshare", methods=["POST"])
-@login_required
-def createshare():
-    sample = Sample.query.get(int(request.form.get("sampleid")))
-    user = None
-    if request.form.get("userid"):
-        user = User.query.get(int(request.form.get("userid")))
-    elif request.form.get("username"):
-        user = User.query.filter_by(username=(request.form.get("username"))).first()
-    if user is None:
-        return jsonify(code=1, error="No valid user ID or name given"), 500
-    if sample is None or sample.owner != current_user or sample.isdeleted:
-        return (
-            jsonify(
-                code=1, error="Sample does not exist or you do not have the right to access it"
-            ),
-            500,
-        )
-    if user in [x.user for x in sample.shares]:
-        return jsonify(code=1, error="This share already exists"), 500
-    share = Share(sample=sample, user=user, mountpoint_id=0)
-    db.session.add(share)
-    record_activity("add:share", current_user, sample)
-    db.session.commit()
-
-    # re-dispatch news for this sample and for all children
-    affected_samples = [sample]
-    while affected_samples:
-        s = affected_samples.pop()
-        affected_samples.extend(s.children)
-        news = News.query.filter_by(sample_id=s.id).all()
-        for n in news:
-            n.dispatch()
-
-    return jsonify(code=0, username=user.username, userid=user.id, shareid=share.id)
 
 
 @main.route("/changeparent", methods=["POST"])

@@ -45,6 +45,43 @@
                 }
             }
         },
+        "/api/share": {
+            "put": {
+                "operationId": "createShare",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateShareContent"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Empty"
+                                }
+                            }
+                        },
+                        "description": "Share created"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateShareError"
+                                }
+                            }
+                        },
+                        "description": "Failed to create share"
+                    }
+                }
+            }
+        },
         "/api/share/{id}": {
             "delete": {
                 "operationId": "deleteShare",
@@ -161,6 +198,24 @@
     "components": {
         "schemas": {
             "Empty": {
+                "type": "object",
+                "properties": {}
+            },
+            "CreateShareContent": {
+                "type": "object",
+                "properties": {
+                    "sampleid": {
+                        "type": "integer"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "userid": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "CreateShareError": {
                 "type": "object",
                 "properties": {}
             },

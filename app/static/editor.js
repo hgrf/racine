@@ -507,18 +507,22 @@ $(document).ready(function() {
     });
 
     function shareselected(event, suggestion) {
-        $.ajax({
-            url: "/createshare",
-            type: "post",
-            data: { "sampleid": sample_id, "username": $('#username').val() },
-            success: function( data ) {
-                $('#userbrowser').modal('hide');
-                $('#sharelist').append('<div class="sharelistentry" id="sharelistentry' + data.shareid + '"><a data-type="share" data-id="' + data.shareid + '" data-toggle="modal" data-target="#confirm-delete" href=""><i class="glyphicon glyphicon-remove"></i></a>\n' + data.username + '</div>');
-            },
-            error: function( request, status, message ) {
-                $('#userbrowser').modal('hide');
-                error_dialog(request.responseJSON.error);
+        API.createShare(
+            { "sampleid": sample_id, "username": $('#username').val() },
+            function(error, data, response) {
+            if (response.error) {
+                error_dialog(response.error);
+            } else {
+                $('#sharelist').append(
+                    '<div class="sharelistentry" id="sharelistentry' + data.shareid + '">' +
+                        '<a data-type="share" data-id="' + data.shareid + '" data-toggle="modal" ' +
+                                'data-target="#confirm-delete" href="">' + 
+                            '<i class="glyphicon glyphicon-remove"></i>' +
+                        '</a>\n' + data.username + 
+                    '</div>'
+                );
             }
+            $('#userbrowser').modal('hide');
         });
     }
 

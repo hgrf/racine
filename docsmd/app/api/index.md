@@ -10,6 +10,7 @@ Api
 
 - [Actions](./actions.md)
 - [Auth](./auth.md)
+- [Common](./common.md)
 - [Errors](./errors.md)
 - [Samples](./samples.md)
 - [Shares](./shares.md)

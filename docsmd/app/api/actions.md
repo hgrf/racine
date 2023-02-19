@@ -9,7 +9,7 @@ Actions
 
 ## CreateActionError
 
-[Show source in actions.py:24](https://github.com/HolgerGraef/MSM/blob/master/app/api/actions.py#L24)
+[Show source in actions.py:25](https://github.com/HolgerGraef/MSM/blob/master/app/api/actions.py#L25)
 
 #### Signature
 
@@ -20,35 +20,9 @@ class CreateActionError(Schema):
 
 
 
-## EmptySchema
-
-[Show source in actions.py:32](https://github.com/HolgerGraef/MSM/blob/master/app/api/actions.py#L32)
-
-#### Signature
-
-```python
-class EmptySchema(Schema):
-    ...
-```
-
-
-
-## IdParameter
-
-[Show source in actions.py:28](https://github.com/HolgerGraef/MSM/blob/master/app/api/actions.py#L28)
-
-#### Signature
-
-```python
-class IdParameter(Schema):
-    ...
-```
-
-
-
 ## NewActionFormContent
 
-[Show source in actions.py:18](https://github.com/HolgerGraef/MSM/blob/master/app/api/actions.py#L18)
+[Show source in actions.py:19](https://github.com/HolgerGraef/MSM/blob/master/app/api/actions.py#L19)
 
 #### Signature
 
@@ -61,7 +35,7 @@ class NewActionFormContent(Schema):
 
 ## SampleParameter
 
-[Show source in actions.py:14](https://github.com/HolgerGraef/MSM/blob/master/app/api/actions.py#L14)
+[Show source in actions.py:15](https://github.com/HolgerGraef/MSM/blob/master/app/api/actions.py#L15)
 
 #### Signature
 
@@ -74,7 +48,7 @@ class SampleParameter(Schema):
 
 ## createaction
 
-[Show source in actions.py:36](https://github.com/HolgerGraef/MSM/blob/master/app/api/actions.py#L36)
+[Show source in actions.py:29](https://github.com/HolgerGraef/MSM/blob/master/app/api/actions.py#L29)
 
 Create an action in the database.
 ---
@@ -113,7 +87,7 @@ def createaction(sampleid):
 
 ## deleteaction
 
-[Show source in actions.py:95](https://github.com/HolgerGraef/MSM/blob/master/app/api/actions.py#L95)
+[Show source in actions.py:88](https://github.com/HolgerGraef/MSM/blob/master/app/api/actions.py#L88)
 
 Delete an action from the database.
 ---

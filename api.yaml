@@ -11,6 +11,22 @@ tags:
 - name: MSM
   description: Endpoints related to MSM
 paths:
+  /api/sample/{id}:
+    delete:
+      operationId: deleteSample
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      responses:
+        '204':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+          description: Sample deleted
   /api/action/{sampleid}:
     put:
       operationId: createAction
@@ -58,19 +74,19 @@ paths:
 openapi: 3.0.2
 components:
   schemas:
+    Empty:
+      type: object
+      properties: {}
     NewActionFormContent:
       type: object
       properties:
-        description:
-          type: string
         csrf_token:
+          type: string
+        description:
           type: string
         timestamp:
           type: string
           format: date
-    Empty:
-      type: object
-      properties: {}
     CreateActionError:
       type: object
       properties:

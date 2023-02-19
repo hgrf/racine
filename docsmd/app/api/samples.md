@@ -11,6 +11,20 @@ Samples
 
 [Show source in samples.py:10](https://github.com/HolgerGraef/MSM/blob/master/app/api/samples.py#L10)
 
+Delete a sample from the database.
+---
+delete:
+  operationId: deleteSample
+  parameters:
+  - in: path
+    schema: IdParameter
+  responses:
+    204:
+      content:
+        application/json:
+          schema: EmptySchema
+      description: Sample deleted
+
 #### Signature
 
 ```python

@@ -4,6 +4,7 @@ from marshmallow import Schema, fields
 
 from . import api
 from .auth import token_auth
+from .common import IdParameter, EmptySchema
 from .errors import bad_request
 from ..main.forms import NewActionForm
 
@@ -23,14 +24,6 @@ class NewActionFormContent(Schema):
 
 class CreateActionError(Schema):
     resubmit = fields.Bool()
-
-
-class IdParameter(Schema):
-    id = fields.Int()
-
-
-class EmptySchema(Schema):
-    pass
 
 
 @api.route("/action/<int:sampleid>", methods=["PUT"])

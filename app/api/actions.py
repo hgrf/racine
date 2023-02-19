@@ -1,13 +1,28 @@
+from datetime import date
+from flask import jsonify
+from marshmallow import Schema, fields
+
 from . import api
 from .auth import token_auth
 from .errors import bad_request
+from ..main.forms import NewActionForm
 
 from .. import db
-
 from ..models import Action, Sample, record_activity
 
 
-from marshmallow import Schema, fields
+class SampleParameter(Schema):
+    sampleid = fields.Int()
+
+
+class NewActionFormContent(Schema):
+    csrf_token = fields.Str()
+    timestamp = fields.Date()
+    description = fields.Str()
+
+
+class CreateActionError(Schema):
+    resubmit = fields.Bool()
 
 
 class IdParameter(Schema):
@@ -16,6 +31,65 @@ class IdParameter(Schema):
 
 class EmptySchema(Schema):
     pass
+
+
+@api.route("/action/<int:sampleid>", methods=["PUT"])
+@token_auth.login_required
+def createaction(sampleid):
+    """Create an action in the database.
+    ---
+    put:
+      operationId: createAction
+      parameters:
+      - in: path
+        schema: SampleParameter
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema: NewActionFormContent
+      responses:
+        201:
+          content:
+            application/json:
+              schema: EmptySchema
+          description: Action created
+        400:
+          content:
+            application/json:
+              schema: CreateActionError
+          description: Failed to create action
+    """
+    sample = Sample.query.get(sampleid)
+    if (
+        sample is None
+        or not sample.is_accessible_for(token_auth.current_user())
+        or sample.isdeleted
+    ):
+        return bad_request("Sample does not exist or you do not have the right to access it")
+
+    form = NewActionForm()
+    if form.validate_on_submit():
+        a = Action(
+            datecreated=date.today(),
+            timestamp=form.timestamp.data,
+            owner=token_auth.current_user(),
+            sample_id=sampleid,
+            description=form.description.data,
+        )
+        db.session.add(a)
+        record_activity("add:action", token_auth.current_user(), sample)
+        db.session.commit()
+        a.ordnum = a.id  # add ID as order number (maybe there is a more elegant way to do this?)
+        db.session.commit()
+    # if form was submitted but failed validation, show again to user
+    # this is very important for the case where form is not validated because the
+    # CSRF token passed its time limit (typically 3600s) -> users lose everything they
+    # wrote otherwise (also happens when user enters invalid date)
+    elif form.is_submitted():
+        return jsonify(resubmit=True), 400
+
+    return "", 201
 
 
 @api.route("/action/<int:id>", methods=["DELETE"])

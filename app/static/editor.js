@@ -175,30 +175,33 @@ function init_editor(scrolltotop) {
         // make sure content of editor is transmitted
         CKEDITOR.instances['description'].updateElement();
 
-        $.ajax({
-            url: "/newaction/"+sample_id,
-            type: "post",
-            data: $('#newactionform').serialize(),
-            success: function( data ) {
-                if(data.code != 0) {
+        var formdata = {};
+        $('#newactionform').serializeArray().map(function(x){formdata[x.name] = x.value;});
+        console.log(formdata);
+
+        API.createAction(sample_id, formdata, function(error, data, response) {
+            if (response.error) {
+                if (response.body.resubmit) {
                     // form failed validation; because of invalid data or expired CSRF token
                     // we still reload the sample in order to get a new CSRF token, but we
                     // want to keep the text that the user has written in the description field
-                    $(document).one("editor_initialised", data, function(event) {
+                    $(document).one("editor_initialised", formdata, function(event) {
                         CKEDITOR.instances.description.setData(event.data.description);
-                        error_dialog("Form is not valid. Either you entered an invalid date or the session has " +
-                            "expired. Try submitting again.");
+                        error_dialog("Form is not valid. Either you entered an invalid date " +
+                                     "or the session has expired. Try submitting again.");
                     });
+                } else {
+                    error_dialog(response.error);
+                    return;
                 }
-                // reload the sample
-                // TODO: it would be sufficient to just add the new action
-                CKEDITOR.instances['description'].destroy();     // destroy it so that it doesn't bother us with
-                                                                 // confirmation dialogs when we reload the sample
-                load_sample(sample_id, false, false, false);
-            },
-            error: function( jqXHR, textStatus ) {
-                error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
             }
+
+            // reload the sample
+            // TODO: it would be sufficient to just add the new action
+            // destroy it so that it doesn't bother us with confirmation dialogs when we
+            // reload the sample
+            CKEDITOR.instances['description'].destroy();
+            load_sample(sample_id, false, false, false);
         });
     });
 

@@ -80,12 +80,12 @@ components:
     NewActionFormContent:
       type: object
       properties:
-        csrf_token:
-          type: string
         timestamp:
           type: string
           format: date
         description:
+          type: string
+        csrf_token:
           type: string
     CreateActionError:
       type: object

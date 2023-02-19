@@ -27,6 +27,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/Empty'
           description: Sample deleted
+  /api/share/{id}:
+    delete:
+      operationId: deleteShare
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      responses:
+        '204':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+          description: Share deleted
+        '205':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+          description: Share deleted, sample no longer accessible for current user
   /api/action/{sampleid}:
     put:
       operationId: createAction
@@ -80,12 +102,12 @@ components:
     NewActionFormContent:
       type: object
       properties:
+        csrf_token:
+          type: string
         timestamp:
           type: string
           format: date
         description:
-          type: string
-        csrf_token:
           type: string
     CreateActionError:
       type: object

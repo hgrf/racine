@@ -450,7 +450,8 @@ doc:
 		--theme material \
 		--name "Mercury Sample Manager" \
 		--output-path docsmd \
-		app
+		app \
+		--exclude app/api
 
 	# replace main page of documentation
 	cp README.md docsmd/README.md

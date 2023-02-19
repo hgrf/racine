@@ -251,17 +251,14 @@ function init_editor(scrolltotop) {
     $('.actiondate.editable').texteditable();
 
     $('.swapaction').click( function(event) {
-        sampleid = sample_id;
-        actionid = $(this).data('id');
-        swapid = $(this).data('swapid');
-        $.ajax({
-            url: "/swapactionorder",
-            type: "post",
-            data: { "actionid": actionid,
-                    "swapid": swapid },
-            success: function( data ) {
-                load_sample(sampleid, false, false, false);
-            }
+        API.swapActionOrder(
+            {'actionid': $(this).data('id'), 'swapid': $(this).data('swapid')},
+            function(error, data, response) {
+                if (response.error) {
+                    error_dialog(response.error);
+                } else {
+                    load_sample(sample_id, false, false, false);
+                }
         });
     });
 

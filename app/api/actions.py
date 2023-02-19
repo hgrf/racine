@@ -1,5 +1,5 @@
 from datetime import date
-from flask import jsonify
+from flask import jsonify, request
 from marshmallow import Schema, fields
 
 from . import api
@@ -24,6 +24,11 @@ class NewActionFormContent(Schema):
 
 class CreateActionError(Schema):
     resubmit = fields.Bool()
+
+
+class SwapActionOrderContent(Schema):
+    actionid = fields.Int()
+    swapid = fields.Int()
 
 
 @api.route("/action/<int:sampleid>", methods=["PUT"])
@@ -110,3 +115,31 @@ def deleteaction(id):
     record_activity("delete:action", token_auth.current_user(), Sample.query.get(sampleid))
     db.session.commit()
     return "", 204
+
+
+@api.route("/action/swaporder", methods=["POST"])
+@token_auth.login_required
+def swapactionorder():  # TODO: sort out permissions for this (e.g. who has the right to change order?)
+    """Swap the order of two actions in the database.
+    ---
+    post:
+      operationId: swapActionOrder
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema: SwapActionOrderContent
+      responses:
+        200:
+          content:
+            application/json:
+              schema: EmptySchema
+          description: Action order swapped
+    """
+    action = Action.query.get(int(request.form.get("actionid")))
+    swapaction = Action.query.get(int(request.form.get("swapid")))
+    ordnum = action.ordnum
+    action.ordnum = swapaction.ordnum
+    swapaction.ordnum = ordnum
+    db.session.commit()
+    return "", 200

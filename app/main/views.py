@@ -538,18 +538,6 @@ def unmarkasnews():
     return jsonify(code=0)
 
 
-@main.route("/swapactionorder", methods=["POST"])
-@login_required
-def swapactionorder():  # TODO: sort out permissions for this (e.g. who has the right to change order?)
-    action = Action.query.get(int(request.form.get("actionid")))
-    swapaction = Action.query.get(int(request.form.get("swapid")))
-    ordnum = action.ordnum
-    action.ordnum = swapaction.ordnum
-    swapaction.ordnum = ordnum
-    db.session.commit()
-    return ""
-
-
 @main.route("/plugins/<path:path>")
 @login_required
 def static_file(path):

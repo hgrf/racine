@@ -8,12 +8,18 @@ info:
     url: https://github.com/HolgerGraef/MSM/blob/master/LICENSE.md
   title: MSM API
 tags:
-- name: MSM
-  description: Endpoints related to MSM
+- name: samples
+  description: Endpoints related to samples
+- name: shares
+  description: Endpoints related to shares
+- name: actions
+  description: Endpoints related to actions
 paths:
   /api/sample/{id}:
     delete:
       operationId: deleteSample
+      tags:
+      - samples
       parameters:
       - in: path
         name: id
@@ -30,6 +36,8 @@ paths:
   /api/share:
     put:
       operationId: createShare
+      tags:
+      - shares
       requestBody:
         required: true
         content:
@@ -52,6 +60,8 @@ paths:
   /api/share/{id}:
     delete:
       operationId: deleteShare
+      tags:
+      - shares
       parameters:
       - in: path
         name: id
@@ -74,6 +84,8 @@ paths:
   /api/action/{sampleid}:
     put:
       operationId: createAction
+      tags:
+      - actions
       parameters:
       - in: path
         name: sampleid
@@ -102,6 +114,8 @@ paths:
   /api/action/{id}:
     delete:
       operationId: deleteAction
+      tags:
+      - actions
       parameters:
       - in: path
         name: id
@@ -118,6 +132,8 @@ paths:
   /api/action/swaporder:
     post:
       operationId: swapActionOrder
+      tags:
+      - actions
       requestBody:
         required: true
         content:
@@ -134,6 +150,8 @@ paths:
   /api/action/markasnews:
     post:
       operationId: markActionAsNews
+      tags:
+      - actions
       requestBody:
         required: true
         content:
@@ -150,6 +168,8 @@ paths:
   /api/action/unmarkasnews:
     post:
       operationId: unmarkActionAsNews
+      tags:
+      - actions
       requestBody:
         required: true
         content:
@@ -172,9 +192,9 @@ components:
     CreateShareContent:
       type: object
       properties:
-        sampleid:
-          type: integer
         userid:
+          type: integer
+        sampleid:
           type: integer
         username:
           type: string
@@ -186,11 +206,11 @@ components:
       properties:
         description:
           type: string
-        csrf_token:
-          type: string
         timestamp:
           type: string
           format: date
+        csrf_token:
+          type: string
     CreateActionError:
       type: object
       properties:
@@ -206,15 +226,15 @@ components:
     MarkActionAsNewsContent:
       type: object
       properties:
-        actionid:
-          type: integer
-        csrf_token:
-          type: string
-        title:
-          type: string
         expires:
           type: string
           format: date
+        csrf_token:
+          type: string
+        actionid:
+          type: integer
+        title:
+          type: string
     UnmarkActionAsNewsContent:
       type: object
       properties:

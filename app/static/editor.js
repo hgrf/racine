@@ -1,4 +1,6 @@
-var API;
+var SamplesAPI;
+var SharesAPI;
+var ActionsAPI;
 var sample_id;
 var term;
 var hiddeneditor;
@@ -179,7 +181,7 @@ function init_editor(scrolltotop) {
         $('#newactionform').serializeArray().map(function(x){formdata[x.name] = x.value;});
         console.log(formdata);
 
-        API.createAction(sample_id, formdata, function(error, data, response) {
+        ActionsAPI.createAction(sample_id, formdata, function(error, data, response) {
             if (response.error) {
                 if (response.body.resubmit) {
                     // form failed validation; because of invalid data or expired CSRF token
@@ -251,7 +253,7 @@ function init_editor(scrolltotop) {
     $('.actiondate.editable').texteditable();
 
     $('.swapaction').click( function(event) {
-        API.swapActionOrder(
+        ActionsAPI.swapActionOrder(
             {'actionid': $(this).data('id'), 'swapid': $(this).data('swapid')},
             function(error, data, response) {
                 if (response.error) {
@@ -276,7 +278,7 @@ function init_editor(scrolltotop) {
             $('#expires').val('');
             $('#dlg_markasnews').modal('show');
         } else {
-            API.unmarkActionAsNews({ "actionid": actionid }, function(error, data, response) {
+            ActionsAPI.unmarkActionAsNews({ "actionid": actionid }, function(error, data, response) {
                 if (response.error) {
                     error_dialog(response.error);
                 } else {
@@ -431,7 +433,9 @@ function before_unload_handler(event, ignore, message) {
 $(document).ready(function() {
     var apiClient = new MsmApi.ApiClient(basePath=window.location.origin);
     apiClient.authentications["bearerAuth"].accessToken = api_token;
-    API = new MsmApi.DefaultApi(apiClient);
+    SamplesAPI = new MsmApi.SamplesApi(apiClient);
+    SharesAPI = new MsmApi.SharesApi(apiClient);
+    ActionsAPI = new MsmApi.ActionsApi(apiClient);
 
     // Switch of automatic scroll restoration...
     // so that, if a popstate event occurs but the user does not want to leave the page, automatic scrolling to the top
@@ -496,7 +500,7 @@ $(document).ready(function() {
     });
 
     function shareselected(event, suggestion) {
-        API.createShare(
+        SharesAPI.createShare(
             { "sampleid": sample_id, "username": $('#username').val() },
             function(error, data, response) {
             if (response.error) {
@@ -614,7 +618,7 @@ $(document).ready(function() {
         var formdata = {};
         dlg_markasnews_form.serializeArray().map(function(x){formdata[x.name] = x.value;});
 
-        API.markActionAsNews(formdata, function(error, data, response) {
+        ActionsAPI.markActionAsNews(formdata, function(error, data, response) {
             if (response.body && response.body.error) {
                 // form failed validation; because of invalid data or expired CSRF token
                 for(field in response.body.error) {
@@ -713,7 +717,7 @@ $(document).ready(function() {
 
         switch(type) {
         case "action":
-            API.deleteAction(id, function(error, data, response) {
+            ActionsAPI.deleteAction(id, function(error, data, response) {
                 if (response.error) {
                     error_dialog(response.error);
                 } else {
@@ -723,7 +727,7 @@ $(document).ready(function() {
             });
             break;
         case "sample":
-            API.deleteSample(id, function(error, data, response) {
+            SamplesAPI.deleteSample(id, function(error, data, response) {
                 if (response.error) {
                     error_dialog(response.error);
                 } else {
@@ -734,7 +738,7 @@ $(document).ready(function() {
             });
             break;
         case "share":
-            API.deleteShare(id, function(error, data, response) {
+            SharesAPI.deleteShare(id, function(error, data, response) {
                 $('#sharelistentry'+id).remove();
                 if(response.status == 205) { // if the user removed himself from the sharer list
                     load_welcome(true);

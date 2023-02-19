@@ -29,6 +29,7 @@ def createshare():
     ---
     put:
       operationId: createShare
+      tags: [shares]
       requestBody:
         required: true
         content:
@@ -82,6 +83,7 @@ def deleteshare(id):
     ---
     delete:
       operationId: deleteShare
+      tags: [shares]
       parameters:
       - in: path
         schema: IdParameter

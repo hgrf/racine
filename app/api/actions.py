@@ -49,6 +49,7 @@ def createaction(sampleid):
     ---
     put:
       operationId: createAction
+      tags: [actions]
       parameters:
       - in: path
         schema: SampleParameter
@@ -108,6 +109,7 @@ def deleteaction(id):
     ---
     delete:
       operationId: deleteAction
+      tags: [actions]
       parameters:
       - in: path
         schema: IdParameter
@@ -135,6 +137,7 @@ def swapactionorder():  # TODO: sort out permissions for this (e.g. who has the 
     ---
     post:
       operationId: swapActionOrder
+      tags: [actions]
       requestBody:
         required: true
         content:
@@ -163,6 +166,7 @@ def markasnews():
     ---
     post:
       operationId: markActionAsNews
+      tags: [actions]
       requestBody:
         required: true
         content:
@@ -216,6 +220,7 @@ def unmarkasnews():
     ---
     post:
       operationId: unmarkActionAsNews
+      tags: [actions]
       requestBody:
         required: true
         content:

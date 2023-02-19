@@ -14,6 +14,7 @@ def deletesample(id):
     ---
     delete:
       operationId: deleteSample
+      tags: [samples]
       parameters:
       - in: path
         schema: IdParameter

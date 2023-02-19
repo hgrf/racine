@@ -26,7 +26,11 @@ spec = APISpec(
             name="GPL v3", url="https://github.com/HolgerGraef/MSM/blob/master/LICENSE.md"
         ),
     ),
-    tags=[dict(name="MSM", description="Endpoints related to MSM")],
+    tags=[
+        dict(name="samples", description="Endpoints related to samples"),
+        dict(name="shares", description="Endpoints related to shares"),
+        dict(name="actions", description="Endpoints related to actions"),
+    ],
     plugins=[FlaskPlugin(), MarshmallowPlugin()],
 )
 

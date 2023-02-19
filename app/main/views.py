@@ -575,39 +575,6 @@ def unmarkasnews():
     return jsonify(code=0)
 
 
-@main.route("/newaction/<sampleid>", methods=["POST"])
-@login_required
-def newaction(sampleid):
-    sample = Sample.query.get(int(sampleid))
-    if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
-        return jsonify(
-            code=1, error="Sample does not exist or you do not have the right to access it"
-        )
-
-    form = NewActionForm()
-    if form.validate_on_submit():
-        a = Action(
-            datecreated=date.today(),
-            timestamp=form.timestamp.data,
-            owner=current_user,
-            sample_id=sampleid,
-            description=form.description.data,
-        )
-        db.session.add(a)
-        record_activity("add:action", current_user, sample)
-        db.session.commit()
-        a.ordnum = a.id  # add ID as order number (maybe there is a more elegant way to do this?)
-        db.session.commit()
-    # if form was submitted but failed validation, show again to user
-    # this is very important for the case where form is not validated because the
-    # CSRF token passed its time limit (typically 3600s) -> users lose everything they
-    # wrote otherwise (also happens when user enters invalid date)
-    elif form.is_submitted():
-        return jsonify(code=1, description=form.description.data)
-
-    return jsonify(code=0)
-
-
 @main.route("/swapactionorder", methods=["POST"])
 @login_required
 def swapactionorder():  # TODO: sort out permissions for this (e.g. who has the right to change order?)

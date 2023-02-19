@@ -12,7 +12,7 @@ api-client: api-spec
 	wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/6.2.1/openapi-generator-cli-6.2.1.jar \
 		-O build/openapi-generator-cli.jar
 	
-	java -jar build/openapi-generator-cli.jar generate -i api.yaml -g javascript -o build/api-client
+	java -jar build/openapi-generator-cli.jar generate -i api.yaml -g javascript -p modelPropertyNaming=original -o build/api-client
 	cd build/api-client && npm install
 	cd build/api-client && npm install \
 		rollup \

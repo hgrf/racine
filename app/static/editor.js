@@ -730,6 +730,17 @@ $(document).ready(function() {
                 $('#confirm-delete').modal('hide');
             });
             return;
+        } else if(type == "sample") {
+            API.deleteSample(id, function(error, data, response) {
+                if (response.error) {
+                    error_dialog(response.error);
+                } else {
+                    load_welcome(true);
+                    load_navbar(undefined, undefined, false, true);
+                }
+                $('#confirm-delete').modal('hide');
+            });
+            return;
         }
 
         $.ajax({
@@ -740,10 +751,6 @@ $(document).ready(function() {
             },
             success: function( data, textStatus, jqXHR ) {
                 switch(type) {
-                    case "sample":
-                        load_welcome(true);
-                        load_navbar(undefined, undefined, false, true);
-                        break;
                     case "share":
                         $('#sharelistentry'+id).remove();
                         if(jqXHR.status == 205) { // if the user removed himself from the sharer list

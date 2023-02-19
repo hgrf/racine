@@ -59,7 +59,7 @@ def editor(sampleid):
 
 ## getfield
 
-[Show source in views.py:690](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L690)
+[Show source in views.py:657](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L657)
 
 #### Signature
 
@@ -147,21 +147,6 @@ def navbar():
 
 
 
-## newaction
-
-[Show source in views.py:576](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L576)
-
-#### Signature
-
-```python
-@main.route("/newaction/<sampleid>", methods=["POST"])
-@login_required
-def newaction(sampleid):
-    ...
-```
-
-
-
 ## newsample
 
 [Show source in views.py:483](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L483)
@@ -194,7 +179,7 @@ def search():
 
 ## static_file
 
-[Show source in views.py:621](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L621)
+[Show source in views.py:588](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L588)
 
 #### Signature
 
@@ -209,7 +194,7 @@ def static_file(path):
 
 ## str_to_bool
 
-[Show source in views.py:628](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L628)
+[Show source in views.py:595](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L595)
 
 #### Signature
 
@@ -222,7 +207,7 @@ def str_to_bool(str):
 
 ## swapactionorder
 
-[Show source in views.py:609](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L609)
+[Show source in views.py:576](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L576)
 
 #### Signature
 
@@ -282,7 +267,7 @@ def unmarkasnews():
 
 ## updatefield
 
-[Show source in views.py:721](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L721)
+[Show source in views.py:688](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L688)
 
 #### Signature
 
@@ -312,7 +297,7 @@ def userlist():
 
 ## validate_is_admin
 
-[Show source in views.py:637](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L637)
+[Show source in views.py:604](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L604)
 
 #### Signature
 

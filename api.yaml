@@ -131,6 +131,38 @@ paths:
               schema:
                 $ref: '#/components/schemas/Empty'
           description: Action order swapped
+  /api/action/markasnews:
+    post:
+      operationId: markActionAsNews
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MarkActionAsNewsContent'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+          description: Action marked as news
+  /api/action/unmarkasnews:
+    post:
+      operationId: unmarkActionAsNews
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UnmarkActionAsNewsContent'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+          description: Action unmarked as news
 openapi: 3.0.2
 components:
   schemas:
@@ -142,23 +174,23 @@ components:
       properties:
         sampleid:
           type: integer
-        username:
-          type: string
         userid:
           type: integer
+        username:
+          type: string
     CreateShareError:
       type: object
       properties: {}
     NewActionFormContent:
       type: object
       properties:
+        description:
+          type: string
         csrf_token:
           type: string
         timestamp:
           type: string
           format: date
-        description:
-          type: string
     CreateActionError:
       type: object
       properties:
@@ -169,6 +201,23 @@ components:
       properties:
         swapid:
           type: integer
+        actionid:
+          type: integer
+    MarkActionAsNewsContent:
+      type: object
+      properties:
+        actionid:
+          type: integer
+        csrf_token:
+          type: string
+        title:
+          type: string
+        expires:
+          type: string
+          format: date
+    UnmarkActionAsNewsContent:
+      type: object
+      properties:
         actionid:
           type: integer
   securitySchemes:

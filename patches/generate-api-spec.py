@@ -40,6 +40,8 @@ with app.test_request_context():
     spec.path(view=api.actions.createaction)
     spec.path(view=api.actions.deleteaction)
     spec.path(view=api.actions.swapactionorder)
+    spec.path(view=api.actions.markasnews)
+    spec.path(view=api.actions.unmarkasnews)
 
 with open("swagger.json", "w") as f:
     json.dump(spec.to_dict(), f, indent=4)

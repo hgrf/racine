@@ -269,27 +269,19 @@ function init_editor(scrolltotop) {
         // is this action not yet marked as news?
         if(flag_element.hasClass('markasnews')) {
             // set the action ID hidden field
-            // TODO: it seems a bit dangerous that this form field is just called "action_id"
-            $('#action_id').val(actionid);
+            // TODO: it seems a bit dangerous that this form field is just called "actionid"
+            $('#actionid').val(actionid);
             // clear other fields
             $('#title').val('');
             $('#expires').val('');
             $('#dlg_markasnews').modal('show');
         } else {
-            $.ajax({
-                url: "/unmarkasnews",
-                type: "post",
-                data: { "actionid": actionid },
-                success: function(data) {
-                    if (data.code === 0) {
-                        flag_element.removeClass('unmarkasnews');
-                        flag_element.addClass('markasnews');
-                    } else {
-                        error_dialog(data.error);
-                    }
-                },
-                error: function( jqXHR, textStatus ) {
-                    error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
+            API.unmarkActionAsNews({ "actionid": actionid }, function(error, data, response) {
+                if (response.error) {
+                    error_dialog(response.error);
+                } else {
+                    flag_element.removeClass('unmarkasnews');
+                    flag_element.addClass('markasnews');
                 }
             });
         }
@@ -612,46 +604,44 @@ $(document).ready(function() {
         event.preventDefault();
 
         var dlg_markasnews_form = $('#dlg_markasnews_form');
-        var actionid = $("#action_id").val();
+        var actionid = $("#actionid").val();
         var flag_element = $('#togglenews-' + actionid);
 
         // clean up error messages
         dlg_markasnews_form.find('.form-group').removeClass('has-error');
         dlg_markasnews_form.find('span.help-block').remove();
 
-        $.ajax({
-            url: "/markasnews",
-            type: "post",
-            data: dlg_markasnews_form.serialize(),
-            success: function(data) {
-                if (data.code === 0) {
-                    // hide the dialog
-                    $('#dlg_markasnews').modal('hide');
+        var formdata = {};
+        dlg_markasnews_form.serializeArray().map(function(x){formdata[x.name] = x.value;});
 
-                    // toggle the flag
-                    flag_element.removeClass('markasnews');
-                    flag_element.addClass('unmarkasnews');
-                } else {
-                    console.log(data.error);
-                    // form failed validation; because of invalid data or expired CSRF token
-                    for(field in data.error) {
-                        if(field === 'csrf_token') {
-                            error_dialog('The CSRF token has expired. Please reload the page.');
-                            continue;
-                        }
-                        // get form group
-                        var formgroup = $('#'+field).closest('.form-group');
-                        // add the has-error to the form group
-                        formgroup.addClass('has-error')
-                        // add the error message to the form group
-                        for(i in data.error[field]) {
-                            formgroup.append('<span class="help-block">'+data.error[field][i]+'</span>');
-                        }
+        API.markActionAsNews(formdata, function(error, data, response) {
+            if (response.body && response.body.error) {
+                // form failed validation; because of invalid data or expired CSRF token
+                for(field in response.body.error) {
+                    if(field === 'csrf_token') {
+                        error_dialog('The CSRF token has expired. Please reload the page.');
+                        continue;
+                    }
+                    // get form group
+                    var formgroup = $('#' + field).closest('.form-group');
+                    // add the has-error to the form group
+                    formgroup.addClass('has-error')
+                    // add the error message to the form group
+                    for(i in response.body.error[field]) {
+                        formgroup.append(
+                            '<span class="help-block">' +
+                            response.body.error[field][i] + 
+                            '</span>'
+                        );
                     }
                 }
-            },
-            error: function( jqXHR, textStatus ) {
-                error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
+            } else {
+                // hide the dialog
+                $('#dlg_markasnews').modal('hide');
+
+                // toggle the flag
+                flag_element.removeClass('markasnews');
+                flag_element.addClass('unmarkasnews');
             }
         });
     });

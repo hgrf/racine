@@ -3,7 +3,7 @@
 ![flake8](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/hgrf/1cfaee423c85504cd204cf4649e2cf29/raw/flake8-badge.json)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Documentation Status](https://readthedocs.org/projects/racine/badge/?version=latest)](https://racine.readthedocs.io/en/latest/?badge=latest)
-[![Join the chat at https://gitter.im/Racine/community](https://badges.gitter.im/Racine/community.svg)](https://gitter.im/Racine/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/racine/community](https://badges.gitter.im/racine/community.svg)](https://gitter.im/racine/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Racine
 

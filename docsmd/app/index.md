@@ -1,13 +1,13 @@
 # App
 
-[Mercury Sample Manager Index](../README.md#mercury-sample-manager-index) /
+[Racine Index](../README.md#racine-index) /
 App
 
-> Auto-generated documentation for [app](https://github.com/HolgerGraef/MSM/blob/master/app/__init__.py) module.
+> Auto-generated documentation for [app](https://github.com/hgrf/racine/blob/master/app/__init__.py) module.
 
 ## create_app
 
-[Show source in __init__.py:28](https://github.com/HolgerGraef/MSM/blob/master/app/__init__.py#L28)
+[Show source in __init__.py:28](https://github.com/hgrf/racine/blob/master/app/__init__.py#L28)
 
 #### Signature
 

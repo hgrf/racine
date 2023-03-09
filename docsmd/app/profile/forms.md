@@ -1,15 +1,15 @@
 # Forms
 
-[Mercury Sample Manager Index](../../README.md#mercury-sample-manager-index) /
+[Racine Index](../../README.md#racine-index) /
 [App](../index.md#app) /
 [Profile](./index.md#profile) /
 Forms
 
-> Auto-generated documentation for [app.profile.forms](https://github.com/HolgerGraef/MSM/blob/master/app/profile/forms.py) module.
+> Auto-generated documentation for [app.profile.forms](https://github.com/hgrf/racine/blob/master/app/profile/forms.py) module.
 
 ## ChangeDetailsForm
 
-[Show source in forms.py:18](https://github.com/HolgerGraef/MSM/blob/master/app/profile/forms.py#L18)
+[Show source in forms.py:18](https://github.com/hgrf/racine/blob/master/app/profile/forms.py#L18)
 
 #### Signature
 
@@ -20,7 +20,7 @@ class ChangeDetailsForm(FlaskForm):
 
 ### ChangeDetailsForm().validate_email
 
-[Show source in forms.py:36](https://github.com/HolgerGraef/MSM/blob/master/app/profile/forms.py#L36)
+[Show source in forms.py:36](https://github.com/hgrf/racine/blob/master/app/profile/forms.py#L36)
 
 #### Signature
 
@@ -31,7 +31,7 @@ def validate_email(self, field):
 
 ### ChangeDetailsForm().validate_password
 
-[Show source in forms.py:47](https://github.com/HolgerGraef/MSM/blob/master/app/profile/forms.py#L47)
+[Show source in forms.py:47](https://github.com/hgrf/racine/blob/master/app/profile/forms.py#L47)
 
 #### Signature
 
@@ -42,7 +42,7 @@ def validate_password(self, field):
 
 ### ChangeDetailsForm().validate_username
 
-[Show source in forms.py:40](https://github.com/HolgerGraef/MSM/blob/master/app/profile/forms.py#L40)
+[Show source in forms.py:40](https://github.com/hgrf/racine/blob/master/app/profile/forms.py#L40)
 
 #### Signature
 
@@ -55,7 +55,7 @@ def validate_username(self, field):
 
 ## ChangePasswordForm
 
-[Show source in forms.py:8](https://github.com/HolgerGraef/MSM/blob/master/app/profile/forms.py#L8)
+[Show source in forms.py:8](https://github.com/hgrf/racine/blob/master/app/profile/forms.py#L8)
 
 #### Signature
 

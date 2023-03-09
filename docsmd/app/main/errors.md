@@ -1,15 +1,15 @@
 # Errors
 
-[Mercury Sample Manager Index](../../README.md#mercury-sample-manager-index) /
+[Racine Index](../../README.md#racine-index) /
 [App](../index.md#app) /
 [Main](./index.md#main) /
 Errors
 
-> Auto-generated documentation for [app.main.errors](https://github.com/HolgerGraef/MSM/blob/master/app/main/errors.py) module.
+> Auto-generated documentation for [app.main.errors](https://github.com/hgrf/racine/blob/master/app/main/errors.py) module.
 
 ## forbidden
 
-[Show source in errors.py:7](https://github.com/HolgerGraef/MSM/blob/master/app/main/errors.py#L7)
+[Show source in errors.py:7](https://github.com/hgrf/racine/blob/master/app/main/errors.py#L7)
 
 #### Signature
 
@@ -23,7 +23,7 @@ def forbidden(e):
 
 ## internal_server_error
 
-[Show source in errors.py:17](https://github.com/HolgerGraef/MSM/blob/master/app/main/errors.py#L17)
+[Show source in errors.py:17](https://github.com/hgrf/racine/blob/master/app/main/errors.py#L17)
 
 #### Signature
 
@@ -37,7 +37,7 @@ def internal_server_error(e):
 
 ## page_not_found
 
-[Show source in errors.py:12](https://github.com/HolgerGraef/MSM/blob/master/app/main/errors.py#L12)
+[Show source in errors.py:12](https://github.com/hgrf/racine/blob/master/app/main/errors.py#L12)
 
 #### Signature
 
@@ -51,7 +51,7 @@ def page_not_found(e):
 
 ## unhandled_exception
 
-[Show source in errors.py:22](https://github.com/HolgerGraef/MSM/blob/master/app/main/errors.py#L22)
+[Show source in errors.py:22](https://github.com/hgrf/racine/blob/master/app/main/errors.py#L22)
 
 #### Signature
 

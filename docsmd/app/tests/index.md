@@ -1,10 +1,10 @@
 # Tests
 
-[Mercury Sample Manager Index](../../README.md#mercury-sample-manager-index) /
+[Racine Index](../../README.md#racine-index) /
 [App](../index.md#app) /
 Tests
 
-> Auto-generated documentation for [app.tests](https://github.com/HolgerGraef/MSM/blob/master/app/tests/__init__.py) module.
+> Auto-generated documentation for [app.tests](https://github.com/hgrf/racine/blob/master/app/tests/__init__.py) module.
 
 ## Modules
 

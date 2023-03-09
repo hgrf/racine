@@ -1,10 +1,10 @@
 # Printdata
 
-[Mercury Sample Manager Index](../../README.md#mercury-sample-manager-index) /
+[Racine Index](../../README.md#racine-index) /
 [App](../index.md#app) /
 Printdata
 
-> Auto-generated documentation for [app.printdata](https://github.com/HolgerGraef/MSM/blob/master/app/printdata/__init__.py) module.
+> Auto-generated documentation for [app.printdata](https://github.com/hgrf/racine/blob/master/app/printdata/__init__.py) module.
 
 ## Modules
 

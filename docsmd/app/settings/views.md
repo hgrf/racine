@@ -1,15 +1,15 @@
 # Views
 
-[Mercury Sample Manager Index](../../README.md#mercury-sample-manager-index) /
+[Racine Index](../../README.md#racine-index) /
 [App](../index.md#app) /
 [Settings](./index.md#settings) /
 Views
 
-> Auto-generated documentation for [app.settings.views](https://github.com/HolgerGraef/MSM/blob/master/app/settings/views.py) module.
+> Auto-generated documentation for [app.settings.views](https://github.com/hgrf/racine/blob/master/app/settings/views.py) module.
 
 ## email
 
-[Show source in views.py:82](https://github.com/HolgerGraef/MSM/blob/master/app/settings/views.py#L82)
+[Show source in views.py:82](https://github.com/hgrf/racine/blob/master/app/settings/views.py#L82)
 
 #### Signature
 
@@ -25,7 +25,7 @@ def email():
 
 ## handle_img
 
-[Show source in views.py:184](https://github.com/HolgerGraef/MSM/blob/master/app/settings/views.py#L184)
+[Show source in views.py:184](https://github.com/hgrf/racine/blob/master/app/settings/views.py#L184)
 
 #### Signature
 
@@ -38,7 +38,7 @@ def handle_img(loc, src, refdlist):
 
 ## handle_img_tags
 
-[Show source in views.py:196](https://github.com/HolgerGraef/MSM/blob/master/app/settings/views.py#L196)
+[Show source in views.py:196](https://github.com/hgrf/racine/blob/master/app/settings/views.py#L196)
 
 #### Signature
 
@@ -51,7 +51,7 @@ def handle_img_tags(text, itemid, refdlist):
 
 ## log
 
-[Show source in views.py:278](https://github.com/HolgerGraef/MSM/blob/master/app/settings/views.py#L278)
+[Show source in views.py:278](https://github.com/hgrf/racine/blob/master/app/settings/views.py#L278)
 
 #### Signature
 
@@ -67,7 +67,7 @@ def log():
 
 ## revision
 
-[Show source in views.py:138](https://github.com/HolgerGraef/MSM/blob/master/app/settings/views.py#L138)
+[Show source in views.py:138](https://github.com/hgrf/racine/blob/master/app/settings/views.py#L138)
 
 #### Signature
 
@@ -83,7 +83,7 @@ def revision():
 
 ## set_overview
 
-[Show source in views.py:17](https://github.com/HolgerGraef/MSM/blob/master/app/settings/views.py#L17)
+[Show source in views.py:17](https://github.com/hgrf/racine/blob/master/app/settings/views.py#L17)
 
 #### Signature
 
@@ -99,7 +99,7 @@ def set_overview():
 
 ## smbresources
 
-[Show source in views.py:24](https://github.com/HolgerGraef/MSM/blob/master/app/settings/views.py#L24)
+[Show source in views.py:24](https://github.com/hgrf/racine/blob/master/app/settings/views.py#L24)
 
 #### Signature
 
@@ -115,7 +115,7 @@ def smbresources():
 
 ## uploads
 
-[Show source in views.py:213](https://github.com/HolgerGraef/MSM/blob/master/app/settings/views.py#L213)
+[Show source in views.py:213](https://github.com/hgrf/racine/blob/master/app/settings/views.py#L213)
 
 #### Signature
 
@@ -131,7 +131,7 @@ def uploads():
 
 ## users
 
-[Show source in views.py:59](https://github.com/HolgerGraef/MSM/blob/master/app/settings/views.py#L59)
+[Show source in views.py:59](https://github.com/hgrf/racine/blob/master/app/settings/views.py#L59)
 
 #### Signature
 

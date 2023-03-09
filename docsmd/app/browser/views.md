@@ -1,15 +1,15 @@
 # Views
 
-[Mercury Sample Manager Index](../../README.md#mercury-sample-manager-index) /
+[Racine Index](../../README.md#racine-index) /
 [App](../index.md#app) /
 [Browser](./index.md#browser) /
 Views
 
-> Auto-generated documentation for [app.browser.views](https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py) module.
+> Auto-generated documentation for [app.browser.views](https://github.com/hgrf/racine/blob/master/app/browser/views.py) module.
 
 ## FileTile
 
-[Show source in views.py:24](https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L24)
+[Show source in views.py:24](https://github.com/hgrf/racine/blob/master/app/browser/views.py#L24)
 
 #### Signature
 
@@ -22,7 +22,7 @@ class FileTile:
 
 ## check_stored_file
 
-[Show source in views.py:36](https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L36)
+[Show source in views.py:36](https://github.com/hgrf/racine/blob/master/app/browser/views.py#L36)
 
 Checks file size and SHA-256 hash for an upload and looks for duplicates in the database.
 
@@ -54,7 +54,7 @@ def check_stored_file(upload):
 
 ## imagebrowser
 
-[Show source in views.py:421](https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L421)
+[Show source in views.py:421](https://github.com/hgrf/racine/blob/master/app/browser/views.py#L421)
 
 #### Signature
 
@@ -70,7 +70,7 @@ def imagebrowser(smb_path):
 
 ## inspectpath
 
-[Show source in views.py:572](https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L572)
+[Show source in views.py:572](https://github.com/hgrf/racine/blob/master/app/browser/views.py#L572)
 
 #### Signature
 
@@ -85,7 +85,7 @@ def inspectpath():
 
 ## inspectresource
 
-[Show source in views.py:587](https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L587)
+[Show source in views.py:587](https://github.com/hgrf/racine/blob/master/app/browser/views.py#L587)
 
 #### Signature
 
@@ -100,7 +100,7 @@ def inspectresource():
 
 ## make_preview
 
-[Show source in views.py:128](https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L128)
+[Show source in views.py:128](https://github.com/hgrf/racine/blob/master/app/browser/views.py#L128)
 
 #### Signature
 
@@ -113,7 +113,7 @@ def make_preview(upload, image):
 
 ## make_rotated
 
-[Show source in views.py:145](https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L145)
+[Show source in views.py:145](https://github.com/hgrf/racine/blob/master/app/browser/views.py#L145)
 
 #### Signature
 
@@ -126,7 +126,7 @@ def make_rotated(upload, angle, fullsize):
 
 ## retrieve_attachment
 
-[Show source in views.py:336](https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L336)
+[Show source in views.py:336](https://github.com/hgrf/racine/blob/master/app/browser/views.py#L336)
 
 Retrieves an attachment that was uploaded to the server.
 
@@ -148,7 +148,7 @@ def retrieve_attachment(upload_id):
 
 ## retrieve_image
 
-[Show source in views.py:268](https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L268)
+[Show source in views.py:268](https://github.com/hgrf/racine/blob/master/app/browser/views.py#L268)
 
 Retrieves an image that was uploaded to the server,
 
@@ -173,7 +173,7 @@ def retrieve_image(upload_id):
 
 ## retrieve_smb_image
 
-[Show source in views.py:377](https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L377)
+[Show source in views.py:377](https://github.com/hgrf/racine/blob/master/app/browser/views.py#L377)
 
 Retrieves an image from a SMB resource. This is only for the browser, so we will send back thumbnails to speed
 up the communication a bit.
@@ -196,7 +196,7 @@ def retrieve_smb_image(path):
 
 ## save_from_smb
 
-[Show source in views.py:525](https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L525)
+[Show source in views.py:525](https://github.com/hgrf/racine/blob/master/app/browser/views.py#L525)
 
 #### Signature
 
@@ -211,7 +211,7 @@ def save_from_smb():
 
 ## store_attachment
 
-[Show source in views.py:244](https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L244)
+[Show source in views.py:244](https://github.com/hgrf/racine/blob/master/app/browser/views.py#L244)
 
 Stores an image file in the upload database and saves it in the upload folder, checking for duplicates.
 
@@ -238,7 +238,7 @@ def store_attachment(file_obj, source, ext):
 
 ## store_file
 
-[Show source in views.py:81](https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L81)
+[Show source in views.py:81](https://github.com/hgrf/racine/blob/master/app/browser/views.py#L81)
 
 Stores a file in the upload database and saves it in the upload folder, checking for duplicates.
 
@@ -267,7 +267,7 @@ def store_file(file_obj, source, ext, type):
 
 ## store_image
 
-[Show source in views.py:165](https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L165)
+[Show source in views.py:165](https://github.com/hgrf/racine/blob/master/app/browser/views.py#L165)
 
 Stores an image file in the upload database and saves it in the upload folder, checking for duplicates.
 
@@ -296,7 +296,7 @@ def store_image(file_obj, source, ext):
 
 ## strip_unit
 
-[Show source in views.py:629](https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L629)
+[Show source in views.py:629](https://github.com/hgrf/racine/blob/master/app/browser/views.py#L629)
 
 #### Signature
 
@@ -309,7 +309,7 @@ def strip_unit(s):
 
 ## uploadfile
 
-[Show source in views.py:491](https://github.com/HolgerGraef/MSM/blob/master/app/browser/views.py#L491)
+[Show source in views.py:491](https://github.com/hgrf/racine/blob/master/app/browser/views.py#L491)
 
 #### Signature
 

@@ -1,15 +1,15 @@
 # Views
 
-[Mercury Sample Manager Index](../../README.md#mercury-sample-manager-index) /
+[Racine Index](../../README.md#racine-index) /
 [App](../index.md#app) /
 [Printdata](./index.md#printdata) /
 Views
 
-> Auto-generated documentation for [app.printdata.views](https://github.com/HolgerGraef/MSM/blob/master/app/printdata/views.py) module.
+> Auto-generated documentation for [app.printdata.views](https://github.com/hgrf/racine/blob/master/app/printdata/views.py) module.
 
 ## overview
 
-[Show source in views.py:9](https://github.com/HolgerGraef/MSM/blob/master/app/printdata/views.py#L9)
+[Show source in views.py:9](https://github.com/hgrf/racine/blob/master/app/printdata/views.py#L9)
 
 #### Signature
 

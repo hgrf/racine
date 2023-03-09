@@ -1,15 +1,15 @@
 # Forms
 
-[Mercury Sample Manager Index](../../README.md#mercury-sample-manager-index) /
+[Racine Index](../../README.md#racine-index) /
 [App](../index.md#app) /
 [Main](./index.md#main) /
 Forms
 
-> Auto-generated documentation for [app.main.forms](https://github.com/HolgerGraef/MSM/blob/master/app/main/forms.py) module.
+> Auto-generated documentation for [app.main.forms](https://github.com/hgrf/racine/blob/master/app/main/forms.py) module.
 
 ## MarkActionAsNewsForm
 
-[Show source in forms.py:31](https://github.com/HolgerGraef/MSM/blob/master/app/main/forms.py#L31)
+[Show source in forms.py:31](https://github.com/hgrf/racine/blob/master/app/main/forms.py#L31)
 
 #### Signature
 
@@ -22,7 +22,7 @@ class MarkActionAsNewsForm(FlaskForm):
 
 ## NewActionForm
 
-[Show source in forms.py:7](https://github.com/HolgerGraef/MSM/blob/master/app/main/forms.py#L7)
+[Show source in forms.py:7](https://github.com/hgrf/racine/blob/master/app/main/forms.py#L7)
 
 #### Signature
 
@@ -35,7 +35,7 @@ class NewActionForm(FlaskForm):
 
 ## NewSampleForm
 
-[Show source in forms.py:13](https://github.com/HolgerGraef/MSM/blob/master/app/main/forms.py#L13)
+[Show source in forms.py:13](https://github.com/hgrf/racine/blob/master/app/main/forms.py#L13)
 
 #### Signature
 
@@ -46,7 +46,7 @@ class NewSampleForm(FlaskForm):
 
 ### NewSampleForm().validate_newsampleparentid
 
-[Show source in forms.py:25](https://github.com/HolgerGraef/MSM/blob/master/app/main/forms.py#L25)
+[Show source in forms.py:25](https://github.com/hgrf/racine/blob/master/app/main/forms.py#L25)
 
 #### Signature
 

@@ -1,15 +1,15 @@
 # Views
 
-[Mercury Sample Manager Index](../../README.md#mercury-sample-manager-index) /
+[Racine Index](../../README.md#racine-index) /
 [App](../index.md#app) /
 [Auth](./index.md#auth) /
 Views
 
-> Auto-generated documentation for [app.auth.views](https://github.com/HolgerGraef/MSM/blob/master/app/auth/views.py) module.
+> Auto-generated documentation for [app.auth.views](https://github.com/hgrf/racine/blob/master/app/auth/views.py) module.
 
 ## login
 
-[Show source in views.py:10](https://github.com/HolgerGraef/MSM/blob/master/app/auth/views.py#L10)
+[Show source in views.py:10](https://github.com/hgrf/racine/blob/master/app/auth/views.py#L10)
 
 #### Signature
 
@@ -23,7 +23,7 @@ def login():
 
 ## logout
 
-[Show source in views.py:112](https://github.com/HolgerGraef/MSM/blob/master/app/auth/views.py#L112)
+[Show source in views.py:112](https://github.com/hgrf/racine/blob/master/app/auth/views.py#L112)
 
 #### Signature
 
@@ -38,7 +38,7 @@ def logout():
 
 ## password_reset
 
-[Show source in views.py:97](https://github.com/HolgerGraef/MSM/blob/master/app/auth/views.py#L97)
+[Show source in views.py:97](https://github.com/hgrf/racine/blob/master/app/auth/views.py#L97)
 
 #### Signature
 
@@ -52,7 +52,7 @@ def password_reset(token):
 
 ## password_reset_request
 
-[Show source in views.py:70](https://github.com/HolgerGraef/MSM/blob/master/app/auth/views.py#L70)
+[Show source in views.py:70](https://github.com/hgrf/racine/blob/master/app/auth/views.py#L70)
 
 #### Signature
 

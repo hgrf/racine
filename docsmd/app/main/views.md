@@ -1,11 +1,11 @@
 # Views
 
-[Mercury Sample Manager Index](../../README.md#mercury-sample-manager-index) /
+[Racine Index](../../README.md#racine-index) /
 [App](../index.md#app) /
 [Main](./index.md#main) /
 Views
 
-> Auto-generated documentation for [app.main.views](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py) module.
+> Auto-generated documentation for [app.main.views](https://github.com/hgrf/racine/blob/master/app/main/views.py) module.
 
 #### Attributes
 
@@ -14,7 +14,7 @@ Views
 
 ## changeparent
 
-[Show source in views.py:484](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L484)
+[Show source in views.py:485](https://github.com/hgrf/racine/blob/master/app/main/views.py#L485)
 
 #### Signature
 
@@ -29,7 +29,7 @@ def changeparent():
 
 ## createshare
 
-[Show source in views.py:389](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L389)
+[Show source in views.py:390](https://github.com/hgrf/racine/blob/master/app/main/views.py#L390)
 
 #### Signature
 
@@ -44,7 +44,7 @@ def createshare():
 
 ## deleteaction
 
-[Show source in views.py:426](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L426)
+[Show source in views.py:427](https://github.com/hgrf/racine/blob/master/app/main/views.py#L427)
 
 #### Signature
 
@@ -59,7 +59,7 @@ def deleteaction(actionid):
 
 ## deletesample
 
-[Show source in views.py:439](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L439)
+[Show source in views.py:440](https://github.com/hgrf/racine/blob/master/app/main/views.py#L440)
 
 #### Signature
 
@@ -74,7 +74,7 @@ def deletesample(sampleid):
 
 ## deleteshare
 
-[Show source in views.py:452](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L452)
+[Show source in views.py:453](https://github.com/hgrf/racine/blob/master/app/main/views.py#L453)
 
 #### Signature
 
@@ -89,7 +89,7 @@ def deleteshare(shareid):
 
 ## editor
 
-[Show source in views.py:185](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L185)
+[Show source in views.py:185](https://github.com/hgrf/racine/blob/master/app/main/views.py#L185)
 
 #### Signature
 
@@ -104,7 +104,7 @@ def editor(sampleid):
 
 ## getfield
 
-[Show source in views.py:746](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L746)
+[Show source in views.py:747](https://github.com/hgrf/racine/blob/master/app/main/views.py#L747)
 
 #### Signature
 
@@ -119,7 +119,7 @@ def getfield(target, field, id):
 
 ## help
 
-[Show source in views.py:231](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L231)
+[Show source in views.py:231](https://github.com/hgrf/racine/blob/master/app/main/views.py#L231)
 
 #### Signature
 
@@ -134,7 +134,7 @@ def help():
 
 ## index
 
-[Show source in views.py:28](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L28)
+[Show source in views.py:28](https://github.com/hgrf/racine/blob/master/app/main/views.py#L28)
 
 #### Signature
 
@@ -149,7 +149,7 @@ def index(sampleid=0):
 
 ## login_as
 
-[Show source in views.py:348](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L348)
+[Show source in views.py:349](https://github.com/hgrf/racine/blob/master/app/main/views.py#L349)
 
 #### Signature
 
@@ -164,7 +164,7 @@ def login_as():
 
 ## markasnews
 
-[Show source in views.py:566](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L566)
+[Show source in views.py:567](https://github.com/hgrf/racine/blob/master/app/main/views.py#L567)
 
 #### Signature
 
@@ -179,7 +179,7 @@ def markasnews():
 
 ## navbar
 
-[Show source in views.py:160](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L160)
+[Show source in views.py:160](https://github.com/hgrf/racine/blob/master/app/main/views.py#L160)
 
 #### Signature
 
@@ -194,7 +194,7 @@ def navbar():
 
 ## newaction
 
-[Show source in views.py:632](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L632)
+[Show source in views.py:633](https://github.com/hgrf/racine/blob/master/app/main/views.py#L633)
 
 #### Signature
 
@@ -209,7 +209,7 @@ def newaction(sampleid):
 
 ## newsample
 
-[Show source in views.py:539](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L539)
+[Show source in views.py:540](https://github.com/hgrf/racine/blob/master/app/main/views.py#L540)
 
 #### Signature
 
@@ -224,7 +224,7 @@ def newsample():
 
 ## search
 
-[Show source in views.py:238](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L238)
+[Show source in views.py:238](https://github.com/hgrf/racine/blob/master/app/main/views.py#L238)
 
 #### Signature
 
@@ -239,7 +239,7 @@ def search():
 
 ## static_file
 
-[Show source in views.py:677](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L677)
+[Show source in views.py:678](https://github.com/hgrf/racine/blob/master/app/main/views.py#L678)
 
 #### Signature
 
@@ -254,7 +254,7 @@ def static_file(path):
 
 ## str_to_bool
 
-[Show source in views.py:684](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L684)
+[Show source in views.py:685](https://github.com/hgrf/racine/blob/master/app/main/views.py#L685)
 
 #### Signature
 
@@ -267,7 +267,7 @@ def str_to_bool(str):
 
 ## swapactionorder
 
-[Show source in views.py:665](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L665)
+[Show source in views.py:666](https://github.com/hgrf/racine/blob/master/app/main/views.py#L666)
 
 #### Signature
 
@@ -282,7 +282,7 @@ def swapactionorder():
 
 ## togglearchived
 
-[Show source in views.py:363](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L363)
+[Show source in views.py:364](https://github.com/hgrf/racine/blob/master/app/main/views.py#L364)
 
 #### Signature
 
@@ -297,7 +297,7 @@ def togglearchived():
 
 ## togglecollaborative
 
-[Show source in views.py:376](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L376)
+[Show source in views.py:377](https://github.com/hgrf/racine/blob/master/app/main/views.py#L377)
 
 #### Signature
 
@@ -312,7 +312,7 @@ def togglecollaborative():
 
 ## unmarkasnews
 
-[Show source in views.py:602](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L602)
+[Show source in views.py:603](https://github.com/hgrf/racine/blob/master/app/main/views.py#L603)
 
 #### Signature
 
@@ -327,7 +327,7 @@ def unmarkasnews():
 
 ## updatefield
 
-[Show source in views.py:777](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L777)
+[Show source in views.py:778](https://github.com/hgrf/racine/blob/master/app/main/views.py#L778)
 
 #### Signature
 
@@ -342,7 +342,7 @@ def updatefield(target, field, id):
 
 ## userlist
 
-[Show source in views.py:290](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L290)
+[Show source in views.py:291](https://github.com/hgrf/racine/blob/master/app/main/views.py#L291)
 
 #### Signature
 
@@ -357,7 +357,7 @@ def userlist():
 
 ## validate_is_admin
 
-[Show source in views.py:693](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L693)
+[Show source in views.py:694](https://github.com/hgrf/racine/blob/master/app/main/views.py#L694)
 
 #### Signature
 
@@ -370,7 +370,7 @@ def validate_is_admin(str, item):
 
 ## welcome
 
-[Show source in views.py:55](https://github.com/HolgerGraef/MSM/blob/master/app/main/views.py#L55)
+[Show source in views.py:55](https://github.com/hgrf/racine/blob/master/app/main/views.py#L55)
 
 #### Signature
 

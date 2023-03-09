@@ -1,15 +1,15 @@
 # Views
 
-[Mercury Sample Manager Index](../../README.md#mercury-sample-manager-index) /
+[Racine Index](../../README.md#racine-index) /
 [App](../index.md#app) /
 [Profile](./index.md#profile) /
 Views
 
-> Auto-generated documentation for [app.profile.views](https://github.com/HolgerGraef/MSM/blob/master/app/profile/views.py) module.
+> Auto-generated documentation for [app.profile.views](https://github.com/hgrf/racine/blob/master/app/profile/views.py) module.
 
 ## changedetails
 
-[Show source in views.py:9](https://github.com/HolgerGraef/MSM/blob/master/app/profile/views.py#L9)
+[Show source in views.py:9](https://github.com/hgrf/racine/blob/master/app/profile/views.py#L9)
 
 #### Signature
 
@@ -24,7 +24,7 @@ def changedetails():
 
 ## changepassword
 
-[Show source in views.py:26](https://github.com/HolgerGraef/MSM/blob/master/app/profile/views.py#L26)
+[Show source in views.py:26](https://github.com/hgrf/racine/blob/master/app/profile/views.py#L26)
 
 #### Signature
 
@@ -39,7 +39,7 @@ def changepassword():
 
 ## leave
 
-[Show source in views.py:41](https://github.com/HolgerGraef/MSM/blob/master/app/profile/views.py#L41)
+[Show source in views.py:41](https://github.com/hgrf/racine/blob/master/app/profile/views.py#L41)
 
 #### Signature
 

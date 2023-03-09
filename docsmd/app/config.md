@@ -1,14 +1,14 @@
 # Config
 
-[Mercury Sample Manager Index](../README.md#mercury-sample-manager-index) /
+[Racine Index](../README.md#racine-index) /
 [App](./index.md#app) /
 Config
 
-> Auto-generated documentation for [app.config](https://github.com/HolgerGraef/MSM/blob/master/app/config.py) module.
+> Auto-generated documentation for [app.config](https://github.com/hgrf/racine/blob/master/app/config.py) module.
 
 ## Config
 
-[Show source in config.py:8](https://github.com/HolgerGraef/MSM/blob/master/app/config.py#L8)
+[Show source in config.py:8](https://github.com/hgrf/racine/blob/master/app/config.py#L8)
 
 #### Signature
 
@@ -19,7 +19,7 @@ class Config:
 
 ### Config.init_app
 
-[Show source in config.py:18](https://github.com/HolgerGraef/MSM/blob/master/app/config.py#L18)
+[Show source in config.py:18](https://github.com/hgrf/racine/blob/master/app/config.py#L18)
 
 #### Signature
 
@@ -33,7 +33,7 @@ def init_app(app):
 
 ## DevelopmentConfig
 
-[Show source in config.py:30](https://github.com/HolgerGraef/MSM/blob/master/app/config.py#L30)
+[Show source in config.py:30](https://github.com/hgrf/racine/blob/master/app/config.py#L30)
 
 #### Signature
 
@@ -50,7 +50,7 @@ class DevelopmentConfig(Config):
 
 ## ProductionConfig
 
-[Show source in config.py:40](https://github.com/HolgerGraef/MSM/blob/master/app/config.py#L40)
+[Show source in config.py:40](https://github.com/hgrf/racine/blob/master/app/config.py#L40)
 
 #### Signature
 
@@ -67,7 +67,7 @@ class ProductionConfig(Config):
 
 ## TestingConfig
 
-[Show source in config.py:47](https://github.com/HolgerGraef/MSM/blob/master/app/config.py#L47)
+[Show source in config.py:47](https://github.com/hgrf/racine/blob/master/app/config.py#L47)
 
 #### Signature
 

@@ -1,15 +1,15 @@
-![build](https://github.com/HolgerGraef/MSM/actions/workflows/ci.yml/badge.svg)
-![coverage](https://raw.githubusercontent.com/HolgerGraef/MSM/python-coverage-comment-action-data/badge.svg)
-![flake8](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/HolgerGraef/1cfaee423c85504cd204cf4649e2cf29/raw/flake8-badge.json)
+![build](https://github.com/hgrf/racine/actions/workflows/ci.yml/badge.svg)
+![coverage](https://raw.githubusercontent.com/hgrf/racine/python-coverage-comment-action-data/badge.svg)
+![flake8](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/hgrf/1cfaee423c85504cd204cf4649e2cf29/raw/flake8-badge.json)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Documentation Status](https://readthedocs.org/projects/msm/badge/?version=latest)](https://msm.readthedocs.io/en/latest/?badge=latest)
-[![Join the chat at https://gitter.im/Mercury-Sample-Manager/community](https://badges.gitter.im/Mercury-Sample-Manager/community.svg)](https://gitter.im/Mercury-Sample-Manager/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Documentation Status](https://readthedocs.org/projects/racine/badge/?version=latest)](https://racine.readthedocs.io/en/latest/?badge=latest)
+[![Join the chat at https://gitter.im/Racine/community](https://badges.gitter.im/Racine/community.svg)](https://gitter.im/Racine/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-# Mercury Sample Manager
+# Racine
 
 ## Introduction
 
-Mercury Sample Manager is a tool that enables researchers to keep track of their samples from any PC
+Racine is a tool that enables researchers to keep track of their samples from any PC
 in a laboratory. It is a Flask-based web service that runs on a central server in the local network
 of your research institute and that can be accessed from all other computers on the same network
 using the normal web browser.
@@ -37,8 +37,8 @@ used/available disk space.
 
 ## Using pre-built images
 
-    mkdir msm && cd msm
-    wget holgergraef.github.io/MSM/docker-compose.yml
+    mkdir racine && cd racine
+    wget hgrf.github.io/racine/docker-compose.yml
     docker compose up web
 
 ## For developers: getting started
@@ -53,11 +53,11 @@ You should have python 3.x and python3-venv installed on your system. Using a vi
 not absolutely necessary, but I recommend it. You can now create a folder somewhere and clone the
 git repository:
 
-    git clone git@github.com:HolgerGraef/MSM.git
+    git clone git@github.com:hgrf/racine.git
 
 Now you enter this directory and you create a virtual environment for python - and activate it:
 
-    cd MSM
+    cd racine
     python3 -m venv venv
     . venv/bin/activate
 
@@ -84,7 +84,7 @@ section (you will find the corresponding button on the top right after logging i
 set up an email account in the corresponding subsection of the "Settings" page.
 
 You can set up a site name for usage statistics by writing it into a file "usage_stats_site" in the
-MSM folder.
+Racine folder.
 
 You can start the development server by simply executing:
 
@@ -128,7 +128,7 @@ server](#installation-of-development-server). Then configure gunicorn autostart 
 corresponding autostart file. This is explained below either for upstart or for systemd.
 
 Please note that the app should be executed in the HTTP root, bugs should be expected when you
-install MSM in a subfolder.
+install Racine in a subfolder.
 
 Note the use of the `--preload` option for gunicorn in the following, which ensures that the thread
 for reporting usage statistics is only started once (before the worker processes are forked). Also
@@ -137,13 +137,13 @@ e.g.:
 
     gunicorn [--preload] --workers 4 --bind 127.0.0.1 manage:app
 
-### Setting up the MSM service
+### Setting up the Racine service
 
 #### with upstart
 
-Create the file /etc/init/msm.conf and copy the following code into it:
+Create the file /etc/init/racine.conf and copy the following code into it:
 
-    description "Gunicorn application server running Mercury Sample Manager"
+    description "Gunicorn application server running Racine"
 
     start on runlevel [2345]
     stop on runlevel [!2345]
@@ -153,9 +153,9 @@ Create the file /etc/init/msm.conf and copy the following code into it:
     setgid www-data
 
     env FLASK_CONFIG=production
-    env PATH=[path]/MSM/venv/bin:/usr/bin
-    chdir [path]/MSM
-    exec gunicorn --preload --workers 4 --bind unix:msm.sock -m 007 manage:app
+    env PATH=[path]/racine/venv/bin:/usr/bin
+    chdir [path]/racine
+    exec gunicorn --preload --workers 4 --bind unix:racine.sock -m 007 manage:app
 
 Where you will have to replace [user name] by your user name and [path] by the path where you
 installed the programme. The second path (/usr/bin) is where you should have installed the git
@@ -163,10 +163,10 @@ executable.
 
 #### with systemd
 
-Create the file /lib/systemd/system/msm.service and copy the following code into it:
+Create the file /lib/systemd/system/racine.service and copy the following code into it:
 
     [Unit]
-    Description=Gunicorn application server running Mercury Sample Manager
+    Description=Gunicorn application server running Racine
 
     [Service]
     Restart=on-failure
@@ -174,9 +174,9 @@ Create the file /lib/systemd/system/msm.service and copy the following code into
     Group=www-data
 
     Environment=FLASK_CONFIG=production
-    Environment=PATH=[path]/MSM/venv/bin:/usr/bin
-    WorkingDirectory=[path]/MSM
-    ExecStart=[path]/MSM/venv/bin/gunicorn --preload --workers 4 --bind unix:msm.sock -m 007 manage:app
+    Environment=PATH=[path]/racine/venv/bin:/usr/bin
+    WorkingDirectory=[path]/racine
+    ExecStart=[path]/racine/venv/bin/gunicorn --preload --workers 4 --bind unix:racine.sock -m 007 manage:app
 
     [Install]
     WantedBy=multi-user.target
@@ -186,12 +186,12 @@ installed the programme. The second path (/usr/bin) is where you should have ins
 executable.
 
 Note that for the execution of gunicorn, the group has to be set to `www-data` so that the
-`msm.sock` file is accessible for the nginx server (this also applies to the upstart configuration
+`racine.sock` file is accessible for the nginx server (this also applies to the upstart configuration
 above).
 
 Now activate autostart:
 
-    sudo systemctl enable msm
+    sudo systemctl enable racine
 
 ### Setting up nginx
 
@@ -207,7 +207,7 @@ Create an SSL certificate and key in the following folder:
 In order to create SSL certificate and key follow the steps given in
 https://www.digitalocean.com/community/tutorials/how-to-create-a-ssl-certificate-on-nginx-for-ubuntu-12-04
 
-You then want to configure your nginx server. Create a file "msm" in /etc/nginx/sites-available and
+You then want to configure your nginx server. Create a file "racine" in /etc/nginx/sites-available and
 copy the following content into it:
 
     server {
@@ -229,14 +229,14 @@ copy the following content into it:
     
         location / {
         include proxy_params;
-          proxy_pass http://unix:[path]/MSM/msm.sock;
+          proxy_pass http://unix:[path]/racine/racine.sock;
         }
     }
 
 Where - again - you have to replace [path] by the path to the application's directory. Then create a
 symbolic link to this file in /etc/nginx/sites-enabled and delete the default entry:
 
-    sudo ln -s /etc/nginx/sites-available/msm /etc/nginx/sites-enabled
+    sudo ln -s /etc/nginx/sites-available/racine /etc/nginx/sites-enabled
     sudo rm /etc/nginx/sites-enabled/default
 
 If you want your server to support large file uploads, you have to change /etc/nginx/nginx.conf and
@@ -247,12 +247,12 @@ add the following line to the http context to increase the size limit (in this e
 
 You can now start your server by executing:
  
-    sudo start msm
+    sudo start racine
     sudo service nginx restart
     
 If you use upstart, for systemd type:
 
-    sudo systemctl start msm
+    sudo systemctl start racine
     sudo systemctl restart nginx
 
 The server will now automatically - i.e. also after a reboot - be available on localhost.

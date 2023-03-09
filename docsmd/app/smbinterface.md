@@ -1,14 +1,14 @@
 # SMBInterface
 
-[Mercury Sample Manager Index](../README.md#mercury-sample-manager-index) /
+[Racine Index](../README.md#racine-index) /
 [App](./index.md#app) /
 SMBInterface
 
-> Auto-generated documentation for [app.smbinterface](https://github.com/HolgerGraef/MSM/blob/master/app/smbinterface.py) module.
+> Auto-generated documentation for [app.smbinterface](https://github.com/hgrf/racine/blob/master/app/smbinterface.py) module.
 
 ## SMBInterface
 
-[Show source in smbinterface.py:8](https://github.com/HolgerGraef/MSM/blob/master/app/smbinterface.py#L8)
+[Show source in smbinterface.py:8](https://github.com/hgrf/racine/blob/master/app/smbinterface.py#L8)
 
 #### Signature
 
@@ -20,7 +20,7 @@ class SMBInterface:
 
 ### SMBInterface().get_file
 
-[Show source in smbinterface.py:14](https://github.com/HolgerGraef/MSM/blob/master/app/smbinterface.py#L14)
+[Show source in smbinterface.py:14](https://github.com/hgrf/racine/blob/master/app/smbinterface.py#L14)
 
 Creates a temporary file object and reads the content of a remote SMB file into it.
 
@@ -43,7 +43,7 @@ def get_file(self, path):
 
 ### SMBInterface().list_path
 
-[Show source in smbinterface.py:53](https://github.com/HolgerGraef/MSM/blob/master/app/smbinterface.py#L53)
+[Show source in smbinterface.py:53](https://github.com/hgrf/racine/blob/master/app/smbinterface.py#L53)
 
 #### Signature
 
@@ -54,7 +54,7 @@ def list_path(self, path):
 
 ### SMBInterface().process_smb_path
 
-[Show source in smbinterface.py:73](https://github.com/HolgerGraef/MSM/blob/master/app/smbinterface.py#L73)
+[Show source in smbinterface.py:73](https://github.com/hgrf/racine/blob/master/app/smbinterface.py#L73)
 
 Splits up the SMB path of type "/ResourceName/path_in_resource".
 

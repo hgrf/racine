@@ -1,14 +1,14 @@
 # Usagestats
 
-[Mercury Sample Manager Index](../README.md#mercury-sample-manager-index) /
+[Racine Index](../README.md#racine-index) /
 [App](./index.md#app) /
 Usagestats
 
-> Auto-generated documentation for [app.usagestats](https://github.com/HolgerGraef/MSM/blob/master/app/usagestats.py) module.
+> Auto-generated documentation for [app.usagestats](https://github.com/hgrf/racine/blob/master/app/usagestats.py) module.
 
 ## UsageStatisticsThread
 
-[Show source in usagestats.py:27](https://github.com/HolgerGraef/MSM/blob/master/app/usagestats.py#L27)
+[Show source in usagestats.py:27](https://github.com/hgrf/racine/blob/master/app/usagestats.py#L27)
 
 #### Signature
 
@@ -20,7 +20,7 @@ class UsageStatisticsThread(threading.Thread):
 
 ### UsageStatisticsThread().run
 
-[Show source in usagestats.py:37](https://github.com/HolgerGraef/MSM/blob/master/app/usagestats.py#L37)
+[Show source in usagestats.py:37](https://github.com/hgrf/racine/blob/master/app/usagestats.py#L37)
 
 #### Signature
 
@@ -33,7 +33,7 @@ def run(self):
 
 ## filesystem_usage
 
-[Show source in usagestats.py:88](https://github.com/HolgerGraef/MSM/blob/master/app/usagestats.py#L88)
+[Show source in usagestats.py:88](https://github.com/hgrf/racine/blob/master/app/usagestats.py#L88)
 
 #### Signature
 

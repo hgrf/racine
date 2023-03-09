@@ -81,7 +81,7 @@ jobs:
       run: docker-compose run web python -m pytest
         
     - name: Export image
-      run: docker save --output /tmp/dockerimage.tar hgrf/racine
+      run: docker save --output /tmp/dockerimage.tar ghcr.io/hgrf/racine
     
     # https://docs.docker.com/build/ci/github-actions/examples/#share-built-image-between-jobs
     - name: Upload artifact
@@ -110,9 +110,6 @@ jobs:
 
     - name: Login to ghcr
       run: echo ${{ github.token }} | docker login ghcr.io -u hgrf --password-stdin
-
-    - name: Tag image for ghcr
-      run: docker tag hgrf/racine:latest ghcr.io/hgrf/racine:latest
 
     - name: Push to ghcr
       run: docker push ghcr.io/hgrf/racine:latest

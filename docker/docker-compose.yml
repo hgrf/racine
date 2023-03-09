@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   web:
-    image: hgrf/racine
+    image: ghcr.io/hgrf/racine
     build:
       context: ..
       dockerfile: docker/Dockerfile

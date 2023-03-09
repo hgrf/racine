@@ -2,4 +2,4 @@
 # Allow crawling of all content
 User-agent: *
 Disallow:
-Sitemap: https://holgergraef.github.io/sitemap.xml
+Sitemap: https://hgrf.github.io/sitemap.xml

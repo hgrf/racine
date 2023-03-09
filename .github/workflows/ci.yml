@@ -79,34 +79,18 @@ jobs:
 
     - name: Run tests
       run: docker-compose run web python -m pytest
-        
-    - name: Export image
-      run: docker save --output /tmp/dockerimage.tar ghcr.io/hgrf/racine
-    
-    # https://docs.docker.com/build/ci/github-actions/examples/#share-built-image-between-jobs
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: dockerimage
-        path: /tmp/dockerimage.tar
 
-  push:
+  push-docker:
     if: github.event_name == 'push'
-    needs: build-docker
     name: Push docker image
     runs-on: ubuntu-latest
 
     steps:
-    - name: Download artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: dockerimage
-        path: /tmp
-        
-    - name: Import image
-      run: |
-        docker load --input /tmp/dockerimage.tar
-        docker image ls
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build docker images
+      run: docker-compose build web
 
     - name: Login to ghcr
       run: echo ${{ github.token }} | docker login ghcr.io -u hgrf --password-stdin

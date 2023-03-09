@@ -95,9 +95,6 @@ jobs:
     needs: build-docker
     name: Push docker image
     runs-on: ubuntu-latest
-    env:
-      DOCKER_USER: ${{ secrets.DOCKER_USER }}
-      DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
 
     steps:
     - name: Download artifact
@@ -110,9 +107,6 @@ jobs:
       run: |
         docker load --input /tmp/dockerimage.tar
         docker image ls
-    
-    - name: Login to DockerHub
-      run: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
 
     - name: Login to ghcr
       run: echo ${{ github.token }} | docker login ghcr.io -u hgrf --password-stdin

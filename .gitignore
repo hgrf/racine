@@ -3,7 +3,7 @@
 # ignore all "backup" files created by gedit
 *~
 # ignore log file
-msm.log
+racine.log
 # ignore virtual environment files
 venv/*
 # ignore PyCharm specific files

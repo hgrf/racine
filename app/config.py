@@ -12,13 +12,13 @@ class Config:
     BOOTSTRAP_SERVE_LOCAL = (
         True  # don't use CDN for Bootstrap resources (so app will work without Internet access)
     )
-    MSM_FOLDER = basedir
+    RACINE_FOLDER = basedir
     UPLOAD_FOLDER = os.path.join(basedir, "uploads")
 
     @staticmethod
     def init_app(app):
         file_handler = logging.handlers.RotatingFileHandler(
-            os.path.join(basedir, "msm.log"), maxBytes=10000
+            os.path.join(basedir, "racine.log"), maxBytes=10000
         )
         file_handler.setFormatter(
             Formatter("%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]")

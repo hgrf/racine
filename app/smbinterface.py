@@ -8,7 +8,7 @@ import tempfile
 class SMBInterface:
     def __init__(self):
         self.conns = []
-        self.client_machine_name = "MSM"
+        self.client_machine_name = "Racine"
         self.lock = Lock()
 
     def get_file(self, path):

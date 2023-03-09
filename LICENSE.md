@@ -1,18 +1,18 @@
 Software License Agreement
 ==========================
 
-Mercury Sample Manager - A collaborative lab book in your web browser.
+Racine - A collaborative lab book in your web browser.
 
-Copyright (c) 2015-2022 Holger Graef. All rights reserved.
+Copyright (c) 2015-2023 Holger Graef. All rights reserved.
 
 Licensed under the terms of the GNU General Public License version 3:
 http://www.gnu.org/licenses/gpl.html (see also Appendix A).
 
-Sources of Intellectual Property included in Mercury Sample Manager
--------------------------------------------------------------------
+Sources of Intellectual Property included in Racine
+---------------------------------------------------
 
-Where not otherwise indicated, all Mercury Sample Manager content is authored by
-Holger Graef. The following libraries are included in Mercury Sample Manager
+Where not otherwise indicated, all Racine content is authored by
+Holger Graef. The following libraries are included in Racine
 under the GPL license (see Appendix A):
 
 * CKEditor 4 - Copyright (c) 2003-2019, CKSource - Frederico Knabben.
@@ -20,7 +20,7 @@ under the GPL license (see Appendix A):
 The image rotate plugin is based on madis' work (https://ckeditor.com/cke4/addon/imagerotate),
 released under the GPL license (see Appendix A).
 
-The following libraries are included in Mercury Sample Manager under the MIT license
+The following libraries are included in Racine under the MIT license
 (see Appendix B):
 
 * jQuery and jQueryUI - Copyright (c) jQuery Foundation and other contributors.
@@ -29,23 +29,23 @@ The following libraries are included in Mercury Sample Manager under the MIT lic
 * bootstrap-toc.min.js and bootstrap-toc.min.css - Copyright (c) 2015-2016 Aidan Feldman.
 * Lightbox2 - Copyright (c) 2015 Lokesh Dhakar.
 
-The following libraries are included in Mercury Sample Manager under the Apache license
+The following libraries are included in Racine under the Apache license
 (see Appendix C):
 
 * MathJax - Copyright (c) MathJax Consortium, "a joint venture of the American Mathematical Society
    (AMS) and the Society for Industrial and Applied Mathematics (SIAM)".
 
 The following icons from the Open Icon Library (https://sourceforge.net/projects/openiconlibrary/)
-are included in Mercury Sample Manager under various open source licenses:
+are included in Racine under various open source licenses:
 
 * archive.png, collaborative.png, dearchive.png, delete.png, edit.png, file.png, folder.png,
   folder_inaccessible.png, insertimage.png, non-collaborative.png, resource.png, sample.png,
   upload.png, user.png
 
-External sources of Intellectual Property used by Mercury Sample Manager
-------------------------------------------------------------------------
+External sources of Intellectual Property used by Racine
+--------------------------------------------------------
 
-The following external libraries are used by Mercury Sample Manager under the BSD 3-Clause
+The following external libraries are used by Racine under the BSD 3-Clause
 license (see Appendix D):
 
 * Flask - Copyright (c) 2010, Pallets (and related libraries: Flask-SQLAlchemy, werkzeug,
@@ -60,7 +60,7 @@ license (see Appendix D):
 * GitPython - Copyright (c) 2008, 2009 Michael Trier and contributors.
 * WTForms - Copyright (c) 2008 by the WTForms team.
 
-The following external libraries are used by Mercury Sample Manager under the MIT license
+The following external libraries are used by Racine under the MIT license
 (see Appendix B):
 
 * blinker - Copyright (c) The Blinker authors and contributors.
@@ -75,13 +75,13 @@ The following external libraries are used by Mercury Sample Manager under the MI
 * visitor - Copyright (c) 2015 Marc Brinkmann.
 * urllib3 - Copyright (c) 2008-2019 Andrey Petrov and contributors.
 
-The following external libraries are used by Mercury Sample Manager under the Apache
+The following external libraries are used by Racine under the Apache
 license (see Appendix C):
 
 * requests - Copyright 2019 Kenneth Reitz.
 * python-editor 
 
-The following external libraries are used by Mercury Sample Manager under other
+The following external libraries are used by Racine under other
 licenses:
 
 * Pillow - https://raw.githubusercontent.com/python-pillow/Pillow/master/LICENSE

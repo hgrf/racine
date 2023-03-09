@@ -242,6 +242,7 @@ def search():
     if keyword is None or keyword == "":
         return jsonify(error="Please specify a search term")
     keyword = keyword.lower()
+
     # In order to reach really ALL samples that are accessible by the current user, we need to go through the hierarchy.
     # The most tricky samples to catch are the children of a sample that the user shares with someone else and that are
     # not explicitly shared with the user.

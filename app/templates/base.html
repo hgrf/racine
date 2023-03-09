@@ -22,7 +22,7 @@ not populated by JavaScript #}
     </div>
 {% endmacro %}
 
-{% block title %}{% if sample is defined and sample is not none %}MSM - {{ sample.name }}{% else %}Mercury Sample Manager{% endif %}{% endblock %}
+{% block title %}{% if sample is defined and sample is not none %}Racine - {{ sample.name }}{% else %}Racine{% endif %}{% endblock %}
 
 {% block styles %}
     {{super()}}
@@ -63,12 +63,12 @@ not populated by JavaScript #}
                 </div>
                 <a class="navbar-brand hidden-xs" href="/">
                     {% if config['DEBUG'] %}
-                    MSM #DEV#
+                    Racine #DEV#
                     {% else %}
-                    Mercury Sample Manager
+                    Racine
                     {% endif %}
                 </a>
-                <a class="navbar-brand visible-xs" href="/">MSM</a>
+                <a class="navbar-brand visible-xs" href="/">Racine</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">

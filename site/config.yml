@@ -1,6 +1,6 @@
 languageCode:           "en"
-title:                  "Mercury Sample Manager"
-baseURL:                "https://holgergraef.github.io/MSM"
+title:                  "Racine"
+baseURL:                "https://hgrf.github.io/racine"
 
 relativeURLs:           true
 canonifyURLs:           true
@@ -52,17 +52,17 @@ module:
 
 params:
   subtitle:             "A collaborative lab book in your web browser"
-  description:          "MSM is a Flask-based web app that can run in the local network. Features include file import from Samba servers, sharing samples while protecting individual users' notes, LaTeX typesetting and many more..."
+  description:          "Racine is a Flask-based web app that can run in the local network. Features include file import from Samba servers, sharing samples while protecting individual users' notes, LaTeX typesetting and many more..."
   authors:              "Holger Graef"
 
   current_version:      "0.1.0-dev"
   docs_version:         "5.2"
-  github_org:           "https://github.com/HolgerGraef"
-  repo:                 "https://github.com/HolgerGraef/MSM"
+  github_org:           "https://github.com/hgrf"
+  repo:                 "https://github.com/hgrf/racine"
   linkedin:             "https://www.linkedin.com/in/holgergraef"
 
   download:
-    source:             "https://github.com/HolgerGraef/MSM/archive/refs/heads/master.zip"
+    source:             "https://github.com/hgrf/racine/archive/refs/heads/master.zip"
 
   cdn:
     # See https://www.srihash.org for info on how to generate the hashes
@@ -85,20 +85,20 @@ params:
     - name:           "Dr. Rebeca Ribeiro-Palau"
       img:            "IMGP8279.JPG"
       role:           "CNRS Researcher, Center for Nanoscience and Nanotechnology, Palaiseau, France"
-      text:           "MSM is a great lab tool! We use it as a log book for samples, equipment and data treatment, and to keep everybody updated. Everything in our lab is always on Mercury!"
+      text:           "Racine is a great lab tool! We use it as a log book for samples, equipment and data treatment, and to keep everybody updated. Everything in our lab is always on Racine!"
     - name:           "Prof. Dr. Erwann Bocquillon"
       img:            "EB-FDP3_v3.jpeg"
       role:           "University Professor, ML4Q, University of Cologne, Germany"
-      text:           "User friendly and easily administrable, simple and powerful, the Mercury Sample Manager is perfectly suited to our needs. A great tool for our group!"
+      text:           "User friendly and easily administrable, simple and powerful, Racine is perfectly suited to our needs. A great tool for our group!"
     - name:           "Dr. Emmanuel Baudin"
       img:            "emmanuel_baudin.png"
       role:           "Researcher, École Normale Supérieure, Paris, France"
-      text:           "In our lab we have a large collection of samples which are moved between several institutes. Working in large collaborations, it is essential to be able to retrieve data and information on samples and measurements done long ago and by different people. This task would be very hard without Mercury Sample Manager."
+      text:           "In our lab we have a large collection of samples which are moved between several institutes. Working in large collaborations, it is essential to be able to retrieve data and information on samples and measurements done long ago and by different people. This task would be very hard without Racine."
     - name:           "Mario Di Luca"
       role:           "PhD candidate, Laboratory of Quantum Physics, Topology and Correlations, EPFL, Lausanne, Switzerland"
       img:            "IMG_20230201_133822_575.jpg"
-      text:           "In our group we use Mercury Sample Manager to keep track of everything we do, from fabrication to measurements. Easy to use and accessible from everywhere, MSM is the perfect lab notebook! "
+      text:           "In our group we use Racine to keep track of everything we do, from fabrication to measurements. Easy to use and accessible from everywhere, Racine is the perfect lab notebook! "
     - name:           "Holger Graef"
       img:            "IMG_7415_portrait.jpg"
-      role:           "Developer of MSM"
-      text:           "When I realized that keeping track of multiple samples over numerous fabrication and characterization steps inside and outside of the cleanroom using paper notebooks was rather tedious, I started developing MSM and have used it myself for over four years."
+      role:           "Developer of Racine"
+      text:           "When I realized that keeping track of multiple samples over numerous fabrication and characterization steps inside and outside of the cleanroom using paper notebooks was rather tedious, I started developing Racine and have used it myself for over four years."

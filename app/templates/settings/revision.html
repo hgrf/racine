@@ -5,13 +5,13 @@
 {% block page_content %}
     <h3 class="page-header">Revision</h3>
     <p>
-    running MSM revision: {{ local_rev }} <br>
-    MSM revision on GitHub: {{ remote_rev if remote_rev != 0 else 'could not retrieve' }} <br>
+    running Racine revision: {{ local_rev }} <br>
+    Racine revision on GitHub: {{ remote_rev if remote_rev != 0 else 'could not retrieve' }} <br>
     {% if remote_rev != 0 %}
       {% if local_rev != remote_rev %}
-          <font color="#FF0000">The running MSM revision is newer or older than the GitHub revision.</font>
+          <font color="#FF0000">The running Racine revision is newer or older than the GitHub revision.</font>
       {% else %}
-          <font color="#00FF00">You are using the GitHub revision of MSM.</font>
+          <font color="#00FF00">You are using the GitHub revision of Racine.</font>
       {% endif %}
     {% endif %}
     </p>

@@ -110,12 +110,12 @@ def email():
                 )
         except Exception:
             flash(
-                "Could not save settings. Make sure MSM has write privileges in its main directory."
+                "Could not save settings. Make sure Racine has write privileges in its main directory."
             )
 
         # send test mail
         try:
-            send_mail([form.sender.data], "Test mail", body="This is a test mail from MSM.")
+            send_mail([form.sender.data], "Test mail", body="This is a test mail from Racine.")
         except Exception as e:
             flash("Error: " + str(e))
         else:
@@ -280,6 +280,6 @@ def uploads():
 @admin_required
 def log():
     log = "Failed to load log"
-    with open("msm.log", "r") as f:
+    with open("racine.log", "r") as f:
         log = f.read()
     return render_template("settings/log.html", log=log)

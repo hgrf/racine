@@ -41,7 +41,7 @@ website:
 	# build website
 	cd build/bootstrap && hugo --cleanDestinationDir
 
-	# copy build to MSM
+	# copy build to Racine
 	rm -rf ./_site
 	cp -r build/bootstrap/_site ./_site
 
@@ -106,47 +106,47 @@ install-ckeditor:
 	#	/tmp/ckeditor4/dev/builder/release/ckeditor/skins/moono-lisa
 	
 	# apply patch to image plugin
-	# c.f. https://github.com/HolgerGraef/MSM/commit/0cb962ec38ab3ea627bf2ed9f92d46f3ca2b27d2
-	#      https://github.com/HolgerGraef/MSM/commit/7bebdfd730a61df0cdcbc04d9711e11ef3b80cbf
-	#      https://github.com/HolgerGraef/MSM/commit/e98b8fa093778f0a1331f1d4b56619d669f9e8a5
-	#      https://github.com/HolgerGraef/MSM/commit/cac9cf5bd1cba27551b3335998692a9ba072e29e
-	#      https://github.com/HolgerGraef/MSM/commit/b2940d7d35fd2a725f88d394e815c1bc57f6d10f
-	#      https://github.com/HolgerGraef/MSM/commit/276a495413d6654cad1695cd1ef33daa558f3fa7
-	#      https://github.com/HolgerGraef/MSM/commit/3f33c7f58e41eec70f8749d756aaae5f5755a348
-	#      https://github.com/HolgerGraef/MSM/commit/7791aa8db771323ed8a1997beb50ddc17583b460
+	# c.f. https://github.com/hgrf/racine/commit/0cb962ec38ab3ea627bf2ed9f92d46f3ca2b27d2
+	#      https://github.com/hgrf/racine/commit/7bebdfd730a61df0cdcbc04d9711e11ef3b80cbf
+	#      https://github.com/hgrf/racine/commit/e98b8fa093778f0a1331f1d4b56619d669f9e8a5
+	#      https://github.com/hgrf/racine/commit/cac9cf5bd1cba27551b3335998692a9ba072e29e
+	#      https://github.com/hgrf/racine/commit/b2940d7d35fd2a725f88d394e815c1bc57f6d10f
+	#      https://github.com/hgrf/racine/commit/276a495413d6654cad1695cd1ef33daa558f3fa7
+	#      https://github.com/hgrf/racine/commit/3f33c7f58e41eec70f8749d756aaae5f5755a348
+	#      https://github.com/hgrf/racine/commit/7791aa8db771323ed8a1997beb50ddc17583b460
 	cp patches/image.patch /tmp/ckeditor4/plugins/image/plugin.patch
 	cd /tmp/ckeditor4 && git apply plugins/image/plugin.patch
 	rm /tmp/ckeditor4/plugins/image/plugin.patch
 
 	# apply patch to imagerotate plugin
-	# c.f. https://github.com/HolgerGraef/MSM/commit/627937daf81687278c8d339fa1bfaf0a1e71caa8
-	#      https://github.com/HolgerGraef/MSM/commit/56471eaf168d4f34e930368f95e8b330b4bb8d90
-	#      https://github.com/HolgerGraef/MSM/commit/109e8c57fbb0655245160cc42e0bc1d871c9dabd
-	#      https://github.com/HolgerGraef/MSM/commit/e9af7953866a6f26fd30a96f3293f2be0d192ce3
+	# c.f. https://github.com/hgrf/racine/commit/627937daf81687278c8d339fa1bfaf0a1e71caa8
+	#      https://github.com/hgrf/racine/commit/56471eaf168d4f34e930368f95e8b330b4bb8d90
+	#      https://github.com/hgrf/racine/commit/109e8c57fbb0655245160cc42e0bc1d871c9dabd
+	#      https://github.com/hgrf/racine/commit/e9af7953866a6f26fd30a96f3293f2be0d192ce3
 	cp patches/imagerotate/plugin.patch /tmp/ckeditor4/plugins/imagerotate/plugin.patch
 	cd /tmp/ckeditor4/plugins/imagerotate && git apply plugin.patch
 	rm /tmp/ckeditor4/plugins/imagerotate/plugin.patch
 
 	# apply patch to link plugin
-	# c.f. https://github.com/HolgerGraef/MSM/commit/0cb962ec38ab3ea627bf2ed9f92d46f3ca2b27d2
-	#      https://github.com/HolgerGraef/MSM/commit/7bebdfd730a61df0cdcbc04d9711e11ef3b80cbf
-	#      https://github.com/HolgerGraef/MSM/commit/22e0ae16e74488dea63e59a69bb3d74aaac3b972
-	#      https://github.com/HolgerGraef/MSM/commit/cac9cf5bd1cba27551b3335998692a9ba072e29e
-	#      https://github.com/HolgerGraef/MSM/commit/b2940d7d35fd2a725f88d394e815c1bc57f6d10f
-	#      https://github.com/HolgerGraef/MSM/commit/7791aa8db771323ed8a1997beb50ddc17583b460
+	# c.f. https://github.com/hgrf/racine/commit/0cb962ec38ab3ea627bf2ed9f92d46f3ca2b27d2
+	#      https://github.com/hgrf/racine/commit/7bebdfd730a61df0cdcbc04d9711e11ef3b80cbf
+	#      https://github.com/hgrf/racine/commit/22e0ae16e74488dea63e59a69bb3d74aaac3b972
+	#      https://github.com/hgrf/racine/commit/cac9cf5bd1cba27551b3335998692a9ba072e29e
+	#      https://github.com/hgrf/racine/commit/b2940d7d35fd2a725f88d394e815c1bc57f6d10f
+	#      https://github.com/hgrf/racine/commit/7791aa8db771323ed8a1997beb50ddc17583b460
 	cp patches/link.patch /tmp/ckeditor4/plugins/link/plugin.patch
 	cd /tmp/ckeditor4 && git apply plugins/link/plugin.patch
 	rm /tmp/ckeditor4/plugins/link/plugin.patch
 
 	# apply patch to save plugin
-	# c.f. https://github.com/HolgerGraef/MSM/commit/e98b8fa093778f0a1331f1d4b56619d669f9e8a5
-	#      https://github.com/HolgerGraef/MSM/commit/cac9cf5bd1cba27551b3335998692a9ba072e29e
-	#      https://github.com/HolgerGraef/MSM/commit/0f6fe60cd646d7e95b0330b246ad7c7c1b968aae
+	# c.f. https://github.com/hgrf/racine/commit/e98b8fa093778f0a1331f1d4b56619d669f9e8a5
+	#      https://github.com/hgrf/racine/commit/cac9cf5bd1cba27551b3335998692a9ba072e29e
+	#      https://github.com/hgrf/racine/commit/0f6fe60cd646d7e95b0330b246ad7c7c1b968aae
 	cp patches/save/plugin.patch /tmp/ckeditor4/plugins/save/plugin.patch
 	cd /tmp/ckeditor4 && git apply plugins/save/plugin.patch
 	rm /tmp/ckeditor4/plugins/save/plugin.patch
 
-	# copy build to MSM
+	# copy build to Racine
 	rm -rf app/static/ckeditor
 	cp -r /tmp/ckeditor4/dev/builder/release/ckeditor app/static/ckeditor
 
@@ -256,7 +256,7 @@ install-jquery.jeditable:
 
 	wget -O app/static/jquery.jeditable.js https://sscdn.net/js/jquery/latest/jeditable/1.7.1/jeditable.js
 
-	# c.f. https://github.com/HolgerGraef/MSM/commit/89d8b57e795ccfbeb73dc18faecc1d0016a8a008#diff-5f8e3a2bd35e7f0079090b176e06d0568d5c8e4468c0febbfa61014d72b16246
+	# c.f. https://github.com/hgrf/racine/commit/89d8b57e795ccfbeb73dc18faecc1d0016a8a008#diff-5f8e3a2bd35e7f0079090b176e06d0568d5c8e4468c0febbfa61014d72b16246
 	git apply patches/jquery.jeditable.patch
 
 install-jquery-ui:
@@ -300,9 +300,9 @@ install-typeahead:
 	cp -r /tmp/typeahead.js/dist app/static/typeahead.js
 	rm -rf /tmp/typeahead.js
 
-	# c.f. https://github.com/HolgerGraef/MSM/commit/19fc41b1797112d2980b08ad53d1f945d9e36b17
+	# c.f. https://github.com/hgrf/racine/commit/19fc41b1797112d2980b08ad53d1f945d9e36b17
 	#      https://github.com/twitter/typeahead.js/issues/1218
-	#      https://github.com/HolgerGraef/MSM/commit/2d892a4a2f6a9bdb9465730a64670277e35698a8
+	#      https://github.com/hgrf/racine/commit/2d892a4a2f6a9bdb9465730a64670277e35698a8
 	git apply patches/typeahead.patch
 
 	wget -O yuicompressor.jar https://github.com/yui/yuicompressor/releases/download/v2.4.8/yuicompressor-2.4.8.jar
@@ -425,7 +425,7 @@ doc:
 		--cleanup \
 		--create-configs \
 		--theme material \
-		--name "Mercury Sample Manager" \
+		--name "Racine" \
 		--output-path docsmd \
 		app
 

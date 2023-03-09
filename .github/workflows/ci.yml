@@ -84,6 +84,8 @@ jobs:
     if: github.event_name == 'push'
     name: Push docker image
     runs-on: ubuntu-latest
+    env:
+      COMPOSE_FILE: docker/docker-compose.yml
 
     steps:
     - name: Checkout code

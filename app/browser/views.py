@@ -234,7 +234,7 @@ def store_image(file_obj, source, ext):
         make_preview(upload, image)
     except Exception as e:
         # for now we ignore the exceptions, since even if no preview can be generated,
-        # MSM will still serve the fullsize image instead
+        # Racine will still serve the fullsize image instead
         pass
 
     return upload, address, (image.width, image.height)
@@ -415,7 +415,7 @@ def retrieve_smb_image(path):
         image_binary.seek(0)  # need to go back to beginning of stream
         return send_file(image_binary, mimetype="image/jpeg")
     except Exception:
-        return send_file(os.path.join(app.config["MSM_FOLDER"], "app/static/images/file.png"))
+        return send_file(os.path.join(app.config["RACINE_FOLDER"], "app/static/images/file.png"))
 
 
 @browser.route("/", defaults={"smb_path": ""})

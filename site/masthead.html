@@ -1,19 +1,19 @@
 <div class="bd-masthead mb-3" id="content">
   <div class="container-xxl bd-gutter">
     <div class="col-md-8 mx-auto text-center">
-      <img src="/images/sample.png" width="200" alt="MSM" class="d-block mx-auto mb-3">
-      <h1 class="mb-3 fw-semibold">Take notes and collaborate with&nbsp;Mercury Sample&nbsp;Manager</h1>
+      <img src="/images/sample.png" width="200" alt="Racine" class="d-block mx-auto mb-3">
+      <h1 class="mb-3 fw-semibold">Take notes and collaborate with&nbsp;Racine</h1>
       <p class="lead mb-4">
-        MSM is a tool that enables researchers to keep track of their samples. It runs on a central
+        Racine is a tool that enables researchers to keep track of their samples. It runs on a central
         server in the local network of your research institute and can be accessed using a web
         browser. Features include file import from Samba servers, sharing samples while protecting
         individual users' notes, LaTeX typesetting and many more...
       </p>
       <div class="d-flex flex-column flex-lg-row align-items-md-stretch justify-content-md-center gap-3 mb-4">
         <div class="d-inline-block v-align-middle fs-5 text-start">
-          {{ highlight "mkdir msm && cd msm\nwget holgergraef.github.io/MSM/docker-compose.yml\ndocker compose up web" "sh" "" }}
+          {{ highlight "mkdir racine && cd racine\nwget hgrf.github.io/racine/docker-compose.yml\ndocker compose up web" "sh" "" }}
         </div>
-        <a href="https://msm.readthedocs.io/en/latest/" class="btn btn-lg bd-btn-lg btn-bd-primary d-flex align-items-center justify-content-center fw-semibold" onclick="ga('send', 'event', 'Jumbotron actions', 'Get started', 'Get started');">
+        <a href="https://racine.readthedocs.io/en/latest/" class="btn btn-lg bd-btn-lg btn-bd-primary d-flex align-items-center justify-content-center fw-semibold" onclick="ga('send', 'event', 'Jumbotron actions', 'Get started', 'Get started');">
           <svg class="bi me-2" aria-hidden="true"><use xlink:href="#book-half"></use></svg>
           Read&nbsp;the&nbsp;docs
         </a>
@@ -21,7 +21,7 @@
       <p class="text-muted mb-0">
         Currently <strong>v{{ .Site.Params.current_version }}</strong>
         <span class="px-1">&middot;</span>
-        <a href="https://msm.readthedocs.io/en/latest/#using-pre-built-images" class="link-secondary">Download</a>
+        <a href="https://racine.readthedocs.io/en/latest/#using-pre-built-images" class="link-secondary">Download</a>
       </p>
     </div>
   </div>

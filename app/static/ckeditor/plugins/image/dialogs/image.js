@@ -4,8 +4,8 @@
  *
  * modifications by Holger Graef:
  * lines 232 ff.: hack to set a default image width
- * lines 587 ff.: use MSM fb plugin instead of CKEditor's file browser functionality
- * line 1012: hide image link tab (clicking on images in MSM opens the lightbox, images should never be links)
+ * lines 587 ff.: use Racine fb plugin instead of CKEditor's file browser functionality
+ * line 1012: hide image link tab (clicking on images in Racine opens the lightbox, images should never be links)
  *
  */
 

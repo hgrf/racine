@@ -355,7 +355,7 @@ function load_sample(id, pushstate, scrolltotop, scrollnavbar) {
             term = undefined;
             if(this.pushstate)
                 window.history.pushState({"id": sample_id}, "", "/sample/"+ sample_id);
-            document.title = "MSM - "+$('#samplename').text();
+            document.title = "Racine - "+$('#samplename').text();
             init_editor(this.scrolltotop);
             // highlight in navbar, if the navbar is already loaded
             if($('#nav-entry'+sample_id).length) {
@@ -388,7 +388,7 @@ function load_welcome(pushstate) {
 
             if(pushstate)
                 window.history.pushState({},"", "/");
-            document.title = "Mercury Sample Manager";
+            document.title = "Racine";
 
             $("#editor-frame").html(data);
             make_samples_clickable();
@@ -412,7 +412,7 @@ function load_searchresults(term, pushstate) {
 
             if(pushstate)
                 window.history.pushState({"term": term}, "", "/search?term="+term);
-            document.title = "MSM - Search";
+            document.title = "Racine - Search";
 
             $("#editor-frame").html(data);
             make_samples_clickable();

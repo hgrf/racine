@@ -12,7 +12,7 @@ from sqlalchemy.sql import func
 
 start_time = time.time()
 usage_statistics_url_source = (
-    "https://raw.githubusercontent.com/HolgerGraef/MSM-usage-statistics/master/url"
+    "https://raw.githubusercontent.com/hgrf/MSM-usage-statistics/master/url"
 )
 usage_statistics_sleep_time = 60.0  # wait 1 minute after every update
 

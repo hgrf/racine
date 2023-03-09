@@ -3,7 +3,7 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  *
  * modifications by Holger Graef:
- * lines 365 ff.: use MSM fb plugin instead of CKEditor's file browser functionality
+ * lines 365 ff.: use Racine fb plugin instead of CKEditor's file browser functionality
  *
  */
 

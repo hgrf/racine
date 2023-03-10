@@ -45,10 +45,13 @@ class ProductionConfig(Config):
 
 
 class TestingConfig(Config):
+    DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or "sqlite:///" + os.path.join(
         basedir, "database/testing.sqlite"
     )
     LOG_EXCEPTIONS = True
+    TESTING = True
+    WTF_CSRF_ENABLED = False
 
 
 config = {

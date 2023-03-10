@@ -27,7 +27,9 @@ website:
 	cp site/masthead-followup.html \
 		build/bootstrap/site/layouts/partials/home/masthead-followup.html
 	mkdir -p build/bootstrap/site/static/images
-	cp app/static/images/sample.png build/bootstrap/site/static/images/sample.png
+	cp app/static/images/racine.svg build/bootstrap/site/static/images/racine.svg
+	cp app/static/images/racine-icon.svg build/bootstrap/site/static/images/racine-icon.svg
+	cp app/static/images/racine-icon.png build/bootstrap/site/static/images/racine-icon.png
 	cp site/IMGP8279.JPG build/bootstrap/site/static/images/IMGP8279.JPG
 	cp site/EB-FDP3_v3.jpeg build/bootstrap/site/static/images/EB-FDP3_v3.jpeg
 	cp site/IMG_7415_portrait.jpg build/bootstrap/site/static/images/IMG_7415_portrait.jpg

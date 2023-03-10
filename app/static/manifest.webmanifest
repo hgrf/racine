@@ -5,7 +5,7 @@
   "background_color": "#fff",
   "description": "A note taking and sample management app.",
   "icons": [{
-    "src": "/static/images/sample.png",
+    "src": "/static/images/racine-icon.png",
     "sizes": "128x128",
     "type": "image/png"
   }]

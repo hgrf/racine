@@ -6,6 +6,8 @@
 [![Join the chat at https://gitter.im/racine/community](https://badges.gitter.im/racine/community.svg)](https://gitter.im/racine/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Sponsor](https://img.shields.io/github/sponsors/hgrf)](https://github.com/sponsors/hgrf)
 
+<img src="app/static/images/racine.svg" width="200"/>
+
 # Racine
 
 ## Introduction

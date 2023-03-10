@@ -6,7 +6,7 @@ install-dependencies:
 website:
 	# clone bootstrap
 	rm -rf build/bootstrap
-	git clone -b v5.2.3 --depth 1 git@github.com:twbs/bootstrap.git build/bootstrap
+	git clone -b v5.2.3 --depth 1 https://github.com/twbs/bootstrap.git build/bootstrap
 	rm -rf build/bootstrap/.git
 
 	rm -rf build/bootstrap/site/content/docs
@@ -16,6 +16,7 @@ website:
 	rm build/bootstrap/site/layouts/partials/docs-versions.html
 
 	cd build/bootstrap && npm install
+	cd build/bootstrap && npm install hugo-extended --save-dev
 
 	cp site/config.yml build/bootstrap/config.yml
 	cp site/linkedin.svg build/bootstrap/site/layouts/partials/icons/linkedin.svg
@@ -41,7 +42,7 @@ website:
 	cp site/_variables.scss build/bootstrap/site/assets/scss/_variables.scss
 
 	# build website
-	cd build/bootstrap && hugo --cleanDestinationDir
+	cd build/bootstrap && npx hugo --cleanDestinationDir
 
 	# copy build to Racine
 	rm -rf ./_site
@@ -59,7 +60,7 @@ website-prepare-deploy: website
 	git add docs
 
 hugo-serve:
-	cd build/bootstrap && hugo server --port 9001 --disableFastRender
+	cd build/bootstrap && npx hugo server --port 9001 --disableFastRender --verbose
 
 install-ckeditor:
 	# clone CKEditor 4.9.2

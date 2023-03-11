@@ -1,5 +1,5 @@
 from flask import render_template, redirect, request, jsonify, send_file, abort, current_app
-from werkzeug.utils import safe_join
+from werkzeug.security import safe_join
 from flask_login import current_user, login_required, login_user, logout_user
 from .. import db
 from .. import plugins

@@ -1,4 +1,5 @@
 from flask import render_template, redirect, request, jsonify, send_file, abort, current_app
+from werkzeug.security import safe_join
 from flask_login import current_user, login_required, login_user, logout_user
 from .. import db
 from .. import plugins
@@ -678,8 +679,11 @@ def swapactionorder():  # TODO: sort out permissions for this (e.g. who has the 
 @main.route("/plugins/<path:path>")
 @login_required
 def static_file(path):
-    # TODO: this looks a bit unsafe to me
-    return send_file("../plugins/" + path)
+    path = safe_join("../plugins/", path)
+    if path is None:
+        abort(404)
+    else:
+        return send_file(path)
 
 
 def str_to_bool(str):

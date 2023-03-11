@@ -679,8 +679,11 @@ def swapactionorder():  # TODO: sort out permissions for this (e.g. who has the 
 @main.route("/plugins/<path:path>")
 @login_required
 def static_file(path):
-    # TODO: this looks a bit unsafe to me
-    return send_file(safe_join("../plugins/", path))
+    path = safe_join("../plugins/", path)
+    if path is None:
+        abort(404)
+    else:
+        return send_file(path)
 
 
 def str_to_bool(str):

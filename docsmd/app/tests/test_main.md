@@ -9,7 +9,7 @@ Test Main
 
 ## test_db_migrations
 
-[Show source in test_main.py:13](https://github.com/hgrf/racine/blob/master/app/tests/test_main.py#L13)
+[Show source in test_main.py:39](https://github.com/hgrf/racine/blob/master/app/tests/test_main.py#L39)
 
 Test that the database migrations can be run.
 
@@ -32,5 +32,20 @@ Test that the app can be instantiated.
 
 ```python
 def test_instantiate_app():
+    ...
+```
+
+
+
+## test_issue129
+
+[Show source in test_main.py:13](https://github.com/hgrf/racine/blob/master/app/tests/test_main.py#L13)
+
+Test that the issue #129 is fixed.
+
+#### Signature
+
+```python
+def test_issue129():
     ...
 ```

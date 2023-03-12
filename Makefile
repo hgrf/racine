@@ -435,6 +435,10 @@ doc:
 	# replace main page of documentation
 	cp README.md docsmd/README.md
 
+	# add image for README.md
+	mkdir -p docsmd/app/static/images
+	cp app/static/images/racine.svg docsmd/app/static/images/racine.svg
+
 	sed -i 's/- content.code.annotate/- content.code.annotate\n    - content.code.copy/g' mkdocs.yml
 
 	# convert to HTML documentation

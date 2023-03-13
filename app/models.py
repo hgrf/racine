@@ -14,6 +14,20 @@ from datetime import datetime
 
 SAMPLE_NAME_LENGTH = 64
 
+from flask_httpauth import HTTPTokenAuth
+
+token_auth = HTTPTokenAuth()
+
+
+@token_auth.verify_token
+def verify_token(token):
+    return User.check_token(token) if token else None
+
+
+@token_auth.error_handler
+def token_auth_error(status):
+    return "", 500  # error_response(status)
+
 
 def deleted_sample_handler(session, sample):
     def recursive(sample):
@@ -237,11 +251,12 @@ class Sample(db.Model):
     activity = db.relationship("Activity", backref="sample")
 
     def __setattr__(self, name, value):
+        user = token_auth.current_user() or current_user
         if name == "name":
             if (
                 value != self.name
                 and self.query.filter_by(
-                    owner=current_user, parent_id=self.parent_id, name=value, isdeleted=False
+                    owner=user, parent_id=self.parent_id, name=value, isdeleted=False
                 ).all()
             ):
                 raise Exception("You already have a sample with this name on this hierarchy level.")
@@ -250,7 +265,7 @@ class Sample(db.Model):
                 value != self.parent_id
                 and self.name is not None
                 and self.query.filter_by(
-                    owner=current_user, parent_id=value, name=self.name, isdeleted=False
+                    owner=user, parent_id=value, name=self.name, isdeleted=False
                 ).all()
             ):
                 raise Exception("You already have a sample with this name on this hierarchy level.")

@@ -445,33 +445,6 @@ def changeparent():
     return jsonify(code=0)
 
 
-@main.route("/newsample", methods=["POST"])
-@login_required
-def newsample():
-    form = NewSampleForm()
-    if form.validate_on_submit():
-        try:
-            parent_id = int(form.newsampleparentid.data) if form.newsampleparentid.data else 0
-            sample = Sample(
-                owner=current_user,
-                name=form.newsamplename.data,
-                parent_id=parent_id,
-                description=form.newsampledescription.data,
-                isarchived=False,
-                isdeleted=False,
-            )
-            db.session.add(sample)
-            db.session.commit()
-            record_activity("add:sample", current_user, sample, commit=True)
-            return jsonify(code=0, sampleid=sample.id)
-        except Exception as e:
-            db.session.rollback()
-            return jsonify(code=1, error={"newsamplename": [str(e)]})
-    elif form.is_submitted():
-        return jsonify(code=1, error={field: errors for field, errors in form.errors.items()})
-    abort(500)  # this should never happen
-
-
 @main.route("/plugins/<path:path>")
 @login_required
 def static_file(path):

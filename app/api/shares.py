@@ -2,14 +2,13 @@ from flask import jsonify, request
 from marshmallow import Schema, fields
 
 from . import api
-from .auth import token_auth
 from .common import IdParameter, EmptySchema
 from .errors import bad_request
 
 from .. import db
 from ..models import Sample, User
 
-from ..models import News, Share, record_activity
+from ..models import News, Share, record_activity, token_auth
 
 
 class CreateShareContent(Schema):

@@ -179,7 +179,6 @@ function init_editor(scrolltotop) {
 
         var formdata = {};
         $('#newactionform').serializeArray().map(function(x){formdata[x.name] = x.value;});
-        console.log(formdata);
 
         ActionsAPI.createAction(sample_id, formdata, function(error, data, response) {
             if (response.error) {
@@ -568,19 +567,14 @@ $(document).ready(function() {
         // make sure content of editor is transmitted
         CKEDITOR.instances['newsampledescription'].updateElement();
 
-        $.ajax({
-            url: "/newsample",
-            type: "post",
-            data: newsampleform.serialize(),
-            success: function(data) {
-                if (data.code === 0) {
-                    $('#newsample').modal('hide');  // hide and clear the dialog
-                    load_sample(data.sampleid);
-                    load_navbar();
-                } else {
-                    console.log(data.error);
+        var formdata = {};
+        newsampleform.serializeArray().map(function(x){formdata[x.name] = x.value;});
+
+        SamplesAPI.createSample(formdata, function(error, data, response) {
+            if (response.error) {
+                if (response.body.error) {
                     // form failed validation; because of invalid data or expired CSRF token
-                    for(field in data.error) {
+                    for(field in response.body.error) {
                         if(field === 'csrf_token') {
                             error_dialog('The CSRF token has expired. Please reload the page to create a new sample.');
                             continue;
@@ -591,14 +585,21 @@ $(document).ready(function() {
                         // add the has-error to the form group
                         formgroup.addClass('has-error')
                         // add the error message to the form group
-                        for(i in data.error[field]) {
-                            formgroup.append('<span class="help-block">'+data.error[field][i]+'</span>');
+                        for(i in response.body.error[field]) {
+                            formgroup.append(
+                                '<span class="help-block">' +
+                                response.body.error[field][i] +
+                                '</span>'
+                            );
                         }
                     }
+                } else {
+                    error_dialog(response.error);
                 }
-            },
-            error: function( jqXHR, textStatus ) {
-                error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
+            } else {
+                $('#newsample').modal('hide');  // hide and clear the dialog
+                load_sample(data.sampleid);
+                load_navbar();
             }
         });
     });

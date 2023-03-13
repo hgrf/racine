@@ -15,6 +15,24 @@ tags:
 - name: actions
   description: Endpoints related to actions
 paths:
+  /api/sample:
+    put:
+      operationId: createSample
+      tags:
+      - samples
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NewSampleFormContent'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewSampleResponse'
+          description: Sample created
   /api/sample/{id}:
     delete:
       operationId: deleteSample
@@ -186,15 +204,33 @@ paths:
 openapi: 3.0.2
 components:
   schemas:
+    NewSampleFormContent:
+      type: object
+      properties:
+        csrf_token:
+          type: string
+        newsampleparent:
+          type: string
+        newsampleparentid:
+          type: integer
+        newsamplename:
+          type: string
+        newsampledescription:
+          type: string
+    NewSampleResponse:
+      type: object
+      properties:
+        sampleid:
+          type: integer
     Empty:
       type: object
       properties: {}
     CreateShareContent:
       type: object
       properties:
-        userid:
-          type: integer
         sampleid:
+          type: integer
+        userid:
           type: integer
         username:
           type: string
@@ -204,13 +240,13 @@ components:
     NewActionFormContent:
       type: object
       properties:
+        csrf_token:
+          type: string
         description:
           type: string
         timestamp:
           type: string
           format: date
-        csrf_token:
-          type: string
     CreateActionError:
       type: object
       properties:
@@ -226,15 +262,15 @@ components:
     MarkActionAsNewsContent:
       type: object
       properties:
+        title:
+          type: string
+        csrf_token:
+          type: string
         expires:
           type: string
           format: date
-        csrf_token:
-          type: string
         actionid:
           type: integer
-        title:
-          type: string
     UnmarkActionAsNewsContent:
       type: object
       properties:

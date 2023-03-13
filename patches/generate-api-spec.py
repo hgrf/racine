@@ -36,6 +36,7 @@ spec = APISpec(
 
 app = create_app("testing")
 with app.test_request_context():
+    spec.path(view=api.samples.createsample)
     spec.path(view=api.samples.deletesample)
 
     spec.path(view=api.shares.createshare)

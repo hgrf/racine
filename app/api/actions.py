@@ -3,13 +3,12 @@ from flask import jsonify, request
 from marshmallow import Schema, fields
 
 from . import api
-from .auth import token_auth
 from .common import IdParameter, EmptySchema
 from .errors import bad_request
 from ..main.forms import MarkActionAsNewsForm, NewActionForm
 
 from .. import db
-from ..models import Action, News, Sample, record_activity
+from ..models import Action, News, Sample, record_activity, token_auth
 
 
 class SampleParameter(Schema):
@@ -242,7 +241,8 @@ def unmarkasnews():
         return bad_request("Action is not marked as news")
 
     if action.news.sender != token_auth.current_user():
-        return bad_request("Only the sender of the news ({}) can unmark this action as news".format(
+        return bad_request(
+            "Only the sender of the news ({}) can unmark this action as news".format(
                 action.news.sender.username
             ),
         )

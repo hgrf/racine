@@ -20,6 +20,7 @@ website:
 
 	cp site/config.yml build/bootstrap/config.yml
 	cp site/linkedin.svg build/bootstrap/site/layouts/partials/icons/linkedin.svg
+	cp site/piggy-bank-fill.svg build/bootstrap/site/layouts/partials/icons/piggy-bank-fill.svg
 	cp site/docs-navbar.html build/bootstrap/site/layouts/partials/docs-navbar.html
 	cp site/favicons.html build/bootstrap/site/layouts/partials/favicons.html
 	cp site/footer.html build/bootstrap/site/layouts/partials/footer.html

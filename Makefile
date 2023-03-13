@@ -56,8 +56,10 @@ website-prepare-deploy: website
 	pre-commit uninstall
 	git stash
 	git checkout gh-pages
+	mv docs/.gitignore docs.gitignore
 	rm -rf docs
 	mv _site docs
+	mv docs.gitignore docs/.gitignore
 	git add docs
 
 hugo-serve:

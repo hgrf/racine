@@ -107,8 +107,13 @@ function init_editor(scrolltotop) {
     // handler for archive button
     $('#archive').click(function() {
         SamplesAPI.toggleArchived(sample_id, function(error, data, response) {
-            if (response.error) {
-                error_dialog(response.error);
+            if (!response)
+                error_dialog("Server error. Please check your connection.");
+            else if (response.error) {
+                if (response.body.message)
+                    error_dialog(response.body.message);
+                else
+                    error_dialog(response.error);
             } else {
                 if(data.isarchived) {
                     $('#archive').attr('title', 'De-archive');
@@ -126,8 +131,13 @@ function init_editor(scrolltotop) {
     // handler for collaborative button
     $('#collaborate').click(function() {
         SamplesAPI.toggleCollaborative(sample_id, function(error, data, response) {
-            if (response.error) {
-                error_dialog(response.error);
+            if (!response)
+                error_dialog("Server error. Please check your connection.");
+            else if (response.error) {
+                if (response.body.message)
+                    error_dialog(response.body.message);
+                else
+                    error_dialog(response.error);
             } else {
                 if(data.iscollaborative) {
                     $('#collaborate').attr('title', 'Make non-collaborative');
@@ -179,7 +189,9 @@ function init_editor(scrolltotop) {
         $('#newactionform').serializeArray().map(function(x){formdata[x.name] = x.value;});
 
         ActionsAPI.createAction(sample_id, formdata, function(error, data, response) {
-            if (response.error) {
+            if (!response)
+                error_dialog("Server error. Please check your connection.");
+            else if (response.error) {
                 if (response.body.resubmit) {
                     // form failed validation; because of invalid data or expired CSRF token
                     // we still reload the sample in order to get a new CSRF token, but we
@@ -253,8 +265,13 @@ function init_editor(scrolltotop) {
         ActionsAPI.swapActionOrder(
             {'actionid': $(this).data('id'), 'swapid': $(this).data('swapid')},
             function(error, data, response) {
-                if (response.error) {
-                    error_dialog(response.error);
+                if (!response)
+                    error_dialog("Server error. Please check your connection.");
+                else if (response.error) {
+                    if (response.body.message)
+                        error_dialog(response.body.message);
+                    else
+                        error_dialog(response.error);
                 } else {
                     load_sample(sample_id, false, false, false);
                 }
@@ -276,8 +293,13 @@ function init_editor(scrolltotop) {
             $('#dlg_markasnews').modal('show');
         } else {
             ActionsAPI.unmarkActionAsNews({ "actionid": actionid }, function(error, data, response) {
-                if (response.error) {
-                    error_dialog(response.error);
+                if (!response)
+                    error_dialog("Server error. Please check your connection.");
+                else if (response.error) {
+                    if (response.body.message)
+                        error_dialog(response.body.message);
+                    else
+                        error_dialog(response.error);
                 } else {
                     flag_element.removeClass('unmarkasnews');
                     flag_element.addClass('markasnews');
@@ -500,20 +522,26 @@ $(document).ready(function() {
         SharesAPI.createShare(
             { "sampleid": sample_id, "username": $('#username').val() },
             function(error, data, response) {
-            if (response.error) {
-                error_dialog(response.error);
-            } else {
-                $('#sharelist').append(
-                    '<div class="sharelistentry" id="sharelistentry' + data.shareid + '">' +
-                        '<a data-type="share" data-id="' + data.shareid + '" data-toggle="modal" ' +
-                                'data-target="#confirm-delete" href="">' + 
-                            '<i class="glyphicon glyphicon-remove"></i>' +
-                        '</a>\n' + data.username + 
-                    '</div>'
-                );
+                if (!response)
+                    error_dialog("Server error. Please check your connection.");
+                else if (response.error) {
+                    if (response.body.message)
+                        error_dialog(response.body.message);
+                    else
+                        error_dialog(response.error);
+                } else {
+                    $('#sharelist').append(
+                        '<div class="sharelistentry" id="sharelistentry' + data.shareid + '">' +
+                            '<a data-type="share" data-id="' + data.shareid + '" data-toggle="modal" ' +
+                                    'data-target="#confirm-delete" href="">' + 
+                                '<i class="glyphicon glyphicon-remove"></i>' +
+                            '</a>\n' + data.username + 
+                        '</div>'
+                    );
+                }
+                $('#userbrowser').modal('hide');
             }
-            $('#userbrowser').modal('hide');
-        });
+        );
     }
 
     // new sample dialog
@@ -569,7 +597,9 @@ $(document).ready(function() {
         newsampleform.serializeArray().map(function(x){formdata[x.name] = x.value;});
 
         SamplesAPI.createSample(formdata, function(error, data, response) {
-            if (response.error) {
+            if (!response)
+                error_dialog("Server error. Please check your connection.");
+            else if (response.error) {
                 if (response.body.error) {
                     // form failed validation; because of invalid data or expired CSRF token
                     for(field in response.body.error) {
@@ -618,7 +648,9 @@ $(document).ready(function() {
         dlg_markasnews_form.serializeArray().map(function(x){formdata[x.name] = x.value;});
 
         ActionsAPI.markActionAsNews(formdata, function(error, data, response) {
-            if (response.body && response.body.error) {
+            if (!response)
+                error_dialog("Server error. Please check your connection.");
+            else if (response.body && response.body.error) {
                 // form failed validation; because of invalid data or expired CSRF token
                 for(field in response.body.error) {
                     if(field === 'csrf_token') {
@@ -717,8 +749,13 @@ $(document).ready(function() {
         switch(type) {
         case "action":
             ActionsAPI.deleteAction(id, function(error, data, response) {
-                if (response.error) {
-                    error_dialog(response.error);
+                if (!response)
+                    error_dialog("Server error. Please check your connection.");
+                else if (response.error) {
+                    if (response.body.message)
+                        error_dialog(response.body.message);
+                    else
+                        error_dialog(response.error);
                 } else {
                     $('#'+id+'.list-entry').remove();
                 }
@@ -727,8 +764,13 @@ $(document).ready(function() {
             break;
         case "sample":
             SamplesAPI.deleteSample(id, function(error, data, response) {
-                if (response.error) {
-                    error_dialog(response.error);
+                if (!response)
+                    error_dialog("Server error. Please check your connection.");
+                else if (response.error) {
+                    if (response.body.message)
+                        error_dialog(response.body.message);
+                    else
+                        error_dialog(response.error);
                 } else {
                     load_welcome(true);
                     load_navbar(undefined, undefined, false, true);
@@ -738,12 +780,21 @@ $(document).ready(function() {
             break;
         case "share":
             SharesAPI.deleteShare(id, function(error, data, response) {
-                $('#sharelistentry'+id).remove();
-                if(response.status == 205) { // if the user removed himself from the sharer list
-                    load_welcome(true);
-                    load_navbar(undefined, undefined, false, true);
+                if (!response)
+                    error_dialog("Server error. Please check your connection.");
+                else if (response.error) {
+                    if (response.body.message)
+                        error_dialog(response.body.message);
+                    else
+                        error_dialog(response.error);
+                } else {
+                    $('#sharelistentry'+id).remove();
+                    if(response.status == 205) { // if the user removed himself from the sharer list
+                        load_welcome(true);
+                        load_navbar(undefined, undefined, false, true);
+                    }
+                    $('#confirm-delete').modal('hide');
                 }
-                $('#confirm-delete').modal('hide');
             });
             break;
         }

@@ -96,7 +96,9 @@ function init_navbar(scrolltocurrent, scrolltotop) {
             if(draggedId === parentId) return;
 
             SamplesAPI.changeParent(draggedId, parentId, function(error, data, response) {
-                if (response.error) {
+                if (!response)
+                    error_dialog("Server error. Please check your connection.");
+                else if (response.error) {
                     if (response.body.message)
                         error_dialog(response.body.message);
                     else

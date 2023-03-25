@@ -106,11 +106,10 @@ function init_editor(scrolltotop) {
 
     // handler for archive button
     $('#archive').click(function() {
-        $.ajax({
-            url: "/togglearchived",
-            type: "post",
-            data: { "id": sample_id },
-            success: function( data ) {
+        SamplesAPI.toggleArchived(sample_id, function(error, data, response) {
+            if (response.error) {
+                error_dialog(response.error);
+            } else {
                 if(data.isarchived) {
                     $('#archive').attr('title', 'De-archive');
                     $('#archive').attr('src', '/static/images/dearchive.png');
@@ -126,11 +125,10 @@ function init_editor(scrolltotop) {
 
     // handler for collaborative button
     $('#collaborate').click(function() {
-        $.ajax({
-            url: "/togglecollaborative",
-            type: "post",
-            data: {"id": sample_id},
-            success: function(data) {
+        SamplesAPI.toggleCollaborative(sample_id, function(error, data, response) {
+            if (response.error) {
+                error_dialog(response.error);
+            } else {
                 if(data.iscollaborative) {
                     $('#collaborate').attr('title', 'Make non-collaborative');
                     $('#collaborate').attr('src', '/static/images/non-collaborative.png');

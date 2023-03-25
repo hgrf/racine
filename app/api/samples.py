@@ -22,6 +22,14 @@ class NewSampleResponse(Schema):
     sampleid = fields.Int()
 
 
+class ToggleArchivedResponse(Schema):
+    isarchived = fields.Bool()
+
+
+class ToggleCollaborativeResponse(Schema):
+    iscollaborative = fields.Bool()
+
+
 @api.route("/sample", methods=["PUT"])
 @token_auth.login_required
 def createsample():
@@ -93,3 +101,55 @@ def deletesample(id):
     sample.isdeleted = True  # mark sample as "deleted"
     db.session.commit()
     return "", 204
+
+
+@api.route("/sample/<int:id>/togglearchived", methods=["POST"])
+@token_auth.login_required
+def togglearchived(id):
+    """Toggle the isarchived-flag of a sample.
+    ---
+    post:
+      operationId: toggleArchived
+      tags: [samples]
+      parameters:
+      - in: path
+        schema: IdParameter
+      responses:
+        200:
+          content:
+            application/json:
+              schema: ToggleArchivedResponse
+          description: isarchived-flag toggled
+    """
+    sample = Sample.query.get(id)
+    if sample is None or sample.owner != token_auth.current_user() or sample.isdeleted:
+        return bad_request("Sample does not exist or you do not have the right to access it")
+    sample.isarchived = not sample.isarchived
+    db.session.commit()
+    return jsonify(isarchived=sample.isarchived), 200
+
+
+@api.route("/sample/<int:id>/togglecollaborative", methods=["POST"])
+@token_auth.login_required
+def togglecollaborative(id):
+    """Toggle the iscollaborative-flag of a sample.
+    ---
+    post:
+      operationId: toggleCollaborative
+      tags: [samples]
+      parameters:
+      - in: path
+        schema: IdParameter
+      responses:
+        200:
+          content:
+            application/json:
+              schema: ToggleCollaborativeResponse
+          description: iscollaborative-flag toggled
+    """
+    sample = Sample.query.get(id)
+    if sample is None or sample.owner != token_auth.current_user() or sample.isdeleted:
+        return bad_request("Sample does not exist or you do not have the right to access it")
+    sample.iscollaborative = not sample.iscollaborative
+    db.session.commit()
+    return jsonify(iscollaborative=sample.iscollaborative), 200

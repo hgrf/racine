@@ -364,32 +364,6 @@ def login_as():
     return redirect("/")
 
 
-@main.route("/togglearchived", methods=["POST"])
-@login_required
-def togglearchived():
-    sample = Sample.query.get(int(request.form.get("id")))
-    if sample is None or sample.owner != current_user or sample.isdeleted:
-        return jsonify(
-            code=1, error="Sample does not exist or you do not have the right to access it"
-        )
-    sample.isarchived = not sample.isarchived
-    db.session.commit()
-    return jsonify(code=0, isarchived=sample.isarchived)
-
-
-@main.route("/togglecollaborative", methods=["POST"])
-@login_required
-def togglecollaborative():
-    sample = Sample.query.get(int(request.form.get("id")))
-    if sample is None or sample.owner != current_user or sample.isdeleted:
-        return jsonify(
-            code=1, error="Sample does not exist or you do not have the right to access it"
-        )
-    sample.iscollaborative = not sample.iscollaborative
-    db.session.commit()
-    return jsonify(code=0, iscollaborative=sample.iscollaborative)
-
-
 @main.route("/changeparent", methods=["POST"])
 @login_required
 def changeparent():

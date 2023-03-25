@@ -321,19 +321,20 @@ class Sample(db.Model):
 
     @property
     def logical_parent(self):
+        user = token_auth.current_user() or current_user
         # determine the sample's logical parent in the current user's tree (i.e. the parent or the mountpoint)
 
         # first find out if the sample belongs to the current user (in this case just return the real parent)
-        if self.owner == current_user:
+        if self.owner == user:
             return self.parent
 
         # if the sample is indirectly shared with the current user, also return the real parent
-        if self.is_accessible_for(current_user, indirect_only=True):
+        if self.is_accessible_for(user, indirect_only=True):
             return self.parent
 
         # if the sample is directly shared with the current user, return the mount point
-        if self.is_accessible_for(current_user, direct_only=True):
-            share = Share.query.filter_by(sample=self, user=current_user).first()
+        if self.is_accessible_for(user, direct_only=True):
+            share = Share.query.filter_by(sample=self, user=user).first()
             return share.mountpoint
 
 

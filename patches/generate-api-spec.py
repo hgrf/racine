@@ -40,6 +40,7 @@ with app.test_request_context():
     spec.path(view=api.samples.deletesample)
     spec.path(view=api.samples.togglearchived)
     spec.path(view=api.samples.togglecollaborative)
+    spec.path(view=api.samples.changeparent)
 
     spec.path(view=api.shares.createshare)
     spec.path(view=api.shares.deleteshare)

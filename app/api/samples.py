@@ -7,7 +7,7 @@ from .errors import bad_request
 from ..main.forms import NewSampleForm
 
 from .. import db
-from ..models import Sample, record_activity, token_auth
+from ..models import News, Sample, Share, record_activity, token_auth
 
 
 class NewSampleFormContent(Schema):
@@ -28,6 +28,10 @@ class ToggleArchivedResponse(Schema):
 
 class ToggleCollaborativeResponse(Schema):
     iscollaborative = fields.Bool()
+
+
+class ParentIdParameter(Schema):
+    parentid = fields.Int()
 
 
 @api.route("/sample", methods=["PUT"])
@@ -153,3 +157,73 @@ def togglecollaborative(id):
     sample.iscollaborative = not sample.iscollaborative
     db.session.commit()
     return jsonify(iscollaborative=sample.iscollaborative), 200
+
+
+@api.route("/sample/<int:id>/changeparent/<int:parentid>", methods=["POST"])
+@token_auth.login_required
+def changeparent(id, parentid):
+    """Change the parent of a sample.
+    ---
+    post:
+      operationId: changeParent
+      tags: [samples]
+      parameters:
+      - in: path
+        schema: IdParameter
+      - in: path
+        schema: ParentIdParameter
+      responses:
+        200:
+          content:
+            application/json:
+              schema: EmptySchema
+          description: parent changed
+    """
+    sample = Sample.query.get(id)
+    if (
+        sample is None
+        or not sample.is_accessible_for(token_auth.current_user())
+        or sample.isdeleted
+    ):
+        return bad_request("Sample does not exist or you do not have the right to access it")
+
+    # check if we're not trying to make the snake bite its tail
+    if parentid != 0:
+        p = Sample.query.filter_by(id=parentid).first()
+        while p.logical_parent:
+            if p.logical_parent == sample:
+                return bad_request("Cannot move sample")
+            p = p.logical_parent
+
+    # check if the current user is the sample owner, otherwise get corresponding share
+    if sample.owner != token_auth.current_user():
+        if sample.is_accessible_for(token_auth.current_user(), indirect_only=True):
+            return bad_request(
+                "The sample owner (" + sample.owner.username + ") has fixed the sample's location.",
+            )
+
+        share = Share.query.filter_by(sample=sample, user=token_auth.current_user()).first()
+        if share is None:
+            return bad_request("Could not find corresponding share")
+        try:
+            share.mountpoint_id = parentid
+            db.session.commit()
+        except Exception as e:
+            return bad_request("Exception: " + str(e))
+    else:
+        # change parent ID
+        try:
+            sample.parent_id = parentid
+            db.session.commit()
+
+            # re-dispatch news for this sample and for all children
+            affected_samples = [sample]
+            while affected_samples:
+                s = affected_samples.pop()
+                affected_samples.extend(s.children)
+                news = News.query.filter_by(sample_id=s.id).all()
+                for n in news:
+                    n.dispatch()
+        except Exception as e:
+            return bad_request(str(e))
+    return "", 200

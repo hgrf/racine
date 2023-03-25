@@ -364,61 +364,6 @@ def login_as():
     return redirect("/")
 
 
-@main.route("/changeparent", methods=["POST"])
-@login_required
-def changeparent():
-    sample = Sample.query.get(int(request.form.get("id")))
-    if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
-        return jsonify(
-            code=1, error="Sample does not exist or you do not have the right to access it"
-        )
-
-    # check if we're not trying to make the snake bite its tail
-    parentid = int(request.form.get("parent"))
-    if parentid != 0:
-        p = Sample.query.filter_by(id=parentid).first()
-        while p.logical_parent:
-            if p.logical_parent == sample:
-                return jsonify(code=1, error="Cannot move sample")
-            p = p.logical_parent
-
-    # check if the current user is the sample owner, otherwise get corresponding share
-    if sample.owner != current_user:
-        if sample.is_accessible_for(current_user, indirect_only=True):
-            return jsonify(
-                code=1,
-                error="The sample owner ("
-                + sample.owner.username
-                + ") has fixed the sample's location.",
-            )
-
-        share = Share.query.filter_by(sample=sample, user=current_user).first()
-        if share is None:
-            return jsonify(code=1, error="Could not find corresponding share")
-        try:
-            share.mountpoint_id = parentid
-            db.session.commit()
-        except Exception as e:
-            return jsonify(code=1, error="Exception: " + str(e))
-    else:
-        # change parent ID
-        try:
-            sample.parent_id = parentid
-            db.session.commit()
-
-            # re-dispatch news for this sample and for all children
-            affected_samples = [sample]
-            while affected_samples:
-                s = affected_samples.pop()
-                affected_samples.extend(s.children)
-                news = News.query.filter_by(sample_id=s.id).all()
-                for n in news:
-                    n.dispatch()
-        except Exception as e:
-            return jsonify(code=1, error=str(e))
-    return jsonify(code=0)
-
-
 @main.route("/plugins/<path:path>")
 @login_required
 def static_file(path):

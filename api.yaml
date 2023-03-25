@@ -87,6 +87,29 @@ paths:
               schema:
                 $ref: '#/components/schemas/ToggleCollaborativeResponse'
           description: iscollaborative-flag toggled
+  /api/sample/{id}/changeparent/{parentid}:
+    post:
+      operationId: changeParent
+      tags:
+      - samples
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: parentid
+        schema:
+          type: integer
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+          description: parent changed
   /api/share:
     put:
       operationId: createShare
@@ -243,16 +266,16 @@ components:
     NewSampleFormContent:
       type: object
       properties:
-        newsampleparent:
-          type: string
-        newsamplename:
-          type: string
         csrf_token:
-          type: string
-        newsampledescription:
           type: string
         newsampleparentid:
           type: integer
+        newsampledescription:
+          type: string
+        newsamplename:
+          type: string
+        newsampleparent:
+          type: string
     NewSampleResponse:
       type: object
       properties:
@@ -301,22 +324,22 @@ components:
     SwapActionOrderContent:
       type: object
       properties:
-        swapid:
-          type: integer
         actionid:
+          type: integer
+        swapid:
           type: integer
     MarkActionAsNewsContent:
       type: object
       properties:
-        title:
+        csrf_token:
           type: string
         expires:
           type: string
           format: date
-        csrf_token:
-          type: string
         actionid:
           type: integer
+        title:
+          type: string
     UnmarkActionAsNewsContent:
       type: object
       properties:

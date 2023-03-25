@@ -95,27 +95,25 @@ function init_navbar(scrolltocurrent, scrolltotop) {
 
             if(draggedId === parentId) return;
 
-            $.ajax({
-                url: "/changeparent",
-                type: "post",
-                data: { "id": draggedId, "parent": parentId },
-                success: function( data ) {
-                    if(data.code === 0) {
-                        let draggedItem = $('#nav-container'+draggedId);
-                        let oldParent = draggedItem.parent().prev();
-                        if(parentId !== 0) {
-                            // moving to a regular nav-entry
-                            draggedItem.appendTo('#nav-children'+parentId);
-                            updateGlyphicon($('#nav-entry'+parentId));
-                        } else {
-                            // moving to root
-                            draggedItem.appendTo('#nav-mysamples');
-                        }
-                        if(oldParent.length)        // if it's not the root entry
-                            updateGlyphicon(oldParent);
+            SamplesAPI.changeParent(draggedId, parentId, function(error, data, response) {
+                if (response.error) {
+                    if (response.body.message)
+                        error_dialog(response.body.message);
+                    else
+                        error_dialog(response.error);
+                } else {
+                    let draggedItem = $('#nav-container'+draggedId);
+                    let oldParent = draggedItem.parent().prev();
+                    if(parentId !== 0) {
+                        // moving to a regular nav-entry
+                        draggedItem.appendTo('#nav-children'+parentId);
+                        updateGlyphicon($('#nav-entry'+parentId));
                     } else {
-                        error_dialog(data.error);
+                        // moving to root
+                        draggedItem.appendTo('#nav-mysamples');
                     }
+                    if(oldParent.length)        // if it's not the root entry
+                        updateGlyphicon(oldParent);
                 }
             });
         }

@@ -2,4 +2,4 @@ from flask import Blueprint
 
 api = Blueprint("api", __name__)
 
-from app.api import actions, errors, samples, shares
+from app.api import actions, errors, fields, samples, shares

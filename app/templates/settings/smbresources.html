@@ -21,13 +21,13 @@
             {{ smbresource.id }}
             <i class="actionicon glyphicon glyphicon-trash" data-id="{{ smbresource.id }}" data-toggle="modal" data-target="#confirm-delete"></i>
         </td>
-        <td><div class="editable" data-setter="/set/smbresource/name/{{ smbresource.id }}">{{ smbresource.name }}</div></td>
-        <td><div class="editable" data-setter="/set/smbresource/servername/{{ smbresource.id }}">{{ smbresource.servername }}</div></td>
-        <td><div class="editable" data-setter="/set/smbresource/serveraddr/{{ smbresource.id }}">{{ smbresource.serveraddr }}</div></td>
-        <td><div class="editable" data-setter="/set/smbresource/sharename/{{ smbresource.id }}">{{ smbresource.sharename }}</div></td>
-        <td><div class="editable" data-setter="/set/smbresource/path/{{ smbresource.id }}">{{ smbresource.path }}</div></td>
-        <td><div class="editable" data-setter="/set/smbresource/userid/{{ smbresource.id }}">{{ smbresource.userid }}</div></td>
-        <td><div class="editable" data-setter="/set/smbresource/password/{{ smbresource.id }}">{{ smbresource.password }}</div></td>
+        <td><div class="editable" data-setter="/api/set/smbresource/name/{{ smbresource.id }}">{{ smbresource.name }}</div></td>
+        <td><div class="editable" data-setter="/api/set/smbresource/servername/{{ smbresource.id }}">{{ smbresource.servername }}</div></td>
+        <td><div class="editable" data-setter="/api/set/smbresource/serveraddr/{{ smbresource.id }}">{{ smbresource.serveraddr }}</div></td>
+        <td><div class="editable" data-setter="/api/set/smbresource/sharename/{{ smbresource.id }}">{{ smbresource.sharename }}</div></td>
+        <td><div class="editable" data-setter="/api/set/smbresource/path/{{ smbresource.id }}">{{ smbresource.path }}</div></td>
+        <td><div class="editable" data-setter="/api/set/smbresource/userid/{{ smbresource.id }}">{{ smbresource.userid }}</div></td>
+        <td><div class="editable" data-setter="/api/set/smbresource/password/{{ smbresource.id }}">{{ smbresource.password }}</div></td>
     </tr>
     {% endfor %}
     <form method="POST">
@@ -50,6 +50,7 @@
 
 {% block scripts %}
 {{ super() }}
+<script>var api_token = "{{ api_token }}";</script>
 <script src="{{ url_for('static', filename='jquery.jeditable.js') }}"></script>
 <script src="{{ url_for('static', filename='ckeditable.js') }}"></script>
 <script type="text/javascript" charset="utf-8">

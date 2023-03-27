@@ -260,21 +260,95 @@ paths:
               schema:
                 $ref: '#/components/schemas/Empty'
           description: Action unmarked as news
+  /api/get/{target}/{field}/{id}:
+    get:
+      operationId: getField
+      tags:
+      - fields
+      parameters:
+      - in: path
+        name: field
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: target
+        schema:
+          type: string
+          enum:
+          - sample
+          - action
+          - share
+          - smbresource
+          - user
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Value'
+          description: Field value fetched successfully
+  /api/set/{target}/{field}/{id}:
+    post:
+      operationId: setField
+      tags:
+      - fields
+      parameters:
+      - in: path
+        name: field
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: target
+        schema:
+          type: string
+          enum:
+          - sample
+          - action
+          - share
+          - smbresource
+          - user
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Value'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+          description: Field value updated successfully
 openapi: 3.0.2
 components:
   schemas:
     NewSampleFormContent:
       type: object
       properties:
-        csrf_token:
-          type: string
-        newsampleparentid:
-          type: integer
-        newsampledescription:
+        newsampleparent:
           type: string
         newsamplename:
           type: string
-        newsampleparent:
+        newsampledescription:
+          type: string
+        newsampleparentid:
+          type: integer
+        csrf_token:
           type: string
     NewSampleResponse:
       type: object
@@ -297,25 +371,25 @@ components:
     CreateShareContent:
       type: object
       properties:
-        username:
-          type: string
-        userid:
-          type: integer
         sampleid:
           type: integer
+        userid:
+          type: integer
+        username:
+          type: string
     CreateShareError:
       type: object
       properties: {}
     NewActionFormContent:
       type: object
       properties:
-        csrf_token:
-          type: string
-        description:
-          type: string
         timestamp:
           type: string
           format: date
+        description:
+          type: string
+        csrf_token:
+          type: string
     CreateActionError:
       type: object
       properties:
@@ -331,8 +405,6 @@ components:
     MarkActionAsNewsContent:
       type: object
       properties:
-        csrf_token:
-          type: string
         expires:
           type: string
           format: date
@@ -340,11 +412,18 @@ components:
           type: integer
         title:
           type: string
+        csrf_token:
+          type: string
     UnmarkActionAsNewsContent:
       type: object
       properties:
         actionid:
           type: integer
+    Value:
+      type: object
+      properties:
+        value:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http

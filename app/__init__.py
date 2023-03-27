@@ -52,7 +52,7 @@ def create_app(config_name):
 
     # update activity types table
     with app.app_context():
-        from .main.views import supported_targets
+        from .api.fields import supported_targets
         from .models import ActivityType
         from sqlalchemy.exc import OperationalError
 

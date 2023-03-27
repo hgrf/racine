@@ -51,6 +51,9 @@ with app.test_request_context():
     spec.path(view=api.actions.markasnews)
     spec.path(view=api.actions.unmarkasnews)
 
+    spec.path(view=api.fields.getfield)
+    spec.path(view=api.fields.updatefield)
+
 with open("swagger.json", "w") as f:
     json.dump(spec.to_dict(), f, indent=4)
 

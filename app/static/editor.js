@@ -63,8 +63,9 @@ function setup_sample_image() {
         CKEDITOR.fbupload = true;
         CKEDITOR.fbcallback = function(url) {
             $.ajax({
-                url: "/set/sample/image/"+sample_id,
+                url: "/api/set/sample/image/"+sample_id,
                 type: "post",
+                headers: { 'Authorization': 'Bearer ' + api_token },
                 data: { "value": url },
                 success: function() {
                     // check if there is currently a sample image

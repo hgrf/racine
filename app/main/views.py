@@ -9,21 +9,15 @@ from ..models import (
     User,
     Share,
     Upload,
-    SMBResource,
     Activity,
-    record_activity,
-    News,
 )
 from . import main
 from .forms import NewSampleForm, NewActionForm, MarkActionAsNewsForm
-from ..settings.forms import NewUserForm
 from datetime import date, datetime, timedelta
 from .. import smbinterface
-from ..validators import validate_form_field
 from sqlalchemy.sql import func
 from sqlalchemy import not_
 import os
-import inspect
 
 
 @main.route("/")
@@ -372,161 +366,3 @@ def static_file(path):
         abort(404)
     else:
         return send_file(path)
-
-
-def str_to_bool(str):
-    if str.lower() == "true" or str == "1":
-        return True
-    elif str.lower() == "false" or str == "0":
-        return False
-    else:
-        raise Exception("String could not be converted to boolean")
-
-
-def validate_is_admin(str, item):
-    b = str_to_bool(str)
-    if item.is_admin and not b:
-        # check if any other administrators are left
-        if len(User.query.filter_by(is_admin=True).all()) == 1:
-            raise Exception("There has to be at least one administrator.")
-    return b
-
-
-# define supported fields
-supported_targets = {
-    "sample": {
-        "dbobject": Sample,
-        "auth": "owner",
-        "fields": {
-            "name": lambda x: validate_form_field(NewSampleForm(), "newsamplename", x),
-            "description": str,
-            "image": str,
-        },
-    },
-    "action": {
-        "dbobject": Action,
-        "auth": "action_auth",
-        "fields": {"timestamp": lambda x: datetime.strptime(x, "%Y-%m-%d"), "description": str},
-    },
-    "share": {"dbobject": Share, "auth": None, "fields": {}},
-    "smbresource": {
-        "dbobject": SMBResource,
-        "auth": "admin",
-        "fields": {
-            "name": str,
-            "servername": str,
-            "serveraddr": str,
-            "sharename": str,
-            "path": str,
-            "userid": str,
-            "password": str,
-        },
-    },
-    "user": {
-        "dbobject": User,
-        "auth": "admin",
-        "fields": {
-            "username": lambda x: validate_form_field(NewUserForm(), "username", x),
-            "email": lambda x: validate_form_field(NewUserForm(), "email", x),
-            "is_admin": validate_is_admin,
-        },
-    },
-}
-
-# TODO: both getfield and setfield should check if the sample is marked as deleted
-
-
-@main.route("/get/<target>/<field>/<id>", methods=["GET"])
-@login_required
-def getfield(target, field, id):
-    if not (id and target and field and target in supported_targets):
-        return jsonify(code=1)
-
-    # redefine target to simplify
-    target = supported_targets[target]
-
-    # try to get requested item from database
-    item = target["dbobject"].query.get(id)
-
-    # check if the item is valid and if the requested field is supported
-    if not (item and field in target["fields"]):
-        return jsonify(code=1)
-
-    # check if the current user is authorized to access this item
-    if (
-        not (target["auth"] == "owner" and item.owner == current_user)
-        and not (target["auth"] == "admin" and current_user.is_admin)
-        and not (target["auth"] == "action_auth" and item.has_read_access(current_user))
-    ):
-        return jsonify(code=1)
-
-    # return value
-    if request.args.get("plain") is not None:
-        return str(getattr(item, field))
-    else:
-        return jsonify(code=0, value=getattr(item, field))
-
-
-@main.route("/set/<target>/<field>/<id>", methods=["POST"])
-@login_required
-def updatefield(target, field, id):
-    if not (id and target and field and target in supported_targets):
-        return jsonify(code=1, value="", message="Invalid request")
-
-    value = request.form.get("value")
-
-    # redefine target to simplify
-    target_name = target
-    target = supported_targets[target]
-
-    # try to get requested item from database
-    item = target["dbobject"].query.get(id)
-
-    # check if the item is valid and if the requested field is supported
-    if not (item and field in target["fields"]):
-        return jsonify(code=1, value="", message="Invalid request")
-
-    # check if the current user is authorized to access this item
-    if (
-        not (target["auth"] == "owner" and item.owner == current_user)
-        and not (target["auth"] == "admin" and current_user.is_admin)
-        and not (target["auth"] == "action_auth" and item.has_write_access(current_user))
-    ):
-        return jsonify(code=1, value="", message="Invalid request")
-
-    # try to assign value
-    try:
-        # check if a modifier is to be applied
-        modifier = target["fields"][field]
-        if modifier is None:
-            setvalue = value
-        # check if the modifier is a function
-        elif type(modifier) == type(lambda x: x):
-            argno = len(inspect.getargspec(modifier).args)
-            if argno == 1:
-                setvalue = modifier(value)
-            elif argno == 2:
-                setvalue = modifier(value, item)
-            elif argno == 3:
-                setvalue = modifier(value, item, field)
-            else:
-                raise Exception("Invalid modifier")
-        # otherwise it is probably simply type casting
-        else:
-            setvalue = modifier(value)
-        if getattr(item, field) != setvalue:
-            setattr(item, field, setvalue)
-            if target_name == "sample":
-                sample = item
-            elif target_name == "action":
-                sample = item.sample
-            else:
-                sample = None
-            record_activity("update:" + target_name + ":" + field, current_user, sample)
-
-    except Exception as e:
-        return jsonify(code=1, value=str(getattr(item, field)), message="Error: " + str(e))
-
-    # commit changes to database
-    db.session.commit()
-    return jsonify(code=0, value=value)

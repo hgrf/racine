@@ -1,8 +1,15 @@
-from flask import render_template, redirect, request, jsonify, send_file, abort, current_app
-from werkzeug.security import safe_join
+import os
+
+from datetime import date, datetime, timedelta
+from flask import abort, current_app, jsonify, redirect, render_template, request, send_file
 from flask_login import current_user, login_required, login_user, logout_user
-from .. import db
-from .. import plugins
+from sqlalchemy import not_
+from sqlalchemy.sql import func
+from werkzeug.security import safe_join
+
+from . import main
+from .forms import NewSampleForm, NewActionForm, MarkActionAsNewsForm
+from .. import db, plugins, smbinterface
 from ..models import (
     Sample,
     Action,
@@ -11,13 +18,6 @@ from ..models import (
     Upload,
     Activity,
 )
-from . import main
-from .forms import NewSampleForm, NewActionForm, MarkActionAsNewsForm
-from datetime import date, datetime, timedelta
-from .. import smbinterface
-from sqlalchemy.sql import func
-from sqlalchemy import not_
-import os
 
 
 @main.route("/")

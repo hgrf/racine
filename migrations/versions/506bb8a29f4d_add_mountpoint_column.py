@@ -11,19 +11,19 @@ revision = "506bb8a29f4d"
 down_revision = "3d9e4225ecbd"
 
 from alembic import op
-import sqlalchemy as sa
+import sqlalchemy as sa  # noqa: F401
 
 
 def upgrade():
     op.execute(
         """
         CREATE TABLE shares_new (
-            id INTEGER NOT NULL, 
-            sample_id INTEGER, 
+            id INTEGER NOT NULL,
+            sample_id INTEGER,
             user_id INTEGER,
             mountpoint_id INTEGER,
-            PRIMARY KEY (id), 
-            FOREIGN KEY(sample_id) REFERENCES samples (id), 
+            PRIMARY KEY (id),
+            FOREIGN KEY(sample_id) REFERENCES samples (id),
             FOREIGN KEY(user_id) REFERENCES users (id),
             FOREIGN KEY(mountpoint_id) REFERENCES samples (id)
     );"""

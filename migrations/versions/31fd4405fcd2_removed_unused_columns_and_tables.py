@@ -34,9 +34,10 @@ def upgrade():
     )
     op.execute(
         """
-        INSERT INTO samples_new (id, owner_id, name, parent_id, image, description, isarchived, isdeleted,
-                                 last_modified)
-        SELECT id, owner_id, name, parent_id, image, description, isarchived, isdeleted, last_modified FROM samples;
+        INSERT INTO samples_new (id, owner_id, name, parent_id, image,
+                                 description, isarchived, isdeleted, last_modified)
+        SELECT id, owner_id, name, parent_id, image,
+               description, isarchived, isdeleted, last_modified FROM samples;
     """
     )
     op.execute("DROP TABLE samples;")
@@ -45,23 +46,24 @@ def upgrade():
     op.execute(
         """
         CREATE TABLE "actions_new" (
-            id INTEGER NOT NULL, 
-            timestamp DATE, 
-            sample_id INTEGER, 
-            description TEXT, 
+            id INTEGER NOT NULL,
+            timestamp DATE,
+            sample_id INTEGER,
+            description TEXT,
             owner_id INTEGER,
             datecreated DATE,
-            ordnum INTEGER, 
-            PRIMARY KEY (id), 
-            CONSTRAINT actions FOREIGN KEY(owner_id) REFERENCES users (id), 
+            ordnum INTEGER,
+            PRIMARY KEY (id),
+            CONSTRAINT actions FOREIGN KEY(owner_id) REFERENCES users (id),
             FOREIGN KEY(sample_id) REFERENCES samples (id)
         );
     """
     )
     op.execute(
         """
-        INSERT INTO actions_new (id, timestamp, sample_id, description, owner_id, datecreated, ordnum)
-        SELECT id, timestamp, sample_id, description, owner_id, datecreated, ordnum FROM actions;       
+        INSERT INTO actions_new (id, timestamp, sample_id, description,
+                                 owner_id, datecreated, ordnum)
+        SELECT id, timestamp, sample_id, description, owner_id, datecreated, ordnum FROM actions;
     """
     )
     op.execute("DROP TABLE actions;")

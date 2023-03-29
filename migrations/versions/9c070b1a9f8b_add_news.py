@@ -58,23 +58,28 @@ def upgrade():
     op.execute(
         """
         CREATE TABLE "actions_new" (
-            id INTEGER NOT NULL, 
-            timestamp DATE, 
-            sample_id INTEGER, 
-            description TEXT, 
+            id INTEGER NOT NULL,
+            timestamp DATE,
+            sample_id INTEGER,
+            description TEXT,
             owner_id INTEGER,
             datecreated DATE,
-            ordnum INTEGER, 
+            ordnum INTEGER,
             news_id INTEGER,
-            PRIMARY KEY (id), 
-            CONSTRAINT actions FOREIGN KEY(owner_id) REFERENCES users (id), 
+            PRIMARY KEY (id),
+            CONSTRAINT actions FOREIGN KEY(owner_id) REFERENCES users (id),
             FOREIGN KEY(sample_id) REFERENCES samples (id),
             FOREIGN KEY(news_id) REFERENCES news (id)
         );
     """
     )
     op.execute(
-        "INSERT INTO actions_new (id, timestamp, sample_id, description, owner_id, datecreated, ordnum) SELECT id, timestamp, sample_id, description, owner_id, datecreated, ordnum FROM actions;"
+        """
+        INSERT INTO actions_new (id, timestamp, sample_id, description, owner_id,
+                                 datecreated, ordnum)
+            SELECT id, timestamp, sample_id, description, owner_id, datecreated,
+                   ordnum FROM actions;
+    """
     )
     op.execute("DROP TABLE actions;")
     op.execute("ALTER TABLE actions_new RENAME TO actions;")

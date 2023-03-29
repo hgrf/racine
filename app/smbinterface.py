@@ -73,9 +73,10 @@ class SMBInterface:
     def process_smb_path(self, path):
         """Splits up the SMB path of type "/ResourceName/path_in_resource".
 
-        The path in the resource is not necessarily the same as the path on the server, because a resource can already
-        point to a subdirectory on the server. If the path is empty, this function will return None, ''. The same will
-        be returned if the requested resource does not exist.
+        The path in the resource is not necessarily the same as the path on the server, because
+        a resource can already point to a subdirectory on the server. If the path is empty,
+        this function will return None, ''. The same will be returned if the requested resource
+        does not exist.
 
         Parameters
         ----------
@@ -87,7 +88,8 @@ class SMBInterface:
         path_on_server : str
         """
 
-        # we want to be as tolerant as possible and accept paths like "/ResourceName/path_in_resource", but also
+        # we want to be as tolerant as possible and accept paths like
+        # "/ResourceName/path_in_resource", but also
         # "ResourceName/path_in_resource" or "" or "/"
         toks = path.strip("/").split("/")
 
@@ -101,7 +103,8 @@ class SMBInterface:
 
         path_in_resource = "" if len(toks) == 1 else "/".join(toks[1:])
 
-        # make sure the path is constructed correctly even if resource.path or path_in_resource are empty or None
+        # make sure the path is constructed correctly even if resource.path
+        # or path_in_resource are empty or None
         path_on_server = "/".join(filter(None, [resource.path.strip("/"), path_in_resource]))
 
         return resource, path_on_server
@@ -130,8 +133,7 @@ class SMBInterface:
                     return conn
                 else:
                     self.conns.remove(conn)
-            except:
-                # TODO: specify exception
+            except Exception:
                 self.conns.remove(conn)
 
         if need_new_conn:
@@ -163,7 +165,7 @@ class SMBInterface:
         )
         try:
             connected = conn.connect(server_ip, 139, timeout=1)  # 1 second timeout
-        except:
+        except Exception:
             connected = False
 
         return conn if connected else None

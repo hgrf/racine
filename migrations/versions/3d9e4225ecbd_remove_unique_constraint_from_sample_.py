@@ -11,7 +11,7 @@ revision = "3d9e4225ecbd"
 down_revision = "362505d00f1a"
 
 from alembic import op
-import sqlalchemy as sa
+import sqlalchemy as sa  # noqa: F401
 
 
 def upgrade():
@@ -37,9 +37,10 @@ def upgrade():
     )
     op.execute(
         """
-        INSERT INTO samples_new (id, owner_id, name, parent_id, sampletype_id, image, mwidth, mheight, mx, my, description,
-        isarchived) SELECT id, owner_id, name, parent_id, sampletype_id, image, mwidth, mheight, mx, my, description,
-        isarchived FROM samples;
+        INSERT INTO samples_new (id, owner_id, name, parent_id, sampletype_id,
+                                 image, mwidth, mheight, mx, my, description, isarchived)
+        SELECT id, owner_id, name, parent_id, sampletype_id,
+               image, mwidth, mheight, mx, my, description, isarchived FROM samples;
     """
     )
     op.execute("DROP TABLE samples;")

@@ -23,8 +23,9 @@ def overview():
         except ValueError:
             dateto = None
 
-        # TODO: both this tree function and the below samples.extend... are somewhat duplicated in main/views.py
-        #       (e.g. in search() and in navbar()) and should be in a separate function
+        # TODO: both this tree function and the below samples.extend... are somewhat duplicated
+        #       in main/views.py (e.g. in search() and in navbar()) and should be in a
+        #       separate function
         def tree(samples):
             result = []
             for s in samples:

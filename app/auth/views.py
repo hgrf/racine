@@ -16,7 +16,10 @@ def login():
     try:
         form = LoginForm()
     except TypeError:
-        # erroneous cookie for testing: session = eyJjc3JmX3Rva2VuIjp7IiBiIjoiT1RKaE4yTmpaRGc0WXpNMlpqZGhPR1ZoTkRSa1lURmxaRGN5TjJZeU1EZzVObUZsT0ROa1pBPT0ifX0.XeZ16g.Y3yco4lf1Ofku9GH_vj4ETg2itk
+        # erroneous cookie for testing:
+        # session = eyJjc3JmX3Rva2VuIjp7IiBiIjoiT1RKaE4yTmpaRGc0WXpNMl
+        #           pqZGhPR1ZoTkRSa1lURmxaRGN5TjJZeU1EZzVObUZsT0ROa1pB
+        #           PT0ifX0.XeZ16g.Y3yco4lf1Ofku9GH_vj4ETg2itk
         session.pop("csrf_token")
         form = LoginForm()
     resp = None
@@ -84,7 +87,7 @@ def password_reset_request():
                     "Reset your password",
                     body=render_template("auth/email/reset_password.txt", user=user, token=token),
                 )
-            except:
+            except Exception:
                 flash("Email could not be sent, please contact the administrator.")
             else:
                 flash("An email with instructions to reset your password has been sent to you.")

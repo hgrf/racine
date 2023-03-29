@@ -7,6 +7,7 @@ from .action import Action  # noqa: F401
 from .activity import Activity, ActivityType, record_activity  # noqa: F401
 from .news import News, LinkUserNews
 from .share import Share
+from .upload import Upload  # noqa: F401
 from .user import token_auth, User  # noqa: F401
 
 SAMPLE_NAME_LENGTH = 64
@@ -252,16 +253,3 @@ class SMBResource(db.Model):
 
     def __repr__(self):
         return "<SMBResource %r>" % self.id
-
-
-class Upload(db.Model):
-    __tablename__ = "uploads"
-    id = db.Column(db.Integer, primary_key=True)
-    ext = db.Column(db.String(10))
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    source = db.Column(db.String(256))
-    size = db.Column(db.Integer)
-    hash = db.Column(db.String(64))
-
-    def __repr__(self):
-        return "<Upload %r>" % self.id

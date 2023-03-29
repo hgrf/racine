@@ -7,6 +7,7 @@ from .action import Action  # noqa: F401
 from .activity import Activity, ActivityType, record_activity  # noqa: F401
 from .news import News, LinkUserNews
 from .share import Share
+from .smbresource import SMBResource  # noqa: F401
 from .upload import Upload  # noqa: F401
 from .user import token_auth, User  # noqa: F401
 
@@ -238,18 +239,3 @@ class Sample(db.Model):
         if self.is_accessible_for(user, direct_only=True):
             share = Share.query.filter_by(sample=self, user=user).first()
             return share.mountpoint
-
-
-class SMBResource(db.Model):
-    __tablename__ = "smbresources"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
-    servername = db.Column(db.String(64))
-    serveraddr = db.Column(db.String(64))
-    sharename = db.Column(db.String(64))
-    path = db.Column(db.String(256))
-    userid = db.Column(db.String(64))
-    password = db.Column(db.String(64))
-
-    def __repr__(self):
-        return "<SMBResource %r>" % self.id

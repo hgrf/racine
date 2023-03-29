@@ -6,6 +6,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app as app
 from flask_httpauth import HTTPTokenAuth
 from flask_login import UserMixin
+from flask_login import current_user as flask_login_current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from .. import db, login_manager
@@ -26,6 +27,10 @@ def token_auth_error(status):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+def current_user():
+    return token_auth.current_user() or flask_login_current_user
 
 
 class User(UserMixin, db.Model):

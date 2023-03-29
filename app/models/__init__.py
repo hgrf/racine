@@ -3,9 +3,10 @@ from flask_sqlalchemy import SignallingSession
 from sqlalchemy import event
 
 from .. import db
-from .action import Action
+from .action import Action  # noqa: F401
 from .activity import Activity, ActivityType, record_activity  # noqa: F401
 from .news import News, LinkUserNews
+from .share import Share
 from .user import token_auth, User  # noqa: F401
 
 SAMPLE_NAME_LENGTH = 64
@@ -251,17 +252,6 @@ class SMBResource(db.Model):
 
     def __repr__(self):
         return "<SMBResource %r>" % self.id
-
-
-class Share(db.Model):
-    __tablename__ = "shares"
-    id = db.Column(db.Integer, primary_key=True)
-    sample_id = db.Column(db.Integer, db.ForeignKey("samples.id"))
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    mountpoint_id = db.Column(db.Integer, db.ForeignKey("samples.id"))
-
-    def __repr__(self):
-        return "<Share %r>" % self.id
 
 
 class Upload(db.Model):

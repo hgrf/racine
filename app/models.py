@@ -31,6 +31,8 @@ def token_auth_error(status):
 
 def deleted_sample_handler(session, sample):
     def recursive(sample):
+        user = token_auth.current_user() or current_user
+
         # move everything that is mounted here back to the root
         session.execute(
             Share.__table__.update().values(mountpoint_id=0).where(Share.mountpoint_id == sample.id)
@@ -40,7 +42,7 @@ def deleted_sample_handler(session, sample):
         for s in sample.children:
             recursive(s)
 
-            if s.owner == current_user:
+            if s.owner == user:
                 # if the sample down the hierarchy belongs to the current user, also mark it as deleted
                 session.execute(
                     Sample.__table__.update().values(isdeleted=True).where(Sample.id == s.id)

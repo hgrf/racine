@@ -15,4 +15,9 @@ formats: all
 
 python:
    install:
-   - requirements: requirements.mkdocs.txt
+   - requirements: requirements.txt
+
+build:
+  jobs:
+    pre_build:
+      - make doc

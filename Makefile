@@ -435,6 +435,10 @@ doc:
 		--output-path docsmd \
 		app
 
+	rm requirements.mkdocs.txt
+	sed -i 's/requirements.mkdocs.txt/requirements.txt/g' .readthedocs.yml
+	cat patches/readthedocs.yml >> .readthedocs.yml
+
 	# replace main page of documentation
 	cp README.md docsmd/README.md
 

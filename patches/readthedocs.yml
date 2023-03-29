@@ -1,0 +1,5 @@
+
+build:
+  jobs:
+    pre_build:
+      - make doc

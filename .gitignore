@@ -22,6 +22,7 @@ uwsgi-reload
 # ignore flake8 reports
 reports/
 # ignore generated doc
+docsmd/
 docs/
 # ignore generated site
 build/

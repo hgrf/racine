@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from . import db
 from . import login_manager
+from flask_httpauth import HTTPTokenAuth
 from flask_login import current_user, UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -13,8 +14,6 @@ from flask_sqlalchemy import SignallingSession
 from datetime import datetime
 
 SAMPLE_NAME_LENGTH = 64
-
-from flask_httpauth import HTTPTokenAuth
 
 token_auth = HTTPTokenAuth()
 

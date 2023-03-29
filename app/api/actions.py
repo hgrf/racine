@@ -3,7 +3,7 @@ from flask import jsonify, request
 from marshmallow import Schema, fields
 
 from . import api
-from .common import IdParameter, EmptySchema
+from .common import IdParameter, EmptySchema  # noqa: F401
 from .errors import bad_request
 from ..main.forms import MarkActionAsNewsForm, NewActionForm
 
@@ -120,7 +120,7 @@ def deleteaction(id):
           description: Action deleted
     """
     action = Action.query.get(id)
-    if action == None or not action.has_write_access(token_auth.current_user()):
+    if action is None or not action.has_write_access(token_auth.current_user()):
         return bad_request("You do not have permission to delete this action.")
     sampleid = action.sample_id
     db.session.delete(action)
@@ -129,9 +129,10 @@ def deleteaction(id):
     return "", 204
 
 
+# TODO: sort out permissions for this (e.g. who has the right to change order?)
 @api.route("/action/swaporder", methods=["POST"])
 @token_auth.login_required
-def swapactionorder():  # TODO: sort out permissions for this (e.g. who has the right to change order?)
+def swapactionorder():
     """Swap the order of two actions in the database.
     ---
     post:

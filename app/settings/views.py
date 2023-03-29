@@ -115,7 +115,8 @@ def email():
                 )
         except Exception:
             flash(
-                "Could not save settings. Make sure Racine has write privileges in its main directory."
+                "Could not save settings. Make sure Racine has write privileges in its "
+                + "main directory."
             )
 
         # send test mail

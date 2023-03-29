@@ -1,15 +1,15 @@
 # credit to https://stackoverflow.com/a/62166840
 
+import json
 import os
 import sys
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from app import create_app, api
 from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
 from apispec_webframeworks.flask import FlaskPlugin
 
-import json
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from app import create_app, api  # noqa: E402
 
 
 spec = APISpec(

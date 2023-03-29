@@ -2,7 +2,7 @@ from flask import jsonify
 from marshmallow import Schema, fields
 
 from . import api
-from .common import IdParameter, EmptySchema
+from .common import IdParameter, EmptySchema  # noqa: F401
 from .errors import bad_request
 from ..main.forms import NewSampleForm
 

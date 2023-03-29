@@ -1,3 +1,7 @@
+import base64
+import os
+from datetime import timedelta
+
 from . import db
 from . import login_manager
 from flask_login import current_user, UserMixin
@@ -10,9 +14,25 @@ from datetime import datetime
 
 SAMPLE_NAME_LENGTH = 64
 
+from flask_httpauth import HTTPTokenAuth
+
+token_auth = HTTPTokenAuth()
+
+
+@token_auth.verify_token
+def verify_token(token):
+    return User.check_token(token) if token else None
+
+
+@token_auth.error_handler
+def token_auth_error(status):
+    return "", 500  # error_response(status)
+
 
 def deleted_sample_handler(session, sample):
     def recursive(sample):
+        user = token_auth.current_user() or current_user
+
         # move everything that is mounted here back to the root
         session.execute(
             Share.__table__.update().values(mountpoint_id=0).where(Share.mountpoint_id == sample.id)
@@ -22,7 +42,7 @@ def deleted_sample_handler(session, sample):
         for s in sample.children:
             recursive(s)
 
-            if s.owner == current_user:
+            if s.owner == user:
                 # if the sample down the hierarchy belongs to the current user, also mark it as deleted
                 session.execute(
                     Sample.__table__.update().values(isdeleted=True).where(Sample.id == s.id)
@@ -118,6 +138,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
+    token = db.Column(db.String(32), index=True, unique=True)
+    token_expiration = db.Column(db.DateTime)
     is_admin = db.Column(db.Boolean())
     samples = db.relationship("Sample", backref="owner")
     actions = db.relationship("Action", backref="owner")
@@ -177,6 +199,25 @@ class User(UserMixin, db.Model):
             and not s.sample.isdeleted
         ]
 
+    def get_token(self, expires_in=3600):
+        now = datetime.utcnow()
+        if self.token and self.token_expiration > now + timedelta(seconds=60):
+            return self.token
+        self.token = base64.b64encode(os.urandom(24)).decode("utf-8")
+        self.token_expiration = now + timedelta(seconds=expires_in)
+        db.session.add(self)
+        return self.token
+
+    def revoke_token(self):
+        self.token_expiration = datetime.utcnow() - timedelta(seconds=1)
+
+    @staticmethod
+    def check_token(token):
+        user = User.query.filter_by(token=token).first()
+        if user is None or user.token_expiration < datetime.utcnow():
+            return None
+        return user
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -212,11 +253,12 @@ class Sample(db.Model):
     activity = db.relationship("Activity", backref="sample")
 
     def __setattr__(self, name, value):
+        user = token_auth.current_user() or current_user
         if name == "name":
             if (
                 value != self.name
                 and self.query.filter_by(
-                    owner=current_user, parent_id=self.parent_id, name=value, isdeleted=False
+                    owner=user, parent_id=self.parent_id, name=value, isdeleted=False
                 ).all()
             ):
                 raise Exception("You already have a sample with this name on this hierarchy level.")
@@ -225,7 +267,7 @@ class Sample(db.Model):
                 value != self.parent_id
                 and self.name is not None
                 and self.query.filter_by(
-                    owner=current_user, parent_id=value, name=self.name, isdeleted=False
+                    owner=user, parent_id=value, name=self.name, isdeleted=False
                 ).all()
             ):
                 raise Exception("You already have a sample with this name on this hierarchy level.")
@@ -281,19 +323,20 @@ class Sample(db.Model):
 
     @property
     def logical_parent(self):
+        user = token_auth.current_user() or current_user
         # determine the sample's logical parent in the current user's tree (i.e. the parent or the mountpoint)
 
         # first find out if the sample belongs to the current user (in this case just return the real parent)
-        if self.owner == current_user:
+        if self.owner == user:
             return self.parent
 
         # if the sample is indirectly shared with the current user, also return the real parent
-        if self.is_accessible_for(current_user, indirect_only=True):
+        if self.is_accessible_for(user, indirect_only=True):
             return self.parent
 
         # if the sample is directly shared with the current user, return the mount point
-        if self.is_accessible_for(current_user, direct_only=True):
-            share = Share.query.filter_by(sample=self, user=current_user).first()
+        if self.is_accessible_for(user, direct_only=True):
+            share = Share.query.filter_by(sample=self, user=user).first()
             return share.mountpoint
 
 

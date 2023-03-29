@@ -32,4 +32,4 @@ class MarkActionAsNewsForm(FlaskForm):
     title = StringField("Title:")
     expires = DateField("Expires:", format="%Y-%m-%d", render_kw={"placeholder": "yyyy-mm-dd"})
 
-    action_id = HiddenField()
+    actionid = HiddenField()

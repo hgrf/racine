@@ -1,3 +1,6 @@
+var SamplesAPI;
+var SharesAPI;
+var ActionsAPI;
 var sample_id;
 var term;
 var hiddeneditor;
@@ -60,8 +63,9 @@ function setup_sample_image() {
         CKEDITOR.fbupload = true;
         CKEDITOR.fbcallback = function(url) {
             $.ajax({
-                url: "/set/sample/image/"+sample_id,
+                url: "/api/set/sample/image/"+sample_id,
                 type: "post",
+                headers: { 'Authorization': 'Bearer ' + api_token },
                 data: { "value": url },
                 success: function() {
                     // check if there is currently a sample image
@@ -103,11 +107,15 @@ function init_editor(scrolltotop) {
 
     // handler for archive button
     $('#archive').click(function() {
-        $.ajax({
-            url: "/togglearchived",
-            type: "post",
-            data: { "id": sample_id },
-            success: function( data ) {
+        SamplesAPI.toggleArchived(sample_id, function(error, data, response) {
+            if (!response)
+                error_dialog("Server error. Please check your connection.");
+            else if (response.error) {
+                if (response.body.message)
+                    error_dialog(response.body.message);
+                else
+                    error_dialog(response.error);
+            } else {
                 if(data.isarchived) {
                     $('#archive').attr('title', 'De-archive');
                     $('#archive').attr('src', '/static/images/dearchive.png');
@@ -123,11 +131,15 @@ function init_editor(scrolltotop) {
 
     // handler for collaborative button
     $('#collaborate').click(function() {
-        $.ajax({
-            url: "/togglecollaborative",
-            type: "post",
-            data: {"id": sample_id},
-            success: function(data) {
+        SamplesAPI.toggleCollaborative(sample_id, function(error, data, response) {
+            if (!response)
+                error_dialog("Server error. Please check your connection.");
+            else if (response.error) {
+                if (response.body.message)
+                    error_dialog(response.body.message);
+                else
+                    error_dialog(response.error);
+            } else {
                 if(data.iscollaborative) {
                     $('#collaborate').attr('title', 'Make non-collaborative');
                     $('#collaborate').attr('src', '/static/images/non-collaborative.png');
@@ -174,30 +186,34 @@ function init_editor(scrolltotop) {
         // make sure content of editor is transmitted
         CKEDITOR.instances['description'].updateElement();
 
-        $.ajax({
-            url: "/newaction/"+sample_id,
-            type: "post",
-            data: $('#newactionform').serialize(),
-            success: function( data ) {
-                if(data.code != 0) {
+        var formdata = {};
+        $('#newactionform').serializeArray().map(function(x){formdata[x.name] = x.value;});
+
+        ActionsAPI.createAction(sample_id, formdata, function(error, data, response) {
+            if (!response)
+                error_dialog("Server error. Please check your connection.");
+            else if (response.error) {
+                if (response.body.resubmit) {
                     // form failed validation; because of invalid data or expired CSRF token
                     // we still reload the sample in order to get a new CSRF token, but we
                     // want to keep the text that the user has written in the description field
-                    $(document).one("editor_initialised", data, function(event) {
+                    $(document).one("editor_initialised", formdata, function(event) {
                         CKEDITOR.instances.description.setData(event.data.description);
-                        error_dialog("Form is not valid. Either you entered an invalid date or the session has " +
-                            "expired. Try submitting again.");
+                        error_dialog("Form is not valid. Either you entered an invalid date " +
+                                     "or the session has expired. Try submitting again.");
                     });
+                } else {
+                    error_dialog(response.error);
+                    return;
                 }
-                // reload the sample
-                // TODO: it would be sufficient to just add the new action
-                CKEDITOR.instances['description'].destroy();     // destroy it so that it doesn't bother us with
-                                                                 // confirmation dialogs when we reload the sample
-                load_sample(sample_id, false, false, false);
-            },
-            error: function( jqXHR, textStatus ) {
-                error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
             }
+
+            // reload the sample
+            // TODO: it would be sufficient to just add the new action
+            // destroy it so that it doesn't bother us with confirmation dialogs when we
+            // reload the sample
+            CKEDITOR.instances['description'].destroy();
+            load_sample(sample_id, false, false, false);
         });
     });
 
@@ -247,17 +263,19 @@ function init_editor(scrolltotop) {
     $('.actiondate.editable').texteditable();
 
     $('.swapaction').click( function(event) {
-        sampleid = sample_id;
-        actionid = $(this).data('id');
-        swapid = $(this).data('swapid');
-        $.ajax({
-            url: "/swapactionorder",
-            type: "post",
-            data: { "actionid": actionid,
-                    "swapid": swapid },
-            success: function( data ) {
-                load_sample(sampleid, false, false, false);
-            }
+        ActionsAPI.swapActionOrder(
+            {'actionid': $(this).data('id'), 'swapid': $(this).data('swapid')},
+            function(error, data, response) {
+                if (!response)
+                    error_dialog("Server error. Please check your connection.");
+                else if (response.error) {
+                    if (response.body.message)
+                        error_dialog(response.body.message);
+                    else
+                        error_dialog(response.error);
+                } else {
+                    load_sample(sample_id, false, false, false);
+                }
         });
     });
 
@@ -268,27 +286,24 @@ function init_editor(scrolltotop) {
         // is this action not yet marked as news?
         if(flag_element.hasClass('markasnews')) {
             // set the action ID hidden field
-            // TODO: it seems a bit dangerous that this form field is just called "action_id"
-            $('#action_id').val(actionid);
+            // TODO: it seems a bit dangerous that this form field is just called "actionid"
+            $('#actionid').val(actionid);
             // clear other fields
             $('#title').val('');
             $('#expires').val('');
             $('#dlg_markasnews').modal('show');
         } else {
-            $.ajax({
-                url: "/unmarkasnews",
-                type: "post",
-                data: { "actionid": actionid },
-                success: function(data) {
-                    if (data.code === 0) {
-                        flag_element.removeClass('unmarkasnews');
-                        flag_element.addClass('markasnews');
-                    } else {
-                        error_dialog(data.error);
-                    }
-                },
-                error: function( jqXHR, textStatus ) {
-                    error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
+            ActionsAPI.unmarkActionAsNews({ "actionid": actionid }, function(error, data, response) {
+                if (!response)
+                    error_dialog("Server error. Please check your connection.");
+                else if (response.error) {
+                    if (response.body.message)
+                        error_dialog(response.body.message);
+                    else
+                        error_dialog(response.error);
+                } else {
+                    flag_element.removeClass('unmarkasnews');
+                    flag_element.addClass('markasnews');
                 }
             });
         }
@@ -436,6 +451,12 @@ function before_unload_handler(event, ignore, message) {
 }
 
 $(document).ready(function() {
+    var apiClient = new MsmApi.ApiClient(basePath=window.location.origin);
+    apiClient.authentications["bearerAuth"].accessToken = api_token;
+    SamplesAPI = new MsmApi.SamplesApi(apiClient);
+    SharesAPI = new MsmApi.SharesApi(apiClient);
+    ActionsAPI = new MsmApi.ActionsApi(apiClient);
+
     // Switch of automatic scroll restoration...
     // so that, if a popstate event occurs but the user does not want to leave the page, automatic scrolling to the top
     // is avoided. However, this means that if we navigate back to some page that was previously scrolled to a specific
@@ -499,19 +520,29 @@ $(document).ready(function() {
     });
 
     function shareselected(event, suggestion) {
-        $.ajax({
-            url: "/createshare",
-            type: "post",
-            data: { "sampleid": sample_id, "username": $('#username').val() },
-            success: function( data ) {
+        SharesAPI.createShare(
+            { "sampleid": sample_id, "username": $('#username').val() },
+            function(error, data, response) {
+                if (!response)
+                    error_dialog("Server error. Please check your connection.");
+                else if (response.error) {
+                    if (response.body.message)
+                        error_dialog(response.body.message);
+                    else
+                        error_dialog(response.error);
+                } else {
+                    $('#sharelist').append(
+                        '<div class="sharelistentry" id="sharelistentry' + data.shareid + '">' +
+                            '<a data-type="share" data-id="' + data.shareid + '" data-toggle="modal" ' +
+                                    'data-target="#confirm-delete" href="">' + 
+                                '<i class="glyphicon glyphicon-remove"></i>' +
+                            '</a>\n' + data.username + 
+                        '</div>'
+                    );
+                }
                 $('#userbrowser').modal('hide');
-                $('#sharelist').append('<div class="sharelistentry" id="sharelistentry' + data.shareid + '"><a data-type="share" data-id="' + data.shareid + '" data-toggle="modal" data-target="#confirm-delete" href=""><i class="glyphicon glyphicon-remove"></i></a>\n' + data.username + '</div>');
-            },
-            error: function( request, status, message ) {
-                $('#userbrowser').modal('hide');
-                error_dialog(request.responseJSON.error);
             }
-        });
+        );
     }
 
     // new sample dialog
@@ -563,19 +594,16 @@ $(document).ready(function() {
         // make sure content of editor is transmitted
         CKEDITOR.instances['newsampledescription'].updateElement();
 
-        $.ajax({
-            url: "/newsample",
-            type: "post",
-            data: newsampleform.serialize(),
-            success: function(data) {
-                if (data.code === 0) {
-                    $('#newsample').modal('hide');  // hide and clear the dialog
-                    load_sample(data.sampleid);
-                    load_navbar();
-                } else {
-                    console.log(data.error);
+        var formdata = {};
+        newsampleform.serializeArray().map(function(x){formdata[x.name] = x.value;});
+
+        SamplesAPI.createSample(formdata, function(error, data, response) {
+            if (!response)
+                error_dialog("Server error. Please check your connection.");
+            else if (response.error) {
+                if (response.body.error) {
                     // form failed validation; because of invalid data or expired CSRF token
-                    for(field in data.error) {
+                    for(field in response.body.error) {
                         if(field === 'csrf_token') {
                             error_dialog('The CSRF token has expired. Please reload the page to create a new sample.');
                             continue;
@@ -586,14 +614,21 @@ $(document).ready(function() {
                         // add the has-error to the form group
                         formgroup.addClass('has-error')
                         // add the error message to the form group
-                        for(i in data.error[field]) {
-                            formgroup.append('<span class="help-block">'+data.error[field][i]+'</span>');
+                        for(i in response.body.error[field]) {
+                            formgroup.append(
+                                '<span class="help-block">' +
+                                response.body.error[field][i] +
+                                '</span>'
+                            );
                         }
                     }
+                } else {
+                    error_dialog(response.error);
                 }
-            },
-            error: function( jqXHR, textStatus ) {
-                error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
+            } else {
+                $('#newsample').modal('hide');  // hide and clear the dialog
+                load_sample(data.sampleid);
+                load_navbar();
             }
         });
     });
@@ -603,46 +638,46 @@ $(document).ready(function() {
         event.preventDefault();
 
         var dlg_markasnews_form = $('#dlg_markasnews_form');
-        var actionid = $("#action_id").val();
+        var actionid = $("#actionid").val();
         var flag_element = $('#togglenews-' + actionid);
 
         // clean up error messages
         dlg_markasnews_form.find('.form-group').removeClass('has-error');
         dlg_markasnews_form.find('span.help-block').remove();
 
-        $.ajax({
-            url: "/markasnews",
-            type: "post",
-            data: dlg_markasnews_form.serialize(),
-            success: function(data) {
-                if (data.code === 0) {
-                    // hide the dialog
-                    $('#dlg_markasnews').modal('hide');
+        var formdata = {};
+        dlg_markasnews_form.serializeArray().map(function(x){formdata[x.name] = x.value;});
 
-                    // toggle the flag
-                    flag_element.removeClass('markasnews');
-                    flag_element.addClass('unmarkasnews');
-                } else {
-                    console.log(data.error);
-                    // form failed validation; because of invalid data or expired CSRF token
-                    for(field in data.error) {
-                        if(field === 'csrf_token') {
-                            error_dialog('The CSRF token has expired. Please reload the page.');
-                            continue;
-                        }
-                        // get form group
-                        var formgroup = $('#'+field).closest('.form-group');
-                        // add the has-error to the form group
-                        formgroup.addClass('has-error')
-                        // add the error message to the form group
-                        for(i in data.error[field]) {
-                            formgroup.append('<span class="help-block">'+data.error[field][i]+'</span>');
-                        }
+        ActionsAPI.markActionAsNews(formdata, function(error, data, response) {
+            if (!response)
+                error_dialog("Server error. Please check your connection.");
+            else if (response.body && response.body.error) {
+                // form failed validation; because of invalid data or expired CSRF token
+                for(field in response.body.error) {
+                    if(field === 'csrf_token') {
+                        error_dialog('The CSRF token has expired. Please reload the page.');
+                        continue;
+                    }
+                    // get form group
+                    var formgroup = $('#' + field).closest('.form-group');
+                    // add the has-error to the form group
+                    formgroup.addClass('has-error')
+                    // add the error message to the form group
+                    for(i in response.body.error[field]) {
+                        formgroup.append(
+                            '<span class="help-block">' +
+                            response.body.error[field][i] + 
+                            '</span>'
+                        );
                     }
                 }
-            },
-            error: function( jqXHR, textStatus ) {
-                error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
+            } else {
+                // hide the dialog
+                $('#dlg_markasnews').modal('hide');
+
+                // toggle the flag
+                flag_element.removeClass('markasnews');
+                flag_element.addClass('unmarkasnews');
             }
         });
     });
@@ -711,27 +746,58 @@ $(document).ready(function() {
     $('.btn-ok').click( function(event) {
         var type = $(this).data('type');
         var id = $(this).attr('id');
-        $.ajax({
-            url: "/del"+type+"/"+id,
-            success: function( data ) {
-                switch(type) {
-                    case "sample":
-                        load_welcome(true);
-                        load_navbar(undefined, undefined, false, true);
-                        break;
-                    case "action":
-                        $('#'+id+'.list-entry').remove();
-                        break;
-                    case "share":
-                        $('#sharelistentry'+data.shareid).remove();
-                        if(data.code==2) { // if the user removed himself from the sharer list
-                            load_welcome(true);
-                            load_navbar(undefined, undefined, false, true);
-                        }
-                        break;
+
+        switch(type) {
+        case "action":
+            ActionsAPI.deleteAction(id, function(error, data, response) {
+                if (!response)
+                    error_dialog("Server error. Please check your connection.");
+                else if (response.error) {
+                    if (response.body.message)
+                        error_dialog(response.body.message);
+                    else
+                        error_dialog(response.error);
+                } else {
+                    $('#'+id+'.list-entry').remove();
                 }
                 $('#confirm-delete').modal('hide');
-            }
-        });
+            });
+            break;
+        case "sample":
+            SamplesAPI.deleteSample(id, function(error, data, response) {
+                if (!response)
+                    error_dialog("Server error. Please check your connection.");
+                else if (response.error) {
+                    if (response.body.message)
+                        error_dialog(response.body.message);
+                    else
+                        error_dialog(response.error);
+                } else {
+                    load_welcome(true);
+                    load_navbar(undefined, undefined, false, true);
+                }
+                $('#confirm-delete').modal('hide');
+            });
+            break;
+        case "share":
+            SharesAPI.deleteShare(id, function(error, data, response) {
+                if (!response)
+                    error_dialog("Server error. Please check your connection.");
+                else if (response.error) {
+                    if (response.body.message)
+                        error_dialog(response.body.message);
+                    else
+                        error_dialog(response.error);
+                } else {
+                    $('#sharelistentry'+id).remove();
+                    if(response.status == 205) { // if the user removed himself from the sharer list
+                        load_welcome(true);
+                        load_navbar(undefined, undefined, false, true);
+                    }
+                    $('#confirm-delete').modal('hide');
+                }
+            });
+            break;
+        }
     });
 });

@@ -3,6 +3,28 @@ install-dependencies:
 	pip install ${PIP_OPTIONS} -r requirements-dev.txt
 	pip install ${PIP_OPTIONS} -r requirements.txt
 
+api-spec:
+	python patches/generate-api-spec.py
+	cat patches/api.yaml >> api.yaml
+
+api-client: api-spec
+	rm -rf build/api-client
+	wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/6.2.1/openapi-generator-cli-6.2.1.jar \
+		-O build/openapi-generator-cli.jar
+	
+	java -jar build/openapi-generator-cli.jar generate -i api.yaml -g javascript -p modelPropertyNaming=original -o build/api-client
+	cd build/api-client && npm install
+	cd build/api-client && npm install \
+		rollup \
+		rollup-plugin-polyfill-node \
+		@rollup/plugin-node-resolve \
+		@rollup/plugin-commonjs \
+		@rollup/plugin-json \
+		@rollup/plugin-terser
+
+	cp patches/rollup.config.js build/api-client/rollup.config.js
+	cd build/api-client && npx rollup -c --bundleConfigAsCjs
+
 website:
 	# clone bootstrap
 	rm -rf build/bootstrap
@@ -420,7 +442,7 @@ flake8-badge:
 		\rprint(f'{badge.right_txt}@{badge.color}')\n \
 		\r\n" | python
 
-doc:
+doc: api-spec
 	# install dev requirements
 	pip install --upgrade -r requirements-dev.txt > /dev/null
 
@@ -433,7 +455,8 @@ doc:
 		--theme material \
 		--name "Racine" \
 		--output-path docsmd \
-		app
+		app \
+		--exclude app/api
 
 	rm requirements.mkdocs.txt
 	sed -i 's/requirements.mkdocs.txt/requirements.txt/g' .readthedocs.yml
@@ -446,13 +469,19 @@ doc:
 	mkdir -p docsmd/app/static/images
 	cp app/static/images/racine.svg docsmd/app/static/images/racine.svg
 
+	# enable code copy in documentation
 	sed -i 's/- content.code.annotate/- content.code.annotate\n    - content.code.copy/g' mkdocs.yml
 
+	# add API page
+	mv swagger.json docsmd/swagger.json
+	cp patches/api.md docsmd/API.md
+
 	# convert to HTML documentation
+	echo -n "\nplugins:\n  - render_swagger" >> mkdocs.yml
 	python -m mkdocs build
 
 	# restore environment
 	python -m pip install -r requirements.txt > /dev/null
 
 doc-serve:
-	cd docs && python -m  http.server 8000
+	cd docs && python -m http.server 8000

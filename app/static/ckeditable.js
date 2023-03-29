@@ -5,20 +5,26 @@
         $(this).each(function(index, field) {
             field = $(field);
             field.editable(field.data('setter'), {
+                ajaxoptions: {'headers': { 'Authorization': 'Bearer ' + api_token }},
                 style: 'inherit',
                 event: 'edit',
                 placeholder: '&nbsp;',
                 callback: function (value, settings) {
                     var json = $.parseJSON(value);
                     field.html(json.value);
-                    // display error message if error occured
-                    if (json.code)
-                        error_dialog(json.message);
                     field.trigger('editableupdate', json);
                     field.trigger('editabledone');
                 },
                 resetcb: function (value, settings) {
                     field.trigger('editabledone');
+                },
+                onerror: function(settings, original, xhr) {
+                    if(xhr.responseText) {
+                        var json = $.parseJSON(xhr.responseText);
+                        error_dialog(json.message);
+                    } else {
+                        error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
+                    }
                 }
             });
         });
@@ -30,6 +36,7 @@
         $(this).each(function(index, field) {
             field = $(field);
             field.editable(field.data('setter'), {
+                ajaxoptions: {'headers': { 'Authorization': 'Bearer ' + api_token }},
                 data   : choice,
                 style  : 'inherit',
                 type   : 'select',
@@ -38,14 +45,19 @@
                 callback : function(value, settings) {
                     var json = $.parseJSON(value);
                     field.html(choice[json.value]);
-                    // display error message if error occurred
-                    if(json.code)
-                        error_dialog(json.message);
                     field.trigger('editableupdate', json);
                     field.trigger('editabledone');
                 },
                 resetcb: function(value, settings) {
                     field.trigger('editabledone');
+                },
+                onerror: function(settings, original, xhr) {
+                    if(xhr.responseText) {
+                        var json = $.parseJSON(xhr.responseText);
+                        error_dialog(json.message);
+                    } else {
+                        error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
+                    }
                 }
             });
         });
@@ -106,6 +118,7 @@
         $.ajax({
             url: field.data('getter'),
             type: 'get',
+            headers: { 'Authorization': 'Bearer ' + api_token },
             success: function( data ) {
                 // prepare div content for editing
                 field.empty();
@@ -121,6 +134,10 @@
                 // activate CKEditor
                 editor = CKEDITOR.inline(field.get()[0], clone);
                 editor.on('done', ckeditable_on_done);
+            },
+            error: function( jqXHR, textStatus ) {
+                error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
+                field.trigger('editabledone');
             }
         });
     }
@@ -136,6 +153,7 @@
             $.ajax({
                 url: field.data('setter'),
                 type: "post",
+                headers: { 'Authorization': 'Bearer ' + api_token },
                 data: {"value": data},
                 success: function( data ) {
                     if(data.code) error_dialog("An error occured.");
@@ -155,6 +173,7 @@
         $.ajax({
             url: field.data('getter'),
             type: "get",
+            headers: { 'Authorization': 'Bearer ' + api_token },
             success: function( data ) {
                 editor.destroy();
 

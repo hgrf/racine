@@ -7,7 +7,7 @@
     {% if sample.owner != current_user and sample.iscollaborative %}
         <img class="sample-attr" title="Collaborative" src="/static/images/collaborative.png">
     {% endif %}
-    <div id="samplename" class="{% if sample.owner == current_user %}editable{% endif %}" data-setter="/set/sample/name/{{ sample.id }}">{{ sample.name }}</div>
+    <div id="samplename" class="{% if sample.owner == current_user %}editable{% endif %}" data-setter="/api/set/sample/name/{{ sample.id }}">{{ sample.name }}</div>
     {% if sample.owner == current_user %}
         <img class="editor-shortcut" title="Delete sample" src="/static/images/delete.png" data-href="/delsample/{{ sample.id }}" data-type="sample" data-id="{{ sample.id }}" data-toggle="modal" data-target="#confirm-delete">
         <img class="editor-shortcut" title="{% if sample.isarchived %}De-archive{% else %}Archive{% endif %}" id="archive" src="{% if sample.isarchived %}/static/images/dearchive.png{% else %}/static/images/archive.png{% endif %}">
@@ -42,7 +42,7 @@
         {% endif %}
         <div class="col-md-5 sampledescription">
             <div><strong>Description:</strong></div>
-            <div id="sampledescription" class="{% if sample.owner == current_user %}ckeditable editable{% endif %}" data-getter="/get/sample/description/{{ sample.id }}" data-setter="/set/sample/description/{{ sample.id }}">
+            <div id="sampledescription" class="{% if sample.owner == current_user %}ckeditable editable{% endif %}" data-getter="/api/get/sample/description/{{ sample.id }}" data-setter="/api/set/sample/description/{{ sample.id }}">
                 {{ sample.description|safe }}
             </div>
         </div>
@@ -95,7 +95,7 @@
     {% set action=actions[i] %}
     <div class="row list-entry {% if action.sample != sample %}parentaction{% endif %}" id="{{ action.id }}" {% if action.sample != sample %}style="background: #F0FFF0;"{% endif %}>
         <div class="col-md-2">
-            <div class="actiondate{% if action.owner == current_user %} editable{% endif %}" data-setter="/set/action/timestamp/{{ action.id }}">{{ action.timestamp }}</div>
+            <div class="actiondate{% if action.owner == current_user %} editable{% endif %}" data-setter="/api/set/action/timestamp/{{ action.id }}">{{ action.timestamp }}</div>
             <div class="actionicons">
                 {% if action.owner != current_user %}<div style="font-style: italic">{{ action.owner.username }}</div>{% endif %}
                 {% if action.sample != sample %}<div style="font-style: italic;">{{ action.sample.name }}</div>{% endif %}
@@ -111,7 +111,7 @@
                 <i id="togglenews-{{ action.id }}" class="actionicon glyphicon glyphicon-flag togglenews {% if not action.news_id %}markasnews{% else %}unmarkasnews{% endif %}" data-id="{{ action.id }}"></i>
             </div>
         </div>
-        <div class="col-md-10 actiondescription{% if action.owner == current_user or sample.iscollaborative %} editable ckeditable{% endif %}" data-getter="/get/action/description/{{ action.id }}" data-setter="/set/action/description/{{ action.id }}">{{ action.description|safe }}</div>
+        <div class="col-md-10 actiondescription{% if action.owner == current_user or sample.iscollaborative %} editable ckeditable{% endif %}" data-getter="/api/get/action/description/{{ action.id }}" data-setter="/api/set/action/description/{{ action.id }}">{{ action.description|safe }}</div>
     </div>
     {% endfor %}
     {% if not invertactionorder %}

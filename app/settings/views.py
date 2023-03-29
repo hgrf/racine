@@ -4,7 +4,7 @@ from ..decorators import admin_required
 from ..models import SMBResource, User, Upload, Action, Sample
 from .forms import NewSMBResourceForm, NewUserForm, EmailSettings
 from . import settings
-from flask_login import login_required
+from flask_login import current_user, login_required
 import git
 from ..config import basedir
 from flask import current_app as app
@@ -52,7 +52,10 @@ def smbresources():
         form.userid.data = ""
         form.password.data = ""
     return render_template(
-        "settings/smbresources.html", smbresources=SMBResource.query.all(), form=form
+        "settings/smbresources.html",
+        api_token=current_user.get_token(),
+        smbresources=SMBResource.query.all(),
+        form=form,
     )
 
 
@@ -76,7 +79,9 @@ def users():
         db.session.add(user)
         db.session.commit()
         return redirect(url_for("settings.users"))
-    return render_template("settings/users.html", users=User.query.all(), form=form)
+    return render_template(
+        "settings/users.html", api_token=current_user.get_token(), users=User.query.all(), form=form
+    )
 
 
 @settings.route("/email", methods=["GET", "POST"])

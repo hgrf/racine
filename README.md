@@ -24,9 +24,10 @@
 | app/main/errors.py                                                                 |       19 |        6 |     68% |9, 19, 24-28 |
 | app/main/forms.py                                                                  |       21 |        3 |     86% |     26-28 |
 | app/main/views.py                                                                  |      162 |      121 |     25% |26-42, 56-141, 160-173, 185-217, 231-232, 238-280, 293-344, 350-359, 369 |
-| app/models/\_\_init\_\_.py                                                         |      174 |       88 |     49% |14-67, 71-98, 110-111, 114-115, 150-168, 171, 185-203, 209, 221-237, 263-288, 292-300, 325, 336, 349 |
+| app/models/\_\_init\_\_.py                                                         |      131 |       64 |     51% |15-68, 72-99, 111-112, 115-116, 151-169, 172, 186-204, 210, 222-238, 253, 264, 277 |
 | app/models/action.py                                                               |       22 |        7 |     68% |20, 23-29, 32 |
 | app/models/activity.py                                                             |       30 |        4 |     87% |16, 32, 39, 49 |
+| app/models/news.py                                                                 |       46 |       24 |     48% |28-53, 57-65 |
 | app/models/user.py                                                                 |       80 |       31 |     61% |18, 23, 54, 58, 62, 68-69, 73-83, 90, 99-105, 108, 112-115 |
 | app/printdata/\_\_init\_\_.py                                                      |        3 |        0 |    100% |           |
 | app/printdata/forms.py                                                             |        8 |        0 |    100% |           |
@@ -64,7 +65,7 @@
 | migrations/versions/578518528886\_added\_ownership\_to\_actions.py                 |       13 |        3 |     77% |     28-30 |
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
-|                                                                          **TOTAL** | **2199** | **1160** | **47%** |           |
+|                                                                          **TOTAL** | **2202** | **1160** | **47%** |           |
 
 
 ## Setup coverage badge

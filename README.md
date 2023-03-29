@@ -24,14 +24,15 @@
 | app/main/errors.py                                                                 |       19 |        6 |     68% |9, 19, 24-28 |
 | app/main/forms.py                                                                  |       21 |        3 |     86% |     26-28 |
 | app/main/views.py                                                                  |      162 |      121 |     25% |26-42, 56-141, 160-173, 185-217, 231-232, 238-280, 293-344, 350-359, 369 |
-| app/models/\_\_init\_\_.py                                                         |      104 |       61 |     41% |18-71, 75-102, 114-115, 118-119, 154-172, 175, 189-207, 213, 225-241 |
+| app/models/\_\_init\_\_.py                                                         |       47 |       30 |     36% |16-69, 73-100, 112-113, 116-117 |
 | app/models/action.py                                                               |       22 |        7 |     68% |20, 23-29, 32 |
 | app/models/activity.py                                                             |       30 |        4 |     87% |16, 32, 39, 49 |
 | app/models/news.py                                                                 |       46 |       24 |     48% |28-53, 57-65 |
+| app/models/sample.py                                                               |       58 |       29 |     50% |37-54, 57, 71-89, 95, 112-122 |
 | app/models/share.py                                                                |        9 |        1 |     89% |        12 |
 | app/models/smbresource.py                                                          |       13 |        1 |     92% |        16 |
 | app/models/upload.py                                                               |       11 |        1 |     91% |        14 |
-| app/models/user.py                                                                 |       80 |       31 |     61% |18, 23, 54, 58, 62, 68-69, 73-83, 90, 99-105, 108, 112-115 |
+| app/models/user.py                                                                 |       83 |       32 |     61% |19, 24, 33, 59, 63, 67, 73-74, 78-88, 95, 104-110, 113, 117-120 |
 | app/printdata/\_\_init\_\_.py                                                      |        3 |        0 |    100% |           |
 | app/printdata/forms.py                                                             |        8 |        0 |    100% |           |
 | app/printdata/views.py                                                             |       43 |       34 |     21% |     12-53 |
@@ -68,7 +69,7 @@
 | migrations/versions/578518528886\_added\_ownership\_to\_actions.py                 |       13 |        3 |     77% |     28-30 |
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
-|                                                                          **TOTAL** | **2208** | **1160** | **47%** |           |
+|                                                                          **TOTAL** | **2212** | **1159** | **48%** |           |
 
 
 ## Setup coverage badge

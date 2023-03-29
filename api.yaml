@@ -1,12 +1,12 @@
 info:
-  description: MSM API
+  description: Racine API
   version: 0.1.0-dev
   contact:
     email: holger.graef@gmail.com
   license:
     name: GPL v3
-    url: https://github.com/HolgerGraef/MSM/blob/master/LICENSE.md
-  title: MSM API
+    url: https://github.com/hgrf/racine/blob/master/LICENSE.md
+  title: Racine API
 tags:
 - name: samples
   description: Endpoints related to samples

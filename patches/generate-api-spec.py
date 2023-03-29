@@ -13,18 +13,16 @@ from app import create_app, api  # noqa: E402
 
 
 spec = APISpec(
-    title="MSM API",
+    title="Racine API",
     version="0.1.0-dev",
     openapi_version="3.0.2",
     info=dict(
-        description="MSM API",
+        description="Racine API",
         version="0.1.0-dev",
         contact=dict(
             email="holger.graef@gmail.com",
         ),
-        license=dict(
-            name="GPL v3", url="https://github.com/HolgerGraef/MSM/blob/master/LICENSE.md"
-        ),
+        license=dict(name="GPL v3", url="https://github.com/hgrf/racine/blob/master/LICENSE.md"),
     ),
     tags=[
         dict(name="samples", description="Endpoints related to samples"),

@@ -451,11 +451,11 @@ function before_unload_handler(event, ignore, message) {
 }
 
 $(document).ready(function() {
-    var apiClient = new MsmApi.ApiClient(basePath=window.location.origin);
+    var apiClient = new RacineApi.ApiClient(basePath=window.location.origin);
     apiClient.authentications["bearerAuth"].accessToken = api_token;
-    SamplesAPI = new MsmApi.SamplesApi(apiClient);
-    SharesAPI = new MsmApi.SharesApi(apiClient);
-    ActionsAPI = new MsmApi.ActionsApi(apiClient);
+    SamplesAPI = new RacineApi.SamplesApi(apiClient);
+    SharesAPI = new RacineApi.SharesApi(apiClient);
+    ActionsAPI = new RacineApi.ActionsApi(apiClient);
 
     // Switch of automatic scroll restoration...
     // so that, if a popstate event occurs but the user does not want to leave the page, automatic scrolling to the top

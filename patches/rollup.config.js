@@ -8,8 +8,8 @@ export default {
     input: 'src/index.js',
     output: {
         format: 'iife',
-        file: '../../app/static/msm-api.js',
-        name: 'MsmApi',
+        file: '../../app/static/api-client.js',
+        name: 'RacineApi',
     },
     plugins: [
         commonjs({esmExternals: true}),

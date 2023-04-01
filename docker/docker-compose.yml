@@ -8,9 +8,11 @@ services:
       target: racine
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - uploads:/app/uploads
       - database:/app/database
+      - ./ssl:/etc/nginx/ssl
   web-dev:
     container_name: racine-dev
     image: racine-dev

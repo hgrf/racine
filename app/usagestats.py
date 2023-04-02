@@ -1,6 +1,5 @@
 import os
 import time
-import git
 import requests
 import uuid
 import threading
@@ -45,11 +44,6 @@ class UsageStatisticsThread(threading.Thread):
                 f.write(key)
 
         while True:
-            # obtain git revision and check if repo is clean
-            repo = git.Repo(basedir)  # get Sample Manager git repo
-            git_rev = str(repo.rev_parse("HEAD"))
-            git_clean = str(not repo.is_dirty())
-
             # obtain file system usage
             dbsize, totuploadvol, availablevol = filesystem_usage(self.app)
 
@@ -65,8 +59,6 @@ class UsageStatisticsThread(threading.Thread):
                     "actions": Action.query.join(Sample).filter(not Sample.isdeleted).count(),
                     "starttime": start_time,
                     "uptime": time.time() - start_time,
-                    "gitrev": git_rev,
-                    "gitclean": git_clean,
                     "dbsize": dbsize,
                     "uploadvol": totuploadvol,
                     "availablevol": availablevol,

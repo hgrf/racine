@@ -5,20 +5,12 @@ from ..models import SMBResource, User, Upload, Action, Sample
 from .forms import NewSMBResourceForm, NewUserForm, EmailSettings
 from . import settings
 from flask_login import current_user, login_required
-import git
 from ..config import basedir
 from flask import current_app as app
 from ..emailing import send_mail, read_mailconfig
 import os
 from .. import plugins
 import base64
-
-
-@settings.route("/overview")
-@login_required
-@admin_required
-def set_overview():
-    return render_template("settings/overview.html")
 
 
 @settings.route("/smbresources", methods=["GET", "POST"])
@@ -139,51 +131,6 @@ def email():
         pass
 
     return render_template("settings/email.html", form=form)
-
-
-@settings.route("/revision", methods=["GET"])
-@login_required
-@admin_required
-def revision():
-    recent_changes = []
-    remote_revision = 0
-    local_revision = 0
-    try:
-        repo = git.Repo(basedir)  # get Sample Manager git repo
-        local_revision = repo.rev_parse("HEAD")
-
-        maxc = 10
-        for c in repo.iter_commits():
-            recent_changes.append(c)
-            maxc = maxc - 1
-            if not maxc:
-                break
-    except Exception as inst:
-        app.logger.error(
-            "Could not retrieve local git information:" + str(type(inst)) + str(inst.args)
-        )
-
-    # Getting remote info fails if this is run on production server, probably due to a
-    # problem getting the right SSH key (and especially getting it unlocked).
-    # There are several ways to solve this (e.g. using an open repository, using an SSH
-    # key without passphrase or just ignoring this problem and moving all this Git
-    # stuff to the admin section).
-    try:
-        remote = git.remote.Remote(repo, "origin")  # remote repo
-        info = remote.fetch()[0]  # fetch changes
-        remote_revision = info.commit  # latest remote commit
-    except Exception as inst:
-        app.logger.error(
-            "Could not retrieve remote git information:" + str(type(inst)) + str(inst.args)
-        )
-
-    return render_template(
-        "settings/revision.html",
-        local_rev=local_revision,
-        remote_rev=remote_revision,
-        recent_changes=recent_changes,
-        plugins=plugins,
-    )
 
 
 # ----- two helper functions for the settings/uploads page

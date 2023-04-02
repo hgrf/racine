@@ -55,9 +55,6 @@ license (see Appendix D):
 * Flask-Mail - Copyright (c) 2010 by danjac.
 * Flask-Script - Copyright (c) 2010 by Dan Jacob. Copyright (c) 2014 by Matthias Urlichs.
 * Flask-WTF - Copyright (c) 2010 by Dan Jacob. Copyright (c) 2013 by Hsiaoming Yang.
-* gitdb2 - Copyright (c) 2010, 2011 Sebastian Thiel and contributors.
-* smmap2 - Copyright (c) 2010, 2011 Sebastian Thiel and contributors.
-* GitPython - Copyright (c) 2008, 2009 Michael Trier and contributors.
 * WTForms - Copyright (c) 2008 by the WTForms team.
 
 The following external libraries are used by Racine under the MIT license

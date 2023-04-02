@@ -1,6 +1,5 @@
-var SamplesAPI;
-var SharesAPI;
-var ActionsAPI;
+var R;
+
 var sample_id;
 var term;
 var hiddeneditor;
@@ -107,7 +106,7 @@ function init_editor(scrolltotop) {
 
     // handler for archive button
     $('#archive').click(function() {
-        SamplesAPI.toggleArchived(sample_id, function(error, data, response) {
+        R.samplesAPI.toggleArchived(sample_id, function(error, data, response) {
             if (!response)
                 error_dialog("Server error. Please check your connection.");
             else if (response.error) {
@@ -131,7 +130,7 @@ function init_editor(scrolltotop) {
 
     // handler for collaborative button
     $('#collaborate').click(function() {
-        SamplesAPI.toggleCollaborative(sample_id, function(error, data, response) {
+        R.samplesAPI.toggleCollaborative(sample_id, function(error, data, response) {
             if (!response)
                 error_dialog("Server error. Please check your connection.");
             else if (response.error) {
@@ -189,7 +188,7 @@ function init_editor(scrolltotop) {
         var formdata = {};
         $('#newactionform').serializeArray().map(function(x){formdata[x.name] = x.value;});
 
-        ActionsAPI.createAction(sample_id, formdata, function(error, data, response) {
+        R.actionsAPI.createAction(sample_id, formdata, function(error, data, response) {
             if (!response)
                 error_dialog("Server error. Please check your connection.");
             else if (response.error) {
@@ -263,7 +262,7 @@ function init_editor(scrolltotop) {
     $('.actiondate.editable').texteditable();
 
     $('.swapaction').click( function(event) {
-        ActionsAPI.swapActionOrder(
+        R.actionsAPI.swapActionOrder(
             {'actionid': $(this).data('id'), 'swapid': $(this).data('swapid')},
             function(error, data, response) {
                 if (!response)
@@ -293,7 +292,7 @@ function init_editor(scrolltotop) {
             $('#expires').val('');
             $('#dlg_markasnews').modal('show');
         } else {
-            ActionsAPI.unmarkActionAsNews({ "actionid": actionid }, function(error, data, response) {
+            R.actionsAPI.unmarkActionAsNews({ "actionid": actionid }, function(error, data, response) {
                 if (!response)
                     error_dialog("Server error. Please check your connection.");
                 else if (response.error) {
@@ -451,11 +450,7 @@ function before_unload_handler(event, ignore, message) {
 }
 
 $(document).ready(function() {
-    var apiClient = new RacineApi.ApiClient(basePath=window.location.origin);
-    apiClient.authentications["bearerAuth"].accessToken = api_token;
-    SamplesAPI = new RacineApi.SamplesApi(apiClient);
-    SharesAPI = new RacineApi.SharesApi(apiClient);
-    ActionsAPI = new RacineApi.ActionsApi(apiClient);
+    R = new Racine(api_token);
 
     // Switch of automatic scroll restoration...
     // so that, if a popstate event occurs but the user does not want to leave the page, automatic scrolling to the top
@@ -520,7 +515,7 @@ $(document).ready(function() {
     });
 
     function shareselected(event, suggestion) {
-        SharesAPI.createShare(
+        R.sharesAPI.createShare(
             { "sampleid": sample_id, "username": $('#username').val() },
             function(error, data, response) {
                 if (!response)
@@ -597,7 +592,7 @@ $(document).ready(function() {
         var formdata = {};
         newsampleform.serializeArray().map(function(x){formdata[x.name] = x.value;});
 
-        SamplesAPI.createSample(formdata, function(error, data, response) {
+        R.samplesAPI.createSample(formdata, function(error, data, response) {
             if (!response)
                 error_dialog("Server error. Please check your connection.");
             else if (response.error) {
@@ -648,7 +643,7 @@ $(document).ready(function() {
         var formdata = {};
         dlg_markasnews_form.serializeArray().map(function(x){formdata[x.name] = x.value;});
 
-        ActionsAPI.markActionAsNews(formdata, function(error, data, response) {
+        R.actionsAPI.markActionAsNews(formdata, function(error, data, response) {
             if (!response)
                 error_dialog("Server error. Please check your connection.");
             else if (response.body && response.body.error) {
@@ -749,7 +744,7 @@ $(document).ready(function() {
 
         switch(type) {
         case "action":
-            ActionsAPI.deleteAction(id, function(error, data, response) {
+            R.actionsAPI.deleteAction(id, function(error, data, response) {
                 if (!response)
                     error_dialog("Server error. Please check your connection.");
                 else if (response.error) {
@@ -764,7 +759,7 @@ $(document).ready(function() {
             });
             break;
         case "sample":
-            SamplesAPI.deleteSample(id, function(error, data, response) {
+            R.samplesAPI.deleteSample(id, function(error, data, response) {
                 if (!response)
                     error_dialog("Server error. Please check your connection.");
                 else if (response.error) {
@@ -780,7 +775,7 @@ $(document).ready(function() {
             });
             break;
         case "share":
-            SharesAPI.deleteShare(id, function(error, data, response) {
+            R.sharesAPI.deleteShare(id, function(error, data, response) {
                 if (!response)
                     error_dialog("Server error. Please check your connection.");
                 else if (response.error) {

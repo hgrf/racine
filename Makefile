@@ -8,22 +8,13 @@ api-spec:
 	cat patches/api.yaml >> api.yaml
 
 api-client: api-spec
-	rm -rf build/api-client
+	rm -rf js/src/api
 	wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/6.2.1/openapi-generator-cli-6.2.1.jar \
 		-O build/openapi-generator-cli.jar
 	
-	java -jar build/openapi-generator-cli.jar generate -i api.yaml -g javascript -p modelPropertyNaming=original -o build/api-client
-	cd build/api-client && npm install
-	cd build/api-client && npm install \
-		rollup \
-		rollup-plugin-polyfill-node \
-		@rollup/plugin-node-resolve \
-		@rollup/plugin-commonjs \
-		@rollup/plugin-json \
-		@rollup/plugin-terser
-
-	cp patches/rollup.config.js build/api-client/rollup.config.js
-	cd build/api-client && npx rollup -c --bundleConfigAsCjs
+	java -jar build/openapi-generator-cli.jar generate \
+		-i api.yaml -g javascript -p modelPropertyNaming=original -o js/src/api
+	cd js/src/api && npm install
 
 website:
 	# clone bootstrap
@@ -353,8 +344,8 @@ install-typeahead.js-bootstrap3.less:
 
 	git apply patches/typeahead.css.patch
 
-install-js-dependencies: install-bootstrap-toc install-ckeditor install-jquery install-jquery.jeditable install-jquery-ui install-lightbox install-mathjax install-typeahead install-typeahead.js-bootstrap3.less
-	echo ""
+install-js-dependencies: install-bootstrap-toc install-ckeditor install-jquery install-jquery.jeditable install-jquery-ui install-lightbox install-mathjax install-typeahead install-typeahead.js-bootstrap3.less api-client
+	cd js && npm install && npx rollup -c
 
 clean-js-dependencies:
 	rm  -f app/static/bootstrap-toc.min.css

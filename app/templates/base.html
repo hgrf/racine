@@ -132,6 +132,7 @@ not populated by JavaScript #}
 
 {% block scripts %}
 {{ super() }}
+    <script src="{{ url_for('static', filename='racine.js') }}"></script>
     <script src="{{ url_for('static', filename='base.js', version='20191203') }}"></script>
     <script src="{{ url_for('static', filename='typeahead.js/typeahead.bundle.min.js') }}"></script>
     <script src="{{ url_for('static', filename='typeahead.js/substringmatcher.js') }}"></script>

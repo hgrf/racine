@@ -265,11 +265,6 @@ install-bootstrap-toc:
 	cp /tmp/bootstrap-toc/dist/bootstrap-toc.min.js app/static/bootstrap-toc.min.js
 	rm -rf /tmp/bootstrap-toc
 
-install-jquery:
-	rm -f app/static/jquery-1.11.3.min.js
-
-	wget -O app/static/jquery-1.11.3.min.js https://code.jquery.com/jquery-1.11.3.min.js
-
 install-jquery.jeditable:
 	rm -f app/static/jquery.jeditable.js
 
@@ -344,11 +339,9 @@ install-js-dependencies: install-bootstrap-toc install-ckeditor install-jquery i
 clean-js-dependencies:
 	rm  -f app/static/bootstrap-toc.min.css
 	rm  -f app/static/bootstrap-toc.min.js
-	rm -f app/static/jquery-1.11.3.min.js
 	rm -f app/static/jquery.jeditable.js
 	rm  -f app/static/jquery-ui.min.css
 	rm  -f app/static/jquery-ui.min.js
-	rm -rf app/static/lightbox2-master
 	rm -rf app/static/mathjax
 	rm -rf app/static/typeahead.js
 

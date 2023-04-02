@@ -56,13 +56,13 @@ class NewSampleDialog {
 
             R.samplesAPI.createSample(formdata, function (error, data, response) {
                 if (!response)
-                    error_dialog("Server error. Please check your connection.");
+                    R.errorDialog("Server error. Please check your connection.");
                 else if (response.error) {
                     if (response.body.error) {
                         // form failed validation; because of invalid data or expired CSRF token
                         for (var field in response.body.error) {
                             if (field === 'csrf_token') {
-                                error_dialog('The CSRF token has expired. Please reload the page to create a new sample.');
+                                R.errorDialog('The CSRF token has expired. Please reload the page to create a new sample.');
                                 continue;
                             }
                             // get form group
@@ -80,7 +80,7 @@ class NewSampleDialog {
                             }
                         }
                     } else {
-                        error_dialog(response.error);
+                        R.errorDialog(response.error);
                     }
                 } else {
                     dialog.modal('hide');  // hide and clear the dialog

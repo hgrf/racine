@@ -3,12 +3,12 @@ function shareselected(event, suggestion) {
       {'sampleid': sample_id, 'username': $('#username').val()},
       function(error, data, response) {
         if (!response) {
-          error_dialog('Server error. Please check your connection.');
+          R.errorDialog('Server error. Please check your connection.');
         } else if (response.error) {
           if (response.body.message) {
-            error_dialog(response.body.message);
+            R.errorDialog(response.body.message);
           } else {
-            error_dialog(response.error);
+            R.errorDialog(response.error);
           }
         } else {
           $('#sharelist').append(

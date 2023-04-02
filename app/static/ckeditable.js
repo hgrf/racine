@@ -21,9 +21,9 @@
                 onerror: function(settings, original, xhr) {
                     if(xhr.responseText) {
                         var json = $.parseJSON(xhr.responseText);
-                        error_dialog(json.message);
+                        R.errorDialog(json.message);
                     } else {
-                        error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
+                        R.errorDialog("Could not connect to the server. Please make sure you are connected and try again.");
                     }
                 }
             });
@@ -54,9 +54,9 @@
                 onerror: function(settings, original, xhr) {
                     if(xhr.responseText) {
                         var json = $.parseJSON(xhr.responseText);
-                        error_dialog(json.message);
+                        R.errorDialog(json.message);
                     } else {
-                        error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
+                        R.errorDialog("Could not connect to the server. Please make sure you are connected and try again.");
                     }
                 }
             });
@@ -136,7 +136,7 @@
                 editor.on('done', ckeditable_on_done);
             },
             error: function( jqXHR, textStatus ) {
-                error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
+                R.errorDialog("Could not connect to the server. Please make sure you are connected and try again.");
                 field.trigger('editabledone');
             }
         });
@@ -156,11 +156,11 @@
                 headers: { 'Authorization': 'Bearer ' + api_token },
                 data: {"value": data},
                 success: function( data ) {
-                    if(data.code) error_dialog("An error occured.");
+                    if(data.code) R.errorDialog("An error occured.");
                     ckeditable_finish(editor, field);
                 },
                 error: function( jqXHR, textStatus ) {
-                    error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
+                    R.errorDialog("Could not connect to the server. Please make sure you are connected and try again.");
                 }
             });
         } else {
@@ -204,7 +204,7 @@
                 field.trigger('editabledone');
             },
             error: function( jqXHR, textStatus ) {
-                error_dialog("Could not connect to the server. Please make sure you are connected and try again.");
+                R.errorDialog("Could not connect to the server. Please make sure you are connected and try again.");
             }
         });
     }

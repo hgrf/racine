@@ -16,12 +16,12 @@ class MarkAsNewsDialog {
 
             R.actionsAPI.markActionAsNews(formdata, function (error, data, response) {
                 if (!response)
-                    error_dialog("Server error. Please check your connection.");
+                    R.errorDialog("Server error. Please check your connection.");
                 else if (response.body && response.body.error) {
                     // form failed validation; because of invalid data or expired CSRF token
                     for (var field in response.body.error) {
                         if (field === 'csrf_token') {
-                            error_dialog('The CSRF token has expired. Please reload the page.');
+                            R.errorDialog('The CSRF token has expired. Please reload the page.');
                             continue;
                         }
                         // get form group

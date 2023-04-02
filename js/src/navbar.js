@@ -44,7 +44,8 @@ function initNavbar(scrolltocurrent, scrolltotop) {
         }
 
         R.loadSample($(this).data('id'));
-        mobile_hide_sidebar();   // on the small screen, hide the sidebar after a sample has been selected
+        // on small screen, hide the sidebar after a sample has been selected
+        R.mobileHideSidebar();
     });
 
     // add glyphicons to expandable items in the navbar
@@ -94,12 +95,12 @@ function initNavbar(scrolltocurrent, scrolltotop) {
 
             R.samplesAPI.changeParent(draggedId, parentId, function(error, data, response) {
                 if (!response)
-                    error_dialog("Server error. Please check your connection.");
+                    R.errorDialog("Server error. Please check your connection.");
                 else if (response.error) {
                     if (response.body.message)
-                        error_dialog(response.body.message);
+                        R.errorDialog(response.body.message);
                     else
-                        error_dialog(response.error);
+                        R.errorDialog(response.error);
                 } else {
                     let draggedItem = $('#nav-container'+draggedId);
                     let oldParent = draggedItem.parent().prev();

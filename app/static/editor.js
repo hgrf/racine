@@ -110,12 +110,12 @@ function init_editor(scrolltotop) {
     $('#archive').click(function() {
         R.samplesAPI.toggleArchived(sample_id, function(error, data, response) {
             if (!response)
-                error_dialog("Server error. Please check your connection.");
+                R.errorDialog("Server error. Please check your connection.");
             else if (response.error) {
                 if (response.body.message)
-                    error_dialog(response.body.message);
+                    R.errorDialog(response.body.message);
                 else
-                    error_dialog(response.error);
+                    R.errorDialog(response.error);
             } else {
                 if(data.isarchived) {
                     $('#archive').attr('title', 'De-archive');
@@ -134,12 +134,12 @@ function init_editor(scrolltotop) {
     $('#collaborate').click(function() {
         R.samplesAPI.toggleCollaborative(sample_id, function(error, data, response) {
             if (!response)
-                error_dialog("Server error. Please check your connection.");
+                R.errorDialog("Server error. Please check your connection.");
             else if (response.error) {
                 if (response.body.message)
-                    error_dialog(response.body.message);
+                    R.errorDialog(response.body.message);
                 else
-                    error_dialog(response.error);
+                    R.errorDialog(response.error);
             } else {
                 if(data.iscollaborative) {
                     $('#collaborate').attr('title', 'Make non-collaborative');
@@ -192,7 +192,7 @@ function init_editor(scrolltotop) {
 
         R.actionsAPI.createAction(sample_id, formdata, function(error, data, response) {
             if (!response)
-                error_dialog("Server error. Please check your connection.");
+                R.errorDialog("Server error. Please check your connection.");
             else if (response.error) {
                 if (response.body.resubmit) {
                     // form failed validation; because of invalid data or expired CSRF token
@@ -200,11 +200,11 @@ function init_editor(scrolltotop) {
                     // want to keep the text that the user has written in the description field
                     $(document).one("editor_initialised", formdata, function(event) {
                         CKEDITOR.instances.description.setData(event.data.description);
-                        error_dialog("Form is not valid. Either you entered an invalid date " +
+                        R.errorDialog("Form is not valid. Either you entered an invalid date " +
                                      "or the session has expired. Try submitting again.");
                     });
                 } else {
-                    error_dialog(response.error);
+                    R.errorDialog(response.error);
                     return;
                 }
             }
@@ -268,12 +268,12 @@ function init_editor(scrolltotop) {
             {'actionid': $(this).data('id'), 'swapid': $(this).data('swapid')},
             function(error, data, response) {
                 if (!response)
-                    error_dialog("Server error. Please check your connection.");
+                    R.errorDialog("Server error. Please check your connection.");
                 else if (response.error) {
                     if (response.body.message)
-                        error_dialog(response.body.message);
+                        R.errorDialog(response.body.message);
                     else
-                        error_dialog(response.error);
+                        R.errorDialog(response.error);
                 } else {
                     R.loadSample(sample_id, false, false, false);
                 }
@@ -296,12 +296,12 @@ function init_editor(scrolltotop) {
         } else {
             R.actionsAPI.unmarkActionAsNews({ "actionid": actionid }, function(error, data, response) {
                 if (!response)
-                    error_dialog("Server error. Please check your connection.");
+                    R.errorDialog("Server error. Please check your connection.");
                 else if (response.error) {
                     if (response.body.message)
-                        error_dialog(response.body.message);
+                        R.errorDialog(response.body.message);
                     else
-                        error_dialog(response.error);
+                        R.errorDialog(response.error);
                 } else {
                     flag_element.removeClass('unmarkasnews');
                     flag_element.addClass('markasnews');

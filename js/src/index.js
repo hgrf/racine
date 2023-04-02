@@ -14,6 +14,28 @@ class Racine {
         this.sharesAPI = new API.SharesApi(this.apiClient);
         this.actionsAPI = new API.ActionsApi(this.apiClient);
 
+        $('#toggle-sidebar').click(function () {
+            if ($('.sidebar').hasClass('overlay')) {
+                $('.sidebar').removeClass('overlay');
+                $('.content-overlay').fadeOut();
+            } else {
+                $('.sidebar').addClass('overlay');
+                $('.content-overlay').fadeIn();
+            }
+        });
+    
+        $('.content-overlay').click(function() {
+            this.mobileHideSidebar();
+        });
+    
+        $('.nav-button-toggle').click(function () {
+            if ($(this).hasClass('active')) {
+                $(this).removeClass('active');
+            } else {
+                $(this).addClass('active');
+            }
+        });
+
         // Switch of automatic scroll restoration...
         // so that, if a popstate event occurs but the user does not want to leave the page, automatic scrolling to the top
         // is avoided. However, this means that if we navigate back to some page that was previously scrolled to a specific
@@ -68,7 +90,7 @@ class Racine {
                     $('#nav-entry' + sample_id).css("background-color", "transparent");
 
                 if ($(this).val() === '') {
-                    error_dialog('Please specify a search term');
+                    R.errorDialog('Please specify a search term');
                 } else {
                     load_searchresults($(this).val(), true);  // load the searchresults page
                     $(this).typeahead('val', '');    // clear the search field
@@ -100,12 +122,12 @@ class Racine {
                 case "action":
                     R.actionsAPI.deleteAction(id, function (error, data, response) {
                         if (!response)
-                            error_dialog("Server error. Please check your connection.");
+                            R.errorDialog("Server error. Please check your connection.");
                         else if (response.error) {
                             if (response.body.message)
-                                error_dialog(response.body.message);
+                                R.errorDialog(response.body.message);
                             else
-                                error_dialog(response.error);
+                                R.errorDialog(response.error);
                         } else {
                             $('#' + id + '.list-entry').remove();
                         }
@@ -115,12 +137,12 @@ class Racine {
                 case "sample":
                     R.samplesAPI.deleteSample(id, function (error, data, response) {
                         if (!response)
-                            error_dialog("Server error. Please check your connection.");
+                            R.errorDialog("Server error. Please check your connection.");
                         else if (response.error) {
                             if (response.body.message)
-                                error_dialog(response.body.message);
+                                R.errorDialog(response.body.message);
                             else
-                                error_dialog(response.error);
+                                R.errorDialog(response.error);
                         } else {
                             load_welcome(true);
                             loadNavbar(undefined, undefined, false, true);
@@ -131,12 +153,12 @@ class Racine {
                 case "share":
                     R.sharesAPI.deleteShare(id, function (error, data, response) {
                         if (!response)
-                            error_dialog("Server error. Please check your connection.");
+                            R.errorDialog("Server error. Please check your connection.");
                         else if (response.error) {
                             if (response.body.message)
-                                error_dialog(response.body.message);
+                                R.errorDialog(response.body.message);
                             else
-                                error_dialog(response.error);
+                                R.errorDialog(response.error);
                         } else {
                             $('#sharelistentry' + id).remove();
                             if (response.status == 205) { // if the user removed himself from the sharer list
@@ -195,11 +217,23 @@ class Racine {
                 }
             },
             error: function() {
-                error_dialog('Sample #'+id+" does not exist or you do not have access to it.");
+                R.errorDialog('Sample #'+id+" does not exist or you do not have access to it.");
             }
         });
     
         return true;
+    }
+
+    mobileHideSidebar() {
+        $('#toggle-sidebar').removeClass('active');
+        $('.sidebar').removeClass('overlay');
+        $('.content-overlay').fadeOut();
+    }
+
+    errorDialog(message) {
+        // TODO: think about uniting this with flash messages
+        $("#errordialog").find(".modal-body").text(message);
+        $("#errordialog").modal("show");
     }
 }
 

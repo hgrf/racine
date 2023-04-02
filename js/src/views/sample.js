@@ -1,12 +1,5 @@
-var R;
-
-var order;
-var showarchived;
 var sample_id;
-var term;
 var hiddeneditor;
-var showparentactions = false;
-var invertactionorder = false;
 
 CKEDITOR.timestamp='20201114';
 
@@ -18,31 +11,6 @@ if (!String.prototype.startsWith) {
   };
 }
 
-// configure the CKEditor
-var ckeditorconfig = {
-    extraPlugins: 'save,fb,imagerotate',
-    imageUploadUrl: '/browser/upload?type=img',
-    uploadUrl: '/browser/upload?type=att',
-    filebrowserImageUploadUrl: '/browser/upload?type=img',
-    filebrowserLinkUploadUrl: '/browser/upload?type=att',
-	toolbarGroups: [
-		{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
-		{ name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
-		{ name: 'forms', groups: [ 'forms' ] },
-		{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
-		{ name: 'others', groups: [ 'others' ] },
-		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-		{ name: 'styles', groups: [ 'styles' ] },
-		{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
-		{ name: 'links', groups: [ 'links' ] },
-		{ name: 'insert', groups: [ 'insert' ] },
-		{ name: 'colors', groups: [ 'colors' ] },
-		{ name: 'about', groups: [ 'about' ] },
-		{ name: 'tools', groups: [ 'tools' ] }
-	],
-    removeButtons: 'Cut,Copy,Paste,PasteText,PasteFromWord,Undo,Redo,BGColor,RemoveFormat,Outdent,Indent,Blockquote,About,Strike,Scayt,Anchor,Source'
-};
-
 $.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer
 
 $.ajaxSetup({ cache: false });
@@ -50,7 +18,7 @@ $.ajaxSetup({ cache: false });
 function make_samples_clickable() {
     // check if load_sample is defined
     $('div.sample').click(function() {
-       R.loadSample($(this).data('id'));
+       loadSample($(this).data('id'));
     });
 }
 
@@ -95,7 +63,7 @@ function setup_sample_image() {
     });
 }
 
-function init_editor(scrolltotop) {
+function initEditor(scrolltotop) {
     // define default values for arguments
     var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : true;
   
@@ -162,12 +130,12 @@ function init_editor(scrolltotop) {
 
     $('#invertactionorder').click(function() {
         invertactionorder = !invertactionorder; // toggle
-        R.loadSample(sample_id, false, false, false);
+        loadSample(sample_id, false, false, false);
     });
 
     $('#showparentactions').click(function() {
         showparentactions = !showparentactions; // toggle
-        R.loadSample(sample_id, false, false, false);
+        loadSample(sample_id, false, false, false);
     });
 
     // datepicker
@@ -180,7 +148,7 @@ function init_editor(scrolltotop) {
         event.preventDefault();
 
         // check if the user is still modifying any actions before submitting the new one
-        if(!confirm_unload(['description'], "You have been editing the sample description or one or more past " +
+        if(!R.confirmUnload(['description'], "You have been editing the sample description or one or more past " +
                     "actions. Your changes will be lost if you do not save them, are you sure you want to continue?"))
             return;
 
@@ -214,7 +182,7 @@ function init_editor(scrolltotop) {
             // destroy it so that it doesn't bother us with confirmation dialogs when we
             // reload the sample
             CKEDITOR.instances['description'].destroy();
-            R.loadSample(sample_id, false, false, false);
+            loadSample(sample_id, false, false, false);
         });
     });
 
@@ -224,7 +192,7 @@ function init_editor(scrolltotop) {
         // contains the entire address
         if(typeof $(this).attr('href') == 'string' && $(this).attr('href').startsWith('/sample/')) {
             event.preventDefault();
-            R.loadSample($(this).attr('href').split('/')[2]);
+            loadSample($(this).attr('href').split('/')[2]);
         }
     });
 
@@ -275,7 +243,7 @@ function init_editor(scrolltotop) {
                     else
                         R.errorDialog(response.error);
                 } else {
-                    R.loadSample(sample_id, false, false, false);
+                    loadSample(sample_id, false, false, false);
                 }
         });
     });
@@ -313,27 +281,6 @@ function init_editor(scrolltotop) {
     $(document).trigger("editor_initialised");
 }
 
-function confirm_unload(ignore, message) {
-    var ignore = typeof ignore !== 'undefined' ? ignore : [];
-    ignore = ignore.concat(['newsampledescription']);
-
-    // use the before_unload_handler function to check if any CKEditor is being edited
-    // if yes, ask the user if he really wants to load a different sample
-    confirm_message = before_unload_handler(0, ignore, message);
-    if(confirm_message) {
-        if (!confirm(confirm_message)) {
-            return false;
-        }
-    }
-    // destroy CKEditors
-    for(var i in CKEDITOR.instances) {
-        if(ignore.indexOf(i) < 0) {
-            CKEDITOR.instances[i].destroy()
-        }
-    }
-    return true;
-}
-
 function push_current_state() {
     // figure out what page we currently have and push state accordingly
     if(typeof sample_id !== "undefined") {
@@ -346,7 +293,7 @@ function push_current_state() {
 }
 
 function load_welcome(pushstate) {
-    if(!confirm_unload())
+    if(!R.confirmUnload())
         return false;
 
     // load welcome page
@@ -372,7 +319,7 @@ function load_welcome(pushstate) {
 }
 
 function load_searchresults(term, pushstate) {
-    if(!confirm_unload())
+    if(!R.confirmUnload())
         return false;
 
     $.ajax({
@@ -395,19 +342,47 @@ function load_searchresults(term, pushstate) {
     return true;
 }
 
-function before_unload_handler(event, ignore, message) {
-    var ignore = typeof ignore !== 'undefined' ? ignore : [];
-    var msg = typeof message !== 'undefined' ? message : "Are you sure you want to leave before saving modifications?"
+function loadSample(id, pushstate, scrolltotop, scrollnavbar) {
+    // define default values for arguments
+    var pushstate = typeof pushstate !== 'undefined' ?  pushstate : true;
+    var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : true;
+    var scrollnavbar = typeof scrollnavbar !== 'undefined' ? scrollnavbar : true;
 
-    for(var i in CKEDITOR.instances) {
-        // first check if the editor is not on the ignore list
-        if(ignore.indexOf(i) < 0 && CKEDITOR.instances[i].checkDirty()) {
-            event.returnValue = msg;     // Gecko, Trident, Chrome 34+
-            return msg;                  // Gecko, WebKit, Chrome <34
+    if(!R.confirmUnload())
+        return false;
+
+    // if currently viewing a sample (not welcome page) then change the navbar background to transparent before loading
+    // the new sample (do not do this if the viewed sample is unchanged)
+    if(typeof sample_id !== 'undefined' && sample_id !== id)
+        $('#nav-entry' + sample_id).css("background-color", "transparent");
+
+    // load the sample data and re-initialise the editor
+    $.ajax({
+        url: "/editor/"+id+"?invertactionorder="+invertactionorder+"&showparentactions="+showparentactions,
+        pushstate: pushstate,
+        scrolltotop: scrolltotop,
+        scrollnavbar: scrollnavbar,
+        success: function( data ) {
+            $( "#editor-frame" ).html(data);
+            sample_id = $('#sampleid').text();
+            term = undefined;
+            if(this.pushstate)
+                window.history.pushState({"id": sample_id}, "", "/sample/"+ sample_id);
+            document.title = "Racine - "+$('#samplename').text();
+            initEditor(this.scrolltotop);
+            // highlight in navbar, if the navbar is already loaded
+            if($('#nav-entry'+sample_id).length) {
+                $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
+                if(scrollnavbar)
+                    R.showInNavbar(sample_id, false);
+            }
+        },
+        error: function() {
+            R.errorDialog('Sample #'+id+" does not exist or you do not have access to it.");
         }
-    }
+    });
+
+    return true;
 }
 
-$(document).ready(function() {
-    R = new Racine(api_token);
-});
+export default loadSample;

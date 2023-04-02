@@ -3,6 +3,7 @@ import "lightbox2";
 import NewSampleDialog from "./dialogs/newsample";
 import MarkAsNewsDialog from "./dialogs/markasnews";
 import UserBrowserDialog from "./dialogs/userbrowser";
+import { loadNavbar, showInNavbar } from "./navbar";
 
 class Racine {
     constructor(apiToken) {
@@ -122,7 +123,7 @@ class Racine {
                                 error_dialog(response.error);
                         } else {
                             load_welcome(true);
-                            load_navbar(undefined, undefined, false, true);
+                            loadNavbar(undefined, undefined, false, true);
                         }
                         $('#confirm-delete').modal('hide');
                     });
@@ -140,7 +141,7 @@ class Racine {
                             $('#sharelistentry' + id).remove();
                             if (response.status == 205) { // if the user removed himself from the sharer list
                                 load_welcome(true);
-                                load_navbar(undefined, undefined, false, true);
+                                loadNavbar(undefined, undefined, false, true);
                             }
                             $('#confirm-delete').modal('hide');
                         }
@@ -148,6 +149,14 @@ class Racine {
                     break;
             }
         });
+
+        this.showInNavbar = showInNavbar;
+
+        order = 'id';
+        showarchived = false;
+    
+        // default load with order by ID and hide archived samples
+        loadNavbar(order, false);
     }
 
     loadSample(id, pushstate, scrolltotop, scrollnavbar) {
@@ -182,7 +191,7 @@ class Racine {
                 if($('#nav-entry'+sample_id).length) {
                     $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
                     if(scrollnavbar)
-                        show_in_navbar(sample_id, false);
+                        showInNavbar(sample_id, false);
                 }
             },
             error: function() {

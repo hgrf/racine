@@ -1,5 +1,7 @@
 var R;
 
+var order;
+var showarchived;
 var sample_id;
 var term;
 var hiddeneditor;
@@ -151,7 +153,7 @@ function init_editor(scrolltotop) {
     });
 
     $('#showinnavigator').click(function() {
-        show_in_navbar(sample_id, true);
+        R.showInNavbar(sample_id, true);
     });
 
     $('#scrolltobottom').click(function() {

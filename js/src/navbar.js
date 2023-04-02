@@ -1,7 +1,4 @@
-var order;
-var showarchived;
-
-function init_navbar(scrolltocurrent, scrolltotop) {
+function initNavbar(scrolltocurrent, scrolltotop) {
     // define default values for arguments
     var scrolltocurrent = typeof scrolltocurrent !== 'undefined' ? scrolltocurrent : true;
     var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : false;
@@ -16,7 +13,7 @@ function init_navbar(scrolltocurrent, scrolltotop) {
     if(typeof sample_id !== 'undefined') {
         $('#nav-entry' + sample_id).css("background-color", "#BBBBFF");
         if(scrolltocurrent)
-            show_in_navbar(sample_id, false);
+            showInNavbar(sample_id, false);
     }
 
     // scroll to top if this was requested
@@ -126,15 +123,15 @@ function init_navbar(scrolltocurrent, scrolltotop) {
     });
 
     // TODO: togglearchived could now be achieved without reloading the navbar
-    $('.navbar-togglearchived').click(function() { load_navbar(order, !showarchived, false); });
-    $('.navbar-sort-az').click(function() { load_navbar('name', showarchived, false); });
-    $('.navbar-sort-id').click(function() { load_navbar('id', showarchived, false); });
+    $('.navbar-togglearchived').click(function() { loadNavbar(order, !showarchived, false); });
+    $('.navbar-sort-az').click(function() { loadNavbar('name', showarchived, false); });
+    $('.navbar-sort-id').click(function() { loadNavbar('id', showarchived, false); });
     $('.navbar-sort-lastmodified').click(function() {
-        load_navbar('last_modified', showarchived, false);
+        loadNavbar('last_modified', showarchived, false);
     });
 }
 
-function load_navbar(_order, _showarchived, scrolltocurrent, scrolltotop) {
+function loadNavbar(_order, _showarchived, scrolltocurrent, scrolltotop) {
     // define default values for arguments
     order = typeof _order !== 'undefined' ? _order : order;
     showarchived = typeof _showarchived !== 'undefined' ? _showarchived : showarchived;
@@ -152,12 +149,12 @@ function load_navbar(_order, _showarchived, scrolltocurrent, scrolltotop) {
             $('#sidebar').html(data);
 
             // set up handlers etc.
-            init_navbar(scrolltocurrent, scrolltotop);
+            initNavbar(scrolltocurrent, scrolltotop);
         }
     });
 }
 
-function scroll_to_sample(id, flash) {
+function scrollToSample(id, flash) {
     var naventry = $('#nav-entry'+id);
 
     if(!naventry.is(':visible')) {
@@ -197,14 +194,14 @@ function scroll_to_sample(id, flash) {
     }
 }
 
-function show_in_navbar(id, flash) {
+function showInNavbar(id, flash) {
     // make sure all parent samples are expanded in navbar
     var naventry = $('#nav-entry'+id);
     var collapsibles = naventry.parents('.nav-children');
     var collapsed_counter = 0;
 
     // for each collapsible parent check if it's collapsed and increase the counter accordingly, so that the autoscroll
-    // function is only activated when everything has finished expanding (so that the coordinates in scroll_to_sample
+    // function is only activated when everything has finished expanding (so that the coordinates in scrollToSample
     // are correctly calculated)
     collapsibles.each(function() {
         if($(this).attr('aria-expanded') !== 'true') {   // careful, it can be undefined instead of false, hence the notation
@@ -212,7 +209,7 @@ function show_in_navbar(id, flash) {
             $(this).one('shown.bs.collapse', function() {
                 collapsed_counter--;
                 if(!collapsed_counter) {
-                    scroll_to_sample(id, flash);
+                    scrollToSample(id, flash);
                 }
             });
         }
@@ -221,7 +218,7 @@ function show_in_navbar(id, flash) {
     if(collapsed_counter) {
         collapsibles.collapse('show');
     } else {
-        scroll_to_sample(id, flash);
+        scrollToSample(id, flash);
     }
 }
 
@@ -265,10 +262,4 @@ function addGlyphicon(naventry) {
     updateGlyphicon(naventry);
 }
 
-$(document).ready(function() {
-    order = 'id';
-    showarchived = false;
-
-    // default load with order by ID and hide archived samples
-    load_navbar(order, false);
-});
+export { loadNavbar, showInNavbar };

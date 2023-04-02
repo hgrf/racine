@@ -1,3 +1,5 @@
+import { loadNavbar } from "../navbar";
+
 class NewSampleDialog {
     constructor(selector) {
         var dialog = $(selector);
@@ -83,7 +85,7 @@ class NewSampleDialog {
                 } else {
                     dialog.modal('hide');  // hide and clear the dialog
                     R.loadSample(data.sampleid);
-                    load_navbar();
+                    loadNavbar();
                 }
             });
         });

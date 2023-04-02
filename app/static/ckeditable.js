@@ -190,7 +190,7 @@
                 field.find('a').click(function(event) {
                     if(typeof $(this).attr('href') == 'string' && $(this).attr('href').startsWith('/sample/')) {
                         event.preventDefault();
-                        load_sample($(this).attr('href').split('/')[2]);
+                        R.loadSample($(this).attr('href').split('/')[2]);
                     }
                 });
 

@@ -46,7 +46,7 @@ function init_navbar(scrolltocurrent, scrolltotop) {
             return;
         }
 
-        load_sample($(this).data('id'));
+        R.loadSample($(this).data('id'));
         mobile_hide_sidebar();   // on the small screen, hide the sidebar after a sample has been selected
     });
 
@@ -95,7 +95,7 @@ function init_navbar(scrolltocurrent, scrolltotop) {
 
             if(draggedId === parentId) return;
 
-            SamplesAPI.changeParent(draggedId, parentId, function(error, data, response) {
+            R.samplesAPI.changeParent(draggedId, parentId, function(error, data, response) {
                 if (!response)
                     error_dialog("Server error. Please check your connection.");
                 else if (response.error) {

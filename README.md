@@ -4,7 +4,7 @@
 
 | Name                                                                               |    Stmts |     Miss |   Cover |   Missing |
 |----------------------------------------------------------------------------------- | -------: | -------: | ------: | --------: |
-| app/\_\_init\_\_.py                                                                |       65 |        4 |     94% |     85-89 |
+| app/\_\_init\_\_.py                                                                |       69 |        4 |     94% |     91-95 |
 | app/api/\_\_init\_\_.py                                                            |        3 |        0 |    100% |           |
 | app/api/actions.py                                                                 |       99 |       57 |     42% |72-101, 122-129, 153-159, 182-213, 236-259 |
 | app/api/common.py                                                                  |        5 |        0 |    100% |           |
@@ -33,7 +33,7 @@
 | app/models/share.py                                                                |        9 |        1 |     89% |        12 |
 | app/models/smbresource.py                                                          |       13 |        1 |     92% |        16 |
 | app/models/upload.py                                                               |       11 |        1 |     91% |        14 |
-| app/models/user.py                                                                 |       83 |       32 |     61% |19, 24, 33, 59, 63, 67, 73-74, 78-88, 95, 104-110, 113, 117-120 |
+| app/models/user.py                                                                 |       85 |       33 |     61% |20, 25, 34, 60, 64, 68, 74-75, 81-92, 99, 108-114, 117, 121-124 |
 | app/printdata/\_\_init\_\_.py                                                      |        3 |        0 |    100% |           |
 | app/printdata/forms.py                                                             |        8 |        0 |    100% |           |
 | app/printdata/views.py                                                             |       43 |       34 |     21% |     12-53 |
@@ -45,7 +45,7 @@
 | app/settings/views.py                                                              |      145 |      110 |     24% |20-46, 58-74, 83-133, 138-146, 150-163, 172-222, 235-238 |
 | app/smbinterface.py                                                                |       83 |       67 |     19% |29-51, 57-71, 94-110, 114-145, 149, 154-171 |
 | app/tests/\_\_init\_\_.py                                                          |        0 |        0 |    100% |           |
-| app/tests/test\_main.py                                                            |       32 |        0 |    100% |           |
+| app/tests/test\_main.py                                                            |       26 |        0 |    100% |           |
 | app/usagestats.py                                                                  |       51 |       28 |     45% |20-21, 34, 38-77, 81-91 |
 | app/validators.py                                                                  |       14 |        9 |     36% |6-7, 11-12, 16-21 |
 | migrations/env.py                                                                  |       33 |       10 |     70% |43-47, 62-66, 88 |
@@ -70,7 +70,7 @@
 | migrations/versions/578518528886\_added\_ownership\_to\_actions.py                 |       13 |        3 |     77% |     28-30 |
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
-|                                                                          **TOTAL** | **2180** | **1133** | **48%** |           |
+|                                                                          **TOTAL** | **2180** | **1134** | **48%** |           |
 
 
 ## Setup coverage badge

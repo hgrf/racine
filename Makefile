@@ -407,16 +407,10 @@ coverage-report: test
 	coverage html
 
 black:
-	# workaround for https://github.com/psf/black/issues/3111
-	python -m pip install --upgrade -r requirements-dev.txt > /dev/null
 	black .
-	python -m pip install -r requirements.txt > /dev/null
 
 black-check:
-	# workaround for https://github.com/psf/black/issues/3111
-	python -m pip install --upgrade -r requirements-dev.txt > /dev/null
 	black . --check
-	python -m pip install -r requirements.txt > /dev/null
 
 flake8:
 	# stop the build if there are Python syntax errors or undefined names
@@ -443,9 +437,6 @@ flake8-badge:
 		\r\n" | python
 
 doc: api-spec
-	# install dev requirements
-	pip install --upgrade -r requirements-dev.txt > /dev/null
-
 	# generate markdown documentation
 	handsdown \
 		--branch master \
@@ -479,9 +470,6 @@ doc: api-spec
 	# convert to HTML documentation
 	echo -n "\nplugins:\n  - render_swagger" >> mkdocs.yml
 	python -m mkdocs build
-
-	# restore environment
-	python -m pip install -r requirements.txt > /dev/null
 
 doc-serve:
 	cd docs && python -m http.server 8000

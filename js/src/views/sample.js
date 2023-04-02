@@ -1,4 +1,3 @@
-var sample_id;
 var hiddeneditor;
 
 CKEDITOR.timestamp='20201114';
@@ -14,13 +13,6 @@ if (!String.prototype.startsWith) {
 $.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer
 
 $.ajaxSetup({ cache: false });
-
-function make_samples_clickable() {
-    // check if load_sample is defined
-    $('div.sample').click(function() {
-       loadSample($(this).data('id'));
-    });
-}
 
 function setup_sample_image() {
     $('#sampleimage').zoombutton();
@@ -290,56 +282,6 @@ function push_current_state() {
     } else {
         window.history.pushState({},"", "/");
     }
-}
-
-function load_welcome(pushstate) {
-    if(!R.confirmUnload())
-        return false;
-
-    // load welcome page
-    $.ajax({
-        url: "/welcome",
-        success: function(data) {
-            // if currently viewing a sample (not welcome page) then change the navbar background to transparent
-            if(typeof sample_id !== "undefined")
-                $('#nav-entry' + sample_id).css("background-color", "transparent");
-            sample_id = undefined;
-            term = undefined;
-
-            if(pushstate)
-                window.history.pushState({},"", "/");
-            document.title = "Racine";
-
-            $("#editor-frame").html(data);
-            make_samples_clickable();
-        }
-    });
-
-    return true;
-}
-
-function load_searchresults(term, pushstate) {
-    if(!R.confirmUnload())
-        return false;
-
-    $.ajax({
-        url: "/search?ajax=true&term="+term,
-        success: function(data) {
-            // if currently viewing a sample (not welcome page) then change the navbar background to transparent
-            if(typeof sample_id !== "undefined")
-                $('#nav-entry' + sample_id).css("background-color", "transparent");
-            sample_id = undefined;
-
-            if(pushstate)
-                window.history.pushState({"term": term}, "", "/search?term="+term);
-            document.title = "Racine - Search";
-
-            $("#editor-frame").html(data);
-            make_samples_clickable();
-        }
-    });
-
-    return true;
 }
 
 function loadSample(id, pushstate, scrolltotop, scrollnavbar) {

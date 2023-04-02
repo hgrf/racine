@@ -5,6 +5,8 @@ import MarkAsNewsDialog from "./dialogs/markasnews";
 import UserBrowserDialog from "./dialogs/userbrowser";
 import { loadNavbar, showInNavbar } from "./navbar";
 import loadSample from "./views/sample";
+import loadSearchResults from "./views/searchresults";
+import loadWelcome from "./views/welcome";
 
 (function($){   // this is a jQuery plugin
     $.fn.zoombutton = function() {
@@ -69,11 +71,11 @@ class Racine {
             if (event.state != null) {
                 var res;
                 if (typeof event.state.term !== "undefined") {
-                    res = load_searchresults(event.state.term, false);
+                    res = loadSearchResults(event.state.term, false);
                 } else if (typeof event.state.id !== "undefined") {
                     res = loadSample(event.state.id, false, false, true);
                 } else {
-                    res = load_welcome(false);
+                    res = loadWelcome(false);
                 }
                 if (!res)  // the user wants to stay on the page to make modifications
                     push_current_state();
@@ -86,9 +88,9 @@ class Racine {
         if (typeof sample_id !== "undefined") {
             loadSample(sample_id, true);
         } else if (typeof term !== "undefined") {
-            load_searchresults(term, true);
+            loadSearchResults(term, true);
         } else {
-            load_welcome(true);
+            loadWelcome(true);
         }
 
         // add window unload handler (which asks the user to confirm leaving the page when one of the CKEditor instances
@@ -112,7 +114,7 @@ class Racine {
                 if ($(this).val() === '') {
                     R.errorDialog('Please specify a search term');
                 } else {
-                    load_searchresults($(this).val(), true);  // load the searchresults page
+                    loadSearchResults($(this).val(), true);  // load the searchresults page
                     $(this).typeahead('val', '');    // clear the search field
                 }
             }
@@ -164,7 +166,7 @@ class Racine {
                             else
                                 R.errorDialog(response.error);
                         } else {
-                            load_welcome(true);
+                            loadWelcome(true);
                             loadNavbar(undefined, undefined, false, true);
                         }
                         $('#confirm-delete').modal('hide');
@@ -182,7 +184,7 @@ class Racine {
                         } else {
                             $('#sharelistentry' + id).remove();
                             if (response.status == 205) { // if the user removed himself from the sharer list
-                                load_welcome(true);
+                                loadWelcome(true);
                                 loadNavbar(undefined, undefined, false, true);
                             }
                             $('#confirm-delete').modal('hide');
@@ -253,6 +255,13 @@ class Racine {
             }
         }
         return true;
+    }
+
+    makeSamplesClickable() {
+        // check if load_sample is defined
+        $('div.sample').click(function() {
+           loadSample($(this).data('id'));
+        });
     }
 }
 

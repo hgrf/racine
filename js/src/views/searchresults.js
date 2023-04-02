@@ -1,25 +1,33 @@
-function loadSearchResults(term, pushstate) {
-    if(!R.confirmUnload())
-        return false;
+import BaseView from "./base";
 
-    $.ajax({
-        url: "/search?ajax=true&term="+term,
-        success: function(data) {
-            // if currently viewing a sample (not welcome page) then change the navbar background to transparent
-            if(typeof sample_id !== "undefined")
-                $('#nav-entry' + sample_id).css("background-color", "transparent");
-            sample_id = undefined;
+class SearchResultsView extends BaseView {
+    constructor() {
+        super();
+    }
 
-            if(pushstate)
-                window.history.pushState({"term": term}, "", "/search?term="+term);
-            document.title = "Racine - Search";
+    load(pushState, term) {
+        if(!R.confirmUnload())
+            return false;
 
-            $("#editor-frame").html(data);
-            R.makeSamplesClickable();
-        }
-    });
+        $.ajax({
+            url: "/search?ajax=true&term="+term,
+            success: function(data) {
+                // if currently viewing a sample (not welcome page) then change the navbar background to transparent
+                if(typeof sample_id !== "undefined")
+                    $('#nav-entry' + sample_id).css("background-color", "transparent");
+                sample_id = undefined;
 
-    return true;
+                if(pushState)
+                    window.history.pushState({"term": term}, "", "/search?term="+term);
+                document.title = "Racine - Search";
+
+                $("#editor-frame").html(data);
+                R.makeSamplesClickable();
+            }
+        });
+
+        return true;
+    }
 }
 
-export default loadSearchResults;
+export default SearchResultsView;

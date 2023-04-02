@@ -1,5 +1,3 @@
-import loadSample from "./views/sample";
-
 function initNavbar(scrolltocurrent, scrolltotop) {
     // define default values for arguments
     var scrolltocurrent = typeof scrolltocurrent !== 'undefined' ? scrolltocurrent : true;
@@ -45,7 +43,7 @@ function initNavbar(scrolltocurrent, scrolltotop) {
             return;
         }
 
-        loadSample($(this).data('id'));
+        R.loadSample($(this).data('id'));
         // on small screen, hide the sidebar after a sample has been selected
         R.mobileHideSidebar();
     });

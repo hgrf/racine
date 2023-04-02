@@ -4,9 +4,9 @@ import NewSampleDialog from "./dialogs/newsample";
 import MarkAsNewsDialog from "./dialogs/markasnews";
 import UserBrowserDialog from "./dialogs/userbrowser";
 import { loadNavbar, showInNavbar } from "./navbar";
-import loadSample from "./views/sample";
-import loadSearchResults from "./views/searchresults";
-import loadWelcome from "./views/welcome";
+import SampleView from "./views/sample";
+import SearchResultsView from "./views/searchresults";
+import WelcomeView from "./views/welcome";
 
 (function($){   // this is a jQuery plugin
     $.fn.zoombutton = function() {
@@ -33,6 +33,12 @@ class Racine {
         this.samplesAPI = new API.SamplesApi(this.apiClient);
         this.sharesAPI = new API.SharesApi(this.apiClient);
         this.actionsAPI = new API.ActionsApi(this.apiClient);
+
+        this.views = {
+            sample: new SampleView(),
+            searchResults: new SearchResultsView(),
+            welcome: new WelcomeView(),
+        }
     }
 
     onDocumentReady() {
@@ -71,11 +77,11 @@ class Racine {
             if (event.state != null) {
                 var res;
                 if (typeof event.state.term !== "undefined") {
-                    res = loadSearchResults(event.state.term, false);
+                    res = R.views.searchResults.load(false, event.state.term);
                 } else if (typeof event.state.id !== "undefined") {
-                    res = loadSample(event.state.id, false, false, true);
+                    res = R.views.sample.load(false, event.state.id, false, true);
                 } else {
-                    res = loadWelcome(false);
+                    res = R.views.welcome.load(false);
                 }
                 if (!res)  // the user wants to stay on the page to make modifications
                     push_current_state();
@@ -86,11 +92,11 @@ class Racine {
 
         // figure out what page to load
         if (typeof sample_id !== "undefined") {
-            loadSample(sample_id, true);
+            this.views.sample.load(true, sample_id);
         } else if (typeof term !== "undefined") {
-            loadSearchResults(term, true);
+            this.views.searchResults.load(true, term);
         } else {
-            loadWelcome(true);
+            this.views.welcome.load(true);
         }
 
         // add window unload handler (which asks the user to confirm leaving the page when one of the CKEditor instances
@@ -102,7 +108,7 @@ class Racine {
 
         $('#navbar-search').bind('typeahead:selected', function (event, suggestion) {
             $(this).typeahead('val', '');    // clear the search field
-            loadSample(suggestion.id);
+            this.views.sample.load(true, suggestion.id);
         });
 
         $('#navbar-search').keypress(function (event) {
@@ -114,7 +120,7 @@ class Racine {
                 if ($(this).val() === '') {
                     R.errorDialog('Please specify a search term');
                 } else {
-                    loadSearchResults($(this).val(), true);  // load the searchresults page
+                    R.views.searchResults.load(true, $(this).val());
                     $(this).typeahead('val', '');    // clear the search field
                 }
             }
@@ -166,7 +172,7 @@ class Racine {
                             else
                                 R.errorDialog(response.error);
                         } else {
-                            loadWelcome(true);
+                            R.views.welcome.load(true);
                             loadNavbar(undefined, undefined, false, true);
                         }
                         $('#confirm-delete').modal('hide');
@@ -184,7 +190,7 @@ class Racine {
                         } else {
                             $('#sharelistentry' + id).remove();
                             if (response.status == 205) { // if the user removed himself from the sharer list
-                                loadWelcome(true);
+                                R.views.welcome.load(true);
                                 loadNavbar(undefined, undefined, false, true);
                             }
                             $('#confirm-delete').modal('hide');
@@ -201,6 +207,10 @@ class Racine {
     
         // default load with order by ID and hide archived samples
         loadNavbar(order, false);
+    }
+
+    loadSample(sample_id) {
+        this.views.sample.load(true, sample_id);
     }
 
     mobileHideSidebar() {
@@ -260,7 +270,7 @@ class Racine {
     makeSamplesClickable() {
         // check if load_sample is defined
         $('div.sample').click(function() {
-           loadSample($(this).data('id'));
+            R.views.sample.load(true, $(this).data('id'));
         });
     }
 }

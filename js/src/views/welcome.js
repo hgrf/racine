@@ -1,27 +1,35 @@
-function loadWelcome(pushstate) {
-    if(!R.confirmUnload())
-        return false;
+import BaseView from "./base";
 
-    // load welcome page
-    $.ajax({
-        url: "/welcome",
-        success: function(data) {
-            // if currently viewing a sample (not welcome page) then change the navbar background to transparent
-            if(typeof sample_id !== "undefined")
-                $('#nav-entry' + sample_id).css("background-color", "transparent");
-            sample_id = undefined;
-            term = undefined;
+class WelcomeView extends BaseView {
+    constructor() {
+        super();
+    }
 
-            if(pushstate)
-                window.history.pushState({},"", "/");
-            document.title = "Racine";
+    load(pushState) {
+        if(!R.confirmUnload())
+            return false;
 
-            $("#editor-frame").html(data);
-            R.makeSamplesClickable();
-        }
-    });
+        // load welcome page
+        $.ajax({
+            url: "/welcome",
+            success: function(data) {
+                // if currently viewing a sample (not welcome page) then change the navbar background to transparent
+                if(typeof sample_id !== "undefined")
+                    $('#nav-entry' + sample_id).css("background-color", "transparent");
+                sample_id = undefined;
+                term = undefined;
 
-    return true;
+                if(pushState)
+                    window.history.pushState({},"", "/");
+                document.title = "Racine";
+
+                $("#editor-frame").html(data);
+                R.makeSamplesClickable();
+            }
+        });
+
+        return true;
+    }
 }
 
-export default loadWelcome;
+export default WelcomeView;

@@ -1,5 +1,4 @@
 import { loadNavbar } from "../navbar";
-import loadSample from "../views/sample";
 
 class NewSampleDialog {
     constructor(selector) {
@@ -85,7 +84,7 @@ class NewSampleDialog {
                     }
                 } else {
                     dialog.modal('hide');  // hide and clear the dialog
-                    loadSample(data.sampleid);
+                    R.loadSample(data.sampleid);
                     loadNavbar();
                 }
             });

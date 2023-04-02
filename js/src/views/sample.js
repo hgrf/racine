@@ -1,6 +1,54 @@
-var hiddeneditor;
+import BaseView from "./base";
 
-CKEDITOR.timestamp='20201114';
+class SampleView extends BaseView {
+    constructor() {
+        super();
+    }
+
+    load(pushState, id, scrolltotop, scrollnavbar) {
+        // define default values for arguments
+        var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : true;
+        var scrollnavbar = typeof scrollnavbar !== 'undefined' ? scrollnavbar : true;
+    
+        if(!R.confirmUnload())
+            return false;
+    
+        // if currently viewing a sample (not welcome page) then change the navbar background to transparent before loading
+        // the new sample (do not do this if the viewed sample is unchanged)
+        if(typeof sample_id !== 'undefined' && sample_id !== id)
+            $('#nav-entry' + sample_id).css("background-color", "transparent");
+    
+        // load the sample data and re-initialise the editor
+        $.ajax({
+            url: "/editor/"+id+"?invertactionorder="+invertactionorder+"&showparentactions="+showparentactions,
+            pushstate: pushState,
+            scrolltotop: scrolltotop,
+            scrollnavbar: scrollnavbar,
+            success: function( data ) {
+                $( "#editor-frame" ).html(data);
+                sample_id = $('#sampleid').text();
+                term = undefined;
+                if(this.pushstate)
+                    window.history.pushState({"id": sample_id}, "", "/sample/"+ sample_id);
+                document.title = "Racine - "+$('#samplename').text();
+                initEditor(this.scrolltotop);
+                // highlight in navbar, if the navbar is already loaded
+                if($('#nav-entry'+sample_id).length) {
+                    $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
+                    if(scrollnavbar)
+                        R.showInNavbar(sample_id, false);
+                }
+            },
+            error: function() {
+                R.errorDialog('Sample #'+id+" does not exist or you do not have access to it.");
+            }
+        });
+    
+        return true;
+    }    
+}
+
+var hiddeneditor;
 
 // polyfill for string startsWith
 if (!String.prototype.startsWith) {
@@ -122,12 +170,12 @@ function initEditor(scrolltotop) {
 
     $('#invertactionorder').click(function() {
         invertactionorder = !invertactionorder; // toggle
-        loadSample(sample_id, false, false, false);
+        R.loadSample(sample_id, false, false, false);
     });
 
     $('#showparentactions').click(function() {
         showparentactions = !showparentactions; // toggle
-        loadSample(sample_id, false, false, false);
+        R.loadSample(sample_id, false, false, false);
     });
 
     // datepicker
@@ -174,7 +222,7 @@ function initEditor(scrolltotop) {
             // destroy it so that it doesn't bother us with confirmation dialogs when we
             // reload the sample
             CKEDITOR.instances['description'].destroy();
-            loadSample(sample_id, false, false, false);
+            R.loadSample(sample_id, false, false, false);
         });
     });
 
@@ -184,7 +232,7 @@ function initEditor(scrolltotop) {
         // contains the entire address
         if(typeof $(this).attr('href') == 'string' && $(this).attr('href').startsWith('/sample/')) {
             event.preventDefault();
-            loadSample($(this).attr('href').split('/')[2]);
+            R.loadSample($(this).attr('href').split('/')[2]);
         }
     });
 
@@ -235,7 +283,7 @@ function initEditor(scrolltotop) {
                     else
                         R.errorDialog(response.error);
                 } else {
-                    loadSample(sample_id, false, false, false);
+                    R.loadSample(sample_id, false, false, false);
                 }
         });
     });
@@ -284,47 +332,4 @@ function push_current_state() {
     }
 }
 
-function loadSample(id, pushstate, scrolltotop, scrollnavbar) {
-    // define default values for arguments
-    var pushstate = typeof pushstate !== 'undefined' ?  pushstate : true;
-    var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : true;
-    var scrollnavbar = typeof scrollnavbar !== 'undefined' ? scrollnavbar : true;
-
-    if(!R.confirmUnload())
-        return false;
-
-    // if currently viewing a sample (not welcome page) then change the navbar background to transparent before loading
-    // the new sample (do not do this if the viewed sample is unchanged)
-    if(typeof sample_id !== 'undefined' && sample_id !== id)
-        $('#nav-entry' + sample_id).css("background-color", "transparent");
-
-    // load the sample data and re-initialise the editor
-    $.ajax({
-        url: "/editor/"+id+"?invertactionorder="+invertactionorder+"&showparentactions="+showparentactions,
-        pushstate: pushstate,
-        scrolltotop: scrolltotop,
-        scrollnavbar: scrollnavbar,
-        success: function( data ) {
-            $( "#editor-frame" ).html(data);
-            sample_id = $('#sampleid').text();
-            term = undefined;
-            if(this.pushstate)
-                window.history.pushState({"id": sample_id}, "", "/sample/"+ sample_id);
-            document.title = "Racine - "+$('#samplename').text();
-            initEditor(this.scrolltotop);
-            // highlight in navbar, if the navbar is already loaded
-            if($('#nav-entry'+sample_id).length) {
-                $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
-                if(scrollnavbar)
-                    R.showInNavbar(sample_id, false);
-            }
-        },
-        error: function() {
-            R.errorDialog('Sample #'+id+" does not exist or you do not have access to it.");
-        }
-    });
-
-    return true;
-}
-
-export default loadSample;
+export default SampleView;

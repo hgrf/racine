@@ -5,7 +5,7 @@ import MarkAsNewsDialog from "./dialogs/markasnews";
 import UserBrowserDialog from "./dialogs/userbrowser";
 import { loadNavbar, showInNavbar } from "./navbar";
 
-import { setupBrowserNavigation } from "./views/base";
+import { pushCurrentState, setupBrowserNavigation } from "./views/base";
 import SampleView from "./views/sample";
 import SearchResultsView from "./views/searchresults";
 import WelcomeView from "./views/welcome";
@@ -28,7 +28,8 @@ import WelcomeView from "./views/welcome";
 })(jQuery);
 
 class Racine {
-    constructor(apiToken) {
+    constructor(apiToken, state) {
+        this.apiToken = apiToken;
         this.apiClient = new API.ApiClient(window.location.origin);
         this.apiClient.authentications["bearerAuth"].accessToken = apiToken;
 
@@ -41,6 +42,14 @@ class Racine {
             searchResults: new SearchResultsView(),
             welcome: new WelcomeView(),
         }
+
+        this.state = state;
+    }
+
+    updateState(pushState, state) {
+        this.state = state;
+        if(pushState)
+            pushCurrentState();
     }
 
     onDocumentReady() {
@@ -69,32 +78,22 @@ class Racine {
         setupBrowserNavigation();
 
         // figure out what page to load
-        if (typeof sample_id !== "undefined") {
-            this.views.sample.load(true, sample_id);
-        } else if (typeof term !== "undefined") {
-            this.views.searchResults.load(true, term);
-        } else {
-            this.views.welcome.load(true);
-        }
+        this.views[this.state.view].load(true, this.state);
 
         // set up search field in header bar
         create_searchsample($('#navbar-search'));
 
         $('#navbar-search').bind('typeahead:selected', function (event, suggestion) {
             $(this).typeahead('val', '');    // clear the search field
-            this.views.sample.load(true, suggestion.id);
+            R.loadSample(suggestion.id);
         });
 
         $('#navbar-search').keypress(function (event) {
             if (event.which == 13) {
-                // if currently viewing a sample (not welcome page) then change the navbar background to transparent
-                if (typeof sample_id !== "undefined")
-                    $('#nav-entry' + sample_id).css("background-color", "transparent");
-
                 if ($(this).val() === '') {
                     R.errorDialog('Please specify a search term');
                 } else {
-                    R.views.searchResults.load(true, $(this).val());
+                    R.loadSearchResults($(this).val());
                     $(this).typeahead('val', '');    // clear the search field
                 }
             }
@@ -146,7 +145,7 @@ class Racine {
                             else
                                 R.errorDialog(response.error);
                         } else {
-                            R.views.welcome.load(true);
+                            R.loadWelcome();
                             loadNavbar(undefined, undefined, false, true);
                         }
                         $('#confirm-delete').modal('hide');
@@ -164,7 +163,7 @@ class Racine {
                         } else {
                             $('#sharelistentry' + id).remove();
                             if (response.status == 205) { // if the user removed himself from the sharer list
-                                R.views.welcome.load(true);
+                                R.loadWelcome();
                                 loadNavbar(undefined, undefined, false, true);
                             }
                             $('#confirm-delete').modal('hide');
@@ -183,8 +182,19 @@ class Racine {
         loadNavbar(order, false);
     }
 
-    loadSample(sample_id) {
-        this.views.sample.load(true, sample_id);
+    loadSample(id) {
+        var state = {"view": "sample", "sampleid": id, "url": "/sample/" + id};
+        this.views.sample.load(true, state);
+    }
+
+    loadSearchResults(query) {
+        var state = {"view": "searchResults", "term": query, "url": "/search?term=" + query};
+        this.views.searchResults.load(true, state);
+    }
+
+    loadWelcome() {
+        var state = {"view": "welcome", "url": "/welcome"};
+        this.views.welcome.load(true, state);
     }
 
     mobileHideSidebar() {
@@ -201,16 +211,15 @@ class Racine {
 
     lightboxWrapper() {
         if(this.src.includes('?')) {
-            return '<a class="lightboxlink" href="'+this.src+'&fullsize" data-lightbox="'+sample_id+'">';
+            return '<a class="lightboxlink" href="'+this.src+'&fullsize" data-lightbox="'+R.state.sampleid+'">';
         } else {
-            return '<a class="lightboxlink" href="'+this.src+'?fullsize" data-lightbox="'+sample_id+'">';
+            return '<a class="lightboxlink" href="'+this.src+'?fullsize" data-lightbox="'+R.state.sampleid+'">';
         }
     }
 
     makeSamplesClickable() {
-        // check if load_sample is defined
         $('div.sample').click(function() {
-            R.views.sample.load(true, $(this).data('id'));
+            R.loadSample($(this).data('id'));
         });
     }
 }

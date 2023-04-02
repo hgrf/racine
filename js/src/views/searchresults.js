@@ -5,23 +5,17 @@ class SearchResultsView extends BaseView {
         super();
     }
 
-    load(pushState, term) {
+    load(pushState, state) {
         if(!super.confirmUnload())
             return false;
 
         $.ajax({
-            url: "/search?ajax=true&term="+term,
+            url: "/search?ajax=true&term="+state.term,
             success: function(data) {
-                // if currently viewing a sample (not welcome page) then change the navbar background to transparent
-                if(typeof sample_id !== "undefined")
-                    $('#nav-entry' + sample_id).css("background-color", "transparent");
-                sample_id = undefined;
-
-                if(pushState)
-                    window.history.pushState({"term": term}, "", "/search?term="+term);
-                document.title = "Racine - Search";
+                R.updateState(pushState, state);
 
                 $("#editor-frame").html(data);
+                document.title = "Racine - Search";
                 R.makeSamplesClickable();
             }
         });

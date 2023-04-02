@@ -21,7 +21,7 @@ from ..models import (
 
 
 @main.route("/")
-@main.route("/sample/<sampleid>")
+@main.route("/sample/<int:sampleid>")
 def index(sampleid=0):
     if not current_user.is_authenticated:
         return redirect("/auth/login?next=%2F")
@@ -30,8 +30,8 @@ def index(sampleid=0):
     if not sampleid:
         return render_template(
             "main.html",
+            state={"view": "welcome", "url": "/"},
             api_token=current_user.get_token(),
-            sample=None,
             search_activated=True,
             newsampleform=NewSampleForm(),
             dlg_markasnews_form=MarkActionAsNewsForm(),
@@ -41,8 +41,8 @@ def index(sampleid=0):
         return render_template("404.html"), 404
     return render_template(
         "main.html",
+        state={"view": "sample", "sampleid": sampleid, "url": "/sample/{}".format(sampleid)},
         api_token=current_user.get_token(),
-        sample=sample,
         search_activated=True,
         newsampleform=NewSampleForm(),
         dlg_markasnews_form=MarkActionAsNewsForm(),
@@ -279,6 +279,7 @@ def search():
     else:
         return render_template(
             "main.html",
+            state={"view": "searchResults", "term": keyword, "url": "/search?term=" + keyword},
             sample=None,
             search_activated=True,
             term=keyword,

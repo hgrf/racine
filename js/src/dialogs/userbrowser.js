@@ -1,6 +1,6 @@
 function shareselected(event, suggestion) {
   R.sharesAPI.createShare(
-      {'sampleid': sample_id, 'username': $('#username').val()},
+      {'sampleid': R.state.sampleid, 'username': $('#username').val()},
       function(error, data, response) {
         if (!response) {
           R.errorDialog('Server error. Please check your connection.');
@@ -46,7 +46,7 @@ class UserBrowserDialog {
       $.ajax({
         url: '/userlist',
         type: 'post',
-        data: {'mode': 'share', 'sampleid': sample_id},
+        data: {'mode': 'share', 'sampleid': R.state.sampleid},
         success: function(data) {
           // set up autocompletion
           $('#username').typeahead({

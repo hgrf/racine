@@ -5,7 +5,7 @@ class WelcomeView extends BaseView {
         super();
     }
 
-    load(pushState) {
+    load(pushState, state) {
         if(!super.confirmUnload())
             return false;
 
@@ -13,17 +13,10 @@ class WelcomeView extends BaseView {
         $.ajax({
             url: "/welcome",
             success: function(data) {
-                // if currently viewing a sample (not welcome page) then change the navbar background to transparent
-                if(typeof sample_id !== "undefined")
-                    $('#nav-entry' + sample_id).css("background-color", "transparent");
-                sample_id = undefined;
-                term = undefined;
-
-                if(pushState)
-                    window.history.pushState({},"", "/");
-                document.title = "Racine";
+                R.updateState(pushState, state);
 
                 $("#editor-frame").html(data);
+                document.title = "Racine";
                 R.makeSamplesClickable();
             }
         });

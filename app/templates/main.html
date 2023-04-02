@@ -66,12 +66,10 @@
 
 {% block scripts %}
 {{ super() }}
-    <script>// because Jinja does not work in the JS files
-        var api_token = "{{ api_token }}";
+    <script>
         var invertactionorder = false;
         var showparentactions = false;
         var order;
-        var term;
         var showarchived;
 
         // configure the CKEditor
@@ -99,14 +97,6 @@
             removeButtons: 'Cut,Copy,Paste,PasteText,PasteFromWord,Undo,Redo,BGColor,RemoveFormat,Outdent,Indent,Blockquote,About,Strike,Scayt,Anchor,Source'
         };
 
-        {% if sample is not none %}
-            var sample_id = {{ sample.id }};
-        {% else %}
-            var sample_id;
-        {% endif %}
-        {% if term %}
-            var term = "{{ term }}";
-        {% endif %}
         var begin_flashmsg = "{{ begin_flashmsg|safe }}";
         var end_flashmsg = "{{ end_flashmsg|safe }}";
     </script>
@@ -127,7 +117,7 @@
     <script>
         CKEDITOR.timestamp='20201114';
 
-        var R = new Racine(api_token);
+        var R = new Racine("{{ api_token }}", {{ state|tojson }});
 
         $(document).ready(function() {
             R.onDocumentReady();

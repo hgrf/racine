@@ -13,14 +13,7 @@ function beforeUnloadHandler(event, ignore, message) {
 }    
 
 function pushCurrentState() {
-    // figure out what page we currently have and push state accordingly
-    if(typeof sample_id !== "undefined") {
-        window.history.pushState({"id": sample_id}, "", "/sample/"+sample_id);
-    } else if(typeof term !== "undefined") {
-        window.history.pushState({"term": term}, "", "/search?term="+term);
-    } else {
-        window.history.pushState({},"", "/");
-    }
+    window.history.pushState(R.state, "", R.state.url);
 }
 
 function setupBrowserNavigation() {
@@ -36,14 +29,7 @@ function setupBrowserNavigation() {
     // add event handler for history
     window.addEventListener("popstate", function (event) {
         if (event.state != null) {
-            var res;
-            if (typeof event.state.term !== "undefined") {
-                res = R.views.searchResults.load(false, event.state.term);
-            } else if (typeof event.state.id !== "undefined") {
-                res = R.views.sample.load(false, event.state.id, false, true);
-            } else {
-                res = R.views.welcome.load(false);
-            }
+            var res = R.views[event.state.view].load(false, event.state);
             if (!res)  // the user wants to stay on the page to make modifications
                 pushCurrentState();
         }
@@ -78,9 +64,13 @@ class BaseView {
                 CKEDITOR.instances[i].destroy()
             }
         }
+
+        if(R.state.view == "sample")
+            $('#nav-entry' + R.state.sampleid).css("background-color", "transparent");
+
         return true;
     }
 }
 
 export default BaseView;
-export { setupBrowserNavigation };
+export { pushCurrentState, setupBrowserNavigation };

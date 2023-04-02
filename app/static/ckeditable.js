@@ -5,7 +5,7 @@
         $(this).each(function(index, field) {
             field = $(field);
             field.editable(field.data('setter'), {
-                ajaxoptions: {'headers': { 'Authorization': 'Bearer ' + api_token }},
+                ajaxoptions: {'headers': { 'Authorization': 'Bearer ' + R.apiToken }},
                 style: 'inherit',
                 event: 'edit',
                 placeholder: '&nbsp;',
@@ -36,7 +36,7 @@
         $(this).each(function(index, field) {
             field = $(field);
             field.editable(field.data('setter'), {
-                ajaxoptions: {'headers': { 'Authorization': 'Bearer ' + api_token }},
+                ajaxoptions: {'headers': { 'Authorization': 'Bearer ' + R.apiToken }},
                 data   : choice,
                 style  : 'inherit',
                 type   : 'select',
@@ -118,7 +118,7 @@
         $.ajax({
             url: field.data('getter'),
             type: 'get',
-            headers: { 'Authorization': 'Bearer ' + api_token },
+            headers: { 'Authorization': 'Bearer ' + R.apiToken },
             success: function( data ) {
                 // prepare div content for editing
                 field.empty();
@@ -153,7 +153,7 @@
             $.ajax({
                 url: field.data('setter'),
                 type: "post",
-                headers: { 'Authorization': 'Bearer ' + api_token },
+                headers: { 'Authorization': 'Bearer ' + R.apiToken },
                 data: {"value": data},
                 success: function( data ) {
                     if(data.code) R.errorDialog("An error occured.");
@@ -173,7 +173,7 @@
         $.ajax({
             url: field.data('getter'),
             type: "get",
-            headers: { 'Authorization': 'Bearer ' + api_token },
+            headers: { 'Authorization': 'Bearer ' + R.apiToken },
             success: function( data ) {
                 editor.destroy();
 

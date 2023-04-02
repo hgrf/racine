@@ -5,7 +5,9 @@ class SampleView extends BaseView {
         super();
     }
 
-    load(pushState, id, scrolltotop, scrollnavbar) {
+    load(pushState, state) {
+        var sampleid = state.sampleid;
+
         // define default values for arguments
         var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : true;
         var scrollnavbar = typeof scrollnavbar !== 'undefined' ? scrollnavbar : true;
@@ -13,34 +15,24 @@ class SampleView extends BaseView {
         if(!super.confirmUnload())
             return false;
     
-        // if currently viewing a sample (not welcome page) then change the navbar background to transparent before loading
-        // the new sample (do not do this if the viewed sample is unchanged)
-        if(typeof sample_id !== 'undefined' && sample_id !== id)
-            $('#nav-entry' + sample_id).css("background-color", "transparent");
-    
         // load the sample data and re-initialise the editor
         $.ajax({
-            url: "/editor/"+id+"?invertactionorder="+invertactionorder+"&showparentactions="+showparentactions,
-            pushstate: pushState,
-            scrolltotop: scrolltotop,
-            scrollnavbar: scrollnavbar,
+            url: "/editor/"+sampleid+"?invertactionorder="+invertactionorder+"&showparentactions="+showparentactions,
             success: function( data ) {
+                R.updateState(pushState, state);
+
                 $( "#editor-frame" ).html(data);
-                sample_id = $('#sampleid').text();
-                term = undefined;
-                if(this.pushstate)
-                    window.history.pushState({"id": sample_id}, "", "/sample/"+ sample_id);
                 document.title = "Racine - "+$('#samplename').text();
-                initEditor(this.scrolltotop);
+                initEditor(scrolltotop);
                 // highlight in navbar, if the navbar is already loaded
-                if($('#nav-entry'+sample_id).length) {
-                    $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
+                if($('#nav-entry'+sampleid).length) {
+                    $('#nav-entry'+sampleid).css("background-color", "#BBBBFF");
                     if(scrollnavbar)
-                        R.showInNavbar(sample_id, false);
+                        R.showInNavbar(sampleid, false);
                 }
             },
             error: function() {
-                R.errorDialog('Sample #'+id+" does not exist or you do not have access to it.");
+                R.errorDialog('Sample #'+sampleid+" does not exist or you do not have access to it.");
             }
         });
     
@@ -74,7 +66,7 @@ function setup_sample_image() {
             $.ajax({
                 url: "/api/set/sample/image/"+sample_id,
                 type: "post",
-                headers: { 'Authorization': 'Bearer ' + api_token },
+                headers: { 'Authorization': 'Bearer ' + R.apiToken },
                 data: { "value": url },
                 success: function() {
                     // check if there is currently a sample image

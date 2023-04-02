@@ -40,7 +40,6 @@ ENV FLASK_CONFIG production
 
 COPY ./app /app/app/
 COPY ./migrations /app/migrations/
-COPY ./manage.py /app/
 COPY ./uwsgi.ini /app/
 
 RUN cp -r /tmp/app_static/app/static /app/app/

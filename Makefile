@@ -379,7 +379,7 @@ run:
 	docker compose -f docker/docker-compose.yml up web
 
 run-no-docker:
-	python manage.py runserver -h 0.0.0.0
+	flask run
 
 build-dev: down
 	docker compose -f docker/docker-compose.yml build web-dev

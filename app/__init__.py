@@ -1,10 +1,14 @@
+import imp
+import os
+
 from flask import Flask
 from flask_bootstrap import Bootstrap
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from .config import config
 from glob import glob
-import imp
+
+from .config import config
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 plugins = []
@@ -14,6 +18,7 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.session_protection = "strong"
 login_manager.login_view = "auth.login"
+migrate = Migrate()
 
 from .smbinterface import (  # noqa: E402
     SMBInterface,
@@ -25,7 +30,7 @@ from .usagestats import (  # noqa: E402
 )  # has to be here, because it will import db from this file
 
 
-def create_app(config_name):
+def create_app(config_name=os.getenv("FLASK_CONFIG") or "default"):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
@@ -33,6 +38,7 @@ def create_app(config_name):
     bootstrap.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
+    migrate.init_app(app, db)
 
     from .api import api as api_blueprint
     from .main import main as main_blueprint
@@ -73,7 +79,7 @@ def create_app(config_name):
                     db.session.commit()
         except OperationalError:
             # in case the table is not created yet, do nothing (this happens
-            # when we do 'python manage.py db upgrade')
+            # when we do 'flask db upgrade')
             pass
 
     # run usage statistics thread

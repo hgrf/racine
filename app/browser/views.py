@@ -373,7 +373,7 @@ def retrieve_attachment(upload_id):
                 app.config["UPLOAD_FOLDER"],
                 str(dbentry.id) + "." + dbentry.ext,
                 as_attachment=True,
-                attachment_filename=att_filename,
+                download_name=att_filename,
             )
     else:
         return render_template("404.html"), 404

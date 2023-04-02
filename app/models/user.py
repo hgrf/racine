@@ -1,8 +1,9 @@
 import base64
+import json
 import os
 
+from authlib.jose import JsonWebSignature
 from datetime import datetime, timedelta
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app as app
 from flask_httpauth import HTTPTokenAuth
 from flask_login import UserMixin
@@ -70,14 +71,17 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def generate_reset_token(self, expiration=3600):
-        s = Serializer(app.config["SECRET_KEY"], expiration)
-        return s.dumps({"reset": self.id}).decode("utf-8")
+        jws = JsonWebSignature()
+        return jws.serialize_compact(
+            {"alg": "HS256"}, json.dumps({"reset": self.id}), app.config["SECRET_KEY"]
+        )
 
     @staticmethod
     def reset_password(token, new_password):
-        s = Serializer(app.config["SECRET_KEY"])
+        jws = JsonWebSignature()
         try:
-            data = s.loads(token.encode("utf-8"))
+            data = jws.deserialize_compact(token, app.config["SECRET_KEY"])
+            data = json.loads(data["payload"])
         except Exception:
             return False
         user = User.query.get(data.get("reset"))

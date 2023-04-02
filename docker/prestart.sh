@@ -1,7 +1,7 @@
 #! /usr/bin/env sh
 set -e
 
-python manage.py db upgrade
+flask db upgrade
 
 if [ -f /etc/nginx/ssl/server.key ] \
         && [ -f /etc/nginx/ssl/server.crt ] \

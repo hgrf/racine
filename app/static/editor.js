@@ -56,7 +56,7 @@ function make_samples_clickable() {
 
 function setup_sample_image() {
     $('#sampleimage').zoombutton();
-    $('#sampleimage').wrap(lightboxwrapper);
+    $('#sampleimage').wrap(R.lightboxWrapper);
 
     // handler for button that changes sample image
     $('#changesampleimage').click(function(event) {
@@ -236,8 +236,8 @@ function init_editor(scrolltotop) {
     $('.actiondescription').find('img').zoombutton();
 
     // put lightbox link around images
-    $('#sampledescription').find('img').wrap(lightboxwrapper);
-    $('.actiondescription').find('img').wrap(lightboxwrapper);
+    $('#sampledescription').find('img').wrap(R.lightboxWrapper);
+    $('.actiondescription').find('img').wrap(R.lightboxWrapper);
 
     // typeset all equations
     if(typeof(MathJax) !== 'undefined' && MathJax.isReady)         // if it is not ready now, it should typeset automatically once it is ready

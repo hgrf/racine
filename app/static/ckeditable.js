@@ -198,7 +198,7 @@
                 field.find('img').zoombutton();
 
                 // put back lightbox link around images
-                field.find('img').wrap(lightboxwrapper);
+                field.find('img').wrap(R.lightboxWrapper);
 
                 field.trigger('editableupdate', data);
                 field.trigger('editabledone');

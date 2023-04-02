@@ -10,7 +10,7 @@ class SampleView extends BaseView {
         var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : true;
         var scrollnavbar = typeof scrollnavbar !== 'undefined' ? scrollnavbar : true;
     
-        if(!R.confirmUnload())
+        if(!super.confirmUnload())
             return false;
     
         // if currently viewing a sample (not welcome page) then change the navbar background to transparent before loading
@@ -319,17 +319,6 @@ function initEditor(scrolltotop) {
     });
 
     $(document).trigger("editor_initialised");
-}
-
-function push_current_state() {
-    // figure out what page we currently have and push state accordingly
-    if(typeof sample_id !== "undefined") {
-        window.history.pushState({"id": sample_id}, "", "/sample/"+sample_id);
-    } else if(typeof term !== "undefined") {
-        window.history.pushState({"term": term}, "", "/search?term="+term);
-    } else {
-        window.history.pushState({},"", "/");
-    }
 }
 
 export default SampleView;

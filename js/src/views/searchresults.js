@@ -6,7 +6,7 @@ class SearchResultsView extends BaseView {
     }
 
     load(pushState, term) {
-        if(!R.confirmUnload())
+        if(!super.confirmUnload())
             return false;
 
         $.ajax({

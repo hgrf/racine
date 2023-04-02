@@ -6,7 +6,7 @@ class WelcomeView extends BaseView {
     }
 
     load(pushState) {
-        if(!R.confirmUnload())
+        if(!super.confirmUnload())
             return false;
 
         // load welcome page

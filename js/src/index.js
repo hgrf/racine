@@ -4,6 +4,8 @@ import NewSampleDialog from "./dialogs/newsample";
 import MarkAsNewsDialog from "./dialogs/markasnews";
 import UserBrowserDialog from "./dialogs/userbrowser";
 import { loadNavbar, showInNavbar } from "./navbar";
+
+import { setupBrowserNavigation } from "./views/base";
 import SampleView from "./views/sample";
 import SearchResultsView from "./views/searchresults";
 import WelcomeView from "./views/welcome";
@@ -64,31 +66,7 @@ class Racine {
             }
         });
 
-        // Switch of automatic scroll restoration...
-        // so that, if a popstate event occurs but the user does not want to leave the page, automatic scrolling to the top
-        // is avoided. However, this means that if we navigate back to some page that was previously scrolled to a specific
-        // location, we lose this information and the page is opened at 0 scroll position. This could be solved e.g. by
-        // storing the scroll position in the history state variable.
-        if ('scrollRestoration' in history) {
-            history.scrollRestoration = 'manual';
-        }
-        // add event handler for history
-        window.addEventListener("popstate", function (event) {
-            if (event.state != null) {
-                var res;
-                if (typeof event.state.term !== "undefined") {
-                    res = R.views.searchResults.load(false, event.state.term);
-                } else if (typeof event.state.id !== "undefined") {
-                    res = R.views.sample.load(false, event.state.id, false, true);
-                } else {
-                    res = R.views.welcome.load(false);
-                }
-                if (!res)  // the user wants to stay on the page to make modifications
-                    push_current_state();
-            }
-            else
-                location.href = "/";
-        });
+        setupBrowserNavigation();
 
         // figure out what page to load
         if (typeof sample_id !== "undefined") {
@@ -98,10 +76,6 @@ class Racine {
         } else {
             this.views.welcome.load(true);
         }
-
-        // add window unload handler (which asks the user to confirm leaving the page when one of the CKEditor instances
-        // has been modified
-        window.addEventListener('beforeunload', this.beforeUnloadHandler);
 
         // set up search field in header bar
         create_searchsample($('#navbar-search'));
@@ -231,40 +205,6 @@ class Racine {
         } else {
             return '<a class="lightboxlink" href="'+this.src+'?fullsize" data-lightbox="'+sample_id+'">';
         }
-    }
-
-    beforeUnloadHandler(event, ignore, message) {
-        var ignore = typeof ignore !== 'undefined' ? ignore : [];
-        var msg = typeof message !== 'undefined' ? message : "Are you sure you want to leave before saving modifications?"
-    
-        for(var i in CKEDITOR.instances) {
-            // first check if the editor is not on the ignore list
-            if(ignore.indexOf(i) < 0 && CKEDITOR.instances[i].checkDirty()) {
-                event.returnValue = msg;     // Gecko, Trident, Chrome 34+
-                return msg;                  // Gecko, WebKit, Chrome <34
-            }
-        }
-    }    
-
-    confirmUnload(ignore, message) {
-        var ignore = typeof ignore !== 'undefined' ? ignore : [];
-        ignore = ignore.concat(['newsampledescription']);
-    
-        // use the beforeUnloadHandler function to check if any CKEditor is being edited
-        // if yes, ask the user if he really wants to load a different sample
-        var confirm_message = this.beforeUnloadHandler(0, ignore, message);
-        if(confirm_message) {
-            if (!confirm(confirm_message)) {
-                return false;
-            }
-        }
-        // destroy CKEditors
-        for(var i in CKEDITOR.instances) {
-            if(ignore.indexOf(i) < 0) {
-                CKEDITOR.instances[i].destroy()
-            }
-        }
-        return true;
     }
 
     makeSamplesClickable() {

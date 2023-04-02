@@ -42,11 +42,11 @@
 | app/profile/views.py                                                               |       55 |       40 |     27% |12-23, 29-38, 44-71 |
 | app/settings/\_\_init\_\_.py                                                       |        3 |        0 |    100% |           |
 | app/settings/forms.py                                                              |       29 |        0 |    100% |           |
-| app/settings/views.py                                                              |      176 |      132 |     25% |21, 28-54, 66-82, 91-141, 148-180, 191-199, 203-216, 225-275, 288-291 |
+| app/settings/views.py                                                              |      145 |      110 |     24% |20-46, 58-74, 83-133, 138-146, 150-163, 172-222, 235-238 |
 | app/smbinterface.py                                                                |       83 |       67 |     19% |29-51, 57-71, 94-110, 114-145, 149, 154-171 |
 | app/tests/\_\_init\_\_.py                                                          |        0 |        0 |    100% |           |
 | app/tests/test\_main.py                                                            |       32 |        0 |    100% |           |
-| app/usagestats.py                                                                  |       55 |       31 |     44% |21-22, 35, 39-85, 89-99 |
+| app/usagestats.py                                                                  |       51 |       28 |     45% |20-21, 34, 38-77, 81-91 |
 | app/validators.py                                                                  |       14 |        9 |     36% |6-7, 11-12, 16-21 |
 | migrations/env.py                                                                  |       33 |       10 |     70% |43-47, 62-66, 88 |
 | migrations/versions/1de13fd625b1\_added\_archived\_flag.py                         |        9 |        1 |     89% |        26 |
@@ -70,7 +70,7 @@
 | migrations/versions/578518528886\_added\_ownership\_to\_actions.py                 |       13 |        3 |     77% |     28-30 |
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
-|                                                                          **TOTAL** | **2215** | **1158** | **48%** |           |
+|                                                                          **TOTAL** | **2180** | **1133** | **48%** |           |
 
 
 ## Setup coverage badge

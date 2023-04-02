@@ -1,7 +1,12 @@
 bootstrap/
-lightbox2-master/
 mathjax/
 typeahead.js/
+
+css/lightbox.css
+images/close.png
+images/loading.gif
+images/next.png
+images/prev.png
 
 bootstrap-toc.min.css
 bootstrap-toc.min.js

@@ -291,15 +291,6 @@ install-jquery-ui:
 	cp /tmp/jquery-ui-*/jquery-ui.min.js app/static/jquery-ui.min.js
 	rm -rf /tmp/jquery-ui-*
 
-install-lightbox:
-	rm -rf app/static/lightbox2-master
-
-	git clone -b v2.8.2 --depth 1 \
-		https://github.com/lokesh/lightbox2.git \
-		app/static/lightbox2-master
-
-	rm -rf app/static/lightbox2-master/.git
-
 install-mathjax:
 	rm -rf app/static/mathjax
 
@@ -344,8 +335,11 @@ install-typeahead.js-bootstrap3.less:
 
 	git apply patches/typeahead.css.patch
 
-install-js-dependencies: install-bootstrap-toc install-ckeditor install-jquery install-jquery.jeditable install-jquery-ui install-lightbox install-mathjax install-typeahead install-typeahead.js-bootstrap3.less api-client
+install-js-dependencies: install-bootstrap-toc install-ckeditor install-jquery install-jquery.jeditable install-jquery-ui install-mathjax install-typeahead install-typeahead.js-bootstrap3.less api-client
 	cd js && npm install && npx rollup -c
+	mkdir -p app/static/css
+	cp js/node_modules/lightbox2/dist/css/lightbox.css app/static/css/lightbox.css
+	cp js/node_modules/lightbox2/dist/images/* app/static/images/
 
 clean-js-dependencies:
 	rm  -f app/static/bootstrap-toc.min.css

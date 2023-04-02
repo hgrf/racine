@@ -1,4 +1,5 @@
 import * as API from "./api";
+import "lightbox2";
 
 class Racine {
     constructor(apiToken) {

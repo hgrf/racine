@@ -5,6 +5,10 @@
   "description": "Racine JavaScript library",
   "license": "GPL v3",
   "browser": "index.js",
+  "dependencies": {
+    "jquery": "1.11.3",
+    "lightbox2": "2.8.2"
+  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-node-resolve": "^15.0.1",

@@ -3,7 +3,7 @@
 
 {% block styles %}
     {{super()}}
-    <link rel="stylesheet" href="{{url_for('static', filename='lightbox2-master/src/css/lightbox.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/lightbox.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='navbar.css', version='20191215')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='editor.css', version='20210420')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='jquery-ui.min.css')}}"> {# for the date picker #}
@@ -93,7 +93,6 @@
     <script src="{{ url_for('static', filename='jquery-ui.min.js') }}"></script> {# for the date picker #}
     <script src="{{ url_for('static', filename='editor.js', version='20210406') }}"></script>
     <script src="{{ url_for('static', filename='navbar.js', version='20191215') }}"></script>
-    <script src="{{ url_for('static', filename='lightbox2-master/src/js/lightbox.js') }}"></script>
 {% endblock %}
 
 

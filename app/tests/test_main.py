@@ -1,7 +1,7 @@
 import os
 
-from .. import create_app, db
-from flask_migrate import Migrate, upgrade  # , downgrade
+from .. import create_app
+from flask_migrate import upgrade  # , downgrade
 
 
 def test_instantiate_app():
@@ -13,7 +13,6 @@ def test_instantiate_app():
 def test_issue129():
     """Test that the issue #129 is fixed."""
     app = create_app("testing")
-    migrate = Migrate()
 
     # make sure that testing DB does not exist
     db_path = app.config.get("SQLALCHEMY_DATABASE_URI").replace("sqlite:///", "")
@@ -21,8 +20,6 @@ def test_issue129():
         os.remove(db_path)
 
     with app.app_context():
-        db.init_app(app)
-        migrate.init_app(app, db)
         upgrade()
 
     # recreate app to initialize activity table
@@ -39,7 +36,6 @@ def test_issue129():
 def test_db_migrations():
     """Test that the database migrations can be run."""
     app = create_app("testing")
-    migrate = Migrate()
 
     # make sure that testing DB does not exist
     db_path = app.config.get("SQLALCHEMY_DATABASE_URI").replace("sqlite:///", "")
@@ -47,8 +43,6 @@ def test_db_migrations():
         os.remove(db_path)
 
     with app.app_context():
-        db.init_app(app)
-        migrate.init_app(app, db)
         upgrade()
         # TODO: downgrading is not correctly implemented so far
         # downgrade(revision="base")

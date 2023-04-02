@@ -25,7 +25,7 @@ Jinja2==2.10.3
 Mako==1.1.0
 MarkupSafe==1.1.1
 marshmallow==3.19.0
-Pillow==7.1.0
+Pillow==9.3.0
 pyasn1==0.4.8
 pysmb==1.1.28
 python-dateutil==2.8.1

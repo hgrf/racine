@@ -68,6 +68,37 @@
 {{ super() }}
     <script>// because Jinja does not work in the JS files
         var api_token = "{{ api_token }}";
+        var invertactionorder = false;
+        var showparentactions = false;
+        var order;
+        var term;
+        var showarchived;
+
+        // configure the CKEditor
+        var ckeditorconfig = {
+            extraPlugins: 'save,fb,imagerotate',
+            imageUploadUrl: '/browser/upload?type=img',
+            uploadUrl: '/browser/upload?type=att',
+            filebrowserImageUploadUrl: '/browser/upload?type=img',
+            filebrowserLinkUploadUrl: '/browser/upload?type=att',
+            toolbarGroups: [
+                { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+                { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+                { name: 'forms', groups: [ 'forms' ] },
+                { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+                { name: 'others', groups: [ 'others' ] },
+                { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+                { name: 'styles', groups: [ 'styles' ] },
+                { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+                { name: 'links', groups: [ 'links' ] },
+                { name: 'insert', groups: [ 'insert' ] },
+                { name: 'colors', groups: [ 'colors' ] },
+                { name: 'about', groups: [ 'about' ] },
+                { name: 'tools', groups: [ 'tools' ] }
+            ],
+            removeButtons: 'Cut,Copy,Paste,PasteText,PasteFromWord,Undo,Redo,BGColor,RemoveFormat,Outdent,Indent,Blockquote,About,Strike,Scayt,Anchor,Source'
+        };
+
         {% if sample is not none %}
             var sample_id = {{ sample.id }};
         {% endif %}
@@ -90,7 +121,14 @@
     <script src="{{ url_for('static', filename='jquery.jeditable.js') }}"></script>
     <script src="{{ url_for('static', filename='ckeditable.js') }}"></script>
     <script src="{{ url_for('static', filename='jquery-ui.min.js') }}"></script> {# for the date picker #}
-    <script src="{{ url_for('static', filename='editor.js', version='20210406') }}"></script>
+    <script src="{{ url_for('static', filename='racine.js', version='20230402') }}"></script>
+    <script>
+        var R = new Racine(api_token);
+
+        $(document).ready(function() {
+            R.onDocumentReady();
+        });
+    </script>
 {% endblock %}
 
 

@@ -10,9 +10,9 @@ class NewSampleDialog {
 
         dialog.on('show.bs.modal', function (event) {
             // set the parent field to the current sample
-            if (typeof sample_id !== 'undefined') {
+            if (R.state['view'] == 'sample') {
                 $('#newsampleparent').typeahead('val', $('#samplename').text());
-                $('#newsampleparentid').val(sample_id);
+                $('#newsampleparentid').val(R.state['sampleid']);
             }
         });
 

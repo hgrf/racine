@@ -1,24 +1,5 @@
-function initNavbar(scrolltocurrent, scrolltotop) {
-    // define default values for arguments
-    var scrolltocurrent = typeof scrolltocurrent !== 'undefined' ? scrolltocurrent : true;
-    var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : false;
-
-    if(!showarchived) {
-        $('.nav-entry-archived').css('display', 'none');
-        $('.nav-children-archived').css('display', 'none');
-    }
-
-    // make sure the current sample is highlighted in the navbar (this is redundant in editor.js, but we need to do
-    // it here too if editor.js is executed before navbar.js
-    if(typeof sample_id !== 'undefined') {
-        $('#nav-entry' + sample_id).css("background-color", "#BBBBFF");
-        if(scrolltocurrent)
-            showInNavbar(sample_id, false);
-    }
-
-    // scroll to top if this was requested
-    if(scrolltotop)
-        $('div#sidebar').scrollTop(0);
+function initNavbar() {
+    var activeEntry = $(`#nav-entry${R.state.sampleid}`);
 
     // keep track of CTRL key, so that double click event can open sample in new window if CTRL is held
     $(document).keydown(function(event){
@@ -62,7 +43,7 @@ function initNavbar(scrolltocurrent, scrolltotop) {
         drop: function(event) {
             // reset background color (but highlight if sample is active)
             $(this).css("background-color", "transparent");
-            $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
+            activeEntry.css("background-color", "#BBBBFF");
         }
     });
 
@@ -79,7 +60,7 @@ function initNavbar(scrolltocurrent, scrolltotop) {
         dragleave: function(event) {
             // reset background color (but highlight if sample is active)
             $(this).css("background-color", "transparent");
-            $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
+            activeEntry.css("background-color", "#BBBBFF");
         },
         drop: function(event) {
             let draggedId = parseInt(event.dataTransfer.getData('sampleid'));
@@ -89,7 +70,7 @@ function initNavbar(scrolltocurrent, scrolltotop) {
 
             // reset background color (but highlight if sample is active)
             $(this).css("background-color", "transparent");
-            $('#nav-entry'+sample_id).css("background-color", "#BBBBFF");
+            activeEntry.css("background-color", "#BBBBFF");
 
             if(draggedId === parentId) return;
 
@@ -132,14 +113,12 @@ function initNavbar(scrolltocurrent, scrolltotop) {
     });
 }
 
-function loadNavbar(_order, _showarchived, scrolltocurrent, scrolltotop) {
+// TODO: it would make more sense to define a parameter scroll,
+//       which is either "current", "top", "none" or undefined
+function loadNavbar(_order, _showarchived, scrolltocurrent=false, scrolltotop=false) {
     // define default values for arguments
     order = typeof _order !== 'undefined' ? _order : order;
     showarchived = typeof _showarchived !== 'undefined' ? _showarchived : showarchived;
-    // TODO: it would make more sense to define a parameter scroll,
-    //       which is either "current", "top", "none" or undefined
-    var scrolltocurrent = typeof scrolltocurrent !== 'undefined' ? scrolltocurrent : true;
-    var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : false;
 
     $.ajax({
         url: "/navbar",
@@ -149,8 +128,25 @@ function loadNavbar(_order, _showarchived, scrolltocurrent, scrolltotop) {
             // load the navbar
             $('#sidebar').html(data);
 
+            // scroll to top if this was requested
+            if(scrolltotop)
+                $('div#sidebar').scrollTop(0);
+
+            if(!showarchived) {
+                $('.nav-entry-archived').css('display', 'none');
+                $('.nav-children-archived').css('display', 'none');
+            }
+        
+            // make sure the current sample is highlighted in the navbar (this is redundant in editor.js, but we need to do
+            // it here too if editor.js is executed before navbar.js
+            if(R.state.view == 'sample') {
+                $('#nav-entry' + R.state.sampleid).css("background-color", "#BBBBFF");
+                if(scrolltocurrent)
+                    showInNavbar(R.state.sampleid, false);
+            }
+
             // set up handlers etc.
-            initNavbar(scrolltocurrent, scrolltotop);
+            initNavbar();
         }
     });
 }

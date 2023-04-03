@@ -172,7 +172,7 @@ function initEditor() {
         event.preventDefault();
 
         // check if the user is still modifying any actions before submitting the new one
-        if(!R.confirmUnload(['description'], "You have been editing the sample description or one or more past " +
+        if(!R.views['sample'].confirmUnload(['description'], "You have been editing the sample description or one or more past " +
                     "actions. Your changes will be lost if you do not save them, are you sure you want to continue?"))
             return;
 

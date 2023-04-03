@@ -1,4 +1,4 @@
-import { loadNavbar } from "../navbar";
+import { loadNavbar } from "../tree";
 
 class NewSampleDialog {
     constructor(selector) {

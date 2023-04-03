@@ -1,5 +1,9 @@
+import { draggableHandlers, dropZoneHandlers } from "./dragdrop";
+import { addGlyphicon } from "./glyphicons";
+
 function initNavbar() {
     var activeEntry = $(`#nav-entry${R.state.sampleid}`);
+    var allEntries = $('.nav-entry');
 
     // keep track of CTRL key, so that double click event can open sample in new window if CTRL is held
     $(document).keydown(function(event){
@@ -15,7 +19,7 @@ function initNavbar() {
     var ctrlIsPressed = false;
 
     // initialise sample navigation bar double click event
-    $('.nav-entry').dblclick(function (event) {
+    allEntries.dblclick(function (event) {
         event.preventDefault();
 
         // if CTRL is pressed, open sample in a new tab
@@ -30,75 +34,12 @@ function initNavbar() {
     });
 
     // add glyphicons to expandable items in the navbar
-    $('.nav-entry').each(function () {
-        addGlyphicon($(this));
-    });
+    allEntries.each(function () { addGlyphicon($(this)); });
 
     // enable sample drag and drop in navigation bar
-    $('.nav-entry').on({
-        dragstart: function (event) {
-            event.dataTransfer.setData('sampleid', $(event.target).data('id'));
-            event.dataTransfer.setData('text/html', '<a href="/sample/' + $(event.target).data('id') + '">' + $(event.target).data('name') + '</a> ');
-        },
-        drop: function(event) {
-            // reset background color (but highlight if sample is active)
-            $(this).css("background-color", "transparent");
-            activeEntry.css("background-color", "#BBBBFF");
-        }
-    });
+    allEntries.on(draggableHandlers(activeEntry));
 
-    $('.nav-dropzone').on({
-        dragenter: function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-        },
-        dragover: function(event) {
-            $(this).css("background-color", "#CCCCEE");
-            event.preventDefault();
-            event.stopPropagation();
-        },
-        dragleave: function(event) {
-            // reset background color (but highlight if sample is active)
-            $(this).css("background-color", "transparent");
-            activeEntry.css("background-color", "#BBBBFF");
-        },
-        drop: function(event) {
-            let draggedId = parseInt(event.dataTransfer.getData('sampleid'));
-            let parentId = parseInt($(this).data('id'));
-            event.preventDefault();
-            event.stopPropagation();
-
-            // reset background color (but highlight if sample is active)
-            $(this).css("background-color", "transparent");
-            activeEntry.css("background-color", "#BBBBFF");
-
-            if(draggedId === parentId) return;
-
-            R.samplesAPI.changeParent(draggedId, parentId, function(error, data, response) {
-                if (!response)
-                    R.errorDialog("Server error. Please check your connection.");
-                else if (response.error) {
-                    if (response.body.message)
-                        R.errorDialog(response.body.message);
-                    else
-                        R.errorDialog(response.error);
-                } else {
-                    let draggedItem = $('#nav-container'+draggedId);
-                    let oldParent = draggedItem.parent().prev();
-                    if(parentId !== 0) {
-                        // moving to a regular nav-entry
-                        draggedItem.appendTo('#nav-children'+parentId);
-                        updateGlyphicon($('#nav-entry'+parentId));
-                    } else {
-                        // moving to root
-                        draggedItem.appendTo('#nav-mysamples');
-                    }
-                    if(oldParent.length)        // if it's not the root entry
-                        updateGlyphicon(oldParent);
-                }
-            });
-        }
-    });
+    $('.nav-dropzone').on(dropZoneHandlers(activeEntry));
 
     $('.inheritance').dblclick(function() {
        location.href = '/loginas?userid='+$(this).data('userid');
@@ -217,46 +158,6 @@ function showInNavbar(id, flash) {
     } else {
         scrollToSample(id, flash);
     }
-}
-
-// this function updates the glyphicon as a function of the number of children
-function updateGlyphicon(naventry) {
-    let glyph = naventry.find('i.glyphicon').first();
-    let target = $(naventry.data('target'));
-
-    if (target.children().length > 0) {
-        glyph.removeClass('glyphicon-invisible');
-        if (target.is(':hidden'))
-            glyph.addClass('glyphicon-expand');
-        else
-            glyph.addClass('glyphicon-collapse-down');
-
-        // change the glyphicons when items are expanded or collapsed
-        target.on("show.bs.collapse", function (e) {
-            // the event goes up like a bubble and so it can affect parent nav-entries, stop this
-            e.stopPropagation();
-            glyph.removeClass('glyphicon-expand');
-            glyph.addClass('glyphicon-collapse-down');
-        });
-        target.on("hide.bs.collapse", function (e) {
-            e.stopPropagation();
-            glyph.addClass('glyphicon-expand');
-            glyph.removeClass('glyphicon-collapse-down');
-        });
-    } else {
-        // switch off existing handlers and update classes
-        target.off('show.bs.collapse');
-        target.off('hide.bs.collapse');
-        glyph.removeClass('glyphicon-expand');
-        glyph.removeClass('glyphicon-collapse-down');
-        glyph.addClass('glyphicon-invisible');
-    }
-}
-
-// this function adds a glyphicon to naventry
-function addGlyphicon(naventry) {
-    naventry.prepend('<i class="glyphicon"></i>');
-    updateGlyphicon(naventry);
 }
 
 export { loadNavbar, showInNavbar };

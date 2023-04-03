@@ -3,7 +3,7 @@ import "lightbox2";
 import NewSampleDialog from "./dialogs/newsample";
 import MarkAsNewsDialog from "./dialogs/markasnews";
 import UserBrowserDialog from "./dialogs/userbrowser";
-import { loadNavbar, showInNavbar } from "./navbar";
+import { loadNavbar, showInNavbar } from "./tree";
 
 import { pushCurrentState, setupBrowserNavigation } from "./views/base";
 import SampleView from "./views/sample";

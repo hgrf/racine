@@ -182,9 +182,9 @@ class Racine {
         loadNavbar(order, false);
     }
 
-    loadSample(id) {
+    loadSample(id, reload=false) {
         var state = {"view": "sample", "sampleid": id, "url": "/sample/" + id};
-        this.views.sample.load(true, state);
+        this.views.sample.load(true, state, reload);
     }
 
     loadSearchResults(query) {

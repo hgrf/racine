@@ -5,12 +5,8 @@ class SampleView extends BaseView {
         super();
     }
 
-    load(pushState, state) {
+    load(pushState, state, reload=false) {
         var sampleid = state.sampleid;
-
-        // define default values for arguments
-        var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : true;
-        var scrollnavbar = typeof scrollnavbar !== 'undefined' ? scrollnavbar : true;
     
         if(!super.confirmUnload())
             return false;
@@ -19,15 +15,18 @@ class SampleView extends BaseView {
         $.ajax({
             url: "/editor/"+sampleid+"?invertactionorder="+invertactionorder+"&showparentactions="+showparentactions,
             success: function( data ) {
-                R.updateState(pushState, state);
+                if(!reload)
+                    R.updateState(pushState, state);
 
                 $( "#editor-frame" ).html(data);
                 document.title = "Racine - "+$('#samplename').text();
-                initEditor(scrolltotop);
+                if(!reload)
+                    $('html, body').scrollTop(0);
+                initEditor();
                 // highlight in navbar, if the navbar is already loaded
                 if($('#nav-entry'+sampleid).length) {
                     $('#nav-entry'+sampleid).css("background-color", "#BBBBFF");
-                    if(scrollnavbar)
+                    if(!reload)
                         R.showInNavbar(sampleid, false);
                 }
             },
@@ -95,16 +94,9 @@ function setup_sample_image() {
     });
 }
 
-function initEditor(scrolltotop) {
-    // define default values for arguments
-    var scrolltotop = typeof scrolltotop !== 'undefined' ? scrolltotop : true;
-  
+function initEditor() {
     if($('#hiddenckeditor').length)     // check if this field exists
         hiddeneditor = CKEDITOR.inline($('#hiddenckeditor')[0], $.extend({'removePlugins': 'toolbar,clipboard,pastetext,pastefromword,tableselection,widget,uploadwidget,pastefromexcel,uploadimage,uploadfile'}, ckeditorconfig));
-
-    // scroll to top
-    if(scrolltotop)
-        $('html, body').scrollTop(0);
 
     // handler for archive button
     $('#archive').click(function() {
@@ -162,12 +154,12 @@ function initEditor(scrolltotop) {
 
     $('#invertactionorder').click(function() {
         invertactionorder = !invertactionorder; // toggle
-        R.loadSample(sample_id, false, false, false);
+        R.loadSample(R.state['sampleid'], true);
     });
 
     $('#showparentactions').click(function() {
         showparentactions = !showparentactions; // toggle
-        R.loadSample(sample_id, false, false, false);
+        R.loadSample(R.state['sampleid'], true);
     });
 
     // datepicker
@@ -190,7 +182,7 @@ function initEditor(scrolltotop) {
         var formdata = {};
         $('#newactionform').serializeArray().map(function(x){formdata[x.name] = x.value;});
 
-        R.actionsAPI.createAction(sample_id, formdata, function(error, data, response) {
+        R.actionsAPI.createAction(R.state['sampleid'], formdata, function(error, data, response) {
             if (!response)
                 R.errorDialog("Server error. Please check your connection.");
             else if (response.error) {
@@ -214,7 +206,7 @@ function initEditor(scrolltotop) {
             // destroy it so that it doesn't bother us with confirmation dialogs when we
             // reload the sample
             CKEDITOR.instances['description'].destroy();
-            R.loadSample(sample_id, false, false, false);
+            R.loadSample(R.state['sampleid'], true);
         });
     });
 
@@ -275,7 +267,7 @@ function initEditor(scrolltotop) {
                     else
                         R.errorDialog(response.error);
                 } else {
-                    R.loadSample(sample_id, false, false, false);
+                    R.loadSample(R.state['sampleid'], true);
                 }
         });
     });

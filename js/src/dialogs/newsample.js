@@ -1,5 +1,3 @@
-import { loadNavbar } from "../tree";
-
 class NewSampleDialog {
     constructor(selector) {
         var dialog = $(selector);
@@ -85,7 +83,7 @@ class NewSampleDialog {
                 } else {
                     dialog.modal('hide');  // hide and clear the dialog
                     R.loadSample(data.sampleid);
-                    loadNavbar();
+                    R.tree.load(true);
                 }
             });
         });

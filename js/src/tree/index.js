@@ -1,95 +1,110 @@
 import { draggableHandlers, dropZoneHandlers } from "./dragdrop";
 import { addGlyphicon } from "./glyphicons";
 
-function initNavbar() {
-    var activeEntry = $(`#nav-entry${R.state.sampleid}`);
-    var allEntries = $('.nav-entry');
+class Tree {
+    constructor() {
+        this.orderBy = 'id';
+        this.showArchived = false;
+    }
 
-    // keep track of CTRL key, so that double click event can open sample in new window if CTRL is held
-    $(document).keydown(function(event){
-        if(event.which=="17")
-            ctrlIsPressed = true;
-    });
-
-    $(document).keyup(function(event){
-        if(event.which=="17")
-            ctrlIsPressed = false;
-    });
-
-    var ctrlIsPressed = false;
-
-    // initialise sample navigation bar double click event
-    allEntries.dblclick(function (event) {
-        event.preventDefault();
-
-        // if CTRL is pressed, open sample in a new tab
-        if(ctrlIsPressed) {
-            window.open('/sample/' + $(this).data('id'));
-            return;
-        }
-
-        R.loadSample($(this).data('id'));
-        // on small screen, hide the sidebar after a sample has been selected
-        R.mobileHideSidebar();
-    });
-
-    // add glyphicons to expandable items in the navbar
-    allEntries.each(function () { addGlyphicon($(this)); });
-
-    // enable sample drag and drop in navigation bar
-    allEntries.on(draggableHandlers(activeEntry));
-
-    $('.nav-dropzone').on(dropZoneHandlers(activeEntry));
-
-    $('.inheritance').dblclick(function() {
-       location.href = '/loginas?userid='+$(this).data('userid');
-    });
-
-    // TODO: togglearchived could now be achieved without reloading the navbar
-    $('.navbar-togglearchived').click(function() { loadNavbar(order, !showarchived, false); });
-    $('.navbar-sort-az').click(function() { loadNavbar('name', showarchived, false); });
-    $('.navbar-sort-id').click(function() { loadNavbar('id', showarchived, false); });
-    $('.navbar-sort-lastmodified').click(function() {
-        loadNavbar('last_modified', showarchived, false);
-    });
-}
-
-// TODO: it would make more sense to define a parameter scroll,
-//       which is either "current", "top", "none" or undefined
-function loadNavbar(_order, _showarchived, scrolltocurrent=false, scrolltotop=false) {
-    // define default values for arguments
-    order = typeof _order !== 'undefined' ? _order : order;
-    showarchived = typeof _showarchived !== 'undefined' ? _showarchived : showarchived;
-
-    $.ajax({
-        url: "/navbar",
-        data: {'order': order,
-               'showarchived': showarchived},
-        success: function(data) {
-            // load the navbar
-            $('#sidebar').html(data);
-
-            // scroll to top if this was requested
-            if(scrolltotop)
-                $('div#sidebar').scrollTop(0);
-
-            if(!showarchived) {
-                $('.nav-entry-archived').css('display', 'none');
-                $('.nav-children-archived').css('display', 'none');
-            }
+    setupHandlers() {
+        var activeEntry = $(`#nav-entry${R.state.sampleid}`);
+        var allEntries = $('.nav-entry');
+        var ctrlIsPressed = false;
+        var self = this;
+    
+        // keep track of CTRL key, so that double click event can open sample in new window if CTRL is held
+        $(document).keydown(function(event){
+            if(event.which=="17")
+                ctrlIsPressed = true;
+        });
+    
+        $(document).keyup(function(event){
+            if(event.which=="17")
+                ctrlIsPressed = false;
+        });
         
-            // make sure the current sample is highlighted in the navbar (this is redundant in editor.js, but we need to do
-            // it here too if editor.js is executed before navbar.js
-            if(R.state.view == 'sample') {
-                $('#nav-entry' + R.state.sampleid).css("background-color", "#BBBBFF");
-                if(scrolltocurrent)
-                    showInNavbar(R.state.sampleid, false);
+        // initialise sample navigation bar double click event
+        allEntries.dblclick(function (event) {
+            event.preventDefault();
+    
+            // if CTRL is pressed, open sample in a new tab
+            if(ctrlIsPressed) {
+                window.open('/sample/' + $(this).data('id'));
+                return;
             }
+    
+            R.loadSample($(this).data('id'));
+            // on small screen, hide the sidebar after a sample has been selected
+            R.mobileHideSidebar();
+        });
+    
+        // add glyphicons to expandable items in the navbar
+        allEntries.each(function () { addGlyphicon($(this)); });
+    
+        // enable sample drag and drop in navigation bar
+        allEntries.on(draggableHandlers(activeEntry));
+    
+        $('.nav-dropzone').on(dropZoneHandlers(activeEntry));
+    
+        $('.inheritance').dblclick(function() {
+           location.href = '/loginas?userid='+$(this).data('userid');
+        });
+    
+        // TODO: togglearchived could now be achieved without reloading the navbar
+        $('.navbar-togglearchived').click(function() { 
+            self.showArchived = !self.showArchived;
+            self.load();
+        });
+        $('.navbar-sort-az').click(function() {
+            self.orderBy = 'name';
+            self.load();
+        });
+        $('.navbar-sort-id').click(function() {
+            self.orderBy = 'id';
+            self.load();
+        });
+        $('.navbar-sort-lastmodified').click(function() {
+            self.orderBy = 'last_modified';
+            self.load();
+        });
+    }
 
-            // set up handlers etc.
-            initNavbar();
-        }
-    });
+    // TODO: it would make more sense to define a parameter scroll,
+    //       which is either "current", "top", "none" or undefined
+    load(scrolltocurrent=false, scrolltotop=false) {
+        var self = this;
+
+        $.ajax({
+            url: "/navbar",
+            data: {'order': self.orderBy,
+                'showarchived': self.showArchived},
+            success: function(data) {
+                // load the navbar
+                $('#sidebar').html(data);
+
+                // scroll to top if this was requested
+                if(scrolltotop)
+                    $('div#sidebar').scrollTop(0);
+
+                if(!self.showArchived) {
+                    $('.nav-entry-archived').css('display', 'none');
+                    $('.nav-children-archived').css('display', 'none');
+                }
+            
+                // make sure the current sample is highlighted in the navbar (this is redundant in editor.js, but we need to do
+                // it here too if editor.js is executed before navbar.js
+                if(R.state.view == 'sample') {
+                    $('#nav-entry' + R.state.sampleid).css("background-color", "#BBBBFF");
+                    if(scrolltocurrent)
+                        showInNavbar(R.state.sampleid, false);
+                }
+
+                // set up handlers etc.
+                self.setupHandlers();
+            }
+        });
+    }
 }
 
 function scrollToSample(id, flash) {
@@ -160,4 +175,4 @@ function showInNavbar(id, flash) {
     }
 }
 
-export { loadNavbar, showInNavbar };
+export { Tree, showInNavbar };

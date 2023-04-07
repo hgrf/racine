@@ -3,7 +3,7 @@ import "lightbox2";
 import NewSampleDialog from "./dialogs/newsample";
 import MarkAsNewsDialog from "./dialogs/markasnews";
 import UserBrowserDialog from "./dialogs/userbrowser";
-import { loadNavbar, showInNavbar } from "./tree";
+import { Tree, showInNavbar } from "./tree";
 
 import { pushCurrentState, setupBrowserNavigation } from "./views/base";
 import SampleView from "./views/sample";
@@ -146,7 +146,6 @@ class Racine {
                                 R.errorDialog(response.error);
                         } else {
                             R.loadWelcome();
-                            loadNavbar(undefined, undefined, false, true);
                         }
                         $('#confirm-delete').modal('hide');
                     });
@@ -164,7 +163,6 @@ class Racine {
                             $('#sharelistentry' + id).remove();
                             if (response.status == 205) { // if the user removed himself from the sharer list
                                 R.loadWelcome();
-                                loadNavbar(undefined, undefined, false, true);
                             }
                             $('#confirm-delete').modal('hide');
                         }
@@ -173,13 +171,9 @@ class Racine {
             }
         });
 
+        this.tree = new Tree();
         this.showInNavbar = showInNavbar;
-
-        order = 'id';
-        showarchived = false;
-    
-        // default load with order by ID and hide archived samples
-        loadNavbar(order, false);
+        this.tree.load(true);
     }
 
     loadSample(id, reload=false) {
@@ -195,6 +189,7 @@ class Racine {
     loadWelcome() {
         var state = {"view": "welcome", "url": "/welcome"};
         this.views.welcome.load(true, state);
+        this.tree.load(false, true);
     }
 
     mobileHideSidebar() {

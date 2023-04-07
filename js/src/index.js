@@ -189,7 +189,7 @@ class Racine {
     loadWelcome() {
         var state = {"view": "welcome", "url": "/welcome"};
         this.views.welcome.load(true, state);
-        this.tree.load(false, true);
+        this.tree.load();
     }
 
     mobileHideSidebar() {

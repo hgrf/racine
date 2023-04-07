@@ -70,9 +70,13 @@ class Tree {
         });
     }
 
-    // TODO: it would make more sense to define a parameter scroll,
-    //       which is either "current", "top", "none" or undefined
-    load(scrolltocurrent=false, scrolltotop=false) {
+    /**
+     * Load the Tree.
+     * @param {boolean} [scrollToCurrent] - Scroll to the active entry after
+     *  loading the Tree. False by default, which implies that the navbar is
+     *  scrolled to the top.
+     */
+    load(scrollToCurrent=false) {
         var self = this;
 
         $.ajax({
@@ -83,8 +87,8 @@ class Tree {
                 // load the navbar
                 $('#sidebar').html(data);
 
-                // scroll to top if this was requested
-                if(scrolltotop)
+                // scroll to top by default
+                if(!scrollToCurrent)
                     $('div#sidebar').scrollTop(0);
 
                 if(!self.showArchived) {
@@ -96,7 +100,7 @@ class Tree {
                 // it here too if editor.js is executed before navbar.js
                 if(R.state.view == 'sample') {
                     $('#nav-entry' + R.state.sampleid).css("background-color", "#BBBBFF");
-                    if(scrolltocurrent)
+                    if(scrollToCurrent)
                         showInNavbar(R.state.sampleid, false);
                 }
 

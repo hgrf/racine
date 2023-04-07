@@ -27,7 +27,7 @@ class SampleView extends BaseView {
                 if($('#nav-entry'+sampleid).length) {
                     $('#nav-entry'+sampleid).css("background-color", "#BBBBFF");
                     if(!reload)
-                        R.showInNavbar(sampleid, false);
+                        R.tree.highlight(sampleid, false);
                 }
             },
             error: function() {
@@ -145,7 +145,7 @@ function initEditor() {
     });
 
     $('#showinnavigator').click(function() {
-        R.showInNavbar(sample_id, true);
+        R.tree.highlight(sample_id, true);
     });
 
     $('#scrolltobottom').click(function() {

@@ -3,7 +3,7 @@ import "lightbox2";
 import NewSampleDialog from "./dialogs/newsample";
 import MarkAsNewsDialog from "./dialogs/markasnews";
 import UserBrowserDialog from "./dialogs/userbrowser";
-import { Tree, showInNavbar } from "./tree";
+import Tree from "./tree";
 
 import { pushCurrentState, setupBrowserNavigation } from "./views/base";
 import SampleView from "./views/sample";
@@ -172,7 +172,6 @@ class Racine {
         });
 
         this.tree = new Tree();
-        this.showInNavbar = showInNavbar;
         this.tree.load(true);
     }
 

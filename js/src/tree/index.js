@@ -7,7 +7,7 @@ class Tree {
         this.showArchived = false;
     }
 
-    setupHandlers() {
+    #setupHandlers() {
         var activeEntry = $(`#nav-entry${R.state.sampleid}`);
         var allEntries = $('.nav-entry');
         var ctrlIsPressed = false;
@@ -70,6 +70,75 @@ class Tree {
         });
     }
 
+    #scrollTo(id, flash) {
+        var naventry = $('#nav-entry'+id);
+    
+        if(!naventry.is(':visible')) {
+            showarchived = true;
+            $('.nav-entry-archived').css('display', 'block');
+            $('.nav-children-archived').css('display', 'block');
+            $('.navbar-togglearchived').removeClass('glyphicon-eye-close');
+            $('.navbar-togglearchived').addClass('glyphicon-eye-open');
+            $('.navbar-togglearchived').attr('title', 'Hide archived');
+        }
+    
+        var top = (naventry.offset().top
+            - $('#navbar').height()
+            - $('div.navbar-shortcuts').outerHeight()
+            - $('html, body').scrollTop());
+        var isInView = top >= 0 && top+naventry.outerHeight() <= $('div#sidebar').outerHeight();
+        if(!isInView) {
+            $('div#sidebar')
+                .stop()
+                .animate({scrollTop: top + $('div#sidebar').scrollTop()}, 1000);
+        }
+        if(flash) {
+            var old_background = naventry.css("background-color");
+            // flash the sample
+            naventry
+                .stop()
+                .delay(isInView ? 0 : 1000)
+                .queue(function (next) {
+                    $(this).css("background-color", "#FFFF9C");
+                    next();
+                })
+                .delay(1000)
+                .queue(function (next) {
+                    $(this).css("background-color", old_background);
+                    next();
+                });
+        }
+    }
+
+    highlight(id, flash) {
+        var self = this;
+        // make sure all parent samples are expanded in navbar
+        var naventry = $('#nav-entry'+id);
+        var collapsibles = naventry.parents('.nav-children');
+        var collapsed_counter = 0;
+    
+        // for each collapsible parent check if it's collapsed and increase the counter accordingly, so that the autoscroll
+        // function is only activated when everything has finished expanding (so that the coordinates in scrollTo
+        // are correctly calculated)
+        collapsibles.each(function() {
+            if($(this).attr('aria-expanded') !== 'true') {   // careful, it can be undefined instead of false, hence the notation
+                collapsed_counter++;
+                $(this).one('shown.bs.collapse', function() {
+                    collapsed_counter--;
+                    if(!collapsed_counter) {
+                        self.#scrollTo(id, flash);
+                    }
+                });
+            }
+        });
+    
+        if(collapsed_counter) {
+            collapsibles.collapse('show');
+        } else {
+            self.#scrollTo(id, flash);
+        }
+    }
+
     /**
      * Load the Tree.
      * @param {boolean} [scrollToCurrent] - Scroll to the active entry after
@@ -101,82 +170,14 @@ class Tree {
                 if(R.state.view == 'sample') {
                     $('#nav-entry' + R.state.sampleid).css("background-color", "#BBBBFF");
                     if(scrollToCurrent)
-                        showInNavbar(R.state.sampleid, false);
+                        self.highlight(R.state.sampleid, false);
                 }
 
                 // set up handlers etc.
-                self.setupHandlers();
+                self.#setupHandlers();
             }
         });
     }
 }
 
-function scrollToSample(id, flash) {
-    var naventry = $('#nav-entry'+id);
-
-    if(!naventry.is(':visible')) {
-        showarchived = true;
-        $('.nav-entry-archived').css('display', 'block');
-        $('.nav-children-archived').css('display', 'block');
-        $('.navbar-togglearchived').removeClass('glyphicon-eye-close');
-        $('.navbar-togglearchived').addClass('glyphicon-eye-open');
-        $('.navbar-togglearchived').attr('title', 'Hide archived');
-    }
-
-    var top = (naventry.offset().top
-        - $('#navbar').height()
-        - $('div.navbar-shortcuts').outerHeight()
-        - $('html, body').scrollTop());
-    var isInView = top >= 0 && top+naventry.outerHeight() <= $('div#sidebar').outerHeight();
-    if(!isInView) {
-        $('div#sidebar')
-            .stop()
-            .animate({scrollTop: top + $('div#sidebar').scrollTop()}, 1000);
-    }
-    if(flash) {
-        var old_background = naventry.css("background-color");
-        // flash the sample
-        naventry
-            .stop()
-            .delay(isInView ? 0 : 1000)
-            .queue(function (next) {
-                $(this).css("background-color", "#FFFF9C");
-                next();
-            })
-            .delay(1000)
-            .queue(function (next) {
-                $(this).css("background-color", old_background);
-                next();
-            });
-    }
-}
-
-function showInNavbar(id, flash) {
-    // make sure all parent samples are expanded in navbar
-    var naventry = $('#nav-entry'+id);
-    var collapsibles = naventry.parents('.nav-children');
-    var collapsed_counter = 0;
-
-    // for each collapsible parent check if it's collapsed and increase the counter accordingly, so that the autoscroll
-    // function is only activated when everything has finished expanding (so that the coordinates in scrollToSample
-    // are correctly calculated)
-    collapsibles.each(function() {
-        if($(this).attr('aria-expanded') !== 'true') {   // careful, it can be undefined instead of false, hence the notation
-            collapsed_counter++;
-            $(this).one('shown.bs.collapse', function() {
-                collapsed_counter--;
-                if(!collapsed_counter) {
-                    scrollToSample(id, flash);
-                }
-            });
-        }
-    });
-
-    if(collapsed_counter) {
-        collapsibles.collapse('show');
-    } else {
-        scrollToSample(id, flash);
-    }
-}
-
-export { Tree, showInNavbar };
+export default Tree;

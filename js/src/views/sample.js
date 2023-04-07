@@ -63,7 +63,7 @@ function setup_sample_image() {
         CKEDITOR.fbupload = true;
         CKEDITOR.fbcallback = function(url) {
             $.ajax({
-                url: "/api/set/sample/image/"+sample_id,
+                url: `/api/set/sample/image/${R.state.sampleid}`,
                 type: "post",
                 headers: { 'Authorization': 'Bearer ' + R.apiToken },
                 data: { "value": url },
@@ -100,7 +100,7 @@ function initEditor() {
 
     // handler for archive button
     $('#archive').click(function() {
-        R.samplesAPI.toggleArchived(sample_id, function(error, data, response) {
+        R.samplesAPI.toggleArchived(R.state.sampleid, function(error, data, response) {
             if (!response)
                 R.errorDialog("Server error. Please check your connection.");
             else if (response.error) {
@@ -112,11 +112,11 @@ function initEditor() {
                 if(data.isarchived) {
                     $('#archive').attr('title', 'De-archive');
                     $('#archive').attr('src', '/static/images/dearchive.png');
-                    $('#nav-entry'+sample_id).addClass('nav-entry-archived');
+                    $(`#nav-entry${R.state.sampleid}`).addClass('nav-entry-archived');
                 } else {
                     $('#archive').attr('title', 'Archive');
                     $('#archive').attr('src', '/static/images/archive.png');
-                    $('#nav-entry'+sample_id).removeClass('nav-entry-archived');
+                    $(`#nav-entry${R.state.sampleid}`).removeClass('nav-entry-archived');
                 }
             }
         });
@@ -124,7 +124,7 @@ function initEditor() {
 
     // handler for collaborative button
     $('#collaborate').click(function() {
-        R.samplesAPI.toggleCollaborative(sample_id, function(error, data, response) {
+        R.samplesAPI.toggleCollaborative(R.state.sampleid, function(error, data, response) {
             if (!response)
                 R.errorDialog("Server error. Please check your connection.");
             else if (response.error) {
@@ -145,7 +145,7 @@ function initEditor() {
     });
 
     $('#showinnavigator').click(function() {
-        R.tree.highlight(sample_id, true);
+        R.tree.highlight(R.state.sampleid, true);
     });
 
     $('#scrolltobottom').click(function() {
@@ -251,7 +251,7 @@ function initEditor() {
     $('#samplename.editable').texteditable();
     $('#samplename.editable').on('editableupdate', function(event, data) {
         if(!data.code) // only if no error occured
-            $("#nav-entry"+sample_id+" > .nav-entry-name").html(data.value);
+            $(`#nav-entry${R.state.sampleid} > .nav-entry-name`).html(data.value);
     });
     $('.actiondate.editable').texteditable();
 

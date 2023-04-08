@@ -1,5 +1,7 @@
-import * as API from "./api";
 import "lightbox2";
+import "./jquery-plugins/ckeditable";
+
+import * as API from "./api";
 import NewSampleDialog from "./dialogs/newsample";
 import MarkAsNewsDialog from "./dialogs/markasnews";
 import UserBrowserDialog from "./dialogs/userbrowser";

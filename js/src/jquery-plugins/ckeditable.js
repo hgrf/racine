@@ -69,10 +69,9 @@
     };
 
     function on_edit_requested(event) {
-        if($(this).is('img.edittrigger'))
-            field = $(this).parent();
-        else
-            field = $(this);
+        var field = $(this);
+        if(field.is('img.edittrigger'))
+            field = field.parent();
 
         field.unbind('dblclick');
         field.children('img.edittrigger').remove();
@@ -112,7 +111,7 @@
         if($(event.target).is('img'))
             return;
 
-        field = $(this);
+        var field = $(this);
 
         // read original HTML from server in order to remove all modifications like Latex parsing or Lightbox
         $.ajax({
@@ -132,7 +131,7 @@
                 clone.field = field;
 
                 // activate CKEditor
-                editor = CKEDITOR.inline(field.get()[0], clone);
+                var editor = CKEDITOR.inline(field.get()[0], clone);
                 editor.on('done', ckeditable_on_done);
             },
             error: function( jqXHR, textStatus ) {
@@ -143,9 +142,9 @@
     }
 
     function ckeditable_on_done(event) {
-        editor = event.editor;
-        field = event.editor.config.field;
-        data = event.editor.getData();
+        var editor = event.editor;
+        var field = event.editor.config.field;
+        var data = event.editor.getData();
 
         event.editor.updateElement();
 

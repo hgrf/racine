@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "r_base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block styles %}
@@ -110,15 +110,8 @@
     <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
     <script src="{{ url_for('static', filename='jquery.jeditable.js') }}"></script>
     <script src="{{ url_for('static', filename='jquery-ui.min.js') }}"></script> {# for the date picker #}
-    <script src="{{ url_for('static', filename='racine.js', version='20230402') }}"></script>
     <script>
         CKEDITOR.timestamp='20201114';
-
-        var R = new Racine("{{ api_token }}", {{ state|tojson }});
-
-        $(document).ready(function() {
-            R.onDocumentReady();
-        });
     </script>
 {% endblock %}
 

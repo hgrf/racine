@@ -1,6 +1,6 @@
-import BaseView from "./base";
+import MainView from "./main";
 
-class WelcomeView extends BaseView {
+class WelcomeView extends MainView {
     constructor() {
         super();
     }
@@ -20,6 +20,8 @@ class WelcomeView extends BaseView {
                 R.makeSamplesClickable();
             }
         });
+
+        MainView.tree.load();
 
         return true;
     }

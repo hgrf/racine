@@ -2,10 +2,6 @@ import "lightbox2";
 import "./jquery-plugins/ckeditable";
 
 import * as API from "./api";
-import NewSampleDialog from "./dialogs/newsample";
-import MarkAsNewsDialog from "./dialogs/markasnews";
-import UserBrowserDialog from "./dialogs/userbrowser";
-import Tree from "./tree";
 
 import { pushCurrentState, setupBrowserNavigation } from "./views/base";
 import SampleView from "./views/sample";
@@ -81,6 +77,7 @@ class Racine {
 
         // figure out what page to load
         this.views[this.state.view].load(true, this.state);
+        this.views[this.state.view].onDocumentReady();
 
         // set up search field in header bar
         create_searchsample($('#navbar-search'));
@@ -100,81 +97,6 @@ class Racine {
                 }
             }
         });
-
-        // new sample dialog
-        new NewSampleDialog('#newsample');
-
-        // "mark as news" dialog
-        new MarkAsNewsDialog();
-
-        // user browser dialog
-        new UserBrowserDialog();
-
-        // sample and action deletion
-        $('#confirm-delete').on('show.bs.modal', function (e) {
-            $(this).find('.btn-ok').attr('id', $(e.relatedTarget).data('id'));
-            $(this).find('.btn-ok').data('type', $(e.relatedTarget).data('type'));
-            $('.debug-id').html('Delete <strong>' + $(e.relatedTarget).data('type') + '</strong> ID: <strong>' + $(this).find('.btn-ok').attr('id') + '</strong>');
-        });
-
-        $('.btn-ok').click(function (event) {
-            var type = $(this).data('type');
-            var id = $(this).attr('id');
-
-            switch (type) {
-                case "action":
-                    R.actionsAPI.deleteAction(id, function (error, data, response) {
-                        if (!response)
-                            R.errorDialog("Server error. Please check your connection.");
-                        else if (response.error) {
-                            if (response.body.message)
-                                R.errorDialog(response.body.message);
-                            else
-                                R.errorDialog(response.error);
-                        } else {
-                            $('#' + id + '.list-entry').remove();
-                        }
-                        $('#confirm-delete').modal('hide');
-                    });
-                    break;
-                case "sample":
-                    R.samplesAPI.deleteSample(id, function (error, data, response) {
-                        if (!response)
-                            R.errorDialog("Server error. Please check your connection.");
-                        else if (response.error) {
-                            if (response.body.message)
-                                R.errorDialog(response.body.message);
-                            else
-                                R.errorDialog(response.error);
-                        } else {
-                            R.loadWelcome();
-                        }
-                        $('#confirm-delete').modal('hide');
-                    });
-                    break;
-                case "share":
-                    R.sharesAPI.deleteShare(id, function (error, data, response) {
-                        if (!response)
-                            R.errorDialog("Server error. Please check your connection.");
-                        else if (response.error) {
-                            if (response.body.message)
-                                R.errorDialog(response.body.message);
-                            else
-                                R.errorDialog(response.error);
-                        } else {
-                            $('#sharelistentry' + id).remove();
-                            if (response.status == 205) { // if the user removed himself from the sharer list
-                                R.loadWelcome();
-                            }
-                            $('#confirm-delete').modal('hide');
-                        }
-                    });
-                    break;
-            }
-        });
-
-        this.tree = new Tree();
-        this.tree.load(true);
     }
 
     loadSample(id, reload=false) {
@@ -190,7 +112,6 @@ class Racine {
     loadWelcome() {
         var state = {"view": "welcome", "url": "/welcome"};
         this.views.welcome.load(true, state);
-        this.tree.load();
     }
 
     mobileHideSidebar() {

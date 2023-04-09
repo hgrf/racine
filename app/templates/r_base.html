@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+{{ super() }}
+    <script src="{{ url_for('static', filename='racine.js', version='20230402') }}"></script>
+    <script>
+        var R = new Racine("{{ api_token }}", {{ state|tojson }});
+
+        $(document).ready(function() {
+            R.onDocumentReady();
+        });
+    </script>
+{% endblock %}

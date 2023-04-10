@@ -3,6 +3,17 @@ import MainView from "./main";
 import MarkAsNewsDialog from "../dialogs/markasnews";
 import UserBrowserDialog from "../dialogs/userbrowser";
 
+/* Disable caching for AJAX requests.
+ * This fixes a bug in Internet Explorer, e.g. when reloading the sample
+ * after adding an action, the new action is not shown / when modifying an
+ * action, the old action is shown after saving, even though the data has
+ * been updated on the server.
+ * 
+ * c.f. https://www.itworld.com/article/2693447/ajax-requests-not-executing
+-or-updating-in-internet-explorer-solution.html
+ */
+$.ajaxSetup({ cache: false });
+
 class SampleView extends MainView {
     constructor() {
         super();
@@ -116,18 +127,6 @@ class SampleView extends MainView {
 }
 
 var hiddeneditor;
-
-// polyfill for string startsWith
-if (!String.prototype.startsWith) {
-  String.prototype.startsWith = function(searchString, position) {
-    position = position || 0;
-    return this.indexOf(searchString, position) === position;
-  };
-}
-
-$.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer
-
-$.ajaxSetup({ cache: false });
 
 function setup_sample_image() {
     $('#sampleimage').zoombutton();
@@ -286,26 +285,12 @@ function initEditor() {
         });
     });
 
-    // catch internal links
-    $('a').click(function(event) {
-        // N.B. the detection of internal links does not work with Internet Explorer because the href attribute
-        // contains the entire address
-        if(typeof $(this).attr('href') == 'string' && $(this).attr('href').startsWith('/sample/')) {
-            event.preventDefault();
-            R.loadSample($(this).attr('href').split('/')[2]);
-        }
-    });
-
     // set up the sample image
     setup_sample_image();
 
-    // add zoom buttons to images
-    $('#sampledescription').find('img').zoombutton();
-    $('.actiondescription').find('img').zoombutton();
+    $('#sampledescription').racinecontent();
+    $('.actiondescription').racinecontent();
 
-    // put lightbox link around images
-    $('#sampledescription').find('img').wrap(R.lightboxWrapper);
-    $('.actiondescription').find('img').wrap(R.lightboxWrapper);
 
     // typeset all equations
     if(typeof(MathJax) !== 'undefined' && MathJax.isReady)         // if it is not ready now, it should typeset automatically once it is ready

@@ -1,6 +1,7 @@
 import "lightbox2";
 import "./jquery-plugins/ckeditable";
 import "./jquery-plugins/zoombutton";
+import "./jquery-plugins/racinecontent";
 
 import * as API from "./api";
 

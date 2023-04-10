@@ -1,5 +1,7 @@
 import { updateGlyphicon } from './glyphicons';
 
+$.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer
+
 function draggableHandlers(activeEntry) { return {
     dragstart: function (event) {
         event.dataTransfer.setData('sampleid', $(event.target).data('id'));

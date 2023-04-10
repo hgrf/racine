@@ -185,19 +185,7 @@
                 // typeset all equations in this field
                 MathJax.Hub && MathJax.Hub.Queue(["Typeset",MathJax.Hub,field.get()]);
 
-                // catch internal links
-                field.find('a').click(function(event) {
-                    if(typeof $(this).attr('href') == 'string' && $(this).attr('href').startsWith('/sample/')) {
-                        event.preventDefault();
-                        R.loadSample($(this).attr('href').split('/')[2]);
-                    }
-                });
-
-                // put back the zoombutton
-                field.find('img').zoombutton();
-
-                // put back lightbox link around images
-                field.find('img').wrap(R.lightboxWrapper);
+                field.racinecontent();
 
                 field.trigger('editableupdate', data);
                 field.trigger('editabledone');

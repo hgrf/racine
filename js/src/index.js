@@ -1,5 +1,6 @@
 import "lightbox2";
 import "./jquery-plugins/ckeditable";
+import "./jquery-plugins/zoombutton";
 
 import * as API from "./api";
 
@@ -7,23 +8,6 @@ import { pushCurrentState, setupBrowserNavigation } from "./views/base";
 import SampleView from "./views/sample";
 import SearchResultsView from "./views/searchresults";
 import WelcomeView from "./views/welcome";
-
-(function($){   // this is a jQuery plugin
-    $.fn.zoombutton = function() {
-        $(this).wrap(function() {
-            var width = $(this).width() ? $(this).width()+'px' : '100%';   // 100%: workaround for sample image
-            return '<div class="imgcontainer" style="width:'+width+'"></div>';
-        }).after(function() {
-            if(this.src.includes('?')) {
-                return '<a class="zoombutton" target="_blank" href="'+this.src+'&fullsize'+'">'+
-                       '<i class="glyphicon glyphicon-hd-video" title="Open full resolution in new window"></i></a>'
-            } else {
-                return '<a class="zoombutton" target="_blank" href="'+this.src+'?fullsize'+'">'+
-                       '<i class="glyphicon glyphicon-hd-video" title="Open full resolution in new window"></i></a>'
-            }
-        });
-    };
-})(jQuery);
 
 class Racine {
     constructor(apiToken, state) {

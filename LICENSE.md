@@ -23,7 +23,7 @@ released under the GPL license (see Appendix A).
 The following libraries are included in Racine under the MIT license
 (see Appendix B):
 
-* jQuery and jQueryUI - Copyright (c) jQuery Foundation and other contributors.
+* jQuery - Copyright (c) jQuery Foundation and other contributors.
 * jquery.jeditable.js - Copyright (c) 2006 Mika Tuupola, Dylan Verheul, Nicolas Carpi.
 * typeahead.js - Copyright (c) Twitter, Inc.
 * bootstrap-toc.min.js and bootstrap-toc.min.css - Copyright (c) 2015-2016 Aidan Feldman.

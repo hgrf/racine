@@ -239,10 +239,6 @@ function initEditor() {
         R.loadSample(R.state['sampleid'], true);
     });
 
-    // datepicker
-    $("#timestamp").attr("autocomplete", "off");
-    $("#timestamp").datepicker({dateFormat: "yy-mm-dd"});
-
     // handler for new action submit button
     $('#submit').click( function(event) {
         // prevent "normal" submission of form

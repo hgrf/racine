@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/lightbox.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='navbar.css', version='20191215')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='editor.css', version='20210420')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='jquery-ui.min.css')}}"> {# for the date picker #}
 {% endblock %}
 
 {% block sidebarnav %}
@@ -77,7 +76,6 @@
     <script>window.MathJax || document.write('<script async src="{{ url_for('static', filename='mathjax/MathJax.js') }}?config=TeX-MML-AM_CHTML">\x3C/script>')</script>
     <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
     <script src="{{ url_for('static', filename='jquery.jeditable.js') }}"></script>
-    <script src="{{ url_for('static', filename='jquery-ui.min.js') }}"></script> {# for the date picker #}
     <script>
         CKEDITOR.timestamp='20201114';
     </script>

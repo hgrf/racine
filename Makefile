@@ -274,19 +274,6 @@ install-jquery.jeditable:
 	# c.f. https://github.com/hgrf/racine/commit/89d8b57e795ccfbeb73dc18faecc1d0016a8a008#diff-5f8e3a2bd35e7f0079090b176e06d0568d5c8e4468c0febbfa61014d72b16246
 	git apply patches/jquery.jeditable.patch
 
-install-jquery-ui:
-	rm -f app/static/jquery-ui.min.css
-	rm -f app/static/jquery-ui.min.js
-
-	wget -O jquery-ui.zip https://jqueryui.com/resources/download/jquery-ui-1.11.4.zip
-	rm -rf /tmp/jquery-ui-*
-	unzip -d /tmp jquery-ui.zip
-	rm jquery-ui.zip
-
-	cp /tmp/jquery-ui-*/jquery-ui.min.css app/static/jquery-ui.min.css
-	cp /tmp/jquery-ui-*/jquery-ui.min.js app/static/jquery-ui.min.js
-	rm -rf /tmp/jquery-ui-*
-
 install-mathjax:
 	rm -rf app/static/mathjax
 
@@ -331,7 +318,7 @@ install-typeahead.js-bootstrap3.less:
 
 	git apply patches/typeahead.css.patch
 
-install-js-dependencies: install-bootstrap-toc install-jquery.jeditable install-jquery-ui install-mathjax install-typeahead install-typeahead.js-bootstrap3.less api-client
+install-js-dependencies: install-bootstrap-toc install-jquery.jeditable install-mathjax install-typeahead install-typeahead.js-bootstrap3.less api-client
 	cd js && npm install && npx rollup -c
 	mkdir -p app/static/css
 	cp js/node_modules/lightbox2/dist/css/lightbox.css app/static/css/lightbox.css
@@ -341,8 +328,6 @@ clean-js-dependencies:
 	rm  -f app/static/bootstrap-toc.min.css
 	rm  -f app/static/bootstrap-toc.min.js
 	rm -f app/static/jquery.jeditable.js
-	rm  -f app/static/jquery-ui.min.css
-	rm  -f app/static/jquery-ui.min.js
 	rm -rf app/static/mathjax
 	rm -rf app/static/typeahead.js
 

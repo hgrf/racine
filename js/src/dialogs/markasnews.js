@@ -47,10 +47,6 @@ class MarkAsNewsDialog {
                 }
             });
         });
-
-        // datepicker
-        $("#expires").attr("autocomplete", "off");
-        $("#expires").datepicker({ dateFormat: "yy-mm-dd" });
     }
 }
 

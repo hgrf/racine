@@ -73,12 +73,6 @@ class Racine {
             }
         });
 
-        setupBrowserNavigation();
-
-        // figure out what page to load
-        this.views[this.state.view].load(true, this.state);
-        this.views[this.state.view].onDocumentReady();
-
         // set up search field in header bar
         create_searchsample($('#navbar-search'));
 
@@ -97,6 +91,14 @@ class Racine {
                 }
             }
         });
+
+        if ('view' in this.state) {
+            setupBrowserNavigation();
+
+            // figure out what page to load
+            this.views[this.state.view].load(true, this.state);
+            this.views[this.state.view].onDocumentReady();
+        }
     }
 
     loadSample(id, reload=false) {

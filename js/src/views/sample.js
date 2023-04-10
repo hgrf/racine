@@ -3,6 +3,8 @@ import MainView from "./main";
 import MarkAsNewsDialog from "../dialogs/markasnews";
 import UserBrowserDialog from "../dialogs/userbrowser";
 
+import ckeditorconfig from '../util/ckeditorconfig';
+
 /* Disable caching for AJAX requests.
  * This fixes a bug in Internet Explorer, e.g. when reloading the sample
  * after adding an action, the new action is not shown / when modifying an

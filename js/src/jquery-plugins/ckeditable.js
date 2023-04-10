@@ -1,3 +1,5 @@
+import ckeditorconfig from '../util/ckeditorconfig';
+
 (function($){   // this is a jQuery plugin
     $.fn.texteditable = function() {
         // we need to iterate, because if we are given more than one field, the getter/setter functions

@@ -1,4 +1,5 @@
 import { createSelectSample } from '../util/searchsample';
+import ckeditorconfig from '../util/ckeditorconfig';
 
 class NewSampleDialog {
     constructor(selector) {
@@ -85,6 +86,7 @@ class NewSampleDialog {
                 } else {
                     dialog.modal('hide');  // hide and clear the dialog
                     R.loadSample(data.sampleid);
+                    // TODO
                     R.tree.load(true);
                 }
             });

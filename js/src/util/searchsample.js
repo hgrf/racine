@@ -8,7 +8,7 @@ var samples = new Bloodhound({
     }
 });
 
-function create_searchsample(searchfield) {
+function createSearchSample(searchfield) {
     searchfield.typeahead({
         minLength: 1,
         highlight: true
@@ -18,6 +18,8 @@ function create_searchsample(searchfield) {
         source: samples,
         templates: {
             suggestion: function(result) {
+                var parentinfo;
+                var ownerinfo;
                 if(result.parentname != '') {
                     parentinfo = '<span style="white-space:nowrap;"><i class="glyphicon glyphicon-level-up"></i>&nbsp;'+result.parentname+'</span>\n';
                 } else {
@@ -38,7 +40,7 @@ function create_searchsample(searchfield) {
     });
 }
 
-function create_selectsample(searchfield, hiddenfield, valid, placeholder) {
+function createSelectSample(searchfield, hiddenfield, valid, placeholder) {
     // default values
     valid = valid || true;
     placeholder = placeholder || "None";
@@ -81,5 +83,7 @@ function create_selectsample(searchfield, hiddenfield, valid, placeholder) {
         indicator.css('color', 'green');
     });
 
-    create_searchsample(searchfield);
+    createSearchSample(searchfield);
 }
+
+export { createSearchSample, createSelectSample };

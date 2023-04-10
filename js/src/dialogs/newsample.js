@@ -1,9 +1,11 @@
+import { createSelectSample } from '../util/searchsample';
+
 class NewSampleDialog {
     constructor(selector) {
         var dialog = $(selector);
         var newsampleparent = $('#newsampleparent');
         var newsampleparentid = $('#newsampleparentid')
-        create_selectsample(newsampleparent, newsampleparentid);
+        createSelectSample(newsampleparent, newsampleparentid);
         CKEDITOR.replace('newsampledescription', ckeditorconfig);
 
         dialog.on('show.bs.modal', function (event) {

@@ -9,6 +9,8 @@ import SampleView from "./views/sample";
 import SearchResultsView from "./views/searchresults";
 import WelcomeView from "./views/welcome";
 
+import { createSearchSample } from "./util/searchsample";
+
 class Racine {
     constructor(apiToken, state) {
         this.apiToken = apiToken;
@@ -57,24 +59,7 @@ class Racine {
             }
         });
 
-        // set up search field in header bar
-        create_searchsample($('#navbar-search'));
-
-        $('#navbar-search').bind('typeahead:selected', function (event, suggestion) {
-            $(this).typeahead('val', '');    // clear the search field
-            R.loadSample(suggestion.id);
-        });
-
-        $('#navbar-search').keypress(function (event) {
-            if (event.which == 13) {
-                if ($(this).val() === '') {
-                    R.errorDialog('Please specify a search term');
-                } else {
-                    R.loadSearchResults($(this).val());
-                    $(this).typeahead('val', '');    // clear the search field
-                }
-            }
-        });
+        this.#setupHeaderSearch();
 
         if ('view' in this.state) {
             setupBrowserNavigation();
@@ -118,6 +103,28 @@ class Racine {
         } else {
             return '<a class="lightboxlink" href="'+this.src+'?fullsize" data-lightbox="'+R.state.sampleid+'">';
         }
+    }
+
+    #setupHeaderSearch() {
+        var self = this;
+
+        createSearchSample($('#navbar-search'));
+
+        $('#navbar-search').bind('typeahead:selected', function (event, suggestion) {
+            $(this).typeahead('val', '');    // clear the search field
+            self.loadSample(suggestion.id);
+        });
+
+        $('#navbar-search').keypress(function (event) {
+            if (event.which == 13) {
+                if ($(this).val() === '') {
+                    self.errorDialog('Please specify a search term');
+                } else {
+                    self.loadSearchResults($(this).val());
+                    $(this).typeahead('val', '');    // clear the search field
+                }
+            }
+        });
     }
 
     makeSamplesClickable() {

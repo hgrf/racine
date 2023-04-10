@@ -28,7 +28,6 @@ not populated by JavaScript #}
     {{super()}}
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="{{url_for('static', filename='base.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='typeahead.css')}}">
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
     <style>
@@ -128,11 +127,4 @@ not populated by JavaScript #}
     </div>
 
     <div class="content-overlay"></div>
-{% endblock %}
-
-{% block scripts %}
-{{ super() }}
-    <script src="{{ url_for('static', filename='typeahead.js/typeahead.bundle.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='typeahead.js/substringmatcher.js') }}"></script>
-    <script src="{{ url_for('static', filename='searchsample.js', version='20191204') }}"></script>
 {% endblock %}

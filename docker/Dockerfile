@@ -6,25 +6,16 @@ FROM tiangolo/uwsgi-nginx-flask:python3.10 AS racine-base
 ENV STATIC_URL /static
 ENV STATIC_PATH /app/app/static
 
-RUN echo "Current path: $PWD"
-
 COPY ./Makefile /app/Makefile
 COPY ./requirements.txt /app/requirements.txt
 COPY ./requirements-dev.txt /app/requirements-dev.txt
 
-RUN apt update
-RUN apt install -y dos2unix default-jre
-
-RUN make install-dependencies PIP_OPTIONS=--no-cache-dir
-
-COPY ./Makefile /tmp/app_static/Makefile
-COPY ./requirements.txt /tmp/app_static/requirements.txt
-COPY ./patches /tmp/app_static/patches
-
-RUN cd /tmp/app_static && \
-    mkdir -p app/static && \
-    make install-js-dependencies && \
-    make install-bootstrap
+RUN apt update && \
+    apt install -y default-jre && \
+    apt install -y npm && \
+    npm install -g n && \
+    n stable && \
+    make install-dependencies PIP_OPTIONS=--no-cache-dir
 
 # replace prestart script from base image
 COPY ./docker/prestart.sh /app/prestart.sh
@@ -42,16 +33,13 @@ COPY ./app /app/app/
 COPY ./migrations /app/migrations/
 COPY ./uwsgi.ini /app/
 
-RUN cp -r /tmp/app_static/app/static /app/app/
+COPY ./Makefile /tmp/app_static/Makefile
+COPY ./patches /tmp/app_static/patches
+COPY ./js /tmp/app_static/js
 
-COPY ./patches/generate-api-spec.py /app/patches/generate-api-spec.py
-COPY ./patches/api.yaml /app/patches/api.yaml
-COPY ./patches/rollup.config.js /app/patches/rollup.config.js
-
-RUN apt install -y npm
-RUN npm install -g n
-RUN n stable
-RUN mkdir build && \
-    make api-client
-
-# RUN rm -rf /tmp/app_static
+RUN cd /tmp/app_static && \
+    mkdir -p app/static/images && \
+    make install-js-dependencies && \
+    make install-bootstrap && \
+    cp -r /tmp/app_static/app/static /app/app/ && \
+    rm -rf /tmp/app_static

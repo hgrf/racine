@@ -9,6 +9,7 @@ api-spec:
 
 api-client: api-spec
 	rm -rf js/src/api
+	mkdir -p build
 	wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/6.2.1/openapi-generator-cli-6.2.1.jar \
 		-O build/openapi-generator-cli.jar
 	
@@ -330,7 +331,7 @@ install-typeahead.js-bootstrap3.less:
 
 	git apply patches/typeahead.css.patch
 
-install-js-dependencies: install-bootstrap-toc install-ckeditor install-jquery install-jquery.jeditable install-jquery-ui install-mathjax install-typeahead install-typeahead.js-bootstrap3.less api-client
+install-js-dependencies: install-bootstrap-toc install-jquery.jeditable install-jquery-ui install-mathjax install-typeahead install-typeahead.js-bootstrap3.less api-client
 	cd js && npm install && npx rollup -c
 	mkdir -p app/static/css
 	cp js/node_modules/lightbox2/dist/css/lightbox.css app/static/css/lightbox.css

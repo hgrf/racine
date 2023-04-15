@@ -29,7 +29,7 @@ def index(sampleid=0):
     # TODO: reduce redundance in call to render_template
     if not sampleid:
         return render_template(
-            "main.html",
+            "main/main.html",
             state={"view": "welcome", "url": "/"},
             api_token=current_user.get_token(),
             search_activated=True,
@@ -40,7 +40,7 @@ def index(sampleid=0):
     if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
         return render_template("404.html"), 404
     return render_template(
-        "main.html",
+        "main/main.html",
         state={"view": "sample", "sampleid": sampleid, "url": "/sample/{}".format(sampleid)},
         api_token=current_user.get_token(),
         search_activated=True,
@@ -215,7 +215,7 @@ def editor(sampleid):
         actions = sorted(actions, key=lambda a: a.ordnum, reverse=invertactionorder)
 
         return render_template(
-            "editor.html",
+            "main/editor.html",
             sample=sample,
             actions=actions,
             form=form,
@@ -278,7 +278,7 @@ def search():
         return render_template("searchresults.html", results=results, term=keyword)
     else:
         return render_template(
-            "main.html",
+            "main/main.html",
             state={"view": "searchResults", "term": keyword, "url": "/search?term=" + keyword},
             sample=None,
             search_activated=True,

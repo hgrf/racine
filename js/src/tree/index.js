@@ -80,7 +80,7 @@ class Tree {
     const naventry = $('#nav-entry'+id);
 
     if (!naventry.is(':visible')) {
-      showarchived = true;
+      this.showarchived = true;
       $('.nav-entry-archived').css('display', 'block');
       $('.nav-children-archived').css('display', 'block');
       $('.navbar-togglearchived').removeClass('glyphicon-eye-close');

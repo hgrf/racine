@@ -4,13 +4,13 @@
 {% block sidebarnav %}
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
-        {{ me.menu_entry("smbresources", "SMB resources") }}
-        {{ me.menu_entry("users", "Users") }}
+        {{ me.menu_entry("smbresources", "SMB resources", active) }}
+        {{ me.menu_entry("users", "Users", active) }}
         {% if config['DEBUG'] %}
-            {{ me.menu_entry("uploads", "Uploads") }}
+            {{ me.menu_entry("uploads", "Uploads", active) }}
         {% endif %}
-        {{ me.menu_entry("email", "Email") }}
-        {{ me.menu_entry("log", "Log") }}
+        {{ me.menu_entry("email", "Email", active) }}
+        {{ me.menu_entry("log", "Log", active) }}
     </ul>
 </div>
 {% endblock %}

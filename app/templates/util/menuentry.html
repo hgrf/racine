@@ -2,7 +2,7 @@
     menu_entry macro for profile and settings page where
     the sidebar is not populated by JavaScript 
 #}
-{% macro menu_entry(name, title) %}
+{% macro menu_entry(name, title, active) %}
     <li {% if name==active %} class="active"><a href="#">{% else %}><a href="{{ name }}">{% endif %}
         {{ title }}
         {% if name==active %}

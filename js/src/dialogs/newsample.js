@@ -3,6 +3,8 @@ import $ from 'jquery';
 import {createSelectSample} from '../util/searchsample';
 import ckeditorconfig from '../util/ckeditorconfig';
 
+import MainViewBase from '../views/main/base';
+
 class NewSampleDialog {
   constructor(selector) {
     const dialog = $(selector);
@@ -90,8 +92,7 @@ class NewSampleDialog {
         } else {
           dialog.modal('hide'); // hide and clear the dialog
           R.loadSample(data.sampleid);
-          // TODO
-          R.tree.load(true);
+          MainViewBase.tree.load(true);
         }
       });
     });

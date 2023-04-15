@@ -1,10 +1,8 @@
 import './util/jquery-global.js';
 import 'bootstrap';
+import './typeahead';
 
 import $ from 'jquery';
-
-import typeahead from './typeahead';
-typeahead.loadjQueryPlugin();
 
 import 'bootstrap-toc/bootstrap-toc';
 import 'lightbox2';

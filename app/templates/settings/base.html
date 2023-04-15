@@ -1,4 +1,4 @@
-{% extends "r_base.html" %}
+{% extends "base.html" %}
 
 {% block sidebarnav %}
 <div class="col-sm-3 col-md-2 sidebar">
@@ -12,4 +12,9 @@
         {{ menu_entry("log", "Log") }}
     </ul>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='racine.js', version='20230402') }}"></script>
 {% endblock %}

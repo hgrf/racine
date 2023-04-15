@@ -1,9 +1,10 @@
-{% extends "r_base.html" %}
+{% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block styles %}
     {{super()}}
     <link rel="stylesheet" href="{{url_for('static', filename='css/lightbox.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/typeahead.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='navbar.css', version='20191215')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='editor.css', version='20210420')}}">
 {% endblock %}
@@ -77,6 +78,17 @@
     <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
     <script>
         CKEDITOR.timestamp='20201114';
+    </script>
+    <script src="{{ url_for('static', filename='racine.js', version='20230402') }}"></script>
+    <script>
+        var invertactionorder = false;
+        var showparentactions = false;
+
+        {% if state is defined %}
+            var R = new Racine("{{ api_token }}", {{ state|tojson }});
+        {% else %}
+            var R = new Racine("{{ api_token }}", {});
+        {% endif %}
     </script>
 {% endblock %}
 

@@ -1,15 +1,16 @@
 {% extends "base.html" %}
+{% import "util/menuentry.html" as me %}
 
 {% block sidebarnav %}
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
-        {{ menu_entry("smbresources", "SMB resources") }}
-        {{ menu_entry("users", "Users") }}
+        {{ me.menu_entry("smbresources", "SMB resources") }}
+        {{ me.menu_entry("users", "Users") }}
         {% if config['DEBUG'] %}
-            {{ menu_entry("uploads", "Uploads") }}
+            {{ me.menu_entry("uploads", "Uploads") }}
         {% endif %}
-        {{ menu_entry("email", "Email") }}
-        {{ menu_entry("log", "Log") }}
+        {{ me.menu_entry("email", "Email") }}
+        {{ me.menu_entry("log", "Log") }}
     </ul>
 </div>
 {% endblock %}

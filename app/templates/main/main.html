@@ -1,8 +1,7 @@
 {% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
 
 {% block styles %}
-    {{super()}}
+{{super()}}
     <link rel="stylesheet" href="{{url_for('static', filename='css/lightbox.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/typeahead.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='navbar.css', version='20191215')}}">
@@ -10,71 +9,25 @@
 {% endblock %}
 
 {% block sidebarnav %}
-<div id="sidebar" class="col-sm-3 col-md-2 sidebar">
-</div>
+    <div id="sidebar" class="col-sm-3 col-md-2 sidebar">
+    </div>
 {% endblock %}
 
 {% block page_content %}
-<div id="editor-frame">
-</div>
-
-{{ begin_modal_dialog('userbrowser', 'Select a user') }}
-<div class="modal-body">
-    <div>Select a user you want to share this sample with:<br>&nbsp;</div>
-    <div class="form-group input-group">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-        <input type="text" id="username" class="form-control" placeholder="username">
+    <div id="editor-frame">
     </div>
-    <div id="recent-collaborators"></div>
-</div>
-<div class="modal-footer">
-    <button id="userbrowserok" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-</div>
-{{ end_modal_dialog() }}
+{% endblock %}
 
-{{ begin_modal_dialog('newsample', 'New sample', 'modal-lg') }}
-<div class="modal-body">
-    <form id="newsampleform">
-        {{ newsampleform.hidden_tag() }}  {# also contains newsampleform.newsampleparentid #}
-        {{ wtf.form_field(newsampleform.newsamplename) }}
-        {{ wtf.form_field(newsampleform.newsampleparent) }}
-        {{ wtf.form_field(newsampleform.newsampledescription) }}
-    </form>
-</div>
-<div class="modal-footer">
-    <button id="newsamplesubmit" type="button" class="btn btn-primary">Submit</button>
-    <button id="newsampleclear" type="button" class="btn btn-default">Clear</button>
-</div>
-{{ end_modal_dialog() }}
-
-{{ begin_modal_dialog('dlg_markasnews', 'Mark as news', 'modal-lg') }}
-<div class="modal-body">
-    <p>
-        Mark this action as news to all users who share this sample.
-    </p>
-    <form id="dlg_markasnews_form">
-        {{ wtf.quick_form(dlg_markasnews_form) }}
-    </form>
-</div>
-<div class="modal-footer">
-    <button id="dlg_markasnews_submit" type="button" class="btn btn-primary">Submit</button>
-</div>
-{{ end_modal_dialog() }}
-
+{% block dialogs %}
+{{ super() }}
+    {% include "dialogs/userbrowser.html" %}
+    {% include "dialogs/newsample.html" %}
+    {% include "dialogs/markasnews.html" %}
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
-    <script type="text/x-mathjax-config">
-        // tell MathJax to align left even if it's not loaded yet
-        // this _has_ to be executed before MathJax is loaded (that's why it's not in editor.js anymore)
-        MathJax.Hub.Config({
-            displayAlign: "left"
-        });
-    </script>
-    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-    <script>window.MathJax || document.write('<script async src="{{ url_for('static', filename='mathjax/MathJax.js') }}?config=TeX-MML-AM_CHTML">\x3C/script>')</script>
+    {% include "util/mathjax.html "%}
     <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
     <script>
         CKEDITOR.timestamp='20201114';

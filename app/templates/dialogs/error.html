@@ -1,0 +1,8 @@
+{% import "util/dialog.html" as dialog %}
+
+{{ dialog.begin_modal_dialog('errordialog', 'Error') }}
+    <div class="modal-body"></div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+    </div>
+{{ dialog.end_modal_dialog() }}

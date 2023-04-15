@@ -27,7 +27,8 @@ class LoginView {
       source: substringMatcher(this.state.users),
       templates: {
         suggestion: function(data) {
-          return '<div><img src="/static/images/user.png" width="24px" height="24px">' + data + '</div>';
+          return '<div><img src="/static/images/user.png" width="24px" height="24px">' +
+            data + '</div>';
         },
       },
     });

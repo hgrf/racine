@@ -2,7 +2,8 @@ import $ from 'jquery';
 
 function beforeUnloadHandler(event, ignore, message) {
   var ignore = typeof ignore !== 'undefined' ? ignore : [];
-  const msg = typeof message !== 'undefined' ? message : 'Are you sure you want to leave before saving modifications?';
+  const msg = typeof message !== 'undefined' ?
+    message : 'Are you sure you want to leave before saving modifications?';
 
   for (const i in CKEDITOR.instances) {
     // first check if the editor is not on the ignore list
@@ -20,11 +21,12 @@ function pushCurrentState() {
 }
 
 function setupBrowserNavigation() {
-  // Switch of automatic scroll restoration...
-  // so that, if a popstate event occurs but the user does not want to leave the page, automatic scrolling to the top
-  // is avoided. However, this means that if we navigate back to some page that was previously scrolled to a specific
-  // location, we lose this information and the page is opened at 0 scroll position. This could be solved e.g. by
-  // storing the scroll position in the history state variable.
+  /* Switch off automatic scroll restoration, so that, if a popstate event occurs but the user does
+   * not want to leave the page, automatic scrolling to the top is avoided. However, this means that
+   * if we navigate back to some page that was previously scrolled to a specific location, we lose
+   * this information and the page is opened at 0 scroll position. This could be solved e.g. by
+   * storing the scroll position in the history state variable.
+   */
   if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
   }
@@ -42,8 +44,9 @@ function setupBrowserNavigation() {
     }
   });
 
-  // add window unload handler (which asks the user to confirm leaving the page when one of the CKEditor instances
-  // has been modified
+  /* add window unload handler (which asks the user to confirm leaving the page when one of the
+   * CKEditor instances has been modified
+   */
   window.addEventListener('beforeunload', beforeUnloadHandler);
 }
 

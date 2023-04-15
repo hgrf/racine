@@ -38,7 +38,8 @@ class LeaveView {
           source: substringMatcher(data.users),
           templates: {
             suggestion: function(data) {
-              return '<div><img src="/static/images/user.png" width="24px" height="24px">' + data + '</div>';
+              return '<div><img src="/static/images/user.png" width="24px" height="24px">' +
+                data + '</div>';
             },
           },
         });

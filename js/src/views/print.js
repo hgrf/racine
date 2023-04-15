@@ -49,7 +49,9 @@ class PrintView {
     createSelectSample($('#sample'), $('#sampleid'), !this.state.sampleerror, 'All');
 
     $('#btnprint').click(function() {
-      $('body').append('<div id="printDestination">'+document.getElementById('printArea').innerHTML+'</div>');
+      $('body').append(
+          '<div id="printDestination">'+document.getElementById('printArea').innerHTML+'</div>',
+      );
       window.print();
       $('#printDestination').remove();
     });

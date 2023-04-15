@@ -36,7 +36,10 @@ class SampleView extends MainView {
     $('#confirm-delete').on('show.bs.modal', function(e) {
       $(this).find('.btn-ok').attr('id', $(e.relatedTarget).data('id'));
       $(this).find('.btn-ok').data('type', $(e.relatedTarget).data('type'));
-      $('.debug-id').html('Delete <strong>' + $(e.relatedTarget).data('type') + '</strong> ID: <strong>' + $(this).find('.btn-ok').attr('id') + '</strong>');
+      $('.debug-id').html(
+          'Delete <strong>' + $(e.relatedTarget).data('type') +
+        '</strong> ID: <strong>' + $(this).find('.btn-ok').attr('id') + '</strong>',
+      );
     });
 
     $('.btn-ok').click(function(event) {
@@ -108,7 +111,8 @@ class SampleView extends MainView {
 
     // load the sample data and re-initialise the editor
     $.ajax({
-      url: '/editor/'+sampleid+'?invertactionorder='+invertactionorder+'&showparentactions='+showparentactions,
+      url: `/editor/${sampleid}` +
+        `?invertactionorder=${invertactionorder}&showparentactions=${showparentactions}`,
       success: function( data ) {
         if (!reload) {
           R.updateState(pushState, state);
@@ -164,11 +168,14 @@ function setup_sample_image() {
             div.removeClass('newsampleimage');
             div.addClass('imgeditable');
             div.empty();
-            // TODO: this is duplicated code from templates/editor.html, there is probably a more elegant
-            //       way to sort this out
-            div.append('<img id="sampleimage" src="'+url+'">'+
-                                   '<img id="changesampleimage" src="/static/images/insertimage.png"'+
-                                                             ' title="Change sample image">');
+            /* TODO: this is duplicated code from templates/editor.html, there is probably a more
+             * elegant way to sort this out
+             */
+            div.append(
+                `<img id="sampleimage" src="${url}">` +
+              '<img id="changesampleimage" src="/static/images/insertimage.png"' +
+                ' title="Change sample image">',
+            );
             setup_sample_image();
           }
         },
@@ -183,7 +190,14 @@ function setup_sample_image() {
 function initEditor() {
   if ($('#hiddenckeditor').length) // check if this field exists
   {
-    hiddeneditor = CKEDITOR.inline($('#hiddenckeditor')[0], $.extend({'removePlugins': 'toolbar,clipboard,pastetext,pastefromword,tableselection,widget,uploadwidget,pastefromexcel,uploadimage,uploadfile'}, ckeditorconfig));
+    hiddeneditor = CKEDITOR.inline(
+        $('#hiddenckeditor')[0],
+        $.extend(
+            {'removePlugins': 'toolbar,clipboard,pastetext,pastefromword,tableselection,' +
+          'widget,uploadwidget,pastefromexcel,uploadimage,uploadfile'},
+            ckeditorconfig,
+        ),
+    );
   }
 
   // handler for archive button
@@ -258,8 +272,10 @@ function initEditor() {
     event.preventDefault();
 
     // check if the user is still modifying any actions before submitting the new one
-    if (!R.views['sample'].confirmUnload(['description'], 'You have been editing the sample description or one or more past ' +
-                    'actions. Your changes will be lost if you do not save them, are you sure you want to continue?')) {
+    if (!R.views['sample'].confirmUnload(
+        ['description'],
+        'You have been editing the sample description or one or more past actions. Your changes ' +
+      'will be lost if you do not save them, are you sure you want to continue?')) {
       return;
     }
 
@@ -306,16 +322,16 @@ function initEditor() {
   $('.actiondescription').racinecontent();
 
 
-  // typeset all equations
-  if (typeof(MathJax) !== 'undefined' && MathJax.isReady) // if it is not ready now, it should typeset automatically once it is ready
-  {
+  /* Typeset all equations with MathJax. If it is not ready now, it should typeset automatically
+   * once it is ready.
+   */
+  if (typeof(MathJax) !== 'undefined' && MathJax.isReady) {
     MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
   }
 
   // set up CKEditor for new action form
   CKEDITOR.replace('description', ckeditorconfig);
 
-  // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // set up editables (i.e. in-situ editors)
 
   // add a trigger image to all editables

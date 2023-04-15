@@ -26,11 +26,9 @@
         <li><a href="{{ url_for('auth.logout') }}"><i class="hidden-xs glyphicon glyphicon-log-out" title="Sign out"></i><span class="visible-xs-block">Sign out</span></a></li>
         <li><a href="/help"><i class="hidden-xs glyphicon glyphicon-question-sign" title="Help"></i><span class="visible-xs-block">Help</span></a></li>
     </ul>
-    {% if search_activated %}
-        <form class="nav navbar-form navbar-right">
-            <input type="text" id="navbar-search" class="form-control" placeholder="Search...">
-        </form>
-    {% endif %}
+    <form class="nav navbar-form navbar-right">
+        <input type="text" id="navbar-search" class="form-control" placeholder="Search...">
+    </form>
 {% endblock %}
 
 {% set begin_flashmsg = "<div class='alert alert-warning col-sm-9 col-md-10'><button type='button' class='close' data-dismiss='alert'>&times;</button>" %}

@@ -32,7 +32,6 @@ def index(sampleid=0):
             "main/main.html",
             state={"view": "welcome", "url": "/"},
             api_token=current_user.get_token(),
-            search_activated=True,
             newsampleform=NewSampleForm(),
             dlg_markasnews_form=MarkActionAsNewsForm(),
         )
@@ -43,7 +42,6 @@ def index(sampleid=0):
         "main/main.html",
         state={"view": "sample", "sampleid": sampleid, "url": "/sample/{}".format(sampleid)},
         api_token=current_user.get_token(),
-        search_activated=True,
         newsampleform=NewSampleForm(),
         dlg_markasnews_form=MarkActionAsNewsForm(),
     )
@@ -281,7 +279,6 @@ def search():
             "main/main.html",
             state={"view": "searchResults", "term": keyword, "url": "/search?term=" + keyword},
             sample=None,
-            search_activated=True,
             term=keyword,
             newsampleform=NewSampleForm(),
         )

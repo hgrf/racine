@@ -1,11 +1,11 @@
 import $ from 'jquery';
 
-import MainView from './main';
+import MainViewBase from './base';
 
-import MarkAsNewsDialog from '../dialogs/markasnews';
-import UserBrowserDialog from '../dialogs/userbrowser';
+import MarkAsNewsDialog from '../../dialogs/markasnews';
+import UserBrowserDialog from '../../dialogs/userbrowser';
 
-import ckeditorconfig from '../util/ckeditorconfig';
+import ckeditorconfig from '../../util/ckeditorconfig';
 
 /* Disable caching for AJAX requests.
  * This fixes a bug in Internet Explorer, e.g. when reloading the sample
@@ -18,7 +18,7 @@ import ckeditorconfig from '../util/ckeditorconfig';
  */
 $.ajaxSetup({cache: false});
 
-class SampleView extends MainView {
+class SampleView extends MainViewBase {
   constructor() {
     super();
   }
@@ -128,7 +128,7 @@ class SampleView extends MainView {
         if ($('#nav-entry'+sampleid).length) {
           $('#nav-entry'+sampleid).css('background-color', '#BBBBFF');
           if (!reload) {
-            MainView.tree.highlight(sampleid, false);
+            MainViewBase.tree.highlight(sampleid, false);
           }
         }
       },
@@ -249,7 +249,7 @@ function initEditor() {
   });
 
   $('#showinnavigator').click(function() {
-    MainView.tree.highlight(R.state.sampleid, true);
+    MainViewBase.tree.highlight(R.state.sampleid, true);
   });
 
   $('#scrolltobottom').click(function() {

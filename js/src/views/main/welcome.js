@@ -1,8 +1,8 @@
 import $ from 'jquery';
 
-import MainView from './main';
+import MainViewBase from './base';
 
-class SearchResultsView extends MainView {
+class WelcomeView extends MainViewBase {
   constructor() {
     super();
   }
@@ -12,19 +12,22 @@ class SearchResultsView extends MainView {
       return false;
     }
 
+    // load welcome page
     $.ajax({
-      url: '/search?ajax=true&term='+state.term,
+      url: '/welcome',
       success: function(data) {
         R.updateState(pushState, state);
 
         $('#editor-frame').html(data);
-        document.title = 'Racine - Search';
+        document.title = 'Racine';
         R.makeSamplesClickable();
       },
     });
+
+    MainViewBase.tree.load();
 
     return true;
   }
 }
 
-export default SearchResultsView;
+export default WelcomeView;

@@ -1,8 +1,8 @@
 import LoginView from './login';
 
-import SampleView from './sample';
-import SearchResultsView from './searchresults';
-import WelcomeView from './welcome';
+import SampleView from './main/sample';
+import SearchResultsView from './main/searchresults';
+import WelcomeView from './main/welcome';
 
 import SMBResourcesView from './smbresources';
 import UsersView from './users';

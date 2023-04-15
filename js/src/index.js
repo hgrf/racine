@@ -16,7 +16,7 @@ import './jquery-plugins/racinecontent';
 import * as API from './api';
 import views from './views';
 
-import {pushCurrentState, setupBrowserNavigation} from './views/base';
+import {pushCurrentState, setupBrowserNavigation} from './views/main/base';
 
 import {createSearchSample} from './util/searchsample';
 

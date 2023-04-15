@@ -1,5 +1,8 @@
 import $ from 'jquery';
 
+import NewSampleDialog from '../../dialogs/newsample';
+import Tree from '../../tree';
+
 function beforeUnloadHandler(event, ignore, message) {
   var ignore = typeof ignore !== 'undefined' ? ignore : [];
   const msg = typeof message !== 'undefined' ?
@@ -50,8 +53,18 @@ function setupBrowserNavigation() {
   window.addEventListener('beforeunload', beforeUnloadHandler);
 }
 
-class BaseView {
+class MainViewBase {
+  // subclasses of MainView (WelcomeView, SampleView, SearchResultsView)
+  // all share the same tree instance
+  static tree = new Tree();
+
   constructor() {
+  }
+
+  onDocumentReady() {
+    new NewSampleDialog('#newsample');
+
+    MainViewBase.tree.load(true);
   }
 
   confirmUnload(ignore, message) {
@@ -81,5 +94,5 @@ class BaseView {
   }
 }
 
-export default BaseView;
+export default MainViewBase;
 export {pushCurrentState, setupBrowserNavigation};

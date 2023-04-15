@@ -78,35 +78,13 @@ class Racine {
 
     this.#setupHeaderSearch();
 
-    if ('view' in this.state) {
-      if (this.state.view === 'smbresources') {
-        this.views.smbresources.load(this.state);
-        this.views.smbresources.onDocumentReady();
-        return;
-      } else if (this.state.view === 'users') {
-        this.views.users.load(this.state);
-        this.views.users.onDocumentReady();
-        return;
-      } else if (this.state.view === 'print') {
-        this.views.print.load(this.state);
-        this.views.print.onDocumentReady();
-        return;
-      } else if (this.state.view === 'leave') {
-        this.views.leave.load(this.state);
-        this.views.leave.onDocumentReady();
-        return;
-      } else if (this.state.view === 'help') {
-        this.views.help.load(this.state);
-        this.views.help.onDocumentReady();
-        return;
-      }
-
+    if ('url' in this.state) {
       setupBrowserNavigation();
-
-      // figure out what page to load
       this.views[this.state.view].load(true, this.state);
-      this.views[this.state.view].onDocumentReady();
+    } else {
+      this.views[this.state.view].load(this.state);
     }
+    this.views[this.state.view].onDocumentReady();
   }
 
   loadSample(id, reload=false) {

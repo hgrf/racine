@@ -287,7 +287,7 @@ def retrieve_image(upload_id):
 
     def retrieve_image_error(message):
         if request.method == "GET":
-            return render_template("404.html"), 404
+            return render_template("errors/404.html"), 404
         else:
             return jsonify(code=1, message=message)
 
@@ -376,7 +376,7 @@ def retrieve_attachment(upload_id):
                 download_name=att_filename,
             )
     else:
-        return render_template("404.html"), 404
+        return render_template("errors/404.html"), 404
 
 
 @browser.route("/smbimg/<path:path>")

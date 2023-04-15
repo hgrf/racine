@@ -38,7 +38,7 @@ def index(sampleid=0):
         )
     sample = Sample.query.get(sampleid)
     if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
-        return render_template("404.html"), 404
+        return render_template("errors/404.html"), 404
     return render_template(
         "main/main.html",
         state={"view": "sample", "sampleid": sampleid, "url": "/sample/{}".format(sampleid)},
@@ -198,7 +198,7 @@ def editor(sampleid):
     )
 
     if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
-        return render_template("404.html"), 404
+        return render_template("errors/404.html"), 404
     else:
         form = NewActionForm()
         form.description.data = ""

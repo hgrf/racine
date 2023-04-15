@@ -6,6 +6,7 @@ import $ from 'jquery';
 import typeahead from './typeahead';
 typeahead.loadjQueryPlugin();
 
+import 'bootstrap-toc/bootstrap-toc';
 import 'lightbox2';
 import './jquery-plugins/jquery.jeditable';
 import './jquery-plugins/ckeditable';
@@ -25,6 +26,7 @@ import WelcomeView from './views/welcome';
 import SMBResourcesView from './views/smbresources.js';
 import UsersView from './views/users.js';
 
+import HelpView from './views/help.js';
 import PrintView from './views/print.js';
 import LeaveView from './views/leave.js';
 
@@ -50,6 +52,7 @@ class Racine {
       smbresources: new SMBResourcesView(),
       users: new UsersView(),
 
+      help: new HelpView(),
       print: new PrintView(),
       leave: new LeaveView(),
     };
@@ -116,6 +119,10 @@ class Racine {
       } else if (this.state.view === 'leave') {
         this.views.leave.load(this.state);
         this.views.leave.onDocumentReady();
+        return;
+      } else if (this.state.view === 'help') {
+        this.views.help.load(this.state);
+        this.views.help.onDocumentReady();
         return;
       }
 

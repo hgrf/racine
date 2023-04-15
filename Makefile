@@ -254,18 +254,6 @@ install-ckeditor:
 	# clean up git repo
 	rm -rf /tmp/ckeditor4
 
-install-bootstrap-toc:
-	rm -f app/static/bootstrap-toc.min.css
-	rm -f app/static/bootstrap-toc.min.js
-
-	rm -rf /tmp/bootstrap-toc
-	git clone -b v0.4.1 --depth 1 \
-		https://github.com/afeld/bootstrap-toc.git \
-		/tmp/bootstrap-toc
-	cp /tmp/bootstrap-toc/dist/bootstrap-toc.min.css app/static/bootstrap-toc.min.css
-	cp /tmp/bootstrap-toc/dist/bootstrap-toc.min.js app/static/bootstrap-toc.min.js
-	rm -rf /tmp/bootstrap-toc
-
 install-mathjax:
 	rm -rf app/static/mathjax
 
@@ -275,7 +263,7 @@ install-mathjax:
 
 	rm -rf app/static/mathjax/.git
 
-install-js-dependencies: install-bootstrap-toc install-mathjax api-client
+install-js-dependencies: install-mathjax api-client
 	# install typeahead.js
 	wget -O js/src/typeahead/typeahead.bundle.js \
 		https://raw.githubusercontent.com/twitter/typeahead.js/v0.11.1/dist/typeahead.bundle.js
@@ -302,16 +290,13 @@ install-js-dependencies: install-bootstrap-toc install-mathjax api-client
 	cp js/node_modules/bootstrap/dist/css/bootstrap.min.css app/static/css/bootstrap.min.css
 	cp js/node_modules/bootstrap/dist/fonts/* app/static/fonts/
 
+	cp js/node_modules/bootstrap-toc/dist/bootstrap-toc.min.css app/static/css/bootstrap-toc.min.css
+
 	cp js/node_modules/lightbox2/dist/css/lightbox.css app/static/css/lightbox.css
 	cp js/node_modules/lightbox2/dist/images/* app/static/images/
 
 eslint:
 	cd js && npx eslint .
-
-clean-js-dependencies:
-	rm  -f app/static/bootstrap-toc.min.css
-	rm  -f app/static/bootstrap-toc.min.js
-	rm -rf app/static/mathjax
 
 build: down
 	docker compose -f docker/docker-compose.yml build web

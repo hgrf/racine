@@ -1,6 +1,7 @@
 mathjax/
 
 css/bootstrap.min.css
+css/bootstrap-toc.min.css
 css/lightbox.css
 css/typeahead.css
 
@@ -10,10 +11,5 @@ images/close.png
 images/loading.gif
 images/next.png
 images/prev.png
-
-bootstrap-toc.min.css
-bootstrap-toc.min.js
-
-jquery.jeditable.js
 
 racine.js

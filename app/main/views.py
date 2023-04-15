@@ -275,7 +275,7 @@ def search():
     if request.args.get("autocomplete") is not None:
         return jsonify(results=results)
     elif request.args.get("ajax") is not None:
-        return render_template("searchresults.html", results=results, term=keyword)
+        return render_template("main/searchresults.html", results=results, term=keyword)
     else:
         return render_template(
             "main/main.html",

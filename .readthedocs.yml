@@ -16,6 +16,7 @@ formats: all
 python:
    install:
    - requirements: requirements.txt
+   - requirements: requirements-dev.txt
 
 build:
   os: ubuntu-22.04

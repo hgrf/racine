@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 // this function adds a glyphicon to naventry
 function addGlyphicon(naventry) {
     naventry.prepend('<i class="glyphicon"></i>');

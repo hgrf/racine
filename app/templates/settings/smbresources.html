@@ -50,24 +50,8 @@
 
 {% block scripts %}
 {{ super() }}
-<script src="{{ url_for('static', filename='jquery.jeditable.js') }}"></script>
-<script type="text/javascript" charset="utf-8">
-$(function() {
-  $(document).ready(function() {
-    $('#confirm-delete').on('show.bs.modal', function(e) {
-      $(this).find('.btn-ok').attr('id', $(e.relatedTarget).data('id'));
-      $('.debug-id').html('Delete ID: <strong>' + $(this).find('.btn-ok').attr('id') + '</strong>');
-    });
-
-    $('.btn-ok').click( function(event) {
-      var id = $(this).attr('id');
-      location.href = "/settings/smbresources?delete="+id;
-    });
-
-    // set up editables
-    $('.editable').texteditable();
-    $('.editable').setup_triggers();
-  });
-});
+<script src="{{ url_for('static', filename='racine.js', version='20230402') }}"></script>
+<script>
+    var R = new Racine("{{ api_token }}", {'view': 'smbresources'});        
 </script>
 {% endblock %}

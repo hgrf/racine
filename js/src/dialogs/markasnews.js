@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 class MarkAsNewsDialog {
     constructor() {
         $('#dlg_markasnews_submit').click(function (event) {

@@ -266,14 +266,6 @@ install-bootstrap-toc:
 	cp /tmp/bootstrap-toc/dist/bootstrap-toc.min.js app/static/bootstrap-toc.min.js
 	rm -rf /tmp/bootstrap-toc
 
-install-jquery.jeditable:
-	rm -f app/static/jquery.jeditable.js
-
-	wget -O app/static/jquery.jeditable.js https://sscdn.net/js/jquery/latest/jeditable/1.7.1/jeditable.js
-
-	# c.f. https://github.com/hgrf/racine/commit/89d8b57e795ccfbeb73dc18faecc1d0016a8a008#diff-5f8e3a2bd35e7f0079090b176e06d0568d5c8e4468c0febbfa61014d72b16246
-	git apply patches/jquery.jeditable.patch
-
 install-mathjax:
 	rm -rf app/static/mathjax
 
@@ -283,44 +275,33 @@ install-mathjax:
 
 	rm -rf app/static/mathjax/.git
 
-install-typeahead:
-	rm -rf app/static/typeahead.js
-
-	rm -rf /tmp/typeahead.js
-	git clone -b v0.11.1 --depth 1 \
-		https://github.com/twitter/typeahead.js.git \
-		/tmp/typeahead.js
-	cp -r /tmp/typeahead.js/dist app/static/typeahead.js
-	rm -rf /tmp/typeahead.js
-
+install-js-dependencies: install-bootstrap-toc install-mathjax api-client
+	# install typeahead.js
+	wget -O js/src/typeahead/typeahead.bundle.js \
+		https://raw.githubusercontent.com/twitter/typeahead.js/v0.11.1/dist/typeahead.bundle.js
+	wget -O js/src/typeahead/bloodhound.js \
+		https://raw.githubusercontent.com/twitter/typeahead.js/v0.11.1/dist/bloodhound.js
+	wget -O app/static/css/typeahead.css \
+		https://raw.githubusercontent.com/hyspace/typeahead.js-bootstrap3.less/v0.2.3/typeahead.css
 	# c.f. https://github.com/hgrf/racine/commit/19fc41b1797112d2980b08ad53d1f945d9e36b17
 	#      https://github.com/twitter/typeahead.js/issues/1218
 	#      https://github.com/hgrf/racine/commit/2d892a4a2f6a9bdb9465730a64670277e35698a8
 	git apply patches/typeahead.patch
 
-	wget -O yuicompressor.jar https://github.com/yui/yuicompressor/releases/download/v2.4.8/yuicompressor-2.4.8.jar
-	java -jar yuicompressor.jar \
-		--type js \
-		--charset utf-8 \
-		app/static/typeahead.js/typeahead.bundle.js \
-		> app/static/typeahead.js/typeahead.bundle.min.js
-	rm yuicompressor.jar
+	# install jeditable
+	wget -O js/src/jquery-plugins/jquery.jeditable.js \
+		https://sscdn.net/js/jquery/latest/jeditable/1.7.1/jeditable.js
+	# c.f. https://github.com/hgrf/racine/commit/89d8b57e795ccfbeb73dc18faecc1d0016a8a008#diff-5f8e3a2bd35e7f0079090b176e06d0568d5c8e4468c0febbfa61014d72b16246
+	git apply patches/jquery.jeditable.patch
 
-install-typeahead.js-bootstrap3.less:
-	rm -f app/static/typeahead.css
-
-	rm -rf /tmp/typeahead.js-bootstrap3.less
-	git clone -b v0.2.3 --depth 1 \
-		https://github.com/hyspace/typeahead.js-bootstrap3.less.git \
-		/tmp/typeahead.js-bootstrap3.less
-	cp /tmp/typeahead.js-bootstrap3.less/typeahead.css app/static/typeahead.css
-	rm -rf /tmp/typeahead.js-bootstrap3.less
-
-	git apply patches/typeahead.css.patch
-
-install-js-dependencies: install-bootstrap-toc install-jquery.jeditable install-mathjax install-typeahead install-typeahead.js-bootstrap3.less api-client
 	cd js && npm install && npx rollup -c
+
 	mkdir -p app/static/css
+	mkdir -p app/static/fonts
+
+	cp js/node_modules/bootstrap/dist/css/bootstrap.min.css app/static/css/bootstrap.min.css
+	cp js/node_modules/bootstrap/dist/fonts/* app/static/fonts/
+
 	cp js/node_modules/lightbox2/dist/css/lightbox.css app/static/css/lightbox.css
 	cp js/node_modules/lightbox2/dist/images/* app/static/images/
 
@@ -329,12 +310,6 @@ clean-js-dependencies:
 	rm  -f app/static/bootstrap-toc.min.js
 	rm -f app/static/jquery.jeditable.js
 	rm -rf app/static/mathjax
-	rm -rf app/static/typeahead.js
-
-install-bootstrap:	# only for docker build
-	git clone -b 3.3.7.1 --depth 1 https://github.com/mbr/flask-bootstrap.git /tmp/flask-bootstrap
-	mv /tmp/flask-bootstrap/flask_bootstrap/static ./app/static/bootstrap
-	rm -rf /tmp/flask-bootstrap
 
 build: down
 	docker compose -f docker/docker-compose.yml build web

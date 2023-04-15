@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 import BaseView from "./base";
 
 class SearchResultsView extends BaseView {

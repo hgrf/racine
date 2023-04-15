@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 import { draggableHandlers, dropZoneHandlers } from "./dragdrop";
 import { addGlyphicon } from "./glyphicons";
 

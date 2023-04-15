@@ -2,7 +2,6 @@ import imp
 import os
 
 from flask import Flask
-from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -10,10 +9,16 @@ from glob import glob
 
 from .config import config
 
+from wtforms.fields import HiddenField
+
+
+def is_hidden_field_filter(field):
+    return isinstance(field, HiddenField)
+
+
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 plugins = []
 
-bootstrap = Bootstrap()
 db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.session_protection = "strong"
@@ -35,10 +40,12 @@ def create_app(config_name=os.getenv("FLASK_CONFIG") or "default"):
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 
-    bootstrap.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
+
+    # https://github.com/mbr/flask-bootstrap/blob/3.3.7.1/flask_bootstrap/__init__.py
+    app.jinja_env.globals["bootstrap_is_hidden_field"] = is_hidden_field_filter
 
     from .api import api as api_blueprint
     from .main import main as main_blueprint

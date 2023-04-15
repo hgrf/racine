@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 import MainView from "./main";
 
 class WelcomeView extends MainView {

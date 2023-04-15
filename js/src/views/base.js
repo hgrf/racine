@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 function beforeUnloadHandler(event, ignore, message) {
     var ignore = typeof ignore !== 'undefined' ? ignore : [];
     var msg = typeof message !== 'undefined' ? message : "Are you sure you want to leave before saving modifications?"

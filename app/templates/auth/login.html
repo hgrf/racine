@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="{{url_for('static', filename='login.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='base.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='typeahead.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/typeahead.css')}}">
     <meta name="mobile-web-app-capable" content="yes">
     <meta http-equiv="refresh" content="1800">
     <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
@@ -91,33 +91,8 @@
 
 {% block scripts %}
     {{ super() }}
-    <script src="{{ url_for('static', filename='typeahead.js/typeahead.jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='typeahead.js/substringmatcher.js') }}"></script>
-    <script type="text/javascript" charset="utf-8">
-    $(function() {
-        $(document).ready(function() {
-            $(".user").click(function( event )  {
-                $("#username").val($(this).data("username"));
-                $("#password").focus();
-                event.preventDefault();
-            });
-
-            var users = [{% for u in users %}'{{ u.username }}', {% endfor %}];
-
-            $('#username').typeahead({
-                minLength: 1,
-                highlight: true
-            },
-            {
-                name: 'users',
-                source: substringMatcher(users),
-                templates: {
-                    suggestion: function(data) {
-                        return '<div><img src="/static/images/user.png" width="24px" height="24px">' + data + '</div>';
-                    }
-                }
-            });
-        });
-    });
+    <script src="{{ url_for('static', filename='racine.js', version='20230402') }}"></script>
+    <script>
+        var R = new Racine("{{ api_token }}", {'view': 'login', 'users': [{% for u in users %}'{{ u.username }}', {% endfor %}] });        
     </script>
 {% endblock %}

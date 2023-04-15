@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 import { updateGlyphicon } from './glyphicons';
 
 $.event.props.push('dataTransfer');   // otherwise jQuery event does not have function dataTransfer

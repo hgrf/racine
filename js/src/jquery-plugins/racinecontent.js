@@ -1,3 +1,5 @@
+import jQuery from 'jquery';
+
 // polyfill for string startsWith
 if (!String.prototype.startsWith) {
     String.prototype.startsWith = function(searchString, position) {

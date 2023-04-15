@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 import MainView from "./main";
 
 import MarkAsNewsDialog from "../dialogs/markasnews";

@@ -1,3 +1,5 @@
+import jQuery from 'jquery';
+
 (function($){   // this is a jQuery plugin
     $.fn.zoombutton = function() {
         $(this).wrap(function() {

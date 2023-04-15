@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 import { createSelectSample } from '../util/searchsample';
 import ckeditorconfig from '../util/ckeditorconfig';
 

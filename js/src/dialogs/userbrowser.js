@@ -1,3 +1,7 @@
+import $ from "jquery";
+
+import substringMatcher from "../util/substringmatcher";
+
 function shareselected(event, suggestion) {
   R.sharesAPI.createShare(
       {'sampleid': R.state.sampleid, 'username': $('#username').val()},

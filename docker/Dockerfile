@@ -40,6 +40,5 @@ COPY ./js /tmp/app_static/js
 RUN cd /tmp/app_static && \
     mkdir -p app/static/images && \
     make install-js-dependencies && \
-    make install-bootstrap && \
     cp -r /tmp/app_static/app/static /app/app/ && \
     rm -rf /tmp/app_static

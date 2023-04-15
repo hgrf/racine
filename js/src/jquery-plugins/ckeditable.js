@@ -1,3 +1,4 @@
+import jQuery from 'jquery';
 import ckeditorconfig from '../util/ckeditorconfig';
 
 (function($){   // this is a jQuery plugin

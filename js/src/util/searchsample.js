@@ -1,3 +1,6 @@
+import $ from "jquery";
+import {Bloodhound} from '../typeahead';
+
 var samples = new Bloodhound({
     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
     queryTokenizer: Bloodhound.tokenizers.whitespace,

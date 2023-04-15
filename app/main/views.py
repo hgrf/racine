@@ -139,7 +139,7 @@ def welcome():
     news = not_expired
 
     return render_template(
-        "welcome.html",
+        "main/welcome.html",
         conns=smbinterface.conns,
         recent_samples=recent_samples,
         newactionsallusers=newactionsallusers,

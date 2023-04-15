@@ -14,21 +14,9 @@ import './jquery-plugins/zoombutton';
 import './jquery-plugins/racinecontent';
 
 import * as API from './api';
+import views from './views';
 
 import {pushCurrentState, setupBrowserNavigation} from './views/base';
-
-import LoginView from './views/login.js';
-
-import SampleView from './views/sample';
-import SearchResultsView from './views/searchresults';
-import WelcomeView from './views/welcome';
-
-import SMBResourcesView from './views/smbresources.js';
-import UsersView from './views/users.js';
-
-import HelpView from './views/help.js';
-import PrintView from './views/print.js';
-import LeaveView from './views/leave.js';
 
 import {createSearchSample} from './util/searchsample';
 
@@ -42,20 +30,7 @@ class Racine {
     this.sharesAPI = new API.SharesApi(this.apiClient);
     this.actionsAPI = new API.ActionsApi(this.apiClient);
 
-    this.views = {
-      login: new LoginView(),
-
-      sample: new SampleView(),
-      searchResults: new SearchResultsView(),
-      welcome: new WelcomeView(),
-
-      smbresources: new SMBResourcesView(),
-      users: new UsersView(),
-
-      help: new HelpView(),
-      print: new PrintView(),
-      leave: new LeaveView(),
-    };
+    this.views = views;
 
     this.state = state;
 

@@ -171,7 +171,7 @@ def navbar():
     samples.extend(current_user.directshares)
 
     return render_template(
-        "navbar.html",
+        "main/navbar.html",
         samples=samples,
         inheritance=inheritance,
         showarchived=showarchived,

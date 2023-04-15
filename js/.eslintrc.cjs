@@ -11,6 +11,7 @@ module.exports = {
     'sourceType': 'module',
   },
   'rules': {
+    'require-jsdoc': 0,
     'max-len': [
       'error',
       {
@@ -18,4 +19,10 @@ module.exports = {
       }
     ]
   },
+  'ignorePatterns': [
+    'src/api/**',
+    'src/jquery-plugins/jquery.jeditable.js',
+    'src/typeahead/bloodhound.js',
+    'src/typeahead/typeahead.bundle.js',
+  ],
 };

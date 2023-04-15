@@ -281,6 +281,7 @@ def search():
             sample=None,
             term=keyword,
             newsampleform=NewSampleForm(),
+            dlg_markasnews_form=MarkActionAsNewsForm(),
         )
 
 

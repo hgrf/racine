@@ -1,8 +1,8 @@
 import $ from 'jquery';
 
-import BaseView from './base';
+import MainView from './main';
 
-class SearchResultsView extends BaseView {
+class SearchResultsView extends MainView {
   constructor() {
     super();
   }

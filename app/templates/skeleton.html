@@ -1,7 +1,5 @@
-{% block doc -%}
 <!DOCTYPE html>
-<html{% block html_attribs %}{% endblock html_attribs %}>
-{%- block html %}
+<html>
   <head>
     {%- block head %}
     <title>{% block title %}{{title|default}}{% endblock title %}</title>
@@ -15,7 +13,7 @@
     {%- endblock styles %}
     {%- endblock head %}
   </head>
-  <body{% block body_attribs %}{% endblock body_attribs %}>
+  <body>
     {% block body -%}
     {% block navbar %}
     {%- endblock navbar %}
@@ -26,6 +24,4 @@
     {%- endblock scripts %}
     {%- endblock body %}
   </body>
-{%- endblock html %}
 </html>
-{% endblock doc -%}

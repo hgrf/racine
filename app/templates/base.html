@@ -1,13 +1,22 @@
-{% extends "bootstrap/base.html" %}
+{% extends "skeleton.html" %}
 
-{% block title %}{% if sample is defined and sample is not none %}Racine - {{ sample.name }}{% else %}Racine{% endif %}{% endblock %}
+{% block title %}
+    {% if sample is defined and sample is not none %}
+        Racine - {{ sample.name }}
+    {% else %}
+        Racine
+    {% endif %}
+{% endblock %}
+
+{% block metas %}
+    <meta name="mobile-web-app-capable" content="yes">
+{% endblock %}
 
 {% block styles %}
-    {{super()}}
+{{ super() }}
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="{{url_for('static', filename='base.css')}}">
-    <meta name="mobile-web-app-capable" content="yes">
     <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='base.css')}}">
     <style>
     /* TODO: this should be in something like base.css */
     div.sample {

@@ -27,7 +27,7 @@
 
 {% block scripts %}
 {{ super() }}
-    {% include "util/mathjax.html "%}
+    {% include "util/mathjax.html" %}
     <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
     <script>
         CKEDITOR.timestamp='20201114';

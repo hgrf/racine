@@ -1,22 +1,7 @@
-{% extends "skeleton.html" %}
-
-{% block title %}
-    {% if sample is defined and sample is not none %}
-        Racine - {{ sample.name }}
-    {% else %}
-        Racine
-    {% endif %}
-{% endblock %}
-
-{% block metas %}
-    <meta name="mobile-web-app-capable" content="yes">
-{% endblock %}
+{% extends "racine.html" %}
 
 {% block styles %}
 {{ super() }}
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
-    <link rel="stylesheet" href="{{url_for('static', filename='base.css')}}">
     <style>
     /* TODO: this should be in something like base.css */
     div.sample {
@@ -28,52 +13,24 @@
         background-color: #CCCCEE;
         cursor: pointer;
     }
-
-    {% if config['DEBUG'] %}
-    .navbar-fixed-top {
-        background-color: #660000;
-    }
-    {% endif %}
     </style>
 {% endblock %}
 
-{% block navbar %}
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <div class="nav-button nav-button-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <i class="glyphicon glyphicon-option-vertical"></i>
-                </div>
-                <div id="toggle-sidebar" class="nav-button nav-button-left nav-button-toggle">
-                    <i class="glyphicon glyphicon-menu-hamburger"></i>
-                </div>
-                <a class="navbar-brand hidden-xs" href="/">
-                    {% if config['DEBUG'] %}
-                    Racine #DEV#
-                    {% else %}
-                    Racine
-                    {% endif %}
-                </a>
-                <a class="navbar-brand visible-xs" href="/">Racine</a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    {% if current_user.is_admin %}
-                        <li><a href="/settings/smbresources"><i class="hidden-xs glyphicon glyphicon-wrench" title="Settings"></i><span class="visible-xs-block">Settings</span></a></li>
-                    {% endif %}
-                    <li><a href="/print"><i class="hidden-xs glyphicon glyphicon-print" title="Print"></i><span class="visible-xs-block">Print</span></a></li>
-                    <li><a href="/profile/changedetails"><i class="hidden-xs glyphicon glyphicon-user" title="Profile"></i><span class="hidden-xs">&nbsp;&nbsp;{{ current_user.username }}</span><span class="visible-xs-block">Profile</span></a></li>
-                    <li><a href="{{ url_for('auth.logout') }}"><i class="hidden-xs glyphicon glyphicon-log-out" title="Sign out"></i><span class="visible-xs-block">Sign out</span></a></li>
-                    <li><a href="/help"><i class="hidden-xs glyphicon glyphicon-question-sign" title="Help"></i><span class="visible-xs-block">Help</span></a></li>
-                </ul>
-                {% if search_activated %}
-                    <form class="nav navbar-form navbar-right">
-                        <input type="text" id="navbar-search" class="form-control" placeholder="Search...">
-                    </form>
-                {% endif %}
-            </div>
-        </div>
-    </nav>
+{% block navbar_top %}
+    <ul class="nav navbar-nav navbar-right">
+        {% if current_user.is_admin %}
+            <li><a href="/settings/smbresources"><i class="hidden-xs glyphicon glyphicon-wrench" title="Settings"></i><span class="visible-xs-block">Settings</span></a></li>
+        {% endif %}
+        <li><a href="/print"><i class="hidden-xs glyphicon glyphicon-print" title="Print"></i><span class="visible-xs-block">Print</span></a></li>
+        <li><a href="/profile/changedetails"><i class="hidden-xs glyphicon glyphicon-user" title="Profile"></i><span class="hidden-xs">&nbsp;&nbsp;{{ current_user.username }}</span><span class="visible-xs-block">Profile</span></a></li>
+        <li><a href="{{ url_for('auth.logout') }}"><i class="hidden-xs glyphicon glyphicon-log-out" title="Sign out"></i><span class="visible-xs-block">Sign out</span></a></li>
+        <li><a href="/help"><i class="hidden-xs glyphicon glyphicon-question-sign" title="Help"></i><span class="visible-xs-block">Help</span></a></li>
+    </ul>
+    {% if search_activated %}
+        <form class="nav navbar-form navbar-right">
+            <input type="text" id="navbar-search" class="form-control" placeholder="Search...">
+        </form>
+    {% endif %}
 {% endblock %}
 
 {% set begin_flashmsg = "<div class='alert alert-warning col-sm-9 col-md-10'><button type='button' class='close' data-dismiss='alert'>&times;</button>" %}

@@ -305,10 +305,12 @@ install-js-dependencies: install-bootstrap-toc install-mathjax api-client
 	cp js/node_modules/lightbox2/dist/css/lightbox.css app/static/css/lightbox.css
 	cp js/node_modules/lightbox2/dist/images/* app/static/images/
 
+eslint:
+	cd js && npx eslint .
+
 clean-js-dependencies:
 	rm  -f app/static/bootstrap-toc.min.css
 	rm  -f app/static/bootstrap-toc.min.js
-	rm -f app/static/jquery.jeditable.js
 	rm -rf app/static/mathjax
 
 build: down

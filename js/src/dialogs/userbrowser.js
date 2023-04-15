@@ -1,6 +1,6 @@
-import $ from "jquery";
+import $ from 'jquery';
 
-import substringMatcher from "../util/substringmatcher";
+import substringMatcher from '../util/substringmatcher';
 
 function shareselected(event, suggestion) {
   R.sharesAPI.createShare(

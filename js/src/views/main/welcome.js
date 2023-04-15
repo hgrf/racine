@@ -12,7 +12,6 @@ class WelcomeView extends MainViewBase {
       return false;
     }
 
-    // load welcome page
     $.ajax({
       url: '/welcome',
       success: function(data) {
@@ -23,8 +22,6 @@ class WelcomeView extends MainViewBase {
         R.makeSamplesClickable();
       },
     });
-
-    MainViewBase.tree.load();
 
     return true;
   }

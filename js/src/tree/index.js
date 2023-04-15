@@ -172,8 +172,10 @@ class Tree {
           $('.nav-children-archived').css('display', 'none');
         }
 
-        // make sure the current sample is highlighted in the navbar (this is redundant in editor.js, but we need to do
-        // it here too if editor.js is executed before navbar.js
+        /* Make sure the current sample is highlighted in the tree. This is redundant in
+         * views/main/sampe.js, but we need to do it here as well, because the tree is loaded
+         * asynchronously, and can be loaded even when the sample is already loaded.
+         */
         if (R.state.view == 'sample') {
           $('#nav-entry' + R.state.sampleid).css('background-color', '#BBBBFF');
           if (scrollToCurrent) {

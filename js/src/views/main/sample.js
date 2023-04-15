@@ -124,9 +124,9 @@ class SampleView extends MainViewBase {
           $('html, body').scrollTop(0);
         }
         initEditor();
-        // highlight in navbar, if the navbar is already loaded
-        if ($('#nav-entry'+sampleid).length) {
-          $('#nav-entry'+sampleid).css('background-color', '#BBBBFF');
+        // highlight in tree, if it is already loaded
+        if($(`#nav-entry${sampleid}`).length) {
+          $(`#nav-entry${sampleid}`).css('background-color', '#BBBBFF');
           if (!reload) {
             MainViewBase.tree.highlight(sampleid, false);
           }
@@ -258,12 +258,12 @@ function initEditor() {
 
   $('#invertactionorder').click(function() {
     invertactionorder = !invertactionorder; // toggle
-    R.loadSample(R.state['sampleid'], true);
+    R.loadSample(R.state.sampleid, true);
   });
 
   $('#showparentactions').click(function() {
     showparentactions = !showparentactions; // toggle
-    R.loadSample(R.state['sampleid'], true);
+    R.loadSample(R.state.sampleid, true);
   });
 
   // handler for new action submit button
@@ -287,7 +287,7 @@ function initEditor() {
       formdata[x.name] = x.value;
     });
 
-    R.actionsAPI.createAction(R.state['sampleid'], formdata, function(error, data, response) {
+    R.actionsAPI.createAction(R.state.sampleid, formdata, function(error, data, response) {
       if (!response) {
         R.errorDialog('Server error. Please check your connection.');
       } else if (response.error) {
@@ -311,7 +311,7 @@ function initEditor() {
       // destroy it so that it doesn't bother us with confirmation dialogs when we
       // reload the sample
       CKEDITOR.instances['description'].destroy();
-      R.loadSample(R.state['sampleid'], true);
+      R.loadSample(R.state.sampleid, true);
     });
   });
 
@@ -363,7 +363,7 @@ function initEditor() {
               R.errorDialog(response.error);
             }
           } else {
-            R.loadSample(R.state['sampleid'], true);
+            R.loadSample(R.state.sampleid, true);
           }
         });
   });

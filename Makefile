@@ -305,7 +305,7 @@ run:
 	docker compose -f docker/docker-compose.yml up web
 
 run-no-docker:
-	flask run
+	flask run --debug
 
 build-dev: down
 	docker compose -f docker/docker-compose.yml build web-dev

@@ -14,12 +14,12 @@ import './jquery-plugins/racinecontent';
 import * as API from './api';
 import views from './views';
 
-import {pushCurrentState, setupBrowserNavigation} from './views/main/base';
-
 import {createSearchSample} from './util/searchsample';
 
 class Racine {
-  constructor(apiToken, state) {
+  constructor(apiToken, view, params) {
+    var self = this;
+
     this.apiToken = apiToken;
     this.apiClient = new API.ApiClient(window.location.origin);
     this.apiClient.authentications['bearerAuth'].accessToken = apiToken;
@@ -28,27 +28,22 @@ class Racine {
     this.sharesAPI = new API.SharesApi(this.apiClient);
     this.actionsAPI = new API.ActionsApi(this.apiClient);
 
-    this.views = views;
-
-    this.state = state;
+    if (view in views) {
+      this.view = new views[view](params);
+    } else {
+      console.error('Unknown view: ' + view);
+      return;
+    }
 
     $(document).ready(function() {
-      R.onDocumentReady();
+      self.onDocumentReady();
     });
-  }
-
-  updateState(pushState, state) {
-    this.state = state;
-    if (pushState) {
-      pushCurrentState();
-    }
   }
 
   onDocumentReady() {
     // login view does not have a sidebar
-    if ('view' in this.state && this.state.view === 'login') {
-      this.views.login.load(this.state);
-      this.views.login.onDocumentReady();
+    if (this.view instanceof views.login) {
+      this.view.onDocumentReady();
       return;
     }
 
@@ -76,28 +71,7 @@ class Racine {
 
     this.#setupHeaderSearch();
 
-    if ('url' in this.state) {
-      setupBrowserNavigation();
-      this.views[this.state.view].load(true, this.state);
-    } else {
-      this.views[this.state.view].load(this.state);
-    }
-    this.views[this.state.view].onDocumentReady();
-  }
-
-  loadSample(id, reload=false) {
-    const state = {'view': 'sample', 'sampleid': id, 'url': '/sample/' + id};
-    this.views.sample.load(true, state, reload);
-  }
-
-  loadSearchResults(query) {
-    const state = {'view': 'searchResults', 'term': query, 'url': '/search?term=' + query};
-    this.views.searchResults.load(true, state);
-  }
-
-  loadWelcome() {
-    const state = {'view': 'welcome', 'url': '/welcome'};
-    this.views.welcome.load(true, state);
+    this.view.onDocumentReady();
   }
 
   mobileHideSidebar() {
@@ -135,7 +109,11 @@ class Racine {
         if ($(this).val() === '') {
           self.errorDialog('Please specify a search term');
         } else {
-          self.loadSearchResults($(this).val());
+          if (self.view instanceof views.main) {
+            self.view.loadSearchResults($(this).val());
+          } else {
+            self.errorDialog('Search is not implemented for this view yet');
+          }
           $(this).typeahead('val', ''); // clear the search field
         }
       }
@@ -143,8 +121,10 @@ class Racine {
   }
 
   makeSamplesClickable() {
+    var self = this;
+
     $('div.sample').click(function() {
-      R.loadSample($(this).data('id'));
+      self.loadSample($(this).data('id'));
     });
   }
 }

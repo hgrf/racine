@@ -1,29 +1,16 @@
-import $ from 'jquery';
+import AjaxView from "./ajaxview";
 
-import MainViewBase from './base';
-
-class WelcomeView extends MainViewBase {
-  constructor() {
-    super();
+class WelcomeView extends AjaxView {
+  load(state, pushState=true, reload=false) {
+    state.ajaxView = "welcome";
+    state.url = "/welcome";
+    state.navUrl = "/";
+    super.load(state, pushState, reload);
   }
 
-  load(pushState, state) {
-    if (!super.confirmUnload()) {
-      return false;
-    }
-
-    $.ajax({
-      url: '/welcome',
-      success: function(data) {
-        R.updateState(pushState, state);
-
-        $('#editor-frame').html(data);
-        document.title = 'Racine';
-        R.makeSamplesClickable();
-      },
-    });
-
-    return true;
+  onLoadSuccess(state, reload) {
+    document.title = 'Racine';
+    R.makeSamplesClickable();
   }
 }
 

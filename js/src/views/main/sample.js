@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-import MainViewBase from './base';
+import AjaxView from './ajaxview';
 
 import MarkAsNewsDialog from '../../dialogs/markasnews';
 import UserBrowserDialog from '../../dialogs/userbrowser';
@@ -18,13 +18,9 @@ import ckeditorconfig from '../../util/ckeditorconfig';
  */
 $.ajaxSetup({cache: false});
 
-class SampleView extends MainViewBase {
-  constructor() {
-    super();
-  }
-
+class SampleView extends AjaxView {
   onDocumentReady() {
-    super.onDocumentReady();
+    const self = this;
 
     // "mark as news" dialog
     new MarkAsNewsDialog();
@@ -74,7 +70,7 @@ class SampleView extends MainViewBase {
                 R.errorDialog(response.error);
               }
             } else {
-              R.loadWelcome();
+              self.mainView.loadWelcome();
             }
             $('#confirm-delete').modal('hide');
           });
@@ -92,7 +88,7 @@ class SampleView extends MainViewBase {
             } else {
               $('#sharelistentry' + id).remove();
               if (response.status == 205) { // if the user removed himself from the sharer list
-                R.loadWelcome();
+                self.mainView.loadWelcome();
               }
               $('#confirm-delete').modal('hide');
             }
@@ -102,48 +98,72 @@ class SampleView extends MainViewBase {
     });
   }
 
-  load(pushState, state, reload=false) {
+  load(state, pushState=true, reload=false) {
+    state.ajaxView = 'sample';
+    state.url = `/editor/${state.sampleid}` +
+    `?invertactionorder=${invertactionorder}&showparentactions=${showparentactions}`
+    state.navUrl = `/sample/${state.sampleid}`;
+    super.load(state, pushState, reload);
+  }
+
+  confirmUnload(ajax=true) {
+      // TODO
+      const msg = typeof message !== 'undefined' ?
+        message : 'Are you sure you want to leave before saving modifications?';
+      var ignore = typeof ignore !== 'undefined' ? ignore : [];
+      ignore = ignore.concat(['newsampledescription']);
+  
+      for (const i in CKEDITOR.instances) {
+        // check if the editor is not in the ignore list and has modifications
+        if (ignore.indexOf(i) < 0 && CKEDITOR.instances[i].checkDirty()) {
+          // if the confirmation request is related to an AJAX call, show a dialog
+          if (ajax) {
+            if (!confirm(msg)) {
+              return false;
+            }
+          // if the confirmation request is related to a page reload or close, just return false
+          } else {
+            return false;
+          }
+          break;
+        }
+      }
+
+      // destroy CKEditors
+      for (const i in CKEDITOR.instances) {
+        if (ignore.indexOf(i) < 0) {
+          CKEDITOR.instances[i].destroy();
+        }
+      }
+  
+      $(`#nav-entry${this.mainView.state.sampleid}`).css('background-color', 'transparent');
+  
+      return true;
+  }
+
+  onLoadSuccess(state, reload) {
     const sampleid = state.sampleid;
 
-    if (!super.confirmUnload()) {
-      return false;
+    document.title = 'Racine - '+$('#samplename').text();
+
+    initEditor(sampleid, this.mainView);
+    // highlight in tree, if it is already loaded
+    if($(`#nav-entry${sampleid}`).length) {
+      $(`#nav-entry${sampleid}`).css('background-color', '#BBBBFF');
+      if (!reload) {
+        this.mainView.tree.highlight(sampleid, false);
+      }
     }
+  }
 
-    // load the sample data and re-initialise the editor
-    $.ajax({
-      url: `/editor/${sampleid}` +
-        `?invertactionorder=${invertactionorder}&showparentactions=${showparentactions}`,
-      success: function( data ) {
-        if (!reload) {
-          R.updateState(pushState, state);
-        }
-
-        $( '#editor-frame' ).html(data);
-        document.title = 'Racine - '+$('#samplename').text();
-        if (!reload) {
-          $('html, body').scrollTop(0);
-        }
-        initEditor();
-        // highlight in tree, if it is already loaded
-        if($(`#nav-entry${sampleid}`).length) {
-          $(`#nav-entry${sampleid}`).css('background-color', '#BBBBFF');
-          if (!reload) {
-            MainViewBase.tree.highlight(sampleid, false);
-          }
-        }
-      },
-      error: function() {
-        R.errorDialog('Sample #'+sampleid+' does not exist or you do not have access to it.');
-      },
-    });
-
-    return true;
+  onLoadError() {
+    R.errorDialog(`Sample #${sampleid} does not exist or you do not have access to it.`);
   }
 }
 
 let hiddeneditor;
 
-function setup_sample_image() {
+function setupSampleImage(sampleid) {
   $('#sampleimage').zoombutton();
   $('#sampleimage').wrap(R.lightboxWrapper);
 
@@ -153,7 +173,7 @@ function setup_sample_image() {
     CKEDITOR.fbupload = true;
     CKEDITOR.fbcallback = function(url) {
       $.ajax({
-        url: `/api/set/sample/image/${R.state.sampleid}`,
+        url: `/api/set/sample/image/${sampleid}`,
         type: 'post',
         headers: {'Authorization': 'Bearer ' + R.apiToken},
         data: {'value': url},
@@ -176,7 +196,7 @@ function setup_sample_image() {
               '<img id="changesampleimage" src="/static/images/insertimage.png"' +
                 ' title="Change sample image">',
             );
-            setup_sample_image();
+            setupSampleImage(sampleid);
           }
         },
       });
@@ -187,7 +207,7 @@ function setup_sample_image() {
   });
 }
 
-function initEditor() {
+function initEditor(sampleid, mainview) {
   if ($('#hiddenckeditor').length) // check if this field exists
   {
     hiddeneditor = CKEDITOR.inline(
@@ -202,7 +222,7 @@ function initEditor() {
 
   // handler for archive button
   $('#archive').click(function() {
-    R.samplesAPI.toggleArchived(R.state.sampleid, function(error, data, response) {
+    R.samplesAPI.toggleArchived(sampleid, function(error, data, response) {
       if (!response) {
         R.errorDialog('Server error. Please check your connection.');
       } else if (response.error) {
@@ -215,11 +235,11 @@ function initEditor() {
         if (data.isarchived) {
           $('#archive').attr('title', 'De-archive');
           $('#archive').attr('src', '/static/images/dearchive.png');
-          $(`#nav-entry${R.state.sampleid}`).addClass('nav-entry-archived');
+          $(`#nav-entry${sampleid}`).addClass('nav-entry-archived');
         } else {
           $('#archive').attr('title', 'Archive');
           $('#archive').attr('src', '/static/images/archive.png');
-          $(`#nav-entry${R.state.sampleid}`).removeClass('nav-entry-archived');
+          $(`#nav-entry${sampleid}`).removeClass('nav-entry-archived');
         }
       }
     });
@@ -227,7 +247,7 @@ function initEditor() {
 
   // handler for collaborative button
   $('#collaborate').click(function() {
-    R.samplesAPI.toggleCollaborative(R.state.sampleid, function(error, data, response) {
+    R.samplesAPI.toggleCollaborative(sampleid, function(error, data, response) {
       if (!response) {
         R.errorDialog('Server error. Please check your connection.');
       } else if (response.error) {
@@ -249,7 +269,7 @@ function initEditor() {
   });
 
   $('#showinnavigator').click(function() {
-    MainViewBase.tree.highlight(R.state.sampleid, true);
+    mainview.tree.highlight(sampleid, true);
   });
 
   $('#scrolltobottom').click(function() {
@@ -258,12 +278,12 @@ function initEditor() {
 
   $('#invertactionorder').click(function() {
     invertactionorder = !invertactionorder; // toggle
-    R.loadSample(R.state.sampleid, true);
+    mainview.loadSample(sampleid, true);
   });
 
   $('#showparentactions').click(function() {
     showparentactions = !showparentactions; // toggle
-    R.loadSample(R.state.sampleid, true);
+    mainview.loadSample(sampleid, true);
   });
 
   // handler for new action submit button
@@ -287,7 +307,7 @@ function initEditor() {
       formdata[x.name] = x.value;
     });
 
-    R.actionsAPI.createAction(R.state.sampleid, formdata, function(error, data, response) {
+    R.actionsAPI.createAction(sampleid, formdata, function(error, data, response) {
       if (!response) {
         R.errorDialog('Server error. Please check your connection.');
       } else if (response.error) {
@@ -311,12 +331,12 @@ function initEditor() {
       // destroy it so that it doesn't bother us with confirmation dialogs when we
       // reload the sample
       CKEDITOR.instances['description'].destroy();
-      R.loadSample(R.state.sampleid, true);
+      mainview.loadSample(sampleid, true);
     });
   });
 
   // set up the sample image
-  setup_sample_image();
+  setupSampleImage(sampleid);
 
   $('#sampledescription').racinecontent();
   $('.actiondescription').racinecontent();
@@ -345,7 +365,7 @@ function initEditor() {
   $('#samplename.editable').on('editableupdate', function(event, data) {
     if (!data.code) // only if no error occured
     {
-      $(`#nav-entry${R.state.sampleid} > .nav-entry-name`).html(data.value);
+      $(`#nav-entry${sampleid} > .nav-entry-name`).html(data.value);
     }
   });
   $('.actiondate.editable').texteditable();

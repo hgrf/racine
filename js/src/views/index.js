@@ -1,29 +1,24 @@
 import LoginView from './login';
 
-import SampleView from './main/sample';
-import SearchResultsView from './main/searchresults';
-import WelcomeView from './main/welcome';
-
 import SMBResourcesView from './smbresources';
 import UsersView from './users';
 
 import HelpView from './help';
 import LeaveView from './leave';
 import PrintView from './print';
+import MainView from './main';
 
 const views = {
-    login: new LoginView(),
+    login: LoginView,
 
-    sample: new SampleView(),
-    searchResults: new SearchResultsView(),
-    welcome: new WelcomeView(),
+    main: MainView,
 
-    smbresources: new SMBResourcesView(),
-    users: new UsersView(),
+    smbresources: SMBResourcesView,
+    users: UsersView,
 
-    help: new HelpView(),
-    print: new PrintView(),
-    leave: new LeaveView(),
+    help: HelpView,
+    print: PrintView,
+    leave: LeaveView,
 };
 
 export default views;

@@ -3,12 +3,8 @@ import $ from 'jquery';
 import substringMatcher from '../util/substringmatcher';
 
 class LeaveView {
-  constructor() {
-    this.state = {};
-  }
-
-  load(state) {
-    this.state = state;
+  constructor(params) {
+    this.params = params;
   }
 
   onDocumentReady() {

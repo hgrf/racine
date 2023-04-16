@@ -1,29 +1,16 @@
-import $ from 'jquery';
+import AjaxView from './ajaxview';
 
-import MainViewBase from './base';
-
-class SearchResultsView extends MainViewBase {
-  constructor() {
-    super();
+class SearchResultsView extends AjaxView {
+  load(state, pushState=true, reload=false) {
+    state.ajaxView = 'searchResults';
+    state.url = `/search?ajax=true&${state.term}`;
+    state.navUrl = `/search?${state.term}`;
+    super.load(state, pushState, reload);
   }
 
-  load(pushState, state) {
-    if (!super.confirmUnload()) {
-      return false;
-    }
-
-    $.ajax({
-      url: '/search?ajax=true&term='+state.term,
-      success: function(data) {
-        R.updateState(pushState, state);
-
-        $('#editor-frame').html(data);
-        document.title = 'Racine - Search';
-        R.makeSamplesClickable();
-      },
-    });
-
-    return true;
+  onDocumentReady() {
+    document.title = 'Racine - Search';
+    R.makeSamplesClickable();
   }
 }
 

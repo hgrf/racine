@@ -36,11 +36,7 @@
         var invertactionorder = false;
         var showparentactions = false;
 
-        {% if state is defined %}
-            var R = new Racine("{{ api_token }}", {{ state|tojson }});
-        {% else %}
-            var R = new Racine("{{ api_token }}", {});
-        {% endif %}
+        var R = new Racine("{{ api_token }}", "{{ view }}", {{ params|tojson }});
     </script>
 {% endblock %}
 

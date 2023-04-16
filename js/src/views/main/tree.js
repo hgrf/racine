@@ -4,13 +4,13 @@ import {draggableHandlers, dropZoneHandlers} from './dragdrop';
 import {addGlyphicon} from './glyphicons';
 
 class Tree {
-  constructor() {
+  constructor(mainView) {
+    this.mainView = mainView;
     this.orderBy = 'id';
     this.showArchived = false;
   }
 
   #setupHandlers() {
-    const activeEntry = $(`#nav-entry${R.state.sampleid}`);
     const allEntries = $('.nav-entry');
     let ctrlIsPressed = false;
     const self = this;
@@ -38,7 +38,7 @@ class Tree {
         return;
       }
 
-      R.loadSample($(this).data('id'));
+      self.mainView.loadSample($(this).data('id'));
       // on small screen, hide the sidebar after a sample has been selected
       R.mobileHideSidebar();
     });
@@ -49,9 +49,7 @@ class Tree {
     });
 
     // enable sample drag and drop in navigation bar
-    allEntries.on(draggableHandlers(activeEntry));
 
-    $('.nav-dropzone').on(dropZoneHandlers(activeEntry));
 
     $('.inheritance').dblclick(function() {
       location.href = '/loginas?userid='+$(this).data('userid');
@@ -176,11 +174,11 @@ class Tree {
          * views/main/sampe.js, but we need to do it here as well, because the tree is loaded
          * asynchronously, and can be loaded even when the sample is already loaded.
          */
-        if (R.state.view == 'sample') {
-          $('#nav-entry' + R.state.sampleid).css('background-color', '#BBBBFF');
+        if (self.mainView.state.ajaxView == 'sample') {
+          $('#nav-entry' + self.mainView.state.sampleid).css('background-color', '#BBBBFF');
           if (scrollToCurrent) {
-            self.highlight(R.state.sampleid, false);
-          }
+            self.highlight(self.mainView.state.sampleid, false);
+           }
         }
 
         // set up handlers etc.

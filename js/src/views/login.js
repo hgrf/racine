@@ -8,7 +8,7 @@ class LoginView {
   }
 
   onDocumentReady() {
-    var self = this;
+    const self = this;
 
     $('.user').click(function( event ) {
       $('#username').val($(this).data('username'));

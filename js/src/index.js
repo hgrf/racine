@@ -18,7 +18,7 @@ import {createSearchSample} from './util/searchsample';
 
 class Racine {
   constructor(apiToken, view, params) {
-    var self = this;
+    const self = this;
 
     this.apiToken = apiToken;
     this.apiClient = new API.ApiClient(window.location.origin);
@@ -121,7 +121,7 @@ class Racine {
   }
 
   makeSamplesClickable() {
-    var self = this;
+    const self = this;
 
     $('div.sample').click(function() {
       self.loadSample($(this).data('id'));

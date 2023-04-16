@@ -26,7 +26,7 @@ class SampleView extends AjaxView {
     new MarkAsNewsDialog();
 
     // user browser dialog
-    new UserBrowserDialog();
+    new UserBrowserDialog(this.mainView);
 
     // sample and action deletion
     $('#confirm-delete').on('show.bs.modal', function(e) {

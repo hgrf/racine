@@ -1,36 +1,7 @@
-{% extends "bootstrap/base.html" %}
-
-{# menu_entry macro for profile and settings page where the sidebar is
-not populated by JavaScript #}
-{% macro menu_entry(name, title) %}
-    <li {% if name==active %} class="active"><a href="#">{% else %}><a href="{{ name }}">{% endif %}{{ title }}{% if name==active %} <span class="sr-only">(current)</span>{% endif %}</a></li>
-{% endmacro %}
-
-{# macros for quick creation of modal dialogs #}
-{% macro begin_modal_dialog(id, title, class='') %}
-    <div class="modal fade" id="{{ id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog {{ class }}">
-        <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" id="myModalLabel">{{ title }}</h4>
-            </div>
-{% endmacro %}
-{% macro end_modal_dialog() %}
-            </div>
-        </div>
-    </div>
-{% endmacro %}
-
-{% block title %}{% if sample is defined and sample is not none %}Racine - {{ sample.name }}{% else %}Racine{% endif %}{% endblock %}
+{% extends "racine.html" %}
 
 {% block styles %}
-    {{super()}}
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="{{url_for('static', filename='base.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='typeahead.css')}}">
-    <meta name="mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
+{{ super() }}
     <style>
     /* TODO: this should be in something like base.css */
     div.sample {
@@ -42,52 +13,22 @@ not populated by JavaScript #}
         background-color: #CCCCEE;
         cursor: pointer;
     }
-
-    {% if config['DEBUG'] %}
-    .navbar-fixed-top {
-        background-color: #660000;
-    }
-    {% endif %}
     </style>
 {% endblock %}
 
-{% block navbar %}
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <div class="nav-button nav-button-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <i class="glyphicon glyphicon-option-vertical"></i>
-                </div>
-                <div id="toggle-sidebar" class="nav-button nav-button-left nav-button-toggle">
-                    <i class="glyphicon glyphicon-menu-hamburger"></i>
-                </div>
-                <a class="navbar-brand hidden-xs" href="/">
-                    {% if config['DEBUG'] %}
-                    Racine #DEV#
-                    {% else %}
-                    Racine
-                    {% endif %}
-                </a>
-                <a class="navbar-brand visible-xs" href="/">Racine</a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    {% if current_user.is_admin %}
-                        <li><a href="/settings/smbresources"><i class="hidden-xs glyphicon glyphicon-wrench" title="Settings"></i><span class="visible-xs-block">Settings</span></a></li>
-                    {% endif %}
-                    <li><a href="/print"><i class="hidden-xs glyphicon glyphicon-print" title="Print"></i><span class="visible-xs-block">Print</span></a></li>
-                    <li><a href="/profile/changedetails"><i class="hidden-xs glyphicon glyphicon-user" title="Profile"></i><span class="hidden-xs">&nbsp;&nbsp;{{ current_user.username }}</span><span class="visible-xs-block">Profile</span></a></li>
-                    <li><a href="{{ url_for('auth.logout') }}"><i class="hidden-xs glyphicon glyphicon-log-out" title="Sign out"></i><span class="visible-xs-block">Sign out</span></a></li>
-                    <li><a href="/help"><i class="hidden-xs glyphicon glyphicon-question-sign" title="Help"></i><span class="visible-xs-block">Help</span></a></li>
-                </ul>
-                {% if search_activated %}
-                    <form class="nav navbar-form navbar-right">
-                        <input type="text" id="navbar-search" class="form-control" placeholder="Search...">
-                    </form>
-                {% endif %}
-            </div>
-        </div>
-    </nav>
+{% block navbar_top %}
+    <ul class="nav navbar-nav navbar-right">
+        {% if current_user.is_admin %}
+            <li><a href="/settings/smbresources"><i class="hidden-xs glyphicon glyphicon-wrench" title="Settings"></i><span class="visible-xs-block">Settings</span></a></li>
+        {% endif %}
+        <li><a href="/print"><i class="hidden-xs glyphicon glyphicon-print" title="Print"></i><span class="visible-xs-block">Print</span></a></li>
+        <li><a href="/profile/changedetails"><i class="hidden-xs glyphicon glyphicon-user" title="Profile"></i><span class="hidden-xs">&nbsp;&nbsp;{{ current_user.username }}</span><span class="visible-xs-block">Profile</span></a></li>
+        <li><a href="{{ url_for('auth.logout') }}"><i class="hidden-xs glyphicon glyphicon-log-out" title="Sign out"></i><span class="visible-xs-block">Sign out</span></a></li>
+        <li><a href="/help"><i class="hidden-xs glyphicon glyphicon-question-sign" title="Help"></i><span class="visible-xs-block">Help</span></a></li>
+    </ul>
+    <form class="nav navbar-form navbar-right">
+        <input type="text" id="navbar-search" class="form-control" placeholder="Search...">
+    </form>
 {% endblock %}
 
 {% set begin_flashmsg = "<div class='alert alert-warning col-sm-9 col-md-10'><button type='button' class='close' data-dismiss='alert'>&times;</button>" %}
@@ -105,35 +46,13 @@ not populated by JavaScript #}
             {% endfor %}
           </div>
         {% block page_content %}{% endblock %}
-
-        {# The confirmation dialog for deletion is the most important modal dialog. #}
-        {{ begin_modal_dialog('confirm-delete', 'Confirm delete') }}
-        <div class="modal-body">
-          <p>You are about to delete an item, this procedure is irreversible.</p>
-          <p>Do you want to proceed?</p>
-          <p class="debug-id"></p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-danger btn-ok">Delete</a>
-        </div>
-        {{ end_modal_dialog() }}
-
-        {{ begin_modal_dialog('errordialog', 'Error') }}
-          <div class="modal-body"></div>
-          <div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">OK</button></div>
-        {{ end_modal_dialog() }}
+        {% block dialogs %}
+            {% include "dialogs/confirmdelete.html" %}
+            {% include "dialogs/error.html" %}
+        {% endblock %}
         </div>
       </div>
     </div>
 
     <div class="content-overlay"></div>
-{% endblock %}
-
-{% block scripts %}
-{{ super() }}
-    <script src="{{ url_for('static', filename='base.js', version='20191203') }}"></script>
-    <script src="{{ url_for('static', filename='typeahead.js/typeahead.bundle.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='typeahead.js/substringmatcher.js') }}"></script>
-    <script src="{{ url_for('static', filename='searchsample.js', version='20191204') }}"></script>
 {% endblock %}

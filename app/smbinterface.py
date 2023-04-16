@@ -169,5 +169,10 @@ class SMBInterface:
             connected = conn.connect(server_ip, port=server_port, timeout=1)  # 1 second timeout
         except Exception:
             connected = False
+        if not connected:
+            try:
+                connected = conn.connect(server_ip, 445, timeout=1)
+            except Exception:
+                connected = False
 
         return conn if connected else None

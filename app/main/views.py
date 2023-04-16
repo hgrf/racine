@@ -21,7 +21,7 @@ from ..models import (
 
 
 @main.route("/")
-@main.route("/sample/<sampleid>")
+@main.route("/sample/<int:sampleid>")
 def index(sampleid=0):
     if not current_user.is_authenticated:
         return redirect("/auth/login?next=%2F")
@@ -29,21 +29,21 @@ def index(sampleid=0):
     # TODO: reduce redundance in call to render_template
     if not sampleid:
         return render_template(
-            "main.html",
+            "main/main.html",
+            view="main",
+            params={"ajaxView": "welcome"},
             api_token=current_user.get_token(),
-            sample=None,
-            search_activated=True,
             newsampleform=NewSampleForm(),
             dlg_markasnews_form=MarkActionAsNewsForm(),
         )
     sample = Sample.query.get(sampleid)
     if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
-        return render_template("404.html"), 404
+        return render_template("errors/404.html"), 404
     return render_template(
-        "main.html",
+        "main/main.html",
+        view="main",
+        params={"ajaxView": "sample", "sampleid": sampleid},
         api_token=current_user.get_token(),
-        sample=sample,
-        search_activated=True,
         newsampleform=NewSampleForm(),
         dlg_markasnews_form=MarkActionAsNewsForm(),
     )
@@ -139,7 +139,7 @@ def welcome():
     news = not_expired
 
     return render_template(
-        "welcome.html",
+        "main/welcome.html",
         conns=smbinterface.conns,
         recent_samples=recent_samples,
         newactionsallusers=newactionsallusers,
@@ -171,7 +171,7 @@ def navbar():
     samples.extend(current_user.directshares)
 
     return render_template(
-        "navbar.html",
+        "main/navbar.html",
         samples=samples,
         inheritance=inheritance,
         showarchived=showarchived,
@@ -198,7 +198,7 @@ def editor(sampleid):
     )
 
     if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
-        return render_template("404.html"), 404
+        return render_template("errors/404.html"), 404
     else:
         form = NewActionForm()
         form.description.data = ""
@@ -215,7 +215,7 @@ def editor(sampleid):
         actions = sorted(actions, key=lambda a: a.ordnum, reverse=invertactionorder)
 
         return render_template(
-            "editor.html",
+            "main/sample.html",
             sample=sample,
             actions=actions,
             form=form,
@@ -275,14 +275,16 @@ def search():
     if request.args.get("autocomplete") is not None:
         return jsonify(results=results)
     elif request.args.get("ajax") is not None:
-        return render_template("searchresults.html", results=results, term=keyword)
+        return render_template("main/searchresults.html", results=results, term=keyword)
     else:
         return render_template(
-            "main.html",
+            "main/main.html",
+            view="main",
+            params={"ajaxView": "searchResults", "term": keyword},
             sample=None,
-            search_activated=True,
             term=keyword,
             newsampleform=NewSampleForm(),
+            dlg_markasnews_form=MarkActionAsNewsForm(),
         )
 
 

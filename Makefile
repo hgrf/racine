@@ -8,22 +8,14 @@ api-spec:
 	cat patches/api.yaml >> api.yaml
 
 api-client: api-spec
-	rm -rf build/api-client
+	rm -rf js/src/api
+	mkdir -p build
 	wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/6.2.1/openapi-generator-cli-6.2.1.jar \
 		-O build/openapi-generator-cli.jar
 	
-	java -jar build/openapi-generator-cli.jar generate -i api.yaml -g javascript -p modelPropertyNaming=original -o build/api-client
-	cd build/api-client && npm install
-	cd build/api-client && npm install \
-		rollup \
-		rollup-plugin-polyfill-node \
-		@rollup/plugin-node-resolve \
-		@rollup/plugin-commonjs \
-		@rollup/plugin-json \
-		@rollup/plugin-terser
-
-	cp patches/rollup.config.js build/api-client/rollup.config.js
-	cd build/api-client && npx rollup -c --bundleConfigAsCjs
+	java -jar build/openapi-generator-cli.jar generate \
+		-i api.yaml -g javascript -p modelPropertyNaming=original -o js/src/api
+	cd js/src/api && npm install
 
 website:
 	# clone bootstrap
@@ -262,53 +254,6 @@ install-ckeditor:
 	# clean up git repo
 	rm -rf /tmp/ckeditor4
 
-install-bootstrap-toc:
-	rm -f app/static/bootstrap-toc.min.css
-	rm -f app/static/bootstrap-toc.min.js
-
-	rm -rf /tmp/bootstrap-toc
-	git clone -b v0.4.1 --depth 1 \
-		https://github.com/afeld/bootstrap-toc.git \
-		/tmp/bootstrap-toc
-	cp /tmp/bootstrap-toc/dist/bootstrap-toc.min.css app/static/bootstrap-toc.min.css
-	cp /tmp/bootstrap-toc/dist/bootstrap-toc.min.js app/static/bootstrap-toc.min.js
-	rm -rf /tmp/bootstrap-toc
-
-install-jquery:
-	rm -f app/static/jquery-1.11.3.min.js
-
-	wget -O app/static/jquery-1.11.3.min.js https://code.jquery.com/jquery-1.11.3.min.js
-
-install-jquery.jeditable:
-	rm -f app/static/jquery.jeditable.js
-
-	wget -O app/static/jquery.jeditable.js https://sscdn.net/js/jquery/latest/jeditable/1.7.1/jeditable.js
-
-	# c.f. https://github.com/hgrf/racine/commit/89d8b57e795ccfbeb73dc18faecc1d0016a8a008#diff-5f8e3a2bd35e7f0079090b176e06d0568d5c8e4468c0febbfa61014d72b16246
-	git apply patches/jquery.jeditable.patch
-
-install-jquery-ui:
-	rm -f app/static/jquery-ui.min.css
-	rm -f app/static/jquery-ui.min.js
-
-	wget -O jquery-ui.zip https://jqueryui.com/resources/download/jquery-ui-1.11.4.zip
-	rm -rf /tmp/jquery-ui-*
-	unzip -d /tmp jquery-ui.zip
-	rm jquery-ui.zip
-
-	cp /tmp/jquery-ui-*/jquery-ui.min.css app/static/jquery-ui.min.css
-	cp /tmp/jquery-ui-*/jquery-ui.min.js app/static/jquery-ui.min.js
-	rm -rf /tmp/jquery-ui-*
-
-install-lightbox:
-	rm -rf app/static/lightbox2-master
-
-	git clone -b v2.8.2 --depth 1 \
-		https://github.com/lokesh/lightbox2.git \
-		app/static/lightbox2-master
-
-	rm -rf app/static/lightbox2-master/.git
-
 install-mathjax:
 	rm -rf app/static/mathjax
 
@@ -318,59 +263,37 @@ install-mathjax:
 
 	rm -rf app/static/mathjax/.git
 
-install-typeahead:
-	rm -rf app/static/typeahead.js
+install-js-dependencies: install-mathjax api-client
+	mkdir -p app/static/css
+	mkdir -p app/static/fonts
 
-	rm -rf /tmp/typeahead.js
-	git clone -b v0.11.1 --depth 1 \
-		https://github.com/twitter/typeahead.js.git \
-		/tmp/typeahead.js
-	cp -r /tmp/typeahead.js/dist app/static/typeahead.js
-	rm -rf /tmp/typeahead.js
-
+	# install typeahead.js
+	wget -O js/src/typeahead/typeahead.bundle.js \
+		https://raw.githubusercontent.com/twitter/typeahead.js/v0.11.1/dist/typeahead.bundle.js
+	wget -O js/src/typeahead/bloodhound.js \
+		https://raw.githubusercontent.com/twitter/typeahead.js/v0.11.1/dist/bloodhound.js
+	wget -O app/static/css/typeahead.css \
+		https://raw.githubusercontent.com/hyspace/typeahead.js-bootstrap3.less/v0.2.3/typeahead.css
 	# c.f. https://github.com/hgrf/racine/commit/19fc41b1797112d2980b08ad53d1f945d9e36b17
 	#      https://github.com/twitter/typeahead.js/issues/1218
 	#      https://github.com/hgrf/racine/commit/2d892a4a2f6a9bdb9465730a64670277e35698a8
 	git apply patches/typeahead.patch
 
-	wget -O yuicompressor.jar https://github.com/yui/yuicompressor/releases/download/v2.4.8/yuicompressor-2.4.8.jar
-	java -jar yuicompressor.jar \
-		--type js \
-		--charset utf-8 \
-		app/static/typeahead.js/typeahead.bundle.js \
-		> app/static/typeahead.js/typeahead.bundle.min.js
-	rm yuicompressor.jar
+	# install jeditable
+	wget -O js/src/jquery-plugins/jquery.jeditable.js \
+		https://sscdn.net/js/jquery/latest/jeditable/1.7.1/jeditable.js
+	# c.f. https://github.com/hgrf/racine/commit/89d8b57e795ccfbeb73dc18faecc1d0016a8a008#diff-5f8e3a2bd35e7f0079090b176e06d0568d5c8e4468c0febbfa61014d72b16246
+	git apply patches/jquery.jeditable.patch
 
-install-typeahead.js-bootstrap3.less:
-	rm -f app/static/typeahead.css
+	cd js && npm install && npx rollup -c
 
-	rm -rf /tmp/typeahead.js-bootstrap3.less
-	git clone -b v0.2.3 --depth 1 \
-		https://github.com/hyspace/typeahead.js-bootstrap3.less.git \
-		/tmp/typeahead.js-bootstrap3.less
-	cp /tmp/typeahead.js-bootstrap3.less/typeahead.css app/static/typeahead.css
-	rm -rf /tmp/typeahead.js-bootstrap3.less
+	cp js/node_modules/bootstrap/dist/css/bootstrap.min.css app/static/css/bootstrap.min.css
+	cp js/node_modules/bootstrap/dist/fonts/* app/static/fonts/
 
-	git apply patches/typeahead.css.patch
+	cp js/node_modules/bootstrap-toc/dist/bootstrap-toc.min.css app/static/css/bootstrap-toc.min.css
 
-install-js-dependencies: install-bootstrap-toc install-ckeditor install-jquery install-jquery.jeditable install-jquery-ui install-lightbox install-mathjax install-typeahead install-typeahead.js-bootstrap3.less
-	echo ""
-
-clean-js-dependencies:
-	rm  -f app/static/bootstrap-toc.min.css
-	rm  -f app/static/bootstrap-toc.min.js
-	rm -f app/static/jquery-1.11.3.min.js
-	rm -f app/static/jquery.jeditable.js
-	rm  -f app/static/jquery-ui.min.css
-	rm  -f app/static/jquery-ui.min.js
-	rm -rf app/static/lightbox2-master
-	rm -rf app/static/mathjax
-	rm -rf app/static/typeahead.js
-
-install-bootstrap:	# only for docker build
-	git clone -b 3.3.7.1 --depth 1 https://github.com/mbr/flask-bootstrap.git /tmp/flask-bootstrap
-	mv /tmp/flask-bootstrap/flask_bootstrap/static ./app/static/bootstrap
-	rm -rf /tmp/flask-bootstrap
+	cp js/node_modules/lightbox2/dist/css/lightbox.css app/static/css/lightbox.css
+	cp js/node_modules/lightbox2/dist/images/* app/static/images/
 
 build: down
 	docker compose -f docker/docker-compose.yml build web
@@ -379,7 +302,7 @@ run:
 	docker compose -f docker/docker-compose.yml up web
 
 run-no-docker:
-	flask run
+	flask run --debug
 
 build-dev: down
 	docker compose -f docker/docker-compose.yml build web-dev
@@ -388,8 +311,8 @@ test-dev:
 	docker compose -f docker/docker-compose.yml exec web-dev python -m pytest
 
 run-dev:
-	docker compose -f docker/docker-compose.yml up web-dev -d
-	watchman-make -p 'app/**/*.py' -s 1 --run 'touch uwsgi-reload'
+	docker compose -f docker/docker-compose.yml up web-dev smb-dev & \
+		watchman-make -p 'app/**/*.py' -s 1 --run 'touch uwsgi-reload'
 
 shell-dev:
 	docker compose -f docker/docker-compose.yml exec web-dev bash
@@ -435,6 +358,15 @@ flake8-badge:
 		\rbadge = get_flake8_badge(get_flake8_stats('./reports/flake8/flake8stats.txt'))\n \
 		\rprint(f'{badge.right_txt}@{badge.color}')\n \
 		\r\n" | python
+
+eslint:
+	cd js && npx eslint .
+
+eslint-badge:
+	cd js && npx eslint . | grep "problems (" | (IFS='()' read _ SUMMARY; echo $$SUMMARY) | ( \
+		read ERRORS _ WARNINGS _; \
+		echo $$ERRORS C, $$WARNINGS W@`if [ $$ERRORS -gt 0 ]; then echo red; else echo green; fi` \
+	)
 
 doc: api-spec
 	# generate markdown documentation

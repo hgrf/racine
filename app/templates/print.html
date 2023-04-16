@@ -1,16 +1,15 @@
 {% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
+{% import "util/wtf.html" as wtf %}
 
 {% block styles %}
     {{super()}}
     <link rel="stylesheet" href="{{url_for('static', filename='print.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='jquery-ui.min.css')}}">
 {% endblock %}
 
 {% block sidebarnav %}
 <div class="col-sm-3 col-md-2 sidebar">
     {{ wtf.quick_form(form) }}
-    <div class="checkbox"><label><input type="checkbox" id="chkshowuser" onchange="onChkShowUser()">Hide user names</label></div>
+    <div class="checkbox"><label><input type="checkbox" id="chkshowuser">Hide user names</label></div>
     <p>Reduce image size:</p>
     <div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true">
@@ -58,64 +57,9 @@
 
 {% block scripts %}
 {{ super() }}
-    <script type="text/x-mathjax-config">
-        // tell MathJax to align left even if it's not loaded yet
-        // this _has_ to be executed before MathJax is loaded (that's why it's not in editor.js anymore)
-        MathJax.Hub.Config({
-            displayAlign: "left"
-        });
-    </script>
-    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-    <script>window.MathJax || document.write('<script async src="{{ url_for('static', filename='mathjax/MathJax.js') }}?config=TeX-MML-AM_CHTML">\x3C/script>')</script>
-    <script src="{{ url_for('static', filename='jquery-ui.min.js') }}"></script>
+    {% include "util/mathjax.html" %}
+    <script src="{{ url_for('static', filename='racine.js', version='20230402') }}"></script>
     <script>
-        // could do this more efficiently with jQuery
-        function onChkShowUser() {
-            var spans = document.getElementsByClassName("username");
-            if(document.getElementById('chkshowuser').checked) {
-                for (var i = 0; i < spans.length; i++)
-                    spans[i].style.display = "none";
-            } else {
-                for (var i = 0; i < spans.length; i++)
-                    spans[i].style.display = "initial";
-            }
-        }
-    </script>
-    <script>
-        (function($) {
-            var images = document.getElementsByTagName('img');
-            for(var i=0; i < images.length; i++) {
-                images[i].orgwidth = images[i].style.width;
-                images[i].orgheight = images[i].style.height;
-            }
-
-            $(".dropdown-menu li a").click(function(){
-              $(".btn:first-child").html($(this).text()+'<span class="caret"></span>');
-              if($(this).text() == "Off") {
-                for(var i=0; i < images.length; i++) {
-                    images[i].style.width = images[i].orgwidth;
-                    images[i].style.height = images[i].orgheight;
-                }
-              } else {
-                  for(var i=0; i < images.length; i++) {
-                      images[i].style.width = $(this).text();
-                      images[i].style.height = "auto";
-                  }
-              }
-            });
-
-            $("#datefrom").attr("autocomplete", "off");
-            $("#datefrom").datepicker({dateFormat: "yy-mm-dd"});
-            $("#dateto").attr("autocomplete", "off");
-            $("#dateto").datepicker({dateFormat: "yy-mm-dd"});
-
-            create_selectsample($('#sample'), $('#sampleid'), {{ "false" if sampleerror else "true" }}, "All");
-
-            $("#btnprint").click(function(){
-                $("body").append('<div id="printDestination">'+document.getElementById("printArea").innerHTML+'</div>');
-                window.print();
-                $("#printDestination").remove();
-            });
-        })(jQuery);
+        var R = new Racine("{{ api_token }}", "print", {'sampleerror': {{ "true" if sampleerror else "false" }} });        
     </script>
 {% endblock %}

@@ -81,6 +81,36 @@ jobs:
           message: ${{ env.FLAKE8_BADGE_MESSAGE }}
           color: ${{ env.FLAKE8_BADGE_COLOR }}
 
+  eslint-badge:
+    if: github.event_name == 'push'
+    name: Update eslint badge
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+
+      - name: Setup JS environment
+        run: cd js && npm install
+
+      - name: Determine badge message and color
+        run: make eslint-badge | tail -1 | (IFS="@" read MESSAGE COLOR;
+            echo "ESLINT_BADGE_MESSAGE=$MESSAGE" >> $GITHUB_ENV;
+            echo "ESLINT_BADGE_COLOR=$COLOR" >> $GITHUB_ENV)
+
+      - name: Set up JSON file for badge
+        uses: schneegans/dynamic-badges-action@v1.6.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 1cfaee423c85504cd204cf4649e2cf29
+          filename: eslint-badge.json
+          label: eslint
+          message: ${{ env.ESLINT_BADGE_MESSAGE }}
+          color: ${{ env.ESLINT_BADGE_COLOR }}
+
   # based on https://stackoverflow.com/a/64373702
   build-docker:
     name: Build docker image & run tests

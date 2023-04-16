@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% import "util/menuentry.html" as me %}
 
 {% block sidebarnav %}
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
-        {{ menu_entry("changedetails", "Change my details") }}
-        {{ menu_entry("changepassword", "Change my password") }}
-        {{ menu_entry("leave", "Leave") }}
+        {{ me.menu_entry("changedetails", "Change my details", active) }}
+        {{ me.menu_entry("changepassword", "Change my password", active) }}
+        {{ me.menu_entry("leave", "Leave", active) }}
     </ul>
 </div>
 {% endblock %}

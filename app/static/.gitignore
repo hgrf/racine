@@ -1,17 +1,15 @@
-bootstrap/
-lightbox2-master/
 mathjax/
-typeahead.js/
 
-bootstrap-toc.min.css
-bootstrap-toc.min.js
+css/bootstrap.min.css
+css/bootstrap-toc.min.css
+css/lightbox.css
+css/typeahead.css
 
-jquery-1.11.3.min.js
+fonts/
 
-jquery.jeditable.js
+images/close.png
+images/loading.gif
+images/next.png
+images/prev.png
 
-jquery-ui.min.css
-jquery-ui.min.js
-
-typeahead.css
-api-client.js
+racine.js

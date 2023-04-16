@@ -188,8 +188,8 @@ function setupSampleImage(sampleid) {
             div.removeClass('newsampleimage');
             div.addClass('imgeditable');
             div.empty();
-            /* TODO: this is duplicated code from templates/editor.html, there is probably a more
-             * elegant way to sort this out
+            /* TODO: this is duplicated code from templates/main/sample.html, there is probably a
+             *       more elegant way to sort this out
              */
             div.append(
                 `<img id="sampleimage" src="${url}">` +

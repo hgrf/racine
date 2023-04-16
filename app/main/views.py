@@ -215,7 +215,7 @@ def editor(sampleid):
         actions = sorted(actions, key=lambda a: a.ordnum, reverse=invertactionorder)
 
         return render_template(
-            "main/editor.html",
+            "main/sample.html",
             sample=sample,
             actions=actions,
             form=form,

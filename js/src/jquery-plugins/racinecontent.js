@@ -11,22 +11,12 @@ if (!String.prototype.startsWith) {
 (function($) { // this is a jQuery plugin
   $.fn.racinecontent = function() {
     // catch internal links
-
-    $('a').click(function(event) {
-      // N.B. the detection of internal links does not work with Internet Explorer because the href attribute
-      // contains the entire address
-      // TODO: reduce redundancy with ckeditable.js
-      if (typeof $(this).attr('href') == 'string' && $(this).attr('href').startsWith('/sample/')) {
-        event.preventDefault();
-        R.loadSample($(this).attr('href').split('/')[2]);
-      }
-    });
-
-
     $(this).find('a').click(function(event) {
+      // N.B. the detection of internal links does not work with Internet Explorer because the href
+      // attribute contains the entire address
       if (typeof $(this).attr('href') == 'string' && $(this).attr('href').startsWith('/sample/')) {
         event.preventDefault();
-        R.loadSample($(this).attr('href').split('/')[2]);
+        R.view.loadSample($(this).attr('href').split('/')[2]);
       }
     });
 

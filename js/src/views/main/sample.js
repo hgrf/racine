@@ -106,11 +106,8 @@ class SampleView extends AjaxView {
     super.load(state, pushState, reload);
   }
 
-  confirmUnload(ajax=true) {
-    // TODO
-    const msg = typeof message !== 'undefined' ?
-        message : 'Are you sure you want to leave before saving modifications?';
-    var ignore = typeof ignore !== 'undefined' ? ignore : [];
+  confirmUnload(ajax=true, ignore=[], message='') {
+    const msg = message ? message : 'Are you sure you want to leave before saving modifications?';
     ignore = ignore.concat(['newsampledescription']);
 
     for (const i in CKEDITOR.instances) {
@@ -292,10 +289,11 @@ function initEditor(sampleid, mainview) {
     event.preventDefault();
 
     // check if the user is still modifying any actions before submitting the new one
-    if (!R.views['sample'].confirmUnload(
+    if (!mainview.ajaxViews.sample.confirmUnload(
+        true,
         ['description'],
         'You have been editing the sample description or one or more past actions. Your changes ' +
-      'will be lost if you do not save them, are you sure you want to continue?')) {
+        'will be lost if you do not save them, are you sure you want to continue?')) {
       return;
     }
 

@@ -47,11 +47,7 @@ function createSearchSample(searchfield) {
   });
 }
 
-function createSelectSample(searchfield, hiddenfield, valid, placeholder) {
-  // default values
-  valid = valid || true;
-  placeholder = placeholder || 'None';
-
+function createSelectSample(searchfield, hiddenfield, valid=true, placeholder='None') {
   searchfield.wrap('<div class="input-group"></div>');
   searchfield.attr('placeholder', placeholder);
 

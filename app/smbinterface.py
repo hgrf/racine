@@ -161,10 +161,12 @@ class SMBInterface:
             str(resource.password),
             self.client_machine_name,
             str(resource.servername),
+            domain=str(resource.domainname),
             use_ntlm_v2=True,
         )
+        server_port = resource.serverport if resource.serverport > 0 else 139
         try:
-            connected = conn.connect(server_ip, 139, timeout=1)  # 1 second timeout
+            connected = conn.connect(server_ip, port=server_port, timeout=1)  # 1 second timeout
         except Exception:
             connected = False
 

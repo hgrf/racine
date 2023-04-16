@@ -10,10 +10,12 @@
 {% block page_content %}
 <h3 class="page-header">SMB resources</h3>
 <table class="table">
-    <thead><tr>
-        <th>ID</th><th>Name</th><th>Server name (NetBIOS)</th><th>Server address</th><th>Share name</th>
-        <th>Path</th><th>Username</th><th>Password</th>
-    </tr></thead>
+    <thead>
+      <tr>
+        <th>ID</th><th>Name</th><th>Server name (NetBIOS)</th><th>Server address</th><th>Server port</th><th>Domain</th>
+        <th>Share name</th><th>Path</th><th>Username</th><th>Password</th>
+      </tr>
+    </thead>
     <tbody>
     {% for smbresource in smbresources %}
     <tr>
@@ -24,6 +26,8 @@
         <td><div class="editable" data-setter="/api/set/smbresource/name/{{ smbresource.id }}">{{ smbresource.name }}</div></td>
         <td><div class="editable" data-setter="/api/set/smbresource/servername/{{ smbresource.id }}">{{ smbresource.servername }}</div></td>
         <td><div class="editable" data-setter="/api/set/smbresource/serveraddr/{{ smbresource.id }}">{{ smbresource.serveraddr }}</div></td>
+        <td><div class="editable" data-setter="/api/set/smbresource/serverport/{{ smbresource.id }}">{{ smbresource.serverport }}</div></td>
+        <td><div class="editable" data-setter="/api/set/smbresource/domainname/{{ smbresource.id }}">{{ smbresource.domainname }}</div></td>
         <td><div class="editable" data-setter="/api/set/smbresource/sharename/{{ smbresource.id }}">{{ smbresource.sharename }}</div></td>
         <td><div class="editable" data-setter="/api/set/smbresource/path/{{ smbresource.id }}">{{ smbresource.path }}</div></td>
         <td><div class="editable" data-setter="/api/set/smbresource/userid/{{ smbresource.id }}">{{ smbresource.userid }}</div></td>
@@ -37,6 +41,8 @@
         <td>{{ form.name(class_='form-control') }}</td>
         <td>{{ form.servername(class_='form-control') }}</td>
         <td>{{ form.serveraddr(class_='form-control') }}</td>
+        <td>{{ form.serverport(class_='form-control') }}</td>
+        <td>{{ form.domainname(class_='form-control') }}</td>
         <td>{{ form.sharename(class_='form-control') }}</td>
         <td>{{ form.path(class_='form-control') }}</td>
         <td>{{ form.userid(class_='form-control') }}</td>

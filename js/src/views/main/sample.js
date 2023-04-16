@@ -101,44 +101,44 @@ class SampleView extends AjaxView {
   load(state, pushState=true, reload=false) {
     state.ajaxView = 'sample';
     state.url = `/editor/${state.sampleid}` +
-    `?invertactionorder=${invertactionorder}&showparentactions=${showparentactions}`
+    `?invertactionorder=${invertactionorder}&showparentactions=${showparentactions}`;
     state.navUrl = `/sample/${state.sampleid}`;
     super.load(state, pushState, reload);
   }
 
   confirmUnload(ajax=true) {
-      // TODO
-      const msg = typeof message !== 'undefined' ?
+    // TODO
+    const msg = typeof message !== 'undefined' ?
         message : 'Are you sure you want to leave before saving modifications?';
-      var ignore = typeof ignore !== 'undefined' ? ignore : [];
-      ignore = ignore.concat(['newsampledescription']);
-  
-      for (const i in CKEDITOR.instances) {
-        // check if the editor is not in the ignore list and has modifications
-        if (ignore.indexOf(i) < 0 && CKEDITOR.instances[i].checkDirty()) {
-          // if the confirmation request is related to an AJAX call, show a dialog
-          if (ajax) {
-            if (!confirm(msg)) {
-              return false;
-            }
-          // if the confirmation request is related to a page reload or close, just return false
-          } else {
+    var ignore = typeof ignore !== 'undefined' ? ignore : [];
+    ignore = ignore.concat(['newsampledescription']);
+
+    for (const i in CKEDITOR.instances) {
+      // check if the editor is not in the ignore list and has modifications
+      if (ignore.indexOf(i) < 0 && CKEDITOR.instances[i].checkDirty()) {
+        // if the confirmation request is related to an AJAX call, show a dialog
+        if (ajax) {
+          if (!confirm(msg)) {
             return false;
           }
-          break;
+          // if the confirmation request is related to a page reload or close, just return false
+        } else {
+          return false;
         }
+        break;
       }
+    }
 
-      // destroy CKEditors
-      for (const i in CKEDITOR.instances) {
-        if (ignore.indexOf(i) < 0) {
-          CKEDITOR.instances[i].destroy();
-        }
+    // destroy CKEditors
+    for (const i in CKEDITOR.instances) {
+      if (ignore.indexOf(i) < 0) {
+        CKEDITOR.instances[i].destroy();
       }
-  
-      $(`#nav-entry${this.mainView.state.sampleid}`).css('background-color', 'transparent');
-  
-      return true;
+    }
+
+    $(`#nav-entry${this.mainView.state.sampleid}`).css('background-color', 'transparent');
+
+    return true;
   }
 
   onLoadSuccess(state, reload) {
@@ -148,7 +148,7 @@ class SampleView extends AjaxView {
 
     initEditor(sampleid, this.mainView);
     // highlight in tree, if it is already loaded
-    if($(`#nav-entry${sampleid}`).length) {
+    if ($(`#nav-entry${sampleid}`).length) {
       $(`#nav-entry${sampleid}`).css('background-color', '#BBBBFF');
       if (!reload) {
         this.mainView.tree.highlight(sampleid, false);

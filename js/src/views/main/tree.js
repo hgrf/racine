@@ -11,6 +11,7 @@ class Tree {
   }
 
   #setupHandlers() {
+    const activeEntry = $(`#nav-entry${this.mainView.state.sampleid}`);
     const allEntries = $('.nav-entry');
     let ctrlIsPressed = false;
     const self = this;
@@ -49,7 +50,9 @@ class Tree {
     });
 
     // enable sample drag and drop in navigation bar
+    allEntries.on(draggableHandlers(activeEntry));
 
+    $('.nav-dropzone').on(dropZoneHandlers(activeEntry));
 
     $('.inheritance').dblclick(function() {
       location.href = '/loginas?userid='+$(this).data('userid');

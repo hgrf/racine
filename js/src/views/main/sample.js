@@ -19,6 +19,12 @@ import ckeditorconfig from '../../util/ckeditorconfig';
 $.ajaxSetup({cache: false});
 
 class SampleView extends AjaxView {
+  constructor(mainView) {
+    super(mainView);
+    this.invertactionorder = false;
+    this.showparentactions = false;
+  }
+  
   onDocumentReady() {
     const self = this;
 
@@ -101,7 +107,7 @@ class SampleView extends AjaxView {
   load(state, pushState=true, reload=false) {
     state.ajaxView = 'sample';
     state.url = `/editor/${state.sampleid}` +
-    `?invertactionorder=${invertactionorder}&showparentactions=${showparentactions}`;
+    `?invertactionorder=${this.invertactionorder}&showparentactions=${this.showparentactions}`;
     state.navUrl = `/sample/${state.sampleid}`;
     super.load(state, pushState, reload);
   }
@@ -143,7 +149,7 @@ class SampleView extends AjaxView {
 
     document.title = 'Racine - '+$('#samplename').text();
 
-    initEditor(sampleid, this.mainView);
+    initEditor(sampleid, this, this.mainView);
     // highlight in tree, if it is already loaded
     if ($(`#nav-entry${sampleid}`).length) {
       $(`#nav-entry${sampleid}`).css('background-color', '#BBBBFF');
@@ -204,7 +210,7 @@ function setupSampleImage(sampleid) {
   });
 }
 
-function initEditor(sampleid, mainview) {
+function initEditor(sampleid, sampleview, mainview) {
   if ($('#hiddenckeditor').length) // check if this field exists
   {
     hiddeneditor = CKEDITOR.inline(
@@ -274,12 +280,12 @@ function initEditor(sampleid, mainview) {
   });
 
   $('#invertactionorder').click(function() {
-    invertactionorder = !invertactionorder; // toggle
+    sampleview.invertactionorder = !sampleview.invertactionorder; // toggle
     mainview.loadSample(sampleid, true);
   });
 
   $('#showparentactions').click(function() {
-    showparentactions = !showparentactions; // toggle
+    sampleview.showparentactions = !sampleview.showparentactions; // toggle
     mainview.loadSample(sampleid, true);
   });
 

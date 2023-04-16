@@ -1,3 +1,15 @@
+import $ from 'jquery';
+
+class BrowserView {
+  constructor(params) {
+    this.params = params;
+  }
+
+  onDocumentReady() {
+    init_browser();
+  }
+}
+
 // parse the query string and put it in a dictionary
 var queryDict = {};
 location.search.substr(1).split("&").
@@ -21,7 +33,7 @@ function set_single_selection() {
     // update handler for file tiles
     $('.file').unbind('click');
     $('.file').click(function(event) {
-        path = $(this).data('path');
+        const path = $(this).data('path');
         // show "activity" overlay
         $('#overlaytext').text('Saving file...');
         $('#overlay').css("display", "block");
@@ -68,7 +80,7 @@ function set_multi_selection() {
         $('#overlay').css("display", "block");
         // save files
         $('.file.selected').each(function() {
-            path = $(this).data('path');
+            const path = $(this).data('path');
             // tell the server to store the file
             $.ajax({
                 url: "/browser/savefromsmb",
@@ -179,8 +191,8 @@ function init_browser() {
            data: { "sampleid": queryDict['sample'],
                    "resourceid": $(this).data('id') },
            success: function(data) {
-               resourcediv = $('#resource' + data.resourceid);
-               shortcutsdiv = $('#shortcuts' + data.resourceid);
+               const resourcediv = $('#resource' + data.resourceid);
+               const shortcutsdiv = $('#shortcuts' + data.resourceid);
                shortcutsdiv.empty();
                if(!data.code) {
                    if(data.userfolder != '') {
@@ -202,6 +214,4 @@ function init_browser() {
     });
 }
 
-$(document).ready(function() {
-    init_browser();
-});
+export default BrowserView;

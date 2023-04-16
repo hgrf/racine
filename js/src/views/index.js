@@ -7,6 +7,7 @@ import HelpView from './help';
 import LeaveView from './leave';
 import PrintView from './print';
 import MainView from './main';
+import BrowserView from './browser';
 
 const views = {
   login: LoginView,
@@ -19,6 +20,8 @@ const views = {
   help: HelpView,
   print: PrintView,
   leave: LeaveView,
+
+  browser: BrowserView,
 };
 
 export default views;

@@ -41,8 +41,8 @@ class Racine {
   }
 
   onDocumentReady() {
-    // login view does not have a sidebar
-    if (this.view instanceof views.login) {
+    // login view and browser view do not have a sidebar
+    if ((this.view instanceof views.login) || (this.view instanceof views.browser)) {
       this.view.onDocumentReady();
       return;
     }

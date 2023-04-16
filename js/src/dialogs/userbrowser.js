@@ -2,39 +2,18 @@ import $ from 'jquery';
 
 import substringMatcher from '../util/substringmatcher';
 
-function shareselected(event, suggestion) {
-  R.sharesAPI.createShare(
-      {'sampleid': R.state.sampleid, 'username': $('#username').val()},
-      function(error, data, response) {
-        if (!response) {
-          R.errorDialog('Server error. Please check your connection.');
-        } else if (response.error) {
-          if (response.body.message) {
-            R.errorDialog(response.body.message);
-          } else {
-            R.errorDialog(response.error);
-          }
-        } else {
-          $('#sharelist').append(
-              `<div class="sharelistentry" id="sharelistentry${data.shareid}">
-              <a data-type="share" data-id="${data.shareid}" data-toggle="modal"
-                  data-target="#confirm-delete" href="">
-                <i class="glyphicon glyphicon-remove"></i>
-              </a>${data.username}
-              </div>`,
-          );
-        }
-        $('#userbrowser').modal('hide');
-      },
-  );
-}
-
 class UserBrowserDialog {
-  constructor() {
+  constructor(mainView) {
+    this.mainView = mainView;
+
+    const self = this;
+    
     // set up the OK button and the enter button
-    $('#userbrowserok').click(shareselected);
+    $('#userbrowserok').click(function(event) {
+      self.#shareSelected();
+    });
     $('#username').keyup(function(ev) {
-      if (ev.keyCode == 13) shareselected();
+      if (ev.keyCode == 13) self.#shareSelected();
     });
 
     // user browser (for sample sharing)
@@ -50,7 +29,7 @@ class UserBrowserDialog {
       $.ajax({
         url: '/userlist',
         type: 'post',
-        data: {'mode': 'share', 'sampleid': R.state.sampleid},
+        data: {'mode': 'share', 'sampleid': self.mainView.state.sampleid},
         success: function(data) {
           // set up autocompletion
           $('#username').typeahead({
@@ -85,7 +64,7 @@ class UserBrowserDialog {
           // set up click event
           $('.user').one('click', function(event) {
             $('#username').val($(this).data('name'));
-            shareselected();
+            self.#shareSelected();
           });
         },
       });
@@ -95,6 +74,33 @@ class UserBrowserDialog {
     $('#userbrowser').on('shown.bs.modal', function(event) {
       $('#username').focus();
     });
+  }
+
+  #shareSelected(event, suggestion) {
+    R.sharesAPI.createShare(
+        {'sampleid': this.mainView.state.sampleid, 'username': $('#username').val()},
+        function(error, data, response) {
+          if (!response) {
+            R.errorDialog('Server error. Please check your connection.');
+          } else if (response.error) {
+            if (response.body.message) {
+              R.errorDialog(response.body.message);
+            } else {
+              R.errorDialog(response.error);
+            }
+          } else {
+            $('#sharelist').append(
+                `<div class="sharelistentry" id="sharelistentry${data.shareid}">
+                <a data-type="share" data-id="${data.shareid}" data-toggle="modal"
+                    data-target="#confirm-delete" href="">
+                  <i class="glyphicon glyphicon-remove"></i>
+                </a>${data.username}
+                </div>`,
+            );
+          }
+          $('#userbrowser').modal('hide');
+        },
+    );
   }
 }
 

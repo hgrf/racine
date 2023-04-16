@@ -24,7 +24,6 @@ class LeaveView {
       type: 'post',
       data: {'mode': 'leave'},
       success: function( data ) {
-        // TODO
         $('#username').typeahead({
           minLength: 1,
           highlight: true,

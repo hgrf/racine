@@ -10,8 +10,8 @@ class HelpView {
   }
 
   onDocumentReady() {
-    $('body').attr("data-spy", "scroll");
-    $('body').attr("data-target", "#toc");
+    $('body').attr('data-spy', 'scroll');
+    $('body').attr('data-target', '#toc');
   }
 }
 

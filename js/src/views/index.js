@@ -9,16 +9,16 @@ import PrintView from './print';
 import MainView from './main';
 
 const views = {
-    login: LoginView,
+  login: LoginView,
 
-    main: MainView,
+  main: MainView,
 
-    smbresources: SMBResourcesView,
-    users: UsersView,
+  smbresources: SMBResourcesView,
+  users: UsersView,
 
-    help: HelpView,
-    print: PrintView,
-    leave: LeaveView,
+  help: HelpView,
+  print: PrintView,
+  leave: LeaveView,
 };
 
 export default views;

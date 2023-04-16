@@ -15,7 +15,7 @@ class MainView {
       sample: new SampleView(this),
       searchResults: new SearchResultsView(this),
       welcome: new WelcomeView(this),
-    }
+    };
   }
 
   curAjaxView() {
@@ -68,7 +68,7 @@ class MainView {
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
-  
+
     // add event handler for history
     window.addEventListener('popstate', function(event) {
       if (event.state != null) {
@@ -80,14 +80,14 @@ class MainView {
         location.href = '/';
       }
     });
-  
+
     /* add window unload handler (which asks the user to confirm leaving the page when one of the
      * CKEditor instances has been modified
      */
     window.addEventListener('beforeunload', function(event) {
       const msg = 'Are you sure you want to leave before saving modifications?';
       if (!self.curAjaxView(false).confirmUnload()) {
-        event.returnValue = msg;  // Gecko, Trident, Chrome 34+ 
+        event.returnValue = msg; // Gecko, Trident, Chrome 34+
         return msg; // Gecko, WebKit, Chrome <34
       }
     });

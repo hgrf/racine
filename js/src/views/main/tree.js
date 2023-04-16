@@ -178,7 +178,7 @@ class Tree {
           $('#nav-entry' + self.mainView.state.sampleid).css('background-color', '#BBBBFF');
           if (scrollToCurrent) {
             self.highlight(self.mainView.state.sampleid, false);
-           }
+          }
         }
 
         // set up handlers etc.

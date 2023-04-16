@@ -1,42 +1,42 @@
 import $ from 'jquery';
 
 class AjaxView {
-    constructor(mainView) {
-        this.mainView = mainView;
-    }
+  constructor(mainView) {
+    this.mainView = mainView;
+  }
 
-    load(state, pushState, reload) {
-        const self = this;
+  load(state, pushState, reload) {
+    const self = this;
 
-        $.ajax({
-            url: state.url,
-            success: function(data) {
-                $('#editor-frame').html(data);
-                if (!reload) {
-                    self.mainView.state = state;
-                    if (pushState) {
-                        self.mainView.pushCurrentState();
-                    }
-                    $('html, body').scrollTop(0);
-                }
-                self.onLoadSuccess(state, reload);
-            },
-            error: this.onLoadError.bind(this),
-        });
-    }
+    $.ajax({
+      url: state.url,
+      success: function(data) {
+        $('#editor-frame').html(data);
+        if (!reload) {
+          self.mainView.state = state;
+          if (pushState) {
+            self.mainView.pushCurrentState();
+          }
+          $('html, body').scrollTop(0);
+        }
+        self.onLoadSuccess(state, reload);
+      },
+      error: this.onLoadError.bind(this),
+    });
+  }
 
-    confirmUnload(ajax=true) {
-        return true;
-    }
+  confirmUnload(ajax=true) {
+    return true;
+  }
 
-    onLoadSuccess(state, reload) {
-    }
+  onLoadSuccess(state, reload) {
+  }
 
-    onLoadError() {
-    }
+  onLoadError() {
+  }
 
-    onDocumentReady() {
-    }
+  onDocumentReady() {
+  }
 }
 
 export default AjaxView;

@@ -101,7 +101,11 @@ class Racine {
 
     $('#navbar-search').bind('typeahead:selected', function(event, suggestion) {
       $(this).typeahead('val', ''); // clear the search field
-      self.loadSample(suggestion.id);
+      if (self.view instanceof views.main) {
+        self.view.loadSample(suggestion.id);
+      } else {
+        self.errorDialog('Loading samples is not implemented for this view yet.');
+      }
     });
 
     $('#navbar-search').keypress(function(event) {
@@ -112,7 +116,7 @@ class Racine {
           if (self.view instanceof views.main) {
             self.view.loadSearchResults($(this).val());
           } else {
-            self.errorDialog('Search is not implemented for this view yet');
+            self.errorDialog('Search is not implemented for this view yet.');
           }
           $(this).typeahead('val', ''); // clear the search field
         }
@@ -124,7 +128,11 @@ class Racine {
     const self = this;
 
     $('div.sample').click(function() {
-      self.loadSample($(this).data('id'));
+      if (self.view instanceof views.main) {
+        self.view.loadSample($(this).data('id'));
+      } else {
+        self.errorDialog('Loading samples is not implemented for this view yet.');
+      }
     });
   }
 }

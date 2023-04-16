@@ -280,7 +280,7 @@ def search():
         return render_template(
             "main/main.html",
             view="main",
-            params={"ajaxView": "searchresults", "term": keyword},
+            params={"ajaxView": "searchResults", "term": keyword},
             sample=None,
             term=keyword,
             newsampleform=NewSampleForm(),

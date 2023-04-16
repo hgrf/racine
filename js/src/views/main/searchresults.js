@@ -3,12 +3,12 @@ import AjaxView from './ajaxview';
 class SearchResultsView extends AjaxView {
   load(state, pushState=true, reload=false) {
     state.ajaxView = 'searchResults';
-    state.url = `/search?ajax=true&${state.term}`;
-    state.navUrl = `/search?${state.term}`;
+    state.url = `/search?ajax=true&term=${state.term}`;
+    state.navUrl = `/search?term=${state.term}`;
     super.load(state, pushState, reload);
   }
 
-  onDocumentReady() {
+  onLoadSuccess(state, reload) {
     document.title = 'Racine - Search';
     R.makeSamplesClickable();
   }

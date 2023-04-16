@@ -3,10 +3,8 @@ import $ from 'jquery';
 import {createSelectSample} from '../util/searchsample';
 import ckeditorconfig from '../util/ckeditorconfig';
 
-import MainViewBase from '../views/main/base';
-
 class NewSampleDialog {
-  constructor(selector) {
+  constructor(mainView, selector) {
     const dialog = $(selector);
     const newsampleparent = $('#newsampleparent');
     const newsampleparentid = $('#newsampleparentid');
@@ -15,9 +13,9 @@ class NewSampleDialog {
 
     dialog.on('show.bs.modal', function(event) {
       // set the parent field to the current sample
-      if (R.state['view'] == 'sample') {
+      if ('sampleid' in mainView.state) {
         $('#newsampleparent').typeahead('val', $('#samplename').text());
-        $('#newsampleparentid').val(R.state['sampleid']);
+        $('#newsampleparentid').val(mainView.state.sampleid);
       }
     });
 
@@ -91,8 +89,8 @@ class NewSampleDialog {
           }
         } else {
           dialog.modal('hide'); // hide and clear the dialog
-          R.loadSample(data.sampleid);
-          MainViewBase.tree.load(true);
+          mainView.loadSample(data.sampleid);
+          mainView.tree.load(true);
         }
       });
     });

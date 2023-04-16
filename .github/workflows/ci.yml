@@ -93,6 +93,9 @@ jobs:
         with:
           node-version: "18.x"
 
+      - name: Setup JS environment
+        run: cd js && npm install
+
       - name: Determine badge message and color
         run: make eslint-badge | tail -1 | (IFS="@" read MESSAGE COLOR;
             echo "ESLINT_BADGE_MESSAGE=$MESSAGE" >> $GITHUB_ENV;

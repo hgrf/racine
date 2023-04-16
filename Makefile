@@ -295,9 +295,6 @@ install-js-dependencies: install-mathjax api-client
 	cp js/node_modules/lightbox2/dist/css/lightbox.css app/static/css/lightbox.css
 	cp js/node_modules/lightbox2/dist/images/* app/static/images/
 
-eslint:
-	cd js && npx eslint .
-
 build: down
 	docker compose -f docker/docker-compose.yml build web
 
@@ -361,6 +358,15 @@ flake8-badge:
 		\rbadge = get_flake8_badge(get_flake8_stats('./reports/flake8/flake8stats.txt'))\n \
 		\rprint(f'{badge.right_txt}@{badge.color}')\n \
 		\r\n" | python
+
+eslint:
+	cd js && npx eslint .
+
+eslint-badge:
+	cd js && npx eslint . | grep "problems (" | (IFS='()' read _ SUMMARY; echo $$SUMMARY) | ( \
+		read ERRORS _ WARNINGS _; \
+		echo $$ERRORS C, $$WARNINGS W@`if [ $$ERRORS -gt 0 ]; then echo red; else echo green; fi` \
+	)
 
 doc: api-spec
 	# generate markdown documentation

@@ -3,12 +3,8 @@ import $ from 'jquery';
 import {createSelectSample} from '../util/searchsample';
 
 class PrintView {
-  constructor() {
-    this.state = {};
-  }
-
-  load(state) {
-    this.state = state;
+  constructor(params) {
+    this.params = params;
   }
 
   onDocumentReady() {
@@ -46,7 +42,7 @@ class PrintView {
       }
     });
 
-    createSelectSample($('#sample'), $('#sampleid'), !this.state.sampleerror, 'All');
+    createSelectSample($('#sample'), $('#sampleid'), !this.params.sampleerror, 'All');
 
     $('#btnprint').click(function() {
       $('body').append(

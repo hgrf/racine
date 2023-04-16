@@ -1,0 +1,13 @@
+{% import "util/dialog.html" as dialog %}
+
+{{ dialog.begin_modal_dialog('confirm-delete', 'Confirm delete') }}
+    <div class="modal-body">
+        <p>You are about to delete an item, this procedure is irreversible.</p>
+        <p>Do you want to proceed?</p>
+        <p class="debug-id"></p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <a class="btn btn-danger btn-ok">Delete</a>
+    </div>
+{{ dialog.end_modal_dialog() }}

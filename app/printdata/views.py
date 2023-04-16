@@ -3,7 +3,6 @@ from . import printdata
 from ..models import Sample
 from .forms import RequestActionsForm
 from flask_login import login_required, current_user
-from datetime import datetime
 
 
 @printdata.route("/", methods=["GET", "POST"])
@@ -13,15 +12,6 @@ def overview():
     actions = []
     if form.validate_on_submit():
         sampleid = int(form.sampleid.data) if form.sampleid.data else 0
-
-        try:
-            datefrom = datetime.strptime(form.datefrom.data, "%Y-%m-%d").date()
-        except ValueError:
-            datefrom = None
-        try:
-            dateto = datetime.strptime(form.dateto.data, "%Y-%m-%d").date()
-        except ValueError:
-            dateto = None
 
         # TODO: both this tree function and the below samples.extend... are somewhat duplicated
         #       in main/views.py (e.g. in search() and in navbar()) and should be in a
@@ -43,9 +33,9 @@ def overview():
             if sampleid and sampleid != s.id:
                 continue
             for a in s.actions:
-                if datefrom and a.timestamp and a.timestamp < datefrom:
+                if form.datefrom.data and a.timestamp and a.timestamp < form.datefrom.data:
                     continue
-                if dateto and a.timestamp and a.timestamp > dateto:
+                if form.dateto.data and a.timestamp and a.timestamp > form.dateto.data:
                     continue
                 actions.append(a)
         actions = sorted(actions, key=lambda x: x.ordnum)

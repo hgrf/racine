@@ -1,29 +1,21 @@
 {% extends "base.html" %}
 
-{% block scripts %}
-    {{ super() }}
-    {# see https://afeld.github.io/bootstrap-toc/ #}
-    <link rel="stylesheet" href="/static/bootstrap-toc.min.css">
+{% block styles %}
+{{super()}}
+    <link rel="stylesheet" href="/static/css/bootstrap-toc.min.css">
     <style>
-    /* see https://tscanlin.github.io/tocbot/ */
-    h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
-        display: block;
-        content: " ";
-        height: 60px;
-        margin-top: -60px;
-        visibility: hidden;
-    }
-    p {
-        text-align:justify;
-    }
+        /* see https://tscanlin.github.io/tocbot/ */
+        h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
+            display: block;
+            content: " ";
+            height: 60px;
+            margin-top: -60px;
+            visibility: hidden;
+        }
+        p {
+            text-align:justify;
+        }
     </style>
-    <script src="/static/bootstrap-toc.min.js"></script>
-    <script>
-        (function($) {
-            $('body').attr("data-spy", "scroll");
-            $('body').attr("data-target", "#toc");
-        })(jQuery);
-    </script>
 {% endblock %}
 
 {% block sidebarnav %}
@@ -227,3 +219,10 @@
 </div>
 {% endblock %}
 
+{% block scripts %}
+{{ super() }}
+    <script src="{{ url_for('static', filename='racine.js', version='20230402') }}"></script>
+    <script>
+        var R = new Racine("{{ api_token }}", "help");        
+    </script>
+{% endblock %}

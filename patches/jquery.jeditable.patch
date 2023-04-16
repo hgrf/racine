@@ -1,7 +1,7 @@
-diff --git b/app/static/jquery.jeditable.js a/app/static/jquery.jeditable.js
+diff --git b/js/src/jquery-plugins/jquery.jeditable.js a/js/src/jquery-plugins/jquery.jeditable.js
 index cfd9a8e2..8257a7cf 100644
---- b/app/static/jquery.jeditable.js
-+++ a/app/static/jquery.jeditable.js
+--- b/js/src/jquery-plugins/jquery.jeditable.js
++++ a/js/src/jquery-plugins/jquery.jeditable.js
 @@ -12,6 +12,10 @@
   * Based on editable by Dylan Verheul <dylan_at_dyve.net>:
   *    http://www.dyve.net/jquery/?editable

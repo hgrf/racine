@@ -1,0 +1,17 @@
+{% import "util/wtf.html" as wtf %}
+{% import "util/dialog.html" as dialog %}
+
+{{ dialog.begin_modal_dialog('newsample', 'New sample', 'modal-lg') }}
+    <div class="modal-body">
+        <form id="newsampleform">
+            {{ newsampleform.hidden_tag() }}  {# also contains newsampleform.newsampleparentid #}
+            {{ wtf.form_field(newsampleform.newsamplename) }}
+            {{ wtf.form_field(newsampleform.newsampleparent) }}
+            {{ wtf.form_field(newsampleform.newsampledescription) }}
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button id="newsamplesubmit" type="button" class="btn btn-primary">Submit</button>
+        <button id="newsampleclear" type="button" class="btn btn-default">Clear</button>
+    </div>
+{{ dialog.end_modal_dialog() }}

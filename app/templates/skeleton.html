@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {%- block head %}
+    <title>{% block title %}{{title|default}}{% endblock title %}</title>
+
+    {%- block metas %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {%- endblock metas %}
+
+    {%- block styles %}
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+    {%- endblock styles %}
+    {%- endblock head %}
+  </head>
+  <body>
+    {% block body -%}
+    {% block navbar %}
+    {%- endblock navbar %}
+    {% block content -%}
+    {%- endblock content %}
+
+    {% block scripts %}
+    {%- endblock scripts %}
+    {%- endblock body %}
+  </body>
+</html>

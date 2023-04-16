@@ -1,35 +1,7 @@
-diff --git b/app/static/typeahead.js/substringmatcher.js a/app/static/typeahead.js/substringmatcher.js
-new file mode 100644
-index 00000000..f6198696
---- /dev/null
-+++ a/app/static/typeahead.js/substringmatcher.js
-@@ -0,0 +1,21 @@
-+var substringMatcher = function(strs) {
-+  return function findMatches(q, cb) {
-+    var matches, substringRegex;
-+
-+    // an array that will be populated with substring matches
-+    matches = [];
-+
-+    // regex used to determine if a string contains the substring `q`
-+    substrRegex = new RegExp(q, 'i');
-+
-+    // iterate through the pool of strings and for any string that
-+    // contains the substring `q`, add it to the `matches` array
-+    $.each(strs, function(i, str) {
-+      if (substrRegex.test(str)) {
-+        matches.push(str);
-+      }
-+    });
-+
-+    cb(matches);
-+  };
-+};
-\ No newline at end of file
-diff --git b/app/static/typeahead.js/typeahead.bundle.js a/app/static/typeahead.js/typeahead.bundle.js
+diff --git b/js/src/typeahead/typeahead.bundle.js a/js/src/typeahead/typeahead.bundle.js
 index bb0c8aed..0ec3e748 100644
---- b/app/static/typeahead.js/typeahead.bundle.js
-+++ a/app/static/typeahead.js/typeahead.bundle.js
+--- b/js/src/typeahead/typeahead.bundle.js
++++ a/js/src/typeahead/typeahead.bundle.js
 @@ -1720,8 +1720,12 @@
                      suggestions = suggestions || [];
                      if (!canceled && rendered < that.limit) {
@@ -45,3 +17,82 @@ index bb0c8aed..0ec3e748 100644
                          that.async && that.trigger("asyncReceived", query);
                      }
                  }
+diff --git b/app/static/css/typeahead.css a/app/static/css/typeahead.css
+index fde250d6..d258982b 100644
+--- b/app/static/css/typeahead.css
++++ a/app/static/css/typeahead.css
+@@ -46,11 +46,13 @@
+ .input-group .twitter-typeahead:first-child .tt-hint {
+   border-bottom-left-radius: 4px;
+   border-top-left-radius: 4px;
++  width: 100%;
+ }
+ .input-group .twitter-typeahead:last-child .tt-input,
+ .input-group .twitter-typeahead:last-child .tt-hint {
+   border-bottom-right-radius: 4px;
+   border-top-right-radius: 4px;
++  width: 100%;
+ }
+ .input-group.input-group-sm .twitter-typeahead .tt-input,
+ .input-group.input-group-sm .twitter-typeahead .tt-hint {
+@@ -128,10 +130,10 @@ select[multiple].input-group.input-group-lg .twitter-typeahead .tt-hint {
+ }
+ .twitter-typeahead {
+   width: 100%;
++  float: left;
+ }
+ .input-group .twitter-typeahead {
+   display: table-cell !important;
+-  float: left;
+ }
+ .twitter-typeahead .tt-hint {
+   color: #999999;
+@@ -145,7 +147,8 @@ fieldset[disabled] .twitter-typeahead .tt-input {
+   cursor: not-allowed;
+   background-color: #eeeeee !important;
+ }
+-.tt-dropdown-menu {
++.tt-dropdown-menu,
++.tt-menu {
+   position: absolute;
+   top: 100%;
+   left: 0;
+@@ -166,24 +169,32 @@ fieldset[disabled] .twitter-typeahead .tt-input {
+   *border-right-width: 2px;
+   *border-bottom-width: 2px;
+ }
+-.tt-dropdown-menu .tt-suggestion {
++.tt-dropdown-menu .tt-suggestion,
++.tt-menu .tt-suggestion {
+   display: block;
+-  padding: 3px 20px;
++  padding: 3px 10px;    /* Note: was 3px 20px before */
+   clear: both;
+   font-weight: normal;
+   line-height: 1.42857143;
+   color: #333333;
+-  white-space: nowrap;
+ }
+-.tt-dropdown-menu .tt-suggestion.tt-cursor {
++.tt-dropdown-menu .tt-suggestion.tt-cursor,
++.tt-menu .tt-suggestion.tt-cursor,
++.tt-dropdown-menu .tt-suggestion:hover,
++.tt-menu .tt-suggestion:hover {
++  cursor: pointer;
+   text-decoration: none;
+   outline: 0;
+   background-color: #f5f5f5;
+   color: #262626;
+ }
+-.tt-dropdown-menu .tt-suggestion.tt-cursor a {
++.tt-dropdown-menu .tt-suggestion.tt-cursor a,
++.tt-menu .tt-suggestion.tt-cursor a,
++.tt-dropdown-menu .tt-suggestion:hover a,
++.tt-menu .tt-suggestion:hover a {
+   color: #262626;
+ }
+-.tt-dropdown-menu .tt-suggestion p {
++.tt-dropdown-menu .tt-suggestion p,
++.tt-menu .tt-suggestion p {
+   margin: 0;
+ }

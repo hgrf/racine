@@ -1,6 +1,6 @@
 {% set active = "smbresources" %}
 {% extends "settings/base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
+{% import "util/wtf.html" as wtf %}
 
 {% block styles %}
     {{super()}}
@@ -50,26 +50,7 @@
 
 {% block scripts %}
 {{ super() }}
-<script>var api_token = "{{ api_token }}";</script>
-<script src="{{ url_for('static', filename='jquery.jeditable.js') }}"></script>
-<script src="{{ url_for('static', filename='ckeditable.js') }}"></script>
-<script type="text/javascript" charset="utf-8">
-$(function() {
-  $(document).ready(function() {
-    $('#confirm-delete').on('show.bs.modal', function(e) {
-      $(this).find('.btn-ok').attr('id', $(e.relatedTarget).data('id'));
-      $('.debug-id').html('Delete ID: <strong>' + $(this).find('.btn-ok').attr('id') + '</strong>');
-    });
-
-    $('.btn-ok').click( function(event) {
-      var id = $(this).attr('id');
-      location.href = "/settings/smbresources?delete="+id;
-    });
-
-    // set up editables
-    $('.editable').texteditable();
-    $('.editable').setup_triggers();
-  });
-});
+<script>
+    var R = new Racine("{{ api_token }}", "smbresources");
 </script>
 {% endblock %}

@@ -1,15 +1,21 @@
 {% extends "base.html" %}
+{% import "util/menuentry.html" as me %}
 
 {% block sidebarnav %}
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
-        {{ menu_entry("smbresources", "SMB resources") }}
-        {{ menu_entry("users", "Users") }}
+        {{ me.menu_entry("smbresources", "SMB resources", active) }}
+        {{ me.menu_entry("users", "Users", active) }}
         {% if config['DEBUG'] %}
-            {{ menu_entry("uploads", "Uploads") }}
+            {{ me.menu_entry("uploads", "Uploads", active) }}
         {% endif %}
-        {{ menu_entry("email", "Email") }}
-        {{ menu_entry("log", "Log") }}
+        {{ me.menu_entry("email", "Email", active) }}
+        {{ me.menu_entry("log", "Log", active) }}
     </ul>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='racine.js', version='20230402') }}"></script>
 {% endblock %}

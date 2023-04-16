@@ -24,7 +24,7 @@ class SampleView extends AjaxView {
     this.invertactionorder = false;
     this.showparentactions = false;
   }
-  
+
   onDocumentReady() {
     const self = this;
 

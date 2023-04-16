@@ -7,7 +7,7 @@ class UserBrowserDialog {
     this.mainView = mainView;
 
     const self = this;
-    
+
     // set up the OK button and the enter button
     $('#userbrowserok').click(function(event) {
       self.#shareSelected();

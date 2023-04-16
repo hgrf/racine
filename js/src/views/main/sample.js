@@ -383,7 +383,7 @@ function initEditor(sampleid, mainview) {
               R.errorDialog(response.error);
             }
           } else {
-            R.loadSample(R.state.sampleid, true);
+            mainview.loadSample(sampleid, true);
           }
         });
   });

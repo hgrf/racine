@@ -13,7 +13,7 @@ class NewSMBResourceForm(FlaskForm):
     sharename = StringField("Share name:")
     path = StringField("Path:")
     userid = StringField("User name:")
-    password = StringField("Password:")
+    password = PasswordField("Password:")
     submit = SubmitField("Submit")
 
 

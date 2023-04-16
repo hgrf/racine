@@ -43,7 +43,7 @@
 | app/settings/\_\_init\_\_.py                                                       |        3 |        0 |    100% |           |
 | app/settings/forms.py                                                              |       29 |        0 |    100% |           |
 | app/settings/views.py                                                              |      145 |      110 |     24% |20-46, 58-74, 83-133, 138-146, 150-163, 172-222, 235-238 |
-| app/smbinterface.py                                                                |       83 |       67 |     19% |29-51, 57-71, 94-110, 114-145, 149, 154-171 |
+| app/smbinterface.py                                                                |       88 |       72 |     18% |29-51, 57-71, 94-110, 114-145, 149, 154-176 |
 | app/tests/\_\_init\_\_.py                                                          |        0 |        0 |    100% |           |
 | app/tests/test\_main.py                                                            |       26 |        0 |    100% |           |
 | app/usagestats.py                                                                  |       51 |       28 |     45% |20-21, 34, 38-77, 81-91 |
@@ -70,7 +70,7 @@
 | migrations/versions/578518528886\_added\_ownership\_to\_actions.py                 |       13 |        3 |     77% |     28-30 |
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
-|                                                                          **TOTAL** | **2172** | **1127** | **48%** |           |
+|                                                                          **TOTAL** | **2177** | **1132** | **48%** |           |
 
 
 ## Setup coverage badge

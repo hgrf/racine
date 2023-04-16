@@ -24,6 +24,16 @@ services:
       - "8080:80"
     volumes:
       - ..:/app
+  smb-dev:
+    container_name: racine-smb-dev
+    image: ghcr.io/crazy-max/samba:4.16.8
+    # uncomment if you want to expose the SMB ports
+    # ports:
+    #  - "139:139"
+    #  - "445:445"
+    volumes:
+      - ./smb-data:/data
+      - ./smb-files:/samba
 volumes:
   uploads:
   database:

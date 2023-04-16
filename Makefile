@@ -314,8 +314,8 @@ test-dev:
 	docker compose -f docker/docker-compose.yml exec web-dev python -m pytest
 
 run-dev:
-	docker compose -f docker/docker-compose.yml up web-dev -d
-	watchman-make -p 'app/**/*.py' -s 1 --run 'touch uwsgi-reload'
+	docker compose -f docker/docker-compose.yml up web-dev smb-dev & \
+		watchman-make -p 'app/**/*.py' -s 1 --run 'touch uwsgi-reload'
 
 shell-dev:
 	docker compose -f docker/docker-compose.yml exec web-dev bash

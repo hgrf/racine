@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block sidebarnav %}
-    <ul class="nav nav-sidebar">
+    <ul class="navbar-nav nav-sidebar">
         {{ me.menu_entry("smbresources", "SMB resources", active) }}
         {{ me.menu_entry("users", "Users", active) }}
         {% if config['DEBUG'] %}

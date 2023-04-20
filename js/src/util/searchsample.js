@@ -70,7 +70,7 @@ function createSelectSample(searchfield, hiddenfield, valid=true, placeholder='N
   const iconOk = R.icons.ok;
   const iconAlert = R.icons.alert;
 
-  const indicatorspan = $('<span class="input-group-addon"></span>');
+  const indicatorspan = $('<span class="input-group-text"></span>');
   const indicator = $('<i class="'+(valid?iconOk:iconAlert)+commonClass+
                       '" style="color:'+(valid?'green':'red')+';"></i>');
   indicatorspan.append(indicator);

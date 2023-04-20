@@ -11,14 +11,14 @@
 <div id="browser-frame">
     <div id="header">
         <div id="pathbuttons" class="btn-group" role="group">
-            <button type="button" class="btn btn-default folder" data-url="">
+            <button type="button" class="btn btn-secondary folder" data-url="">
                 <i class="btn-home {{ icons.home }}"></i>
             </button>
             {% if smb_path is not undefined and smb_path != '' %}
                 {% set curr_path = '' %}
                 {% for element in smb_path.split('/') %}
                     {% set curr_path = curr_path+('/' if curr_path != '' else '')+element %}
-                    <button type="button" class="btn btn-default folder" data-url="{{ curr_path }}">
+                    <button type="button" class="btn btn-secondary folder" data-url="{{ curr_path }}">
                         {{ element }}
                     </button>
                 {% endfor %}

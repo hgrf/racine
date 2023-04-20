@@ -15,7 +15,7 @@
     {% if sample.owner == current_user %}
         <i class="{{ icons.trashAlt }} editor-shortcut" title="Delete sample"
            data-href="/delsample/{{ sample.id }}" data-type="sample" data-id="{{ sample.id }}"
-           data-toggle="modal" data-target="#dlg-confirm-delete">
+           data-bs-toggle="modal" data-bs-target="#dlg-confirm-delete">
         </i>
         <i id="archive" class="editor-shortcut"></i>
         <i id="collaborate" class="editor-shortcut"></i>
@@ -57,7 +57,7 @@
             {% for share in shares %}
                 <div class="sharelistentry" id="sharelistentry{{ share.id }}">
                     {% if sample.owner == current_user or share.user == current_user %}
-                        <a data-type="share" data-id="{{ share.id }}" data-toggle="modal" data-target="#dlg-confirm-delete" href="">
+                        <a data-type="share" data-id="{{ share.id }}" data-bs-toggle="modal" data-bs-target="#dlg-confirm-delete" href="">
                             <i class="{{ icons.remove }}"></i>
                         </a>
                     {% else %}
@@ -71,10 +71,10 @@
             </div>
             <div class="sharelistbuttons">
                 {% if shares|length > 4 %}
-                    <a id="collapsebutton" role="button" class="collapsed" data-toggle="collapse" href="#sharelistcontainer" aria-expanded="false" aria-controls="sharelistcontainer"></a>
+                    <a id="collapsebutton" role="button" class="collapsed" data-bs-toggle="collapse" href="#sharelistcontainer" aria-expanded="false" aria-controls="sharelistcontainer"></a>
                 {% endif %}
                 {% if sample.owner == current_user %}
-                    <a data-toggle="modal" data-target="#userbrowser" href=""><i class="{{ icons.newItem }}"></i> add share</a>
+                    <a data-bs-toggle="modal" data-bs-target="#userbrowser" href=""><i class="{{ icons.newItem }}"></i> add share</a>
                 {% endif %}
             </div>
         </div>
@@ -83,16 +83,14 @@
 
 <div class="container-fluid">
     {% if invertactionorder %}
-    <div class="row list-entry">
-        <form id="newactionform">
-            {{ newactionform.hidden_tag() }}
-            <div class="col-md-2">
-                {{ wtf.form_field(newactionform.timestamp) }}
-                {{ wtf.form_field(newactionform.submit) }}
-            </div>
-            <div class="col-md-10">{{ wtf.form_field(newactionform.description) }}</div>
-        </form>
-    </div>
+    <form class="row list-entry" id="newactionform">
+        {{ newactionform.hidden_tag() }}
+        <div class="col-md-2">
+            {{ wtf.form_field(newactionform.timestamp) }}
+            {{ wtf.form_field(newactionform.submit) }}
+        </div>
+        <div class="col-md-10">{{ wtf.form_field(newactionform.description) }}</div>
+    </form>
     {% endif %}
     {% for i in range(actions|length)%}
     {% set action=actions[i] %}
@@ -103,7 +101,7 @@
                 {% if action.owner != current_user %}<div style="font-style: italic">{{ action.owner.username }}</div>{% endif %}
                 {% if action.sample != sample %}<div style="font-style: italic;">{{ action.sample.name }}</div>{% endif %}
                 {% if action.owner == current_user or sample.iscollaborative %}
-                    <i class="actionicon {{ icons.trash }}" data-type="action" data-id="{{ action.id }}" data-toggle="modal" data-target="#dlg-confirm-delete"></i>
+                    <i class="actionicon {{ icons.trash }}" data-type="action" data-id="{{ action.id }}" data-bs-toggle="modal" data-bs-target="#dlg-confirm-delete"></i>
                 {% if not i == 0 %} {# can  be moved up #}
                     <i class="actionicon {{ icons.arrowUp }} swapaction" data-id="{{ action.id }}" data-swapid="{{ actions[i-1].id }}"></i>
                 {% endif %}
@@ -118,16 +116,14 @@
     </div>
     {% endfor %}
     {% if not invertactionorder %}
-    <div class="row list-entry">
-        <form id="newactionform">
-            {{ newactionform.hidden_tag() }}
-            <div class="col-md-2">
-                {{ wtf.form_field(newactionform.timestamp) }}
-                {{ wtf.form_field(newactionform.submit) }}
-            </div>
-            <div class="col-md-10">{{ wtf.form_field(newactionform.description) }}</div>
-        </form>
-    </div>
+    <form class="row list-entry" id="newactionform">
+        {{ newactionform.hidden_tag() }}
+        <div class="col-md-2">
+            {{ wtf.form_field(newactionform.timestamp) }}
+            {{ wtf.form_field(newactionform.submit) }}
+        </div>
+        <div class="col-md-10">{{ wtf.form_field(newactionform.description) }}</div>
+    </form>
     {% endif %}
 </div>
 

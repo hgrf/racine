@@ -1,6 +1,6 @@
 {% extends "skeleton.html" %}
 
-{% set begin_flashmsg = "<div class='alert alert-warning'><button type='button' class='close' data-dismiss='alert'>&times;</button>" %}
+{% set begin_flashmsg = "<div class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='btn-close' data-bs-dismiss='alert'></button>" %}
 {% set end_flashmsg = "</div>" %}
 
 {% block title %}
@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/typeahead.css')}}">
     {% if config['DEBUG'] %}
         <style>
+            /* TODO: adapt for BS 5 */
             .navbar-fixed-top {
                 background-color: #660000;
             }
@@ -32,22 +33,26 @@
 {% endblock %}
 
 {% block navbar %}
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
         <div class="container-fluid">
-            <div class="navbar-header">
-                {% block navbar_top_header %}
-                {% endblock %}
-                <a class="navbar-brand" href="/">
-                    <img src="{{ url_for('static', filename='images/racine-icon.svg') }}"/>
-                    {% if config['DEBUG'] %}
-                    Racine #DEV#
-                    {% else %}
-                    Racine
-                    {% endif %}
-                </a>
-            </div>
-            {% block navbar_top %}
+            {% block navbar_top_header %}
             {% endblock %}
+            <a class="navbar-brand" href="/">
+                <img src="{{ url_for('static', filename='images/racine-icon.svg') }}"/>
+                {% if config['DEBUG'] %}
+                Racine #DEV#
+                {% else %}
+                Racine
+                {% endif %}
+            </a>
+            {% block navbar_top_footer %}
+            {% endblock %}
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                </ul>
+                {% block navbar_top %}
+                {% endblock %}
+            </div>
         </div>
     </nav>
 {% endblock %}

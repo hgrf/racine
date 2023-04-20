@@ -105,8 +105,8 @@ class UserBrowserDialog extends Dialog {
           } else {
             $('#sharelist').append(
                 `<div class="sharelistentry" id="sharelistentry${data.shareid}">
-                <a data-type="share" data-id="${data.shareid}" data-toggle="modal"
-                    data-target="#dlg-confirm-delete" href="">
+                <a data-type="share" data-id="${data.shareid}" data-bs-toggle="modal"
+                    data-bs-target="#dlg-confirm-delete" href="">
                   <i class="${R.icons.remove}"></i>
                 </a>${data.username}
                 </div>`,

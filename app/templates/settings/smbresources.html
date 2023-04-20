@@ -10,7 +10,7 @@
 {% block page_content %}
 <h3 class="page-header">
     SMB resources
-    <a data-toggle="modal" data-target="#dlg-new-smbresource" href="" title="New SMB resource">
+    <a data-bs-toggle="modal" data-bs-target="#dlg-new-smbresource" href="" title="New SMB resource">
         <i class="{{ icons.newItem }}"></i>&nbsp;add
     </a>
 </h3>
@@ -26,7 +26,7 @@
     <tr>
         <td>
             {{ smbresource.id }}
-            <i class="actionicon {{ icons.trash }}" data-type="smbresource" data-id="{{ smbresource.id }}" data-toggle="modal" data-target="#dlg-confirm-delete"></i>
+            <i class="actionicon {{ icons.trash }}" data-type="smbresource" data-id="{{ smbresource.id }}" data-bs-toggle="modal" data-bs-target="#dlg-confirm-delete"></i>
         </td>
         <td><div class="editable" data-setter="/api/set/smbresource/name/{{ smbresource.id }}">{{ smbresource.name }}</div></td>
         <td><div class="editable" data-setter="/api/set/smbresource/servername/{{ smbresource.id }}">{{ smbresource.servername }}</div></td>

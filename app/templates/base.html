@@ -1,7 +1,7 @@
 {% extends "racine.html" %}
 
 {% block navbar_top_header %}
-<div class="nav-button nav-button-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+<div class="nav-button nav-button-toggle" data-bs-toggle="collapse" data-bs-target="#navbar" aria-expanded="false" aria-controls="navbar">
   <i class="{{ icons.toggleHeaderNav }}"></i>
 </div>
 <div id="toggle-sidebar" class="nav-button nav-button-left nav-button-toggle">
@@ -11,28 +11,27 @@
 
 {% block navbar_top %}
   <div id="navbar" class="navbar-collapse collapse">
-    <ul class="nav navbar-nav navbar-right">
-        {% if current_user.is_admin %}
-            <li><a href="/settings/smbresources"><i class="hidden-xs {{ icons.settings }}" title="Settings"></i><span class="visible-xs-block">Settings</span></a></li>
-        {% endif %}
-        <li><a href="/print"><i class="hidden-xs {{ icons.printer }}" title="Print"></i><span class="visible-xs-block">Print</span></a></li>
-        <li><a href="/profile/overview"><i class="hidden-xs {{ icons.user }}" title="Profile"></i><span class="hidden-xs">&nbsp;&nbsp;{{ current_user.username }}</span><span class="visible-xs-block">Profile</span></a></li>
-        <li><a href="{{ url_for('auth.logout') }}"><i class="hidden-xs {{ icons.logout }}" title="Sign out"></i><span class="visible-xs-block">Sign out</span></a></li>
-        <li><a href="/help"><i class="hidden-xs {{ icons.help }}" title="Help"></i><span class="visible-xs-block">Help</span></a></li>
-    </ul>
     <form class="nav navbar-form navbar-right">
         <input type="text" id="navbar-search" class="form-control" placeholder="Search...">
     </form>
-  </div>
+    <ul class="navbar-nav navbar-right">
+        {% if current_user.is_admin %}
+            <li class="nav-item ms-2"><a class="nav-link" href="/settings/smbresources"><i class="{{ icons.settings }}" title="Settings"></i><span class="d-md-none ms-2">Settings</span></a></li>
+        {% endif %}
+        <li class="nav-item ms-2"><a class="nav-link" href="/print"><i class="{{ icons.printer }}" title="Print"></i><span class="d-md-none ms-2">Print</span></a></li>
+        <li class="nav-item ms-2"><a class="nav-link" href="/profile/overview"><i class="{{ icons.user }}" title="Profile"></i><span class="d-none d-md-inline ms-2">{{ current_user.username }}</span><span class="d-md-none ms-2">Profile</span></a></li>
+        <li class="nav-item ms-2"><a class="nav-link" href="{{ url_for('auth.logout') }}"><i class="{{ icons.logout }}" title="Sign out"></i><span class="d-md-none ms-2">Sign out</span></a></li>
+        <li class="nav-item ms-2"><a class="nav-link" href="/help"><i class="{{ icons.help }}" title="Help"></i><span class="d-md-none ms-2">Help</span></a></li>
+    </ul>
 {% endblock %}
 
 {% block content %}
     <div class="container-fluid">
       <div class="row">
-        <div id="sidebar" class="col-sm-3 col-md-2 sidebar">
+        <div id="sidebar" class="col-lg-2 sidebar">
           {% block sidebarnav %}{% endblock %}
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="col-lg-10 offset-lg-2 main">
           <div class="container" id="flashmessages">
             {% for message in get_flashed_messages() %}
             {{ begin_flashmsg|safe }}
@@ -40,14 +39,14 @@
             {{ end_flashmsg|safe }}
             {% endfor %}
           </div>
-        {% block page_content %}{% endblock %}
-        {% block dialogs %}
+          {% block page_content %}
+          {% endblock %}
+          {% block dialogs %}
             {% include "dialogs/confirmdelete.html" %}
             {% include "dialogs/error.html" %}
-        {% endblock %}
+          {% endblock %}
         </div>
       </div>
     </div>
-
     <div class="content-overlay"></div>
 {% endblock %}

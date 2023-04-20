@@ -3,10 +3,10 @@
     the sidebar is not populated by JavaScript 
 #}
 {% macro menu_entry(name, title, active) %}
-    <li {% if name==active %} class="active"><a href="#">{% else %}><a href="{{ name }}">{% endif %}
+    <li class="nav-item{% if name==active %} active"><a class="nav-link" href="#">{% else %}"><a class="nav-link" href="{{ name }}">{% endif %}
         {{ title }}
         {% if name==active %}
-            <span class="sr-only">(current)</span>
+            <span class="visually-hidden">(current)</span>
         {% endif %}
     </a></li>
 {% endmacro %}

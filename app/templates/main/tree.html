@@ -5,7 +5,7 @@
             <div id="nav-entry{{ sample.id }}"
                     class="nav-entry nav-dropzone{% if sample.isarchived %} nav-entry-archived{% endif %}"
                     data-id="{{ sample.id }}" data-name="{{ sample.name }}"
-                    data-toggle="collapse" data-target="#nav-children{{ sample.id }}"
+                    data-bs-toggle="collapse" data-bs-target="#nav-children{{ sample.id }}"
                     draggable="true">
                 <div class="nav-entry-name">{{ sample.name }}</div>
                 {% if sample.owner != current_user %}
@@ -28,7 +28,7 @@
 {# HTML for navbar #}
 <div class="navbar-shortcuts">
     <span class="left">
-        <a data-toggle="modal" data-target="#dlg-new-sample" href="" title="New sample">
+        <a data-bs-toggle="modal" data-bs-target="#dlg-new-sample" href="" title="New sample">
             <i class="{{ icons.newItem }}"></i>
         </a>
     </span>

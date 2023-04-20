@@ -194,7 +194,7 @@
     You will still be able to log in after leaving. The designated user will see your name at the bottom of his navigation bar. By double-clicking
     on your name, the other user can access all of your samples.</p>
     <img src="/static/help/leaving.png?version=20191203">
-
+</div>
 {% if current_user.is_admin %}
     <h3>Modifying the settings</h3>
     <p>In order to access the settings page, click on the <i class="{{ icons.settings }}"></i>-symbol on the upper right.</p>
@@ -222,7 +222,7 @@
     <p>The "Log" page gives you access to the server's log file for debugging.</p>
     <p>The "Uploads" page provides information about lost, empty, unused and duplicate uploads. It can take a long time to load, since a lot
     of database and filesystem operations are required to collect this data.</p>
-
+</div>
 {% endif %}
 </div>
 {% endblock %}

@@ -58,6 +58,8 @@ supported_targets = {
             "name": str,
             "servername": str,
             "serveraddr": str,
+            "serverport": int,
+            "domainname": str,
             "sharename": str,
             "path": str,
             "userid": str,

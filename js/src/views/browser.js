@@ -3,12 +3,27 @@ import $ from 'jquery';
 class BrowserView {
   constructor(params) {
     this.params = params;
+
+    this.queryDict = {};
   }
 
   onDocumentReady() {
     const self = this;
 
-    if (queryDict['multi'] === 'true') {
+    // parse the query string and put it in a dictionary
+    location.search.substr(1).split('&').
+        forEach(function(item) {
+          self.queryDict[item.split('=')[0]] = item.split('=')[1];
+        });
+    function dictToURI(dict) {
+      const str = [];
+      for (const p in dict) {
+        str.push(encodeURIComponent(p) + '=' + encodeURIComponent(dict[p]));
+      }
+      return str.join('&');
+    }
+
+    if (this.queryDict['multi'] === 'true') {
       this.setMultiSelection();
     } else {
       this.setSingleSelection();
@@ -54,9 +69,9 @@ class BrowserView {
   
     function folderclickhandler(event) {
       if (document.getElementById('multiswitch-checkbox') !== null) {
-        queryDict['multi'] = document.getElementById('multiswitch-checkbox').checked;
+        self.queryDict['multi'] = document.getElementById('multiswitch-checkbox').checked;
       }
-      location.replace('/browser/'+$(this).data('url')+'?'+dictToURI(queryDict));
+      location.replace('/browser/'+$(this).data('url')+'?'+dictToURI(self.queryDict));
       event.preventDefault();
     }
   
@@ -90,7 +105,7 @@ class BrowserView {
       $.ajax({
         url: '/browser/inspectresource',
         type: 'post',
-        data: {'sampleid': queryDict['sample'],
+        data: {'sampleid': self.queryDict['sample'],
           'resourceid': $(this).data('id')},
         success: function(data) {
           const resourcediv = $('#resource' + data.resourceid);
@@ -117,6 +132,8 @@ class BrowserView {
   }
 
   setSingleSelection() {
+    const self = this;
+
     // disable Save button
     $('#savemulti').unbind('click');
     $('#savemulti').addClass('disabled');
@@ -136,7 +153,7 @@ class BrowserView {
         url: '/browser/savefromsmb',
         type: 'post',
         data: {'path': path,
-          'type': queryDict['type']},
+          'type': self.queryDict['type']},
         success: function(data) {
           if (data.code) {
             alert('Error: '+data.message);
@@ -153,6 +170,8 @@ class BrowserView {
   }
 
   setMultiSelection() {
+    const self = this;
+
     // update handler for file tiles
     $('.file').unbind('click');
     $('.file').click(function(event) {
@@ -177,7 +196,7 @@ class BrowserView {
           url: '/browser/savefromsmb',
           type: 'post',
           data: {'path': path,
-            'type': queryDict['type']},
+            'type': self.queryDict['type']},
           success: function(data) {
             files_left -= 1;
             $('#filecounter').text('('+(files_total-files_left)+'/'+files_total+')');
@@ -196,20 +215,6 @@ class BrowserView {
       });
     });
   }
-}
-
-// parse the query string and put it in a dictionary
-const queryDict = {};
-location.search.substr(1).split('&').
-    forEach(function(item) {
-      queryDict[item.split('=')[0]] = item.split('=')[1];
-    });
-function dictToURI(dict) {
-  const str = [];
-  for (const p in dict) {
-    str.push(encodeURIComponent(p) + '=' + encodeURIComponent(dict[p]));
-  }
-  return str.join('&');
 }
 
 let files_total = 0;

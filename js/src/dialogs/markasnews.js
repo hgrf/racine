@@ -5,16 +5,16 @@ class MarkAsNewsDialog {
     $('#dlg_markasnews_submit').click(function(event) {
       event.preventDefault();
 
-      const dlg_markasnews_form = $('#dlg_markasnews_form');
+      const form = $('#dlg_markasnews_form');
       const actionid = $('#actionid').val();
-      const flag_element = $('#togglenews-' + actionid);
+      const flag = $('#togglenews-' + actionid);
 
       // clean up error messages
-      dlg_markasnews_form.find('.form-group').removeClass('has-error');
-      dlg_markasnews_form.find('span.help-block').remove();
+      form.find('.form-group').removeClass('has-error');
+      form.find('span.help-block').remove();
 
       const formdata = {};
-      dlg_markasnews_form.serializeArray().map(function(x) {
+      form.serializeArray().map(function(x) {
         formdata[x.name] = x.value;
       });
 
@@ -46,8 +46,8 @@ class MarkAsNewsDialog {
           $('#dlg_markasnews').modal('hide');
 
           // toggle the flag
-          flag_element.removeClass('markasnews');
-          flag_element.addClass('unmarkasnews');
+          flag.removeClass('markasnews');
+          flag.addClass('unmarkasnews');
         }
       });
     });

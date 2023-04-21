@@ -393,11 +393,11 @@ function initEditor(sampleid, sampleview, mainview) {
   });
 
   $('.togglenews').click(function(event) {
-    const flag_element = $(this);
-    const actionid = flag_element.data('id');
+    const flag = $(this);
+    const actionid = flag.data('id');
 
     // is this action not yet marked as news?
-    if (flag_element.hasClass('markasnews')) {
+    if (flag.hasClass('markasnews')) {
       // set the action ID hidden field
       // TODO: it seems a bit dangerous that this form field is just called "actionid"
       $('#actionid').val(actionid);
@@ -416,8 +416,8 @@ function initEditor(sampleid, sampleview, mainview) {
             R.errorDialog(response.error);
           }
         } else {
-          flag_element.removeClass('unmarkasnews');
-          flag_element.addClass('markasnews');
+          flag.removeClass('unmarkasnews');
+          flag.addClass('markasnews');
         }
       });
     }

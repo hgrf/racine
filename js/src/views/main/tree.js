@@ -102,7 +102,7 @@ class Tree {
           .animate({scrollTop: top + $('div#sidebar').scrollTop()}, 1000);
     }
     if (flash) {
-      const old_background = naventry.css('background-color');
+      const oldBackground = naventry.css('background-color');
       // flash the sample
       naventry
           .stop()
@@ -113,7 +113,7 @@ class Tree {
           })
           .delay(1000)
           .queue(function(next) {
-            $(this).css('background-color', old_background);
+            $(this).css('background-color', oldBackground);
             next();
           });
     }
@@ -124,7 +124,7 @@ class Tree {
     // make sure all parent samples are expanded in navbar
     const naventry = $('#nav-entry'+id);
     const collapsibles = naventry.parents('.nav-children');
-    let collapsed_counter = 0;
+    let collapsedCounter = 0;
 
     /* for each collapsible parent check if it's collapsed and increase the counter accordingly,
      * so that the autoscroll function is only activated when everything has finished expanding
@@ -133,17 +133,17 @@ class Tree {
     collapsibles.each(function() {
       // careful, it can be undefined instead of false, hence the notation
       if ($(this).attr('aria-expanded') !== 'true') {
-        collapsed_counter++;
+        collapsedCounter++;
         $(this).one('shown.bs.collapse', function() {
-          collapsed_counter--;
-          if (!collapsed_counter) {
+          collapsedCounter--;
+          if (!collapsedCounter) {
             self.#scrollTo(id, flash);
           }
         });
       }
     });
 
-    if (collapsed_counter) {
+    if (collapsedCounter) {
       collapsibles.collapse('show');
     } else {
       self.#scrollTo(id, flash);

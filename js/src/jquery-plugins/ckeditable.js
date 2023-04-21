@@ -70,11 +70,11 @@ const serverErrorMsg = 'Could not connect to the server. ' +
   };
 
   $.fn.ckeditable = function() {
-    this.on('edit', ckeditable_activate);
+    this.on('edit', ckeditableActivate);
     return this;
   };
 
-  function on_edit_requested(event) {
+  function onEditRequested(event) {
     let field = $(this);
     if (field.is('img.edittrigger')) {
       field = field.parent();
@@ -90,7 +90,7 @@ const serverErrorMsg = 'Could not connect to the server. ' +
   $.fn.setup_triggers = function() {
     // add the double click handler
     $(this).unbind('dblclick');
-    $(this).dblclick(on_edit_requested);
+    $(this).dblclick(onEditRequested);
 
     // add the edit trigger icon
     $(this).each(function(index, field) {
@@ -103,7 +103,7 @@ const serverErrorMsg = 'Could not connect to the server. ' +
       field.find('img.edittrigger').unbind('click');
       field.unbind('editabledone');
       // re-define events
-      field.find('img.edittrigger').click(on_edit_requested);
+      field.find('img.edittrigger').click(onEditRequested);
       field.on('editabledone', function(event) {
         field.addClass('editable');
         field.removeClass('editabling');
@@ -113,7 +113,7 @@ const serverErrorMsg = 'Could not connect to the server. ' +
     return this;
   };
 
-  function ckeditable_activate(event) {
+  function ckeditableActivate(event) {
     // do not react if the user clicked on an image
     if ($(event.target).is('img')) {
       return;
@@ -142,7 +142,7 @@ const serverErrorMsg = 'Could not connect to the server. ' +
 
         // activate CKEditor
         const editor = CKEDITOR.inline(field.get()[0], clone);
-        editor.on('done', ckeditable_on_done);
+        editor.on('done', onCkeditableDone);
       },
       error: function( jqXHR, textStatus ) {
         R.errorDialog(serverErrorMsg);
@@ -151,7 +151,7 @@ const serverErrorMsg = 'Could not connect to the server. ' +
     });
   }
 
-  function ckeditable_on_done(event) {
+  function onCkeditableDone(event) {
     const editor = event.editor;
     const field = event.editor.config.field;
     const data = event.editor.getData();
@@ -166,18 +166,18 @@ const serverErrorMsg = 'Could not connect to the server. ' +
         data: {'value': data},
         success: function( data ) {
           if (data.code) R.errorDialog('An error occured.');
-          ckeditable_finish(editor, field);
+          ckeditableFinish(editor, field);
         },
         error: function( jqXHR, textStatus ) {
           R.errorDialog(serverErrorMsg);
         },
       });
     } else {
-      ckeditable_finish(editor, field);
+      ckeditableFinish(editor, field);
     }
   }
 
-  function ckeditable_finish(editor, field) {
+  function ckeditableFinish(editor, field) {
     // read new HTML from server (i.e. either the modified or unmodified version)
     $.ajax({
       url: field.data('getter'),

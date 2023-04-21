@@ -29,6 +29,8 @@ def smbresources():
                 name=form.name.data,
                 servername=form.servername.data,
                 serveraddr=form.serveraddr.data,
+                serverport=form.serverport.data,
+                domainname=form.domainname.data,
                 sharename=form.sharename.data,
                 path=form.path.data,
                 userid=form.userid.data,
@@ -39,6 +41,8 @@ def smbresources():
         form.name.data = ""
         form.servername.data = ""
         form.serveraddr.data = ""
+        form.serverport.data = ""
+        form.domainname.data = ""
         form.sharename.data = ""
         form.path.data = ""
         form.userid.data = ""

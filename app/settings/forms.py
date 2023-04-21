@@ -8,10 +8,12 @@ class NewSMBResourceForm(FlaskForm):
     name = StringField("SMB Resource name:")
     servername = StringField("Server name (NetBIOS):")
     serveraddr = StringField("Server address:")
+    serverport = IntegerField("Server port:")
+    domainname = StringField("Domain:")
     sharename = StringField("Share name:")
     path = StringField("Path:")
     userid = StringField("User name:")
-    password = StringField("Password:")
+    password = PasswordField("Password:")
     submit = SubmitField("Submit")
 
 

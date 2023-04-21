@@ -7,6 +7,8 @@ class SMBResource(db.Model):
     name = db.Column(db.String(64), unique=True)
     servername = db.Column(db.String(64))
     serveraddr = db.Column(db.String(64))
+    serverport = db.Column(db.Integer)
+    domainname = db.Column(db.String(64))
     sharename = db.Column(db.String(64))
     path = db.Column(db.String(256))
     userid = db.Column(db.String(64))

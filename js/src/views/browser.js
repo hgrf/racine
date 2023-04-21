@@ -29,7 +29,7 @@ class BrowserView {
     } else {
       this.setSingleSelection();
     }
-  
+
     $('#multiswitch-checkbox').click(function(event) {
       if (this.checked) {
         self.setMultiSelection();
@@ -37,12 +37,12 @@ class BrowserView {
         self.setSingleSelection();
       }
     });
-  
+
     // tell the upload form how to communicate with the server
     $('#uploadform').submit(function(event) {
       event.preventDefault();
       const formData = new FormData(this);
-  
+
       // show "activity" overlay
       $('#overlaytext').text('Uploading file...');
       $('#overlay').css('display', 'block');
@@ -67,7 +67,7 @@ class BrowserView {
         },
       });
     });
-  
+
     function folderclickhandler(event) {
       if (document.getElementById('multiswitch-checkbox') !== null) {
         self.queryDict['multi'] = document.getElementById('multiswitch-checkbox').checked;
@@ -75,12 +75,12 @@ class BrowserView {
       location.replace('/browser/'+$(this).data('url')+'?'+dictToURI(self.queryDict));
       event.preventDefault();
     }
-  
+
     $('.folder').click(folderclickhandler);
-  
+
     // TODO: note that the functionality of inpectpath and inspectresource could be easily combined and the following
     // code could be reduced a lot by treating historyitem, resource and shortcut all the same way...
-  
+
     // check for each history item if it is available
     $('.historyitem').each(function(index, element) {
       const historyitemdiv = $(this);
@@ -100,7 +100,7 @@ class BrowserView {
         },
       });
     });
-  
+
     // check for each resource if it is available and if it has a user/sample folder
     $('.resource').each(function(index, element) {
       $.ajax({
@@ -120,7 +120,7 @@ class BrowserView {
               shortcutsdiv.append('<img class=\'shortcut\' src=\'/static/images/sample.png\' data-url=\''+data.samplefolder+'\'>');
             }
             resourcediv.addClass('available'); // for CSS :hover
-  
+
             // add click handler for new elements
             resourcediv.click(folderclickhandler);
             shortcutsdiv.children('img').click(folderclickhandler);
@@ -138,10 +138,10 @@ class BrowserView {
     // disable Save button
     $('#savemulti').unbind('click');
     $('#savemulti').addClass('disabled');
-  
+
     // unselect selected files
     $('.file.selected').removeClass('selected');
-  
+
     // update handler for file tiles
     $('.file').unbind('click');
     $('.file').click(function(event) {
@@ -178,7 +178,7 @@ class BrowserView {
     $('.file').click(function(event) {
       $(this).toggleClass('selected');
     });
-  
+
     // set up Save button
     $('#savemulti').removeClass('disabled');
     $('#savemulti').click(function() {

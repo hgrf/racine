@@ -181,11 +181,14 @@ class BrowserView {
     // set up Save button
     $('#savemulti').removeClass('disabled');
     $('#savemulti').click(function() {
+      let filesTotal = 0;
+      let filesLeft = 0;
+
       // count files
-      files_total = $('.file.selected').length;
-      files_left = files_total;
+      filesTotal = $('.file.selected').length;
+      filesLeft = filesTotal;
       // show "activity" overlay
-      $('#overlaytext').html('Saving files... <span id="filecounter">(0/'+files_total+')</span>'+
+      $('#overlaytext').html('Saving files... <span id="filecounter">(0/'+filesTotal+')</span>'+
               '<div id="saveerrors"></div>');
       $('#overlay').css('display', 'block');
       // save files
@@ -198,15 +201,15 @@ class BrowserView {
           data: {'path': path,
             'type': self.queryDict['type']},
           success: function(data) {
-            files_left -= 1;
-            $('#filecounter').text('('+(files_total-files_left)+'/'+files_total+')');
+            filesLeft -= 1;
+            $('#filecounter').text('('+(filesTotal-filesLeft)+'/'+filesTotal+')');
             if (data.code) {
               $('#saveerrors').append('<div>Error: '+data.filename+': '+data.message+'</div>');
             } else {
               // call the call back function
               parent.CKEDITOR.fbcallback(data.uploadurl, {'filename': data.filename, 'type': data.type});
             }
-            if (!files_left && $('#saveerrors').html() == '') {
+            if (!filesLeft && $('#saveerrors').html() == '') {
               // hide the file browser
               parent.CKEDITOR.dialog.getCurrent().hide();
             }
@@ -216,8 +219,5 @@ class BrowserView {
     });
   }
 }
-
-let files_total = 0;
-let files_left = 0;
 
 export default BrowserView;

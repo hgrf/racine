@@ -1,5 +1,13 @@
 import $ from 'jquery';
 
+function dictToURI(dict) {
+  const str = [];
+  for (const p in dict) {
+    str.push(encodeURIComponent(p) + '=' + encodeURIComponent(dict[p]));
+  }
+  return str.join('&');
+}
+
 class BrowserView {
   constructor(params) {
     this.params = params;
@@ -15,13 +23,6 @@ class BrowserView {
         forEach(function(item) {
           self.queryDict[item.split('=')[0]] = item.split('=')[1];
         });
-    function dictToURI(dict) {
-      const str = [];
-      for (const p in dict) {
-        str.push(encodeURIComponent(p) + '=' + encodeURIComponent(dict[p]));
-      }
-      return str.join('&');
-    }
 
     if (this.queryDict['multi'] === 'true') {
       this.setMultiSelection();

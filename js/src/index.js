@@ -87,10 +87,11 @@ class Racine {
   }
 
   lightboxWrapper() {
+    const id = R.view.state.sampleid;
     if (this.src.includes('?')) {
-      return '<a class="lightboxlink" href="'+this.src+'&fullsize" data-lightbox="'+R.view.state.sampleid+'">';
+      return `<a class="lightboxlink" href="${this.src}&fullsize" data-lightbox="${id}">`;
     } else {
-      return '<a class="lightboxlink" href="'+this.src+'?fullsize" data-lightbox="'+R.view.state.sampleid+'">';
+      return `<a class="lightboxlink" href="${this.src}?fullsize" data-lightbox="${id}">`;
     }
   }
 

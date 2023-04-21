@@ -59,11 +59,11 @@ class MainView {
   #setupBrowserNavigation() {
     const self = this;
 
-    /* Switch off automatic scroll restoration, so that, if a popstate event occurs but the user does
-     * not want to leave the page, automatic scrolling to the top is avoided. However, this means that
-     * if we navigate back to some page that was previously scrolled to a specific location, we lose
-     * this information and the page is opened at 0 scroll position. This could be solved e.g. by
-     * storing the scroll position in the history state variable.
+    /* Switch off automatic scroll restoration, so that, if a popstate event occurs but the user
+     * does not want to leave the page, automatic scrolling to the top is avoided. However, this
+     * means that if we navigate back to some page that was previously scrolled to a specific
+     * location, we lose this information and the page is opened at 0 scroll position. This could be
+     * solved e.g. by storing the scroll position in the history state variable.
      */
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';

@@ -1,6 +1,9 @@
 import jQuery from 'jquery';
 import ckeditorconfig from '../util/ckeditorconfig';
 
+const serverErrorMsg = 'Could not connect to the server. ' +
+  'Please make sure you are connected and try again.';
+
 (function($) { // this is a jQuery plugin
   $.fn.texteditable = function() {
     // we need to iterate, because if we are given more than one field, the getter/setter functions
@@ -26,7 +29,7 @@ import ckeditorconfig from '../util/ckeditorconfig';
             const json = $.parseJSON(xhr.responseText);
             R.errorDialog(json.message);
           } else {
-            R.errorDialog('Could not connect to the server. Please make sure you are connected and try again.');
+            R.errorDialog(serverErrorMsg);
           }
         },
       });
@@ -59,7 +62,7 @@ import ckeditorconfig from '../util/ckeditorconfig';
             const json = $.parseJSON(xhr.responseText);
             R.errorDialog(json.message);
           } else {
-            R.errorDialog('Could not connect to the server. Please make sure you are connected and try again.');
+            R.errorDialog(serverErrorMsg);
           }
         },
       });
@@ -118,7 +121,9 @@ import ckeditorconfig from '../util/ckeditorconfig';
 
     const field = $(this);
 
-    // read original HTML from server in order to remove all modifications like Latex parsing or Lightbox
+    /* read original HTML from server in order to remove all modifications
+     * like Latex parsing or Lightbox
+     */
     $.ajax({
       url: field.data('getter'),
       type: 'get',
@@ -140,7 +145,7 @@ import ckeditorconfig from '../util/ckeditorconfig';
         editor.on('done', ckeditable_on_done);
       },
       error: function( jqXHR, textStatus ) {
-        R.errorDialog('Could not connect to the server. Please make sure you are connected and try again.');
+        R.errorDialog(serverErrorMsg);
         field.trigger('editabledone');
       },
     });
@@ -164,7 +169,7 @@ import ckeditorconfig from '../util/ckeditorconfig';
           ckeditable_finish(editor, field);
         },
         error: function( jqXHR, textStatus ) {
-          R.errorDialog('Could not connect to the server. Please make sure you are connected and try again.');
+          R.errorDialog(serverErrorMsg);
         },
       });
     } else {
@@ -196,7 +201,7 @@ import ckeditorconfig from '../util/ckeditorconfig';
         field.trigger('editabledone');
       },
       error: function( jqXHR, textStatus ) {
-        R.errorDialog('Could not connect to the server. Please make sure you are connected and try again.');
+        R.errorDialog(serverErrorMsg);
       },
     });
   }

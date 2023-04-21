@@ -28,20 +28,34 @@ function createSearchSample(searchfield) {
         let parentinfo;
         let ownerinfo;
         if (result.parentname != '') {
-          parentinfo = '<span style="white-space:nowrap;"><i class="glyphicon glyphicon-level-up"></i>&nbsp;'+result.parentname+'</span>\n';
+          parentinfo =
+            '<span style="white-space:nowrap;">' +
+              '<i class="glyphicon glyphicon-level-up"></i>' +
+              '&nbsp;' + result.parentname +
+            '</span>\n';
         } else {
           parentinfo = '';
         }
         if (!result.mysample) {
-          ownerinfo = '<span style="white-space:nowrap;"><i class="glyphicon glyphicon-user"></i>&nbsp;'+result.ownername+'</span>\n';
+          ownerinfo =
+            '<span style="white-space:nowrap;">' +
+              '<i class="glyphicon glyphicon-user"></i>' +
+              '&nbsp;' + result.ownername +
+            '</span>\n';
         } else {
           ownerinfo = '';
         }
-        return '<div style="padding-left:2em;padding-bottom:0.5em;padding-top:0.5em;">\n'+
-                       '<span style="white-space:nowrap;"><img src="/static/images/sample.png" style="margin-left:-1.5em;width:1.5em;height:1.5em;">&nbsp;'+result.name+'</span>\n'+
-                       ownerinfo+
-                       parentinfo+
-                       '</div>';
+        return (
+          '<div style="padding-left:2em;padding-bottom:0.5em;padding-top:0.5em;">\n' +
+            '<span style="white-space:nowrap;">' +
+              '<img src="/static/images/sample.png" ' +
+                'style="margin-left:-1.5em;width:1.5em;height:1.5em;">' +
+              '&nbsp;' + result.name +
+            '</span>\n' +
+            ownerinfo +
+            parentinfo +
+          '</div>'
+        );
       },
     },
   });

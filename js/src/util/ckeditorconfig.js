@@ -19,7 +19,8 @@ const ckeditorconfig = {
     {name: 'about', groups: ['about']},
     {name: 'tools', groups: ['tools']},
   ],
-  removeButtons: 'Cut,Copy,Paste,PasteText,PasteFromWord,Undo,Redo,BGColor,RemoveFormat,Outdent,Indent,Blockquote,About,Strike,Scayt,Anchor,Source',
+  removeButtons: 'Cut,Copy,Paste,PasteText,PasteFromWord,Undo,Redo,BGColor,RemoveFormat,Outdent,' +
+    'Indent,Blockquote,About,Strike,Scayt,Anchor,Source',
 };
 
 export default ckeditorconfig;

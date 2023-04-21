@@ -78,8 +78,10 @@ class BrowserView {
 
     $('.folder').click(folderclickhandler);
 
-    // TODO: note that the functionality of inpectpath and inspectresource could be easily combined and the following
-    // code could be reduced a lot by treating historyitem, resource and shortcut all the same way...
+    /* TODO: note that the functionality of inpectpath and inspectresource could be easily combined
+     * and the following code could be reduced a lot by treating historyitem, resource and shortcut
+     * all the same way...
+     */
 
     // check for each history item if it is available
     $('.historyitem').each(function(index, element) {
@@ -114,10 +116,16 @@ class BrowserView {
           shortcutsdiv.empty();
           if (!data.code) {
             if (data.userfolder != '') {
-              shortcutsdiv.append('<img class=\'shortcut\' src=\'/static/images/user.png\' data-url=\''+data.userfolder+'\'>');
+              shortcutsdiv.append(
+                  '<img class="shortcut" src="/static/images/user.png" ' +
+                  `data-url="${data.userfolder}">`,
+              );
             }
             if (data.samplefolder != '') {
-              shortcutsdiv.append('<img class=\'shortcut\' src=\'/static/images/sample.png\' data-url=\''+data.samplefolder+'\'>');
+              shortcutsdiv.append(
+                  '<img class="shortcut" ' +
+                  `src="/static/images/sample.png" data-url="${data.samplefolder}">`,
+              );
             }
             resourcediv.addClass('available'); // for CSS :hover
 
@@ -163,7 +171,9 @@ class BrowserView {
             // hide the file browser
             parent.CKEDITOR.dialog.getCurrent().hide();
             // call the call back function
-            parent.CKEDITOR.fbcallback(data.uploadurl, {'filename': data.filename, 'type': data.type});
+            parent.CKEDITOR.fbcallback(
+                data.uploadurl, {'filename': data.filename, 'type': data.type},
+            );
           }
         },
       });
@@ -208,7 +218,9 @@ class BrowserView {
               $('#saveerrors').append('<div>Error: '+data.filename+': '+data.message+'</div>');
             } else {
               // call the call back function
-              parent.CKEDITOR.fbcallback(data.uploadurl, {'filename': data.filename, 'type': data.type});
+              parent.CKEDITOR.fbcallback(
+                  data.uploadurl, {'filename': data.filename, 'type': data.type},
+              );
             }
             if (!filesLeft && $('#saveerrors').html() == '') {
               // hide the file browser

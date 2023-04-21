@@ -7,8 +7,10 @@ $.event.props.push('dataTransfer'); // otherwise jQuery event does not have func
 function draggableHandlers(activeEntry) {
   return {
     dragstart: function(event) {
-      event.dataTransfer.setData('sampleid', $(event.target).data('id'));
-      event.dataTransfer.setData('text/html', '<a href="/sample/' + $(event.target).data('id') + '">' + $(event.target).data('name') + '</a> ');
+      const id = $(event.target).data('id');
+      const name = $(event.target).data('name');
+      event.dataTransfer.setData('sampleid', id);
+      event.dataTransfer.setData('text/html', `<a href="/sample/${id}">${name}</a>`);
     },
     drop: function(event) {
     // reset background color (but highlight if sample is active)

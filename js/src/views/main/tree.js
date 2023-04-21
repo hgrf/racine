@@ -16,7 +16,9 @@ class Tree {
     let ctrlIsPressed = false;
     const self = this;
 
-    // keep track of CTRL key, so that double click event can open sample in new window if CTRL is held
+    /* keep track of CTRL key, so that double click event can open sample in new window if CTRL
+     * is held
+     */
     $(document).keydown(function(event) {
       if (event.which=='17') {
         ctrlIsPressed = true;
@@ -124,11 +126,13 @@ class Tree {
     const collapsibles = naventry.parents('.nav-children');
     let collapsed_counter = 0;
 
-    // for each collapsible parent check if it's collapsed and increase the counter accordingly, so that the autoscroll
-    // function is only activated when everything has finished expanding (so that the coordinates in scrollTo
-    // are correctly calculated)
+    /* for each collapsible parent check if it's collapsed and increase the counter accordingly,
+     * so that the autoscroll function is only activated when everything has finished expanding
+     * (so that the coordinates in scrollTo are correctly calculated)
+     */
     collapsibles.each(function() {
-      if ($(this).attr('aria-expanded') !== 'true') { // careful, it can be undefined instead of false, hence the notation
+      // careful, it can be undefined instead of false, hence the notation
+      if ($(this).attr('aria-expanded') !== 'true') {
         collapsed_counter++;
         $(this).one('shown.bs.collapse', function() {
           collapsed_counter--;

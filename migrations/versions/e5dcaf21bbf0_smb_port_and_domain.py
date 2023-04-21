@@ -19,6 +19,8 @@ def upgrade():
     with op.batch_alter_table("smbresources", schema=None) as batch_op:
         batch_op.add_column(sa.Column("serverport", sa.Integer(), nullable=True))
         batch_op.add_column(sa.Column("domainname", sa.String(length=64), nullable=True))
+    op.execute('UPDATE "smbresources" SET serverport=139;')
+    op.execute('UPDATE "smbresources" SET domainname="";')
 
     # ### end Alembic commands ###
 

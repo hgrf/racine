@@ -1,4 +1,5 @@
 from flask import jsonify
+from functools import wraps
 from marshmallow import Schema, fields
 
 from . import api
@@ -33,6 +34,36 @@ class ToggleCollaborativeResponse(Schema):
 
 class ParentIdParameter(Schema):
     parentid = fields.Int()
+
+
+def validate_sample_access(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if "sampleid" not in kwargs:
+            return bad_request("Invalid use of decorator: sampleid is missing")
+        sample = Sample.query.get(kwargs.pop("sampleid"))
+        if (
+            sample is None
+            or sample.isdeleted
+            or not sample.is_accessible_for(token_auth.current_user())
+        ):
+            return bad_request("Sample does not exist or you do not have the right to access it.")
+        return func(sample=sample, *args, **kwargs)
+
+    return wrapper
+
+
+def validate_sample_owner(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if "sampleid" not in kwargs:
+            return bad_request("Invalid use of decorator: sampleid is missing")
+        sample = Sample.query.get(kwargs.pop("sampleid"))
+        if sample is None or sample.isdeleted or sample.owner != token_auth.current_user():
+            return bad_request("Sample does not exist or you do not have the right to modify it.")
+        return func(sample=sample, *args, **kwargs)
+
+    return wrapper
 
 
 @api.route("/sample", methods=["PUT"])
@@ -80,9 +111,10 @@ def createsample():
     return "", 500  # this should never happen
 
 
-@api.route("/sample/<int:id>", methods=["DELETE"])
+@api.route("/sample/<int:sampleid>", methods=["DELETE"])
 @token_auth.login_required
-def deletesample(id):
+@validate_sample_owner
+def deletesample(sample):
     """Delete a sample from the database.
     ---
     delete:
@@ -98,19 +130,16 @@ def deletesample(id):
               schema: EmptySchema
           description: Sample deleted
     """
-    sample = Sample.query.get(id)
-    # TODO: put this verification in a function
-    if sample is None or sample.owner != token_auth.current_user() or sample.isdeleted:
-        return bad_request("You do not have permission to delete this sample.")
     record_activity("delete:sample", token_auth.current_user(), sample)
     sample.isdeleted = True  # mark sample as "deleted"
     db.session.commit()
     return "", 204
 
 
-@api.route("/sample/<int:id>/togglearchived", methods=["POST"])
+@api.route("/sample/<int:sampleid>/togglearchived", methods=["POST"])
 @token_auth.login_required
-def togglearchived(id):
+@validate_sample_owner
+def togglearchived(sample):
     """Toggle the isarchived-flag of a sample.
     ---
     post:
@@ -126,17 +155,15 @@ def togglearchived(id):
               schema: ToggleArchivedResponse
           description: isarchived-flag toggled
     """
-    sample = Sample.query.get(id)
-    if sample is None or sample.owner != token_auth.current_user() or sample.isdeleted:
-        return bad_request("Sample does not exist or you do not have the right to access it")
     sample.isarchived = not sample.isarchived
     db.session.commit()
     return jsonify(isarchived=sample.isarchived), 200
 
 
-@api.route("/sample/<int:id>/togglecollaborative", methods=["POST"])
+@api.route("/sample/<int:sampleid>/togglecollaborative", methods=["POST"])
 @token_auth.login_required
-def togglecollaborative(id):
+@validate_sample_owner
+def togglecollaborative(sample):
     """Toggle the iscollaborative-flag of a sample.
     ---
     post:
@@ -152,17 +179,15 @@ def togglecollaborative(id):
               schema: ToggleCollaborativeResponse
           description: iscollaborative-flag toggled
     """
-    sample = Sample.query.get(id)
-    if sample is None or sample.owner != token_auth.current_user() or sample.isdeleted:
-        return bad_request("Sample does not exist or you do not have the right to access it")
     sample.iscollaborative = not sample.iscollaborative
     db.session.commit()
     return jsonify(iscollaborative=sample.iscollaborative), 200
 
 
-@api.route("/sample/<int:id>/changeparent/<int:parentid>", methods=["POST"])
+@api.route("/sample/<int:sampleid>/changeparent/<int:parentid>", methods=["POST"])
 @token_auth.login_required
-def changeparent(id, parentid):
+@validate_sample_access
+def changeparent(sample, parentid):
     """Change the parent of a sample.
     ---
     post:
@@ -180,10 +205,7 @@ def changeparent(id, parentid):
               schema: EmptySchema
           description: parent changed
     """
-    sample = Sample.query.get(id)
     user = token_auth.current_user()
-    if sample is None or not sample.is_accessible_for(user) or sample.isdeleted:
-        return bad_request("Sample does not exist or you do not have the right to access it")
 
     # check if we're not trying to make the snake bite its tail
     p = Sample.query.get(parentid)

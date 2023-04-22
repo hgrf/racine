@@ -3,6 +3,7 @@ from flask import jsonify, request
 from marshmallow import Schema, fields
 
 from . import api
+from .samples import validate_sample_access
 from .common import IdParameter, EmptySchema  # noqa: F401
 from .errors import bad_request
 from ..main.forms import MarkActionAsNewsForm, NewActionForm
@@ -43,7 +44,8 @@ class UnmarkActionAsNewsContent(Schema):
 
 @api.route("/action/<int:sampleid>", methods=["PUT"])
 @token_auth.login_required
-def createaction(sampleid):
+@validate_sample_access
+def createaction(sample):
     """Create an action in the database.
     ---
     put:
@@ -69,21 +71,13 @@ def createaction(sampleid):
               schema: CreateActionError
           description: Failed to create action
     """
-    sample = Sample.query.get(sampleid)
-    if (
-        sample is None
-        or not sample.is_accessible_for(token_auth.current_user())
-        or sample.isdeleted
-    ):
-        return bad_request("Sample does not exist or you do not have the right to access it")
-
     form = NewActionForm()
     if form.validate_on_submit():
         a = Action(
             datecreated=date.today(),
             timestamp=form.timestamp.data,
             owner=token_auth.current_user(),
-            sample_id=sampleid,
+            sample_id=sample.id,
             description=form.description.data,
         )
         db.session.add(a)

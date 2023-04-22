@@ -27,7 +27,7 @@
 | app/main/ajaxviews/welcome.py                                                      |       51 |       40 |     22% |    17-102 |
 | app/main/errors.py                                                                 |       19 |        6 |     68% |9, 19, 24-28 |
 | app/main/forms.py                                                                  |       21 |        3 |     86% |     26-28 |
-| app/main/views.py                                                                  |       85 |       57 |     33% |18-34, 47-48, 54-96, 111-162, 168-177, 187 |
+| app/main/views.py                                                                  |       85 |       54 |     36% |18, 31-34, 47-48, 54-96, 111-162, 168-177, 187 |
 | app/models/\_\_init\_\_.py                                                         |       12 |        0 |    100% |           |
 | app/models/action.py                                                               |       22 |        7 |     68% |20, 23-29, 32 |
 | app/models/activity.py                                                             |       30 |        4 |     87% |16, 32, 39, 49 |
@@ -75,7 +75,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2207** | **1132** | **49%** |           |
+|                                                                          **TOTAL** | **2207** | **1129** | **49%** |           |
 
 
 ## Setup coverage badge

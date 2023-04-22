@@ -5,9 +5,9 @@ from .. import main
 from ...models import User, Sample
 
 
-@main.route("/navbar", methods=["GET"])
+@main.route("/tree", methods=["GET"])
 @login_required
-def navbar():
+def tree():
     inheritance = User.query.filter_by(heir=current_user).all()
     showarchived = (
         True
@@ -22,7 +22,7 @@ def navbar():
     samples.extend(current_user.directshares)
 
     return render_template(
-        "main/navbar.html",
+        "main/tree.html",
         samples=samples,
         inheritance=inheritance,
         showarchived=showarchived,

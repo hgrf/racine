@@ -91,19 +91,6 @@ class User(UserMixin, db.Model):
         db.session.add(user)
         return True
 
-    @property
-    def directshares(self):
-        """determine the user's direct shares that are not mounted anywhere in his tree
-        (i.e. they are at the top level)
-        """
-        return [
-            s.sample
-            for s in self.shares
-            if s.mountpoint_id == 0
-            and s.sample.is_accessible_for(self, direct_only=True)
-            and not s.sample.isdeleted
-        ]
-
     def get_token(self, expires_in=3600):
         now = datetime.utcnow()
         if self.token and self.token_expiration > now + timedelta(seconds=60):

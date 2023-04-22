@@ -8,6 +8,7 @@ from ..main.forms import NewSampleForm
 
 from .. import db
 from ..models import News, Sample, Share, record_activity, token_auth
+from ..models.tree import is_indirectly_shared, logical_parent
 
 
 class NewSampleFormContent(Schema):
@@ -180,29 +181,25 @@ def changeparent(id, parentid):
           description: parent changed
     """
     sample = Sample.query.get(id)
-    if (
-        sample is None
-        or not sample.is_accessible_for(token_auth.current_user())
-        or sample.isdeleted
-    ):
+    user = token_auth.current_user()
+    if sample is None or not sample.is_accessible_for(user) or sample.isdeleted:
         return bad_request("Sample does not exist or you do not have the right to access it")
 
     # check if we're not trying to make the snake bite its tail
-    if parentid != 0:
-        p = Sample.query.filter_by(id=parentid).first()
-        while p.logical_parent:
-            if p.logical_parent == sample:
-                return bad_request("Cannot move sample")
-            p = p.logical_parent
+    p = Sample.query.get(parentid)
+    while p:
+        if p == sample:
+            return bad_request("Cannot move sample")
+        p = logical_parent(p, user)
 
     # check if the current user is the sample owner, otherwise get corresponding share
-    if sample.owner != token_auth.current_user():
-        if sample.is_accessible_for(token_auth.current_user(), indirect_only=True):
+    if sample.owner != user:
+        if is_indirectly_shared(sample, user):
             return bad_request(
                 "The sample owner (" + sample.owner.username + ") has fixed the sample's location.",
             )
 
-        share = Share.query.filter_by(sample=sample, user=token_auth.current_user()).first()
+        share = Share.query.filter_by(sample=sample, user=user).first()
         if share is None:
             return bad_request("Could not find corresponding share")
         try:

@@ -1,4 +1,3 @@
-from .share import Share
 from .user import current_user
 from .. import db
 
@@ -24,9 +23,6 @@ class Sample(db.Model):
     children = db.relationship("Sample", backref=db.backref("parent", remote_side=[id]))
     shares = db.relationship(
         "Share", backref="sample", foreign_keys="Share.sample_id", cascade="delete"
-    )
-    mountedshares = db.relationship(
-        "Share", backref="mountpoint", foreign_keys="Share.mountpoint_id"
     )
     actions = db.relationship("Action", backref="sample", cascade="delete")
 
@@ -56,67 +52,8 @@ class Sample(db.Model):
     def __repr__(self):
         return "<Sample %r>" % self.name
 
-    def is_accessible_for(self, user, indirect_only=False, direct_only=False):
-        """go through the owner and shares of this sample and check in the hierarchy
-        (i.e. all parents) if it can be accessed by user
+    def is_accessible_for(self, user):
+        return is_accessible(self, user)
 
-        - if indirect_only is True, only look for indirect shares, i.e. parent shares
-        - if direct_only is True, only look for direct shares
 
-        indirect sharing has priority over direct sharing in order to avoid clogging
-        up the hierarchy
-        """
-
-        # check for invalid flag usage
-        if indirect_only and direct_only:
-            raise Exception("Choose either indirect_only or direct_only or neither")
-
-        # if looking for shared access, check first if user owns the sample
-        if (indirect_only or direct_only) and self.owner == user:
-            return False
-
-        if direct_only:
-            return user in [s.user for s in self.shares] and not self.is_accessible_for(
-                user, indirect_only=True
-            )
-
-        parent = self.parent if indirect_only else self
-        shares = []
-        while parent:
-            shares.append(parent.owner)
-            shares.extend([s.user for s in parent.shares])
-            parent = parent.parent
-        return user in shares
-
-    @property
-    def mountedsamples(self):
-        """make a list of samples that are mounted in this one by the current user"""
-
-        return [
-            s.sample
-            for s in self.mountedshares
-            if s.user == current_user()  # make sure it's mounted by the current user
-            and s.sample.is_accessible_for(
-                current_user, direct_only=True
-            )  # exclude indirect shares
-            and not s.sample.isdeleted
-        ]
-
-    @property
-    def logical_parent(self):
-        # determine the sample's logical parent in the current user's tree (i.e. the parent or
-        # the mountpoint)
-
-        # first find out if the sample belongs to the current user (in this case just return
-        # the real parent)
-        if self.owner == current_user():
-            return self.parent
-
-        # if the sample is indirectly shared with the current user, also return the real parent
-        if self.is_accessible_for(current_user(), indirect_only=True):
-            return self.parent
-
-        # if the sample is directly shared with the current user, return the mount point
-        if self.is_accessible_for(current_user(), direct_only=True):
-            share = Share.query.filter_by(sample=self, user=current_user()).first()
-            return share.mountpoint
+from .tree import is_accessible

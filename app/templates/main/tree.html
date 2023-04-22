@@ -1,32 +1,27 @@
-{# render_branch is a macro to recursively render the hierarchy of navbar elements #}
-{% macro render_branch(samps) %}
-    {% for s in samps|sort(attribute=order, reverse=True if order=='last_modified' else False) %}
-        {% if not s.isdeleted %}
-            <div class="nav-container" id="nav-container{{ s.id }}">
-                <div id="nav-entry{{ s.id }}" class="nav-entry nav-dropzone
-                                                     {% if s.isarchived %}
-                                                     nav-entry-archived
-                                                     {% endif %}"
-                     data-id="{{ s.id }}" data-name="{{ s.name }}" data-toggle="collapse"
-                     data-target="#nav-children{{ s.id }}" draggable="true">
-                    <div class="nav-entry-name">{{ s.name }}</div>
-                    {% if s.owner != current_user %}
-                        <div class="nav-entry-owner">
-                            {% if s.is_accessible_for(current_user, indirect_only=True) %}
-                                <i class="glyphicon glyphicon-lock"></i>
-                            {% endif %}
-                            {{ s.owner.username }}
-                        </div>
-                    {% endif %}
-                </div>
-                <div id="nav-children{{ s.id }}" class="collapse out nav-children
-                                                        {% if s.isarchived %}
-                                                        nav-children-archived
-                                                        {% endif %}">
-                    {{ render_branch(s.children+s.mountedsamples) }}
-                </div>
+{% macro render_nodes(nodes) %}
+    {% for node in nodes %}
+        {% set sample = node.sample %}
+        <div class="nav-container" id="nav-container{{ sample.id }}">
+            <div id="nav-entry{{ sample.id }}"
+                    class="nav-entry nav-dropzone{% if sample.isarchived %} nav-entry-archived{% endif %}"
+                    data-id="{{ sample.id }}" data-name="{{ sample.name }}"
+                    data-toggle="collapse" data-target="#nav-children{{ sample.id }}"
+                    draggable="true">
+                <div class="nav-entry-name">{{ sample.name }}</div>
+                {% if sample.owner != current_user %}
+                    <div class="nav-entry-owner">
+                        {% if node.indirectly_shared %}
+                            <i class="glyphicon glyphicon-lock"></i>
+                        {% endif %}
+                        {{ sample.owner.username }}
+                    </div>
+                {% endif %}
             </div>
-        {% endif %}
+            <div id="nav-children{{ sample.id }}"
+                    class="collapse out nav-children{% if sample.isarchived %} nav-children-archived{% endif %}">
+                    {{ render_nodes(node.children) }}
+            </div>
+        </div>
     {% endfor %}
 {% endmacro %}
 
@@ -55,7 +50,7 @@
 
 {# <div class="navbar-clear"></div>  #}
 <div class="nav-main-container nav-dropzone" data-id="0">
-    <div id="nav-mysamples">{{ render_branch(samples) }}</div>
+    <div id="nav-mysamples">{{ render_nodes(root.children) }}</div>
     {% if inheritance %}
         <div class="nav-heading">Inheritance:</div>
         {% for i in inheritance %}

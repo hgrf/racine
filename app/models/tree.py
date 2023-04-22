@@ -44,21 +44,27 @@ def build_tree(user, order="id", callback=None):
     return root
 
 
-def search_tree(user, query, limit=None):
-    query = query.lower()
+def list_tree(user, filter=None, limit=None):
     results = []
 
-    def filter(sample):
-        return sample.name is not None and query in sample.name.lower()
-
     def callback(nodes):
-        results.extend([node.sample for node in nodes if filter(node.sample)])
-        if limit and len(results) >= limit:
+        results.extend([node.sample for node in nodes if filter is None or filter(node.sample)])
+        if limit is not None and len(results) >= limit:
             return False
         return True
 
     build_tree(user, callback=callback)
 
-    if limit:
+    if limit is not None:
         return results[:limit]
+
     return results
+
+
+def search_tree(user, query, limit=None):
+    query = query.lower()
+
+    def filter(sample):
+        return sample.name is not None and query in sample.name.lower()
+
+    return list_tree(user, filter=filter, limit=limit)

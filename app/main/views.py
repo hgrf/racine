@@ -13,21 +13,21 @@ from ..models import (
 
 
 @main.route("/")
-@main.route("/sample/<int:sampleid>")
-def index(sampleid=0):
-    if not current_user.is_authenticated:
-        return redirect("/auth/login?next=%2F")
+@login_required
+def index():
+    return render_template(
+        "main/main.html",
+        view="main",
+        params={"ajaxView": "welcome"},
+        api_token=current_user.get_token(),
+        newsampleform=NewSampleForm(),
+        dlg_markasnews_form=MarkActionAsNewsForm(),
+    )
 
-    # TODO: reduce redundance in call to render_template
-    if not sampleid:
-        return render_template(
-            "main/main.html",
-            view="main",
-            params={"ajaxView": "welcome"},
-            api_token=current_user.get_token(),
-            newsampleform=NewSampleForm(),
-            dlg_markasnews_form=MarkActionAsNewsForm(),
-        )
+
+@main.route("/sample/<int:sampleid>")
+@login_required
+def sample(sampleid):
     sample = Sample.query.get(sampleid)
     if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
         return render_template("errors/404.html"), 404

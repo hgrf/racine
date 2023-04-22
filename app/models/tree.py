@@ -10,10 +10,20 @@ sortkeys = {
 }
 
 
+def is_indirectly_shared(sample, user):
+    parent = sample.parent
+    shares = []
+    while parent:
+        shares.append(parent.owner)
+        shares.extend([s.user for s in parent.shares])
+        parent = parent.parent
+    return user in shares
+
+
 def build_tree(user, order="id", callback=None):
     reverse = True if order == "last_modified" else False
-    Node = namedtuple("Node", ["sample", "children"])
-    root = Node(None, [])
+    Node = namedtuple("Node", ["sample", "children", "indirectly_shared"])
+    root = Node(None, [], False)
     nodes_to_explore = [root]
     while nodes_to_explore:
         current_node = nodes_to_explore.pop(0)
@@ -21,7 +31,7 @@ def build_tree(user, order="id", callback=None):
         kwargs = {"owner": user} if current_id == 0 else {}
         current_node.children.extend(
             [
-                Node(sample, [])
+                Node(sample, [], current_node.indirectly_shared or sample.owner != user)
                 for sample in Sample.query.filter_by(
                     parent_id=current_id, isdeleted=False, **kwargs
                 ).all()
@@ -29,10 +39,9 @@ def build_tree(user, order="id", callback=None):
         )
         current_node.children.extend(
             [
-                Node(share.sample, [])
+                Node(share.sample, [], current_node.indirectly_shared)
                 for share in Share.query.filter_by(user=user, mountpoint_id=current_id).all()
-                if not share.sample.isdeleted
-                and share.sample.is_accessible_for(user, direct_only=True)
+                if not share.sample.isdeleted and not is_indirectly_shared(share.sample, user)
             ]
         )
         current_node.children.sort(key=sortkeys[order], reverse=reverse)

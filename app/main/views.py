@@ -1,22 +1,14 @@
-import os
-
-from datetime import date, datetime, timedelta
-from flask import abort, current_app, jsonify, redirect, render_template, request, send_file
+from flask import abort, jsonify, redirect, render_template, request, send_file
 from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy import not_
-from sqlalchemy.sql import func
 from werkzeug.security import safe_join
 
 from . import main
-from .forms import NewSampleForm, NewActionForm, MarkActionAsNewsForm
-from .. import db, plugins, smbinterface
+from .forms import NewSampleForm, MarkActionAsNewsForm
 from ..models import (
     Sample,
-    Action,
     User,
     Share,
-    Upload,
-    Activity,
 )
 
 
@@ -47,182 +39,6 @@ def index(sampleid=0):
         newsampleform=NewSampleForm(),
         dlg_markasnews_form=MarkActionAsNewsForm(),
     )
-
-
-@main.route("/welcome")
-@login_required
-def welcome():
-    # get free disk space
-    statvfs = os.statvfs(os.path.dirname(__file__))
-    availablevol = statvfs.f_frsize * statvfs.f_bavail
-
-    # get size of the SQLite database
-    dbsize = os.path.getsize(current_app.config["SQLALCHEMY_DATABASE_URI"][10:])
-
-    # get user activity for all users (only admin will see this)
-    aweekago = date.today() - timedelta(weeks=1)
-    stmt = (
-        db.session.query(Action.owner_id, func.count("*").label("action_count"))
-        .filter(Action.datecreated > aweekago)
-        .group_by(Action.owner_id)
-        .subquery()
-    )
-    user_vs_count = (
-        db.session.query(User, stmt.c.action_count)
-        .outerjoin(stmt, User.id == stmt.c.owner_id)
-        .order_by(User.id)
-        .all()
-    )
-    newactionsallusers = []
-    maxcountallusers = 0
-    for n in user_vs_count:
-        if n[1] is not None:
-            newactionsallusers.append(n)
-            maxcountallusers = max(maxcountallusers, n[1])
-
-    # get per user upload volume for all users (only admin will see this)
-    stmt = (
-        db.session.query(Upload.user_id, func.sum(Upload.size).label("upload_volume"))
-        .group_by(Upload.user_id)
-        .subquery()
-    )
-    uploadvols = (
-        db.session.query(User, stmt.c.upload_volume)
-        .outerjoin(stmt, User.id == stmt.c.user_id)
-        .order_by(User.id)
-        .all()
-    )
-    maxuploadvol = 0
-    totuploadvol = 0
-    for u in uploadvols:
-        maxuploadvol = max(maxuploadvol, u[1] if u[1] is not None else 0)
-        totuploadvol += u[1] if u[1] is not None else 0
-
-    # get last modified samples
-    recent_samples = (
-        db.session.query(Sample)
-        .join(Activity)
-        .filter(Activity.user_id == current_user.id, not Sample.isdeleted)
-        .order_by(Activity.id.desc())
-        .distinct()
-        .limit(5)
-        .all()
-    )
-
-    # remove samples that are not shared with the user anymore
-    # NB: this might reduce the recent_samples list to less than five elements
-    recent_samples = [s for s in recent_samples if s.is_accessible_for(current_user)]
-
-    # execute plugin display functions
-    plugin_display = []
-    for p in plugins:
-        try:
-            display = p.display()
-        except Exception:
-            display = "Error in plugin"
-        plugin_display.append([p.title, display])
-
-    # assemble news
-    news = [link.news for link in current_user.news_links]
-    news = sorted(news, key=lambda n: n.id, reverse=True)
-
-    # check for expired news
-    expired = []
-    not_expired = []
-    for n in news:
-        if datetime.today().date() > n.expires:
-            expired.append(n)
-            db.session.delete(n)
-        else:
-            not_expired.append(n)
-    db.session.commit()
-    news = not_expired
-
-    return render_template(
-        "main/welcome.html",
-        conns=smbinterface.conns,
-        recent_samples=recent_samples,
-        newactionsallusers=newactionsallusers,
-        maxcountallusers=maxcountallusers,
-        uploadvols=uploadvols,
-        maxuploadvol=maxuploadvol,
-        plugin_display=plugin_display,
-        totuploadvol=totuploadvol,
-        availablevol=availablevol,
-        dbsize=dbsize,
-        news=news,
-    )
-
-
-@main.route("/navbar", methods=["GET"])
-@login_required
-def navbar():
-    inheritance = User.query.filter_by(heir=current_user).all()
-    showarchived = (
-        True
-        if request.args.get("showarchived") is not None
-        and request.args.get("showarchived") == "true"
-        else False
-    )
-    order = request.args.get("order") if request.args.get("order") else "id"
-
-    # only query root level samples, the template will build the hierarchy
-    samples = Sample.query.filter_by(owner=current_user, parent_id=0, isdeleted=False).all()
-    samples.extend(current_user.directshares)
-
-    return render_template(
-        "main/navbar.html",
-        samples=samples,
-        inheritance=inheritance,
-        showarchived=showarchived,
-        order=order,
-    )
-
-
-@main.route("/editor/<sampleid>", methods=["GET", "POST"])
-@login_required
-def editor(sampleid):
-    sample = Sample.query.get(sampleid)
-    shares = sample.shares
-    showparentactions = (
-        True
-        if request.args.get("showparentactions") is not None
-        and request.args.get("showparentactions") == "true"
-        else False
-    )
-    invertactionorder = (
-        True
-        if request.args.get("invertactionorder") is not None
-        and request.args.get("invertactionorder") == "true"
-        else False
-    )
-
-    if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
-        return render_template("errors/404.html"), 404
-    else:
-        form = NewActionForm()
-        form.description.data = ""
-        form.timestamp.data = date.today()
-
-        # ----- get actions for this sample and all parent samples and order them by ordnum
-        actions = []
-        s = sample
-        while s is not None:
-            actions.extend(Action.query.filter_by(sample=s).order_by(Action.ordnum).all())
-            s = s.parent
-            if not showparentactions:
-                break
-        actions = sorted(actions, key=lambda a: a.ordnum, reverse=invertactionorder)
-
-        return render_template(
-            "main/sample.html",
-            sample=sample,
-            actions=actions,
-            form=form,
-            shares=shares,
-            showparentactions=showparentactions,
-            invertactionorder=invertactionorder,
-        )
 
 
 @main.route("/help")

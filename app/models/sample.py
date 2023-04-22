@@ -86,10 +86,13 @@ class Sample(db.Model):
             return self.parent
 
         # if the sample is indirectly shared with the current user, also return the real parent
-        if self.is_accessible_for(current_user(), indirect_only=True):
+        if is_indirectly_shared(self, current_user()):
             return self.parent
 
         # if the sample is directly shared with the current user, return the mount point
         if current_user() in [s.user for s in self.shares]:
             share = Share.query.filter_by(sample=self, user=current_user()).first()
             return share.mountpoint
+
+
+from .tree import is_indirectly_shared

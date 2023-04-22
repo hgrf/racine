@@ -8,6 +8,7 @@ from ..main.forms import NewSampleForm
 
 from .. import db
 from ..models import News, Sample, Share, record_activity, token_auth
+from ..models.tree import is_indirectly_shared
 
 
 class NewSampleFormContent(Schema):
@@ -197,7 +198,7 @@ def changeparent(id, parentid):
 
     # check if the current user is the sample owner, otherwise get corresponding share
     if sample.owner != token_auth.current_user():
-        if sample.is_accessible_for(token_auth.current_user(), indirect_only=True):
+        if is_indirectly_shared(sample, token_auth.current_user()):
             return bad_request(
                 "The sample owner (" + sample.owner.username + ") has fixed the sample's location.",
             )

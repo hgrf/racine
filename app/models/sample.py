@@ -53,21 +53,12 @@ class Sample(db.Model):
     def __repr__(self):
         return "<Sample %r>" % self.name
 
-    def is_accessible_for(self, user, indirect_only=False):
+    def is_accessible_for(self, user):
         """go through the owner and shares of this sample and check in the hierarchy
         (i.e. all parents) if it can be accessed by user
-
-        - if indirect_only is True, only look for indirect shares, i.e. parent shares
-
-        indirect sharing has priority over direct sharing in order to avoid clogging
-        up the hierarchy
         """
 
-        # if looking for shared access, check first if user owns the sample
-        if indirect_only and self.owner == user:
-            return False
-
-        parent = self.parent if indirect_only else self
+        parent = self
         shares = []
         while parent:
             shares.append(parent.owner)

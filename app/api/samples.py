@@ -186,12 +186,11 @@ def changeparent(id, parentid):
         return bad_request("Sample does not exist or you do not have the right to access it")
 
     # check if we're not trying to make the snake bite its tail
-    if parentid != 0:
-        p = Sample.query.filter_by(id=parentid).first()
-        while logical_parent(p, user):
-            if logical_parent(p, user) == sample:
-                return bad_request("Cannot move sample")
-            p = logical_parent(p, user)
+    p = Sample.query.get(parentid)
+    while p:
+        if p == sample:
+            return bad_request("Cannot move sample")
+        p = logical_parent(p, user)
 
     # check if the current user is the sample owner, otherwise get corresponding share
     if sample.owner != user:

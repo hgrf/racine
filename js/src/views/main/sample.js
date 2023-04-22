@@ -35,15 +35,7 @@ class SampleView extends AjaxView {
       switch (type) {
         case 'action':
           R.actionsAPI.deleteAction(id, function(error, data, response) {
-            if (!response) {
-              R.errorDialog('Server error. Please check your connection.');
-            } else if (response.error) {
-              if (response.body.message) {
-                R.errorDialog(response.body.message);
-              } else {
-                R.errorDialog(response.error);
-              }
-            } else {
+            if (!self.#responseHasError(response)) {
               $('#' + id + '.list-entry').remove();
             }
             $('#confirm-delete').modal('hide');
@@ -51,15 +43,7 @@ class SampleView extends AjaxView {
           break;
         case 'sample':
           R.samplesAPI.deleteSample(id, function(error, data, response) {
-            if (!response) {
-              R.errorDialog('Server error. Please check your connection.');
-            } else if (response.error) {
-              if (response.body.message) {
-                R.errorDialog(response.body.message);
-              } else {
-                R.errorDialog(response.error);
-              }
-            } else {
+            if (!self.#responseHasError(response)) {
               self.mainView.loadWelcome();
             }
             $('#confirm-delete').modal('hide');
@@ -67,15 +51,7 @@ class SampleView extends AjaxView {
           break;
         case 'share':
           R.sharesAPI.deleteShare(id, function(error, data, response) {
-            if (!response) {
-              R.errorDialog('Server error. Please check your connection.');
-            } else if (response.error) {
-              if (response.body.message) {
-                R.errorDialog(response.body.message);
-              } else {
-                R.errorDialog(response.error);
-              }
-            } else {
+            if (!self.#responseHasError(response)) {
               $('#sharelistentry' + id).remove();
               if (response.status == 205) { // if the user removed himself from the sharer list
                 self.mainView.loadWelcome();
@@ -145,6 +121,24 @@ class SampleView extends AjaxView {
 
   onLoadError() {
     R.errorDialog(`Sample #${sampleid} does not exist or you do not have access to it.`);
+  }
+
+  #responseHasError(response) {
+    let errorMsg = null;
+    if (!response) {
+      errorMsg = 'Server error. Please check your connection.';
+    } else if (response.error) {
+      if (response.body.message) {
+        errorMsg = response.body.message;
+      } else {
+        errorMsg = response.error;
+      }
+    }
+    if (errorMsg !== null) {
+      R.errorDialog(errorMsg);
+      return true;
+    }
+    return false;
   }
 }
 

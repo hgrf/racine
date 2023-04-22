@@ -10,7 +10,7 @@ sortkeys = {
 }
 
 
-def build_tree(user, order="id"):
+def build_tree(user, order="id", callback=None):
     reverse = True if order == "last_modified" else False
     Node = namedtuple("Node", ["sample", "children"])
     root = Node(None, [])
@@ -38,4 +38,27 @@ def build_tree(user, order="id"):
         current_node.children.sort(key=sortkeys[order], reverse=reverse)
         nodes_to_explore.extend(current_node.children)
 
+        if callback is not None and not callback(current_node.children):
+            break
+
     return root
+
+
+def search_tree(user, query, limit=None):
+    query = query.lower()
+    results = []
+
+    def filter(sample):
+        return sample.name is not None and query in sample.name.lower()
+
+    def callback(nodes):
+        results.extend([node.sample for node in nodes if filter(node.sample)])
+        if limit and len(results) >= limit:
+            return False
+        return True
+
+    build_tree(user, callback=callback)
+
+    if limit:
+        return results[:limit]
+    return results

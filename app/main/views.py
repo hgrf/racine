@@ -9,6 +9,7 @@ from ..models import (
     Sample,
     User,
     Share,
+    search_tree,
 )
 
 
@@ -54,38 +55,20 @@ def search():
     keyword = request.args.get("term")
     if keyword is None or keyword == "":
         return jsonify(error="Please specify a search term")
-    keyword = keyword.lower()
 
-    # In order to reach really ALL samples that are accessible by the current user, we need to
-    # go through the hierarchy. The most tricky samples to catch are the children of a sample
-    # that the user shares with someone else and that are not explicitly shared with the user.
-    #
-    # The problem with the following strategy is that samples on the same hierarchy level are
-    # not given the same priority in the results list. Instead the first "tree" will be given
-    # highest priority.
-    def find_in(samples, keyword, limit):
-        if not samples or limit < 1:
-            return []
-        result = []
-        for s in samples:
-            # sample name should never be None, but due to bugs this may happen...
-            if s.name is not None and keyword in s.name.lower():
-                result.append(s)
-            # TODO: does s.children contain deleted samples ?
-            result.extend(find_in(s.children + s.mountedsamples, keyword, limit - len(result)))
-        return result
-
-    own_samples = Sample.query.filter_by(owner=current_user, parent_id=0, isdeleted=False).all()
-    shares = current_user.directshares
     results = [
         {
-            "name": s.name,
-            "id": s.id,
-            "ownername": s.owner.username,
-            "mysample": (s.owner == current_user),
-            "parentname": s.parent.name if s.parent_id else "",
+            "name": sample.name,
+            "id": sample.id,
+            "ownername": sample.owner.username,
+            "mysample": (sample.owner == current_user),
+            "parentname": sample.parent.name if sample.parent_id else "",
         }
-        for s in find_in(own_samples + shares, keyword, 10)
+        for sample in search_tree(
+            user=current_user,
+            query=keyword,
+            limit=10,
+        )
     ]
 
     if request.args.get("autocomplete") is not None:

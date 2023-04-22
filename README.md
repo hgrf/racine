@@ -10,7 +10,7 @@
 | app/api/common.py                                                                  |        5 |        0 |    100% |           |
 | app/api/errors.py                                                                  |       11 |        7 |     36% |  6-11, 15 |
 | app/api/fields.py                                                                  |       82 |       55 |     33% |20-25, 29-34, 113-135, 161-220 |
-| app/api/samples.py                                                                 |      104 |       67 |     36% |57-79, 100-107, 128-133, 154-159, 182-229 |
+| app/api/samples.py                                                                 |      105 |       67 |     36% |58-80, 101-108, 129-134, 155-160, 183-226 |
 | app/api/shares.py                                                                  |       63 |       43 |     32% |49-75, 101-126 |
 | app/auth/\_\_init\_\_.py                                                           |        3 |        0 |    100% |           |
 | app/auth/forms.py                                                                  |       15 |        0 |    100% |           |
@@ -23,24 +23,25 @@
 | app/main/\_\_init\_\_.py                                                           |        4 |        0 |    100% |           |
 | app/main/ajaxviews/\_\_init\_\_.py                                                 |        0 |        0 |    100% |           |
 | app/main/ajaxviews/sample.py                                                       |       27 |       18 |     33% |     13-45 |
-| app/main/ajaxviews/tree.py                                                         |       13 |        6 |     54% |     11-24 |
+| app/main/ajaxviews/tree.py                                                         |       14 |        7 |     50% |     11-19 |
 | app/main/ajaxviews/welcome.py                                                      |       51 |       40 |     22% |    17-102 |
 | app/main/errors.py                                                                 |       19 |        6 |     68% |9, 19, 24-28 |
 | app/main/forms.py                                                                  |       21 |        3 |     86% |     26-28 |
-| app/main/views.py                                                                  |       85 |       54 |     36% |18, 31-34, 47-48, 54-96, 111-162, 168-177, 187 |
-| app/models/\_\_init\_\_.py                                                         |       12 |        0 |    100% |           |
+| app/main/views.py                                                                  |       73 |       42 |     42% |19, 32-35, 48-49, 55-79, 94-145, 151-160, 170 |
+| app/models/\_\_init\_\_.py                                                         |       13 |        0 |    100% |           |
 | app/models/action.py                                                               |       22 |        7 |     68% |20, 23-29, 32 |
 | app/models/activity.py                                                             |       30 |        4 |     87% |16, 32, 39, 49 |
 | app/models/handlers.py                                                             |       38 |       29 |     24% |8-59, 63-90, 102-103, 106-107 |
 | app/models/news.py                                                                 |       46 |       24 |     48% |28-53, 57-65 |
-| app/models/sample.py                                                               |       58 |       29 |     50% |37-54, 57, 71-89, 95, 112-122 |
+| app/models/sample.py                                                               |       33 |        9 |     73% |33-50, 53, 56 |
 | app/models/share.py                                                                |        9 |        1 |     89% |        12 |
 | app/models/smbresource.py                                                          |       15 |        1 |     93% |        18 |
+| app/models/tree.py                                                                 |       54 |       44 |     19% |14-20, 24, 33-43, 47-76, 80-93, 97-102 |
 | app/models/upload.py                                                               |       11 |        1 |     91% |        14 |
-| app/models/user.py                                                                 |       85 |       33 |     61% |20, 25, 34, 60, 64, 68, 74-75, 81-92, 99, 108-114, 117, 121-124 |
+| app/models/user.py                                                                 |       82 |       32 |     61% |20, 25, 34, 60, 64, 68, 74-75, 81-92, 95-101, 104, 108-111 |
 | app/printdata/\_\_init\_\_.py                                                      |        3 |        0 |    100% |           |
 | app/printdata/forms.py                                                             |        8 |        0 |    100% |           |
-| app/printdata/views.py                                                             |       34 |       26 |     24% |     11-43 |
+| app/printdata/views.py                                                             |       25 |       17 |     32% |     11-29 |
 | app/profile/\_\_init\_\_.py                                                        |        3 |        0 |    100% |           |
 | app/profile/forms.py                                                               |       24 |        6 |     75% |37-38, 41-45, 48-49 |
 | app/profile/views.py                                                               |       55 |       40 |     27% |12-23, 29-38, 44-71 |
@@ -75,7 +76,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2207** | **1129** | **49%** |           |
+|                                                                          **TOTAL** | **2215** | **1132** | **49%** |           |
 
 
 ## Setup coverage badge

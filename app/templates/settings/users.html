@@ -18,7 +18,7 @@
     <tr>
         <td>
             {{ user.id }}
-            <i class="actionicon glyphicon glyphicon-trash" data-id="{{ user.id }}" data-toggle="modal" data-target="#confirm-delete"></i>
+            <i class="actionicon glyphicon glyphicon-trash" data-type="user" data-id="{{ user.id }}" data-toggle="modal" data-target="#confirm-delete"></i>
             <i class="actionicon loginas glyphicon glyphicon-log-in" data-userid="{{ user.id }}"></i>
         </td>
         <td><div class="editable cmbeditable" data-setter="/api/set/user/is_admin/{{ user.id }}">{{ user.is_admin }}</div></td>

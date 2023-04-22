@@ -21,7 +21,7 @@
     <tr>
         <td>
             {{ smbresource.id }}
-            <i class="actionicon glyphicon glyphicon-trash" data-id="{{ smbresource.id }}" data-toggle="modal" data-target="#confirm-delete"></i>
+            <i class="actionicon glyphicon glyphicon-trash" data-type="smbresource" data-id="{{ smbresource.id }}" data-toggle="modal" data-target="#confirm-delete"></i>
         </td>
         <td><div class="editable" data-setter="/api/set/smbresource/name/{{ smbresource.id }}">{{ smbresource.name }}</div></td>
         <td><div class="editable" data-setter="/api/set/smbresource/servername/{{ smbresource.id }}">{{ smbresource.servername }}</div></td>

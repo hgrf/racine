@@ -4,6 +4,7 @@ import AjaxView from './ajaxview';
 
 import MarkAsNewsDialog from '../../dialogs/markasnews';
 import UserBrowserDialog from '../../dialogs/userbrowser';
+import ConfirmDeleteDialog from '../../dialogs/confirmdelete';
 
 import ckeditorconfig from '../../util/ckeditorconfig';
 
@@ -28,27 +29,9 @@ class SampleView extends AjaxView {
   onDocumentReady() {
     const self = this;
 
-    // "mark as news" dialog
     new MarkAsNewsDialog();
-
-    // user browser dialog
     new UserBrowserDialog(this.mainView);
-
-    // sample and action deletion
-    $('#confirm-delete').on('show.bs.modal', function(e) {
-      const okButton = $(this).find('.btn-ok'); // eslint-disable-line no-invalid-this
-      okButton.attr('id', $(e.relatedTarget).data('id'));
-      okButton.data('type', $(e.relatedTarget).data('type'));
-      $('.debug-id').html(
-          'Delete <strong>' + $(e.relatedTarget).data('type') +
-        '</strong> ID: <strong>' + okButton.attr('id') + '</strong>',
-      );
-    });
-
-    $('.btn-ok').click(function(event) {
-      const type = $(this).data('type'); // eslint-disable-line no-invalid-this
-      const id = $(this).attr('id'); // eslint-disable-line no-invalid-this
-
+    new ConfirmDeleteDialog(function(type, id) {
       switch (type) {
         case 'action':
           R.actionsAPI.deleteAction(id, function(error, data, response) {

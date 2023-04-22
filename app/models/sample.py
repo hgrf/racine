@@ -90,8 +90,6 @@ class Sample(db.Model):
             return self.parent
 
         # if the sample is directly shared with the current user, return the mount point
-        if current_user() in [s.user for s in self.shares] and not self.is_accessible_for(
-            current_user(), indirect_only=True
-        ):
+        if current_user() in [s.user for s in self.shares]:
             share = Share.query.filter_by(sample=self, user=current_user()).first()
             return share.mountpoint

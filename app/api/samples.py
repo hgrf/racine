@@ -181,29 +181,26 @@ def changeparent(id, parentid):
           description: parent changed
     """
     sample = Sample.query.get(id)
-    if (
-        sample is None
-        or not sample.is_accessible_for(token_auth.current_user())
-        or sample.isdeleted
-    ):
+    user = token_auth.current_user()
+    if sample is None or not sample.is_accessible_for(user) or sample.isdeleted:
         return bad_request("Sample does not exist or you do not have the right to access it")
 
     # check if we're not trying to make the snake bite its tail
     if parentid != 0:
         p = Sample.query.filter_by(id=parentid).first()
-        while logical_parent(p, token_auth.current_user()):
-            if logical_parent(p, token_auth.current_user()) == sample:
+        while logical_parent(p, user):
+            if logical_parent(p, user) == sample:
                 return bad_request("Cannot move sample")
-            p = logical_parent(p, token_auth.current_user())
+            p = logical_parent(p, user)
 
     # check if the current user is the sample owner, otherwise get corresponding share
-    if sample.owner != token_auth.current_user():
-        if is_indirectly_shared(sample, token_auth.current_user()):
+    if sample.owner != user:
+        if is_indirectly_shared(sample, user):
             return bad_request(
                 "The sample owner (" + sample.owner.username + ") has fixed the sample's location.",
             )
 
-        share = Share.query.filter_by(sample=sample, user=token_auth.current_user()).first()
+        share = Share.query.filter_by(sample=sample, user=user).first()
         if share is None:
             return bad_request("Could not find corresponding share")
         try:

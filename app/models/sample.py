@@ -54,17 +54,7 @@ class Sample(db.Model):
         return "<Sample %r>" % self.name
 
     def is_accessible_for(self, user):
-        """go through the owner and shares of this sample and check in the hierarchy
-        (i.e. all parents) if it can be accessed by user
-        """
-
-        parent = self
-        shares = []
-        while parent:
-            shares.append(parent.owner)
-            shares.extend([s.user for s in parent.shares])
-            parent = parent.parent
-        return user in shares
+        return is_accessible(self, user)
 
     @property
     def logical_parent(self):
@@ -86,4 +76,4 @@ class Sample(db.Model):
             return share.mountpoint
 
 
-from .tree import is_indirectly_shared
+from .tree import is_accessible, is_indirectly_shared

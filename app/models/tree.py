@@ -10,14 +10,18 @@ sortkeys = {
 }
 
 
-def is_indirectly_shared(sample, user):
-    parent = sample.parent
+def is_accessible(sample, user):
+    parent = sample
     shares = []
     while parent:
         shares.append(parent.owner)
         shares.extend([s.user for s in parent.shares])
         parent = parent.parent
     return user in shares
+
+
+def is_indirectly_shared(sample, user):
+    return is_accessible(sample.parent, user)
 
 
 def build_tree(user, order="id", callback=None):

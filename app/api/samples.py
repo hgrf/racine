@@ -8,7 +8,7 @@ from ..main.forms import NewSampleForm
 
 from .. import db
 from ..models import News, Sample, Share, record_activity, token_auth
-from ..models.tree import is_indirectly_shared
+from ..models.tree import is_indirectly_shared, logical_parent
 
 
 class NewSampleFormContent(Schema):
@@ -191,10 +191,10 @@ def changeparent(id, parentid):
     # check if we're not trying to make the snake bite its tail
     if parentid != 0:
         p = Sample.query.filter_by(id=parentid).first()
-        while p.logical_parent:
-            if p.logical_parent == sample:
+        while logical_parent(p, token_auth.current_user()):
+            if logical_parent(p, token_auth.current_user()) == sample:
                 return bad_request("Cannot move sample")
-            p = p.logical_parent
+            p = logical_parent(p, token_auth.current_user())
 
     # check if the current user is the sample owner, otherwise get corresponding share
     if sample.owner != token_auth.current_user():

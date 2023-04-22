@@ -1,4 +1,3 @@
-from .share import Share
 from .user import current_user
 from .. import db
 
@@ -56,24 +55,5 @@ class Sample(db.Model):
     def is_accessible_for(self, user):
         return is_accessible(self, user)
 
-    @property
-    def logical_parent(self):
-        # determine the sample's logical parent in the current user's tree (i.e. the parent or
-        # the mountpoint)
 
-        # first find out if the sample belongs to the current user (in this case just return
-        # the real parent)
-        if self.owner == current_user():
-            return self.parent
-
-        # if the sample is indirectly shared with the current user, also return the real parent
-        if is_indirectly_shared(self, current_user()):
-            return self.parent
-
-        # if the sample is directly shared with the current user, return the mount point
-        if current_user() in [s.user for s in self.shares]:
-            share = Share.query.filter_by(sample=self, user=current_user()).first()
-            return share.mountpoint
-
-
-from .tree import is_accessible, is_indirectly_shared
+from .tree import is_accessible

@@ -24,6 +24,25 @@ def is_indirectly_shared(sample, user):
     return is_accessible(sample.parent, user)
 
 
+def logical_parent(sample, user):
+    # determine the sample's logical parent in the current user's tree (i.e. the parent or
+    # the mountpoint)
+
+    # first find out if the sample belongs to the current user (in this case just return
+    # the real parent)
+    if sample.owner == user:
+        return sample.parent
+
+    # if the sample is indirectly shared with the current user, also return the real parent
+    if is_indirectly_shared(sample, user):
+        return sample.parent
+
+    # if the sample is directly shared with the current user, return the mount point
+    if user in [s.user for s in sample.shares]:
+        share = Share.query.filter_by(sample=sample, user=user).first()
+        return share.mountpoint
+
+
 def build_tree(user, order="id", callback=None):
     reverse = True if order == "last_modified" else False
     Node = namedtuple("Node", ["sample", "children", "indirectly_shared"])

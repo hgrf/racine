@@ -11,7 +11,7 @@ class ConfirmDeleteDialog {
       okButton.data('type', type);
       okButton.attr('id', id);
       $('.debug-id').html(
-        `Delete <strong>${type}</strong> ID: <strong>${id}</strong>`,
+          `Delete <strong>${type}</strong> ID: <strong>${id}</strong>`,
       );
     });
 

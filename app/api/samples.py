@@ -3,13 +3,17 @@ from functools import wraps
 from marshmallow import Schema, fields
 
 from . import api
-from .common import IdParameter, EmptySchema  # noqa: F401
+from .common import EmptySchema  # noqa: F401
 from .errors import bad_request
 from ..main.forms import NewSampleForm
 
 from .. import db
 from ..models import News, Sample, Share, record_activity, token_auth
 from ..models.tree import is_indirectly_shared, logical_parent
+
+
+class SampleIdParameter(Schema):
+    sampleid = fields.Int()
 
 
 class NewSampleFormContent(Schema):
@@ -122,7 +126,7 @@ def deletesample(sample):
       tags: [samples]
       parameters:
       - in: path
-        schema: IdParameter
+        schema: SampleIdParameter
       responses:
         204:
           content:
@@ -147,7 +151,7 @@ def togglearchived(sample):
       tags: [samples]
       parameters:
       - in: path
-        schema: IdParameter
+        schema: SampleIdParameter
       responses:
         200:
           content:
@@ -171,7 +175,7 @@ def togglecollaborative(sample):
       tags: [samples]
       parameters:
       - in: path
-        schema: IdParameter
+        schema: SampleIdParameter
       responses:
         200:
           content:
@@ -195,7 +199,7 @@ def changeparent(sample, parentid):
       tags: [samples]
       parameters:
       - in: path
-        schema: IdParameter
+        schema: SampleIdParameter
       - in: path
         schema: ParentIdParameter
       responses:

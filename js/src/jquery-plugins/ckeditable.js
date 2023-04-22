@@ -75,7 +75,7 @@ const serverErrorMsg = 'Could not connect to the server. ' +
   };
 
   function onEditRequested(event) {
-    let field = $(this);
+    let field = $(this); // eslint-disable-line no-invalid-this
     if (field.is('img.edittrigger')) {
       field = field.parent();
     }
@@ -119,7 +119,7 @@ const serverErrorMsg = 'Could not connect to the server. ' +
       return;
     }
 
-    const field = $(this);
+    const field = $(this); // eslint-disable-line no-invalid-this
 
     /* read original HTML from server in order to remove all modifications
      * like Latex parsing or Lightbox

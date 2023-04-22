@@ -41,6 +41,7 @@ class Racine {
   }
 
   onDocumentReady() {
+    const self = this;
     // login view and browser view do not have a sidebar
     if ((this.view instanceof views.login) || (this.view instanceof views.browser)) {
       this.view.onDocumentReady();
@@ -58,14 +59,15 @@ class Racine {
     });
 
     $('.content-overlay').click(function() {
-      this.mobileHideSidebar();
+      self.mobileHideSidebar();
     });
 
     $('.nav-button-toggle').click(function() {
-      if ($(this).hasClass('active')) {
-        $(this).removeClass('active');
+      const element = $(this); // eslint-disable-line no-invalid-this
+      if (element.hasClass('active')) {
+        element.removeClass('active');
       } else {
-        $(this).addClass('active');
+        element.addClass('active');
       }
     });
 
@@ -101,7 +103,8 @@ class Racine {
     createSearchSample($('#navbar-search'));
 
     $('#navbar-search').bind('typeahead:selected', function(event, suggestion) {
-      $(this).typeahead('val', ''); // clear the search field
+      const field = $(this); // eslint-disable-line no-invalid-this
+      field.typeahead('val', ''); // clear the search field
       if (self.view instanceof views.main) {
         self.view.loadSample(suggestion.id);
       } else {
@@ -110,16 +113,17 @@ class Racine {
     });
 
     $('#navbar-search').keypress(function(event) {
+      const field = $(this); // eslint-disable-line no-invalid-this
       if (event.which == 13) {
-        if ($(this).val() === '') {
+        if (field.val() === '') {
           self.errorDialog('Please specify a search term');
         } else {
           if (self.view instanceof views.main) {
-            self.view.loadSearchResults($(this).val());
+            self.view.loadSearchResults(field.val());
           } else {
             self.errorDialog('Search is not implemented for this view yet.');
           }
-          $(this).typeahead('val', ''); // clear the search field
+          field.typeahead('val', ''); // clear the search field
         }
       }
     });
@@ -129,8 +133,9 @@ class Racine {
     const self = this;
 
     $('div.sample').click(function() {
+      const id = $(this).data('id'); // eslint-disable-line no-invalid-this
       if (self.view instanceof views.main) {
-        self.view.loadSample($(this).data('id'));
+        self.view.loadSample(id);
       } else {
         self.errorDialog('Loading samples is not implemented for this view yet.');
       }

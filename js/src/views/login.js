@@ -11,7 +11,8 @@ class LoginView {
     const self = this;
 
     $('.user').click(function( event ) {
-      $('#username').val($(this).data('username'));
+      const username = $(this).data('username'); // eslint-disable-line no-invalid-this
+      $('#username').val(username);
       $('#password').focus();
       event.preventDefault();
     });

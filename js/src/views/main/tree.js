@@ -35,20 +35,22 @@ class Tree {
     allEntries.dblclick(function(event) {
       event.preventDefault();
 
+      const id = $(this).data('id'); // eslint-disable-line no-invalid-this
+
       // if CTRL is pressed, open sample in a new tab
       if (ctrlIsPressed) {
-        window.open('/sample/' + $(this).data('id'));
+        window.open(`/sample/${id}`);
         return;
       }
 
-      self.mainView.loadSample($(this).data('id'));
+      self.mainView.loadSample(id);
       // on small screen, hide the sidebar after a sample has been selected
       R.mobileHideSidebar();
     });
 
     // add glyphicons to expandable items in the navbar
     allEntries.each(function() {
-      addGlyphicon($(this));
+      addGlyphicon($(this)); // eslint-disable-line no-invalid-this
     });
 
     // enable sample drag and drop in navigation bar
@@ -57,7 +59,8 @@ class Tree {
     $('.nav-dropzone').on(dropZoneHandlers(activeEntry));
 
     $('.inheritance').dblclick(function() {
-      location.href = '/loginas?userid='+$(this).data('userid');
+      const id = $(this).data('userid'); // eslint-disable-line no-invalid-this
+      location.href = `/loginas?userid=${id}`;
     });
 
     // TODO: togglearchived could now be achieved without reloading the navbar
@@ -108,12 +111,12 @@ class Tree {
           .stop()
           .delay(isInView ? 0 : 1000)
           .queue(function(next) {
-            $(this).css('background-color', '#FFFF9C');
+            naventry.css('background-color', '#FFFF9C');
             next();
           })
           .delay(1000)
           .queue(function(next) {
-            $(this).css('background-color', oldBackground);
+            naventry.css('background-color', oldBackground);
             next();
           });
     }
@@ -131,10 +134,11 @@ class Tree {
      * (so that the coordinates in scrollTo are correctly calculated)
      */
     collapsibles.each(function() {
+      const element = $(this); // eslint-disable-line no-invalid-this
       // careful, it can be undefined instead of false, hence the notation
-      if ($(this).attr('aria-expanded') !== 'true') {
+      if (element.attr('aria-expanded') !== 'true') {
         collapsedCounter++;
-        $(this).one('shown.bs.collapse', function() {
+        element.one('shown.bs.collapse', function() {
           collapsedCounter--;
           if (!collapsedCounter) {
             self.#scrollTo(id, flash);

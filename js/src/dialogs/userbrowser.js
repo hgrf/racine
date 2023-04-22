@@ -63,7 +63,8 @@ class UserBrowserDialog {
           }
           // set up click event
           $('.user').one('click', function(event) {
-            $('#username').val($(this).data('name'));
+            const username = $(this).data('name'); // eslint-disable-line no-invalid-this
+            $('#username').val(username);
             self.#shareSelected();
           });
         },

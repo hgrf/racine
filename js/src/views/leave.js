@@ -42,7 +42,8 @@ class LeaveView {
     });
 
     $('#confirm').click(function( event ) {
-      location.href = '/profile/leave?heir='+$(this).data('heir')+'&confirm=1';
+      const heir = $(this).data('heir'); // eslint-disable-line no-invalid-this
+      location.href = `/profile/leave?heir=${heir}&confirm=1`;
     });
 
     $('#reactivate').click(function( event ) {

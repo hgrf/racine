@@ -31,7 +31,8 @@ class BrowserView {
     }
 
     $('#multiswitch-checkbox').click(function(event) {
-      if (this.checked) {
+      const checkBox = this; // eslint-disable-line no-invalid-this
+      if (checkBox.checked) {
         self.setMultiSelection();
       } else {
         self.setSingleSelection();
@@ -41,7 +42,7 @@ class BrowserView {
     // tell the upload form how to communicate with the server
     $('#uploadform').submit(function(event) {
       event.preventDefault();
-      const formData = new FormData(this);
+      const formData = new FormData(this); // eslint-disable-line no-invalid-this
 
       // show "activity" overlay
       $('#overlaytext').text('Uploading file...');
@@ -69,10 +70,11 @@ class BrowserView {
     });
 
     function folderclickhandler(event) {
+      const url = $(this).data('url'); // eslint-disable-line no-invalid-this
       if (document.getElementById('multiswitch-checkbox') !== null) {
         self.queryDict['multi'] = document.getElementById('multiswitch-checkbox').checked;
       }
-      location.replace('/browser/'+$(this).data('url')+'?'+dictToURI(self.queryDict));
+      location.replace(`/browser/${url}?`+dictToURI(self.queryDict));
       event.preventDefault();
     }
 
@@ -85,11 +87,11 @@ class BrowserView {
 
     // check for each history item if it is available
     $('.historyitem').each(function(index, element) {
-      const historyitemdiv = $(this);
+      const historyitemdiv = $(this); // eslint-disable-line no-invalid-this
       $.ajax({
         url: '/browser/inspectpath',
         type: 'post',
-        data: {'smbpath': $(this).data('url')},
+        data: {'smbpath': historyitemdiv.data('url')},
         success: function(data) {
           if (!data.code) {
             historyitemdiv.find('img').attr('src', '/static/images/folder.png');
@@ -105,11 +107,12 @@ class BrowserView {
 
     // check for each resource if it is available and if it has a user/sample folder
     $('.resource').each(function(index, element) {
+      const id = $(this).data('id'); // eslint-disable-line no-invalid-this
       $.ajax({
         url: '/browser/inspectresource',
         type: 'post',
         data: {'sampleid': self.queryDict['sample'],
-          'resourceid': $(this).data('id')},
+          'resourceid': id},
         success: function(data) {
           const resourcediv = $('#resource' + data.resourceid);
           const shortcutsdiv = $('#shortcuts' + data.resourceid);
@@ -153,7 +156,7 @@ class BrowserView {
     // update handler for file tiles
     $('.file').unbind('click');
     $('.file').click(function(event) {
-      const path = $(this).data('path');
+      const path = $(this).data('path'); // eslint-disable-line no-invalid-this
       // show "activity" overlay
       $('#overlaytext').text('Saving file...');
       $('#overlay').css('display', 'block');
@@ -186,7 +189,8 @@ class BrowserView {
     // update handler for file tiles
     $('.file').unbind('click');
     $('.file').click(function(event) {
-      $(this).toggleClass('selected');
+      const element = $(this); // eslint-disable-line no-invalid-this
+      element.toggleClass('selected');
     });
 
     // set up Save button
@@ -204,7 +208,7 @@ class BrowserView {
       $('#overlay').css('display', 'block');
       // save files
       $('.file.selected').each(function() {
-        const path = $(this).data('path');
+        const path = $(this).data('path'); // eslint-disable-line no-invalid-this
         // tell the server to store the file
         $.ajax({
           url: '/browser/savefromsmb',

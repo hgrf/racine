@@ -7,13 +7,15 @@ class SMBResourcesView {
 
   onDocumentReady() {
     $('#confirm-delete').on('show.bs.modal', function(e) {
-      $(this).find('.btn-ok').attr('id', $(e.relatedTarget).data('id'));
-      $('.debug-id').html('Delete ID: <strong>' + $(this).find('.btn-ok').attr('id') + '</strong>');
+      const id = $(e.relatedTarget).data('id');
+      const okButton = $(this).find('.btn-ok'); // eslint-disable-line no-invalid-this
+      okButton.attr('id', id);
+      $('.debug-id').html(`Delete ID: <strong>${id}</strong>`);
     });
 
     $('.btn-ok').click(function(event) {
-      const id = $(this).attr('id');
-      location.href = '/settings/smbresources?delete=' + id;
+      const id = $(this).attr('id'); // eslint-disable-line no-invalid-this
+      location.href = `/settings/smbresources?delete=${id}`;
     });
 
     // set up editables

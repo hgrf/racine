@@ -36,17 +36,18 @@ class SampleView extends AjaxView {
 
     // sample and action deletion
     $('#confirm-delete').on('show.bs.modal', function(e) {
-      $(this).find('.btn-ok').attr('id', $(e.relatedTarget).data('id'));
-      $(this).find('.btn-ok').data('type', $(e.relatedTarget).data('type'));
+      const okButton = $(this).find('.btn-ok'); // eslint-disable-line no-invalid-this
+      okButton.attr('id', $(e.relatedTarget).data('id'));
+      okButton.data('type', $(e.relatedTarget).data('type'));
       $('.debug-id').html(
           'Delete <strong>' + $(e.relatedTarget).data('type') +
-        '</strong> ID: <strong>' + $(this).find('.btn-ok').attr('id') + '</strong>',
+        '</strong> ID: <strong>' + okButton.attr('id') + '</strong>',
       );
     });
 
     $('.btn-ok').click(function(event) {
-      const type = $(this).data('type');
-      const id = $(this).attr('id');
+      const type = $(this).data('type'); // eslint-disable-line no-invalid-this
+      const id = $(this).attr('id'); // eslint-disable-line no-invalid-this
 
       switch (type) {
         case 'action':
@@ -375,8 +376,9 @@ function initEditor(sampleid, sampleview, mainview) {
   $('.actiondate.editable').texteditable();
 
   $('.swapaction').click( function(event) {
+    const element = $(this); // eslint-disable-line no-invalid-this
     R.actionsAPI.swapActionOrder(
-        {'actionid': $(this).data('id'), 'swapid': $(this).data('swapid')},
+        {'actionid': element.data('id'), 'swapid': element.data('swapid')},
         function(error, data, response) {
           if (!response) {
             R.errorDialog('Server error. Please check your connection.');
@@ -393,7 +395,7 @@ function initEditor(sampleid, sampleview, mainview) {
   });
 
   $('.togglenews').click(function(event) {
-    const flag = $(this);
+    const flag = $(this); // eslint-disable-line no-invalid-this
     const actionid = flag.data('id');
 
     // is this action not yet marked as news?

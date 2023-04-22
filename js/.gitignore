@@ -3,4 +3,3 @@ src/api/
 src/jquery-plugins/jquery.jeditable.js
 src/typeahead/bloodhound.js
 src/typeahead/typeahead.bundle.js
-package-lock.json

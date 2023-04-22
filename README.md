@@ -22,8 +22,8 @@
 | app/emailing.py                                                                    |       17 |       11 |     35% |9-19, 26-29 |
 | app/main/\_\_init\_\_.py                                                           |        4 |        0 |    100% |           |
 | app/main/ajaxviews/\_\_init\_\_.py                                                 |        0 |        0 |    100% |           |
-| app/main/ajaxviews/navbar.py                                                       |       13 |        6 |     54% |     11-24 |
 | app/main/ajaxviews/sample.py                                                       |       27 |       18 |     33% |     13-45 |
+| app/main/ajaxviews/tree.py                                                         |       13 |        6 |     54% |     11-24 |
 | app/main/ajaxviews/welcome.py                                                      |       51 |       40 |     22% |    17-102 |
 | app/main/errors.py                                                                 |       19 |        6 |     68% |9, 19, 24-28 |
 | app/main/forms.py                                                                  |       21 |        3 |     86% |     26-28 |

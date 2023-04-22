@@ -25,9 +25,6 @@ class Sample(db.Model):
     shares = db.relationship(
         "Share", backref="sample", foreign_keys="Share.sample_id", cascade="delete"
     )
-    mountedshares = db.relationship(
-        "Share", backref="mountpoint", foreign_keys="Share.mountpoint_id"
-    )
     actions = db.relationship("Action", backref="sample", cascade="delete")
 
     news = db.relationship("News", backref="sample", cascade="delete")
@@ -87,20 +84,6 @@ class Sample(db.Model):
             shares.extend([s.user for s in parent.shares])
             parent = parent.parent
         return user in shares
-
-    @property
-    def mountedsamples(self):
-        """make a list of samples that are mounted in this one by the current user"""
-
-        return [
-            s.sample
-            for s in self.mountedshares
-            if s.user == current_user()  # make sure it's mounted by the current user
-            and s.sample.is_accessible_for(
-                current_user, direct_only=True
-            )  # exclude indirect shares
-            and not s.sample.isdeleted
-        ]
 
     @property
     def logical_parent(self):

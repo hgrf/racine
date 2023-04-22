@@ -11,10 +11,11 @@ def overview():
     form = RequestActionsForm()
     actions = []
     if form.validate_on_submit():
-        sampleid = int(form.sampleid.data) if form.sampleid.data else 0
+        if form.sampleid.data:
+            samples = [Sample.query.get(int(form.sampleid.data))]
+        else:
+            samples = list_tree(current_user)
 
-        actions = []
-        samples = list_tree(current_user) if sampleid == 0 else [Sample.query.get(sampleid)]
         for s in samples:
             for a in s.actions:
                 if form.datefrom.data and a.timestamp and a.timestamp < form.datefrom.data:

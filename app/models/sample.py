@@ -53,29 +53,19 @@ class Sample(db.Model):
     def __repr__(self):
         return "<Sample %r>" % self.name
 
-    def is_accessible_for(self, user, indirect_only=False, direct_only=False):
+    def is_accessible_for(self, user, indirect_only=False):
         """go through the owner and shares of this sample and check in the hierarchy
         (i.e. all parents) if it can be accessed by user
 
         - if indirect_only is True, only look for indirect shares, i.e. parent shares
-        - if direct_only is True, only look for direct shares
 
         indirect sharing has priority over direct sharing in order to avoid clogging
         up the hierarchy
         """
 
-        # check for invalid flag usage
-        if indirect_only and direct_only:
-            raise Exception("Choose either indirect_only or direct_only or neither")
-
         # if looking for shared access, check first if user owns the sample
-        if (indirect_only or direct_only) and self.owner == user:
+        if indirect_only and self.owner == user:
             return False
-
-        if direct_only:
-            return user in [s.user for s in self.shares] and not self.is_accessible_for(
-                user, indirect_only=True
-            )
 
         parent = self.parent if indirect_only else self
         shares = []
@@ -100,6 +90,8 @@ class Sample(db.Model):
             return self.parent
 
         # if the sample is directly shared with the current user, return the mount point
-        if self.is_accessible_for(current_user(), direct_only=True):
+        if current_user() in [s.user for s in self.shares] and not self.is_accessible_for(
+            current_user(), indirect_only=True
+        ):
             share = Share.query.filter_by(sample=self, user=current_user()).first()
             return share.mountpoint

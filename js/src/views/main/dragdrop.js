@@ -68,8 +68,8 @@ function dropZoneHandlers(activeEntry) {
           // moving to root
             draggedItem.appendTo('#nav-mysamples');
           }
-          if (oldParent.length) // if it's not the root entry
-          {
+          // if it's not the root entry, update the glyphicon
+          if (oldParent.length) {
             updateGlyphicon(oldParent);
           }
         }

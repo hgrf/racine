@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 import NewSampleDialog from '../../dialogs/newsample';
 import Tree from './tree';
 
@@ -49,7 +47,9 @@ class MainView {
     new NewSampleDialog(this, '#newsample');
 
     for (const view in this.ajaxViews) {
-      this.ajaxViews[view].onDocumentReady();
+      if (Object.hasOwn(this.ajaxViews, view)) {
+        this.ajaxViews[view].onDocumentReady();
+      }
     }
 
     this.tree.load(true);

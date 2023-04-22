@@ -212,8 +212,7 @@ function setupSampleImage(sampleid) {
 }
 
 function initEditor(sampleid, sampleview, mainview) {
-  if ($('#hiddenckeditor').length) // check if this field exists
-  {
+  if ($('#hiddenckeditor').length) {
     hiddeneditor = CKEDITOR.inline(
         $('#hiddenckeditor')[0],
         $.extend(
@@ -351,7 +350,7 @@ function initEditor(sampleid, sampleview, mainview) {
    * once it is ready.
    */
   if (typeof(MathJax) !== 'undefined' && MathJax.isReady) {
-    MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
+    MathJax.Hub.Queue(['Typeset', MathJax.Hub]); // eslint-disable-line new-cap
   }
 
   // set up CKEditor for new action form
@@ -368,8 +367,8 @@ function initEditor(sampleid, sampleview, mainview) {
   // other editables:
   $('#samplename.editable').texteditable();
   $('#samplename.editable').on('editableupdate', function(event, data) {
-    if (!data.code) // only if no error occured
-    {
+    // TODO: data.code is deprecated
+    if (!data.code) {
       $(`#nav-entry${sampleid} > .nav-entry-name`).html(data.value);
     }
   });

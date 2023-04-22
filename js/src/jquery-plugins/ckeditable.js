@@ -4,7 +4,7 @@ import ckeditorconfig from '../util/ckeditorconfig';
 const serverErrorMsg = 'Could not connect to the server. ' +
   'Please make sure you are connected and try again.';
 
-(function($) { // this is a jQuery plugin
+(function($) {
   $.fn.texteditable = function() {
     // we need to iterate, because if we are given more than one field, the getter/setter functions
     // will be read only once otherwise
@@ -193,7 +193,9 @@ const serverErrorMsg = 'Could not connect to the server. ' +
         field.removeClass('ckeditabling');
 
         // typeset all equations in this field
-        MathJax.Hub && MathJax.Hub.Queue(['Typeset', MathJax.Hub, field.get()]);
+        if (MathJax.Hub) {
+          MathJax.Hub.Queue(['Typeset', MathJax.Hub, field.get()]); // eslint-disable-line new-cap
+        }
 
         field.racinecontent();
 

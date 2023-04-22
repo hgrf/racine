@@ -18,12 +18,12 @@ class PrintView {
       const text = $(this).text(); // eslint-disable-line no-invalid-this
       $('.btn:first-child').html(text+'<span class="caret"></span>');
       if (text == 'Off') {
-        for (var i=0; i < images.length; i++) {
+        for (let i=0; i < images.length; i++) {
           images[i].style.width = images[i].orgwidth;
           images[i].style.height = images[i].orgheight;
         }
       } else {
-        for (var i=0; i < images.length; i++) {
+        for (let i=0; i < images.length; i++) {
           images[i].style.width = text;
           images[i].style.height = 'auto';
         }
@@ -33,11 +33,11 @@ class PrintView {
     $('#chkshowuser').on('change', function() {
       const spans = document.getElementsByClassName('username');
       if (document.getElementById('chkshowuser').checked) {
-        for (var i = 0; i < spans.length; i++) {
+        for (let i = 0; i < spans.length; i++) {
           spans[i].style.display = 'none';
         }
       } else {
-        for (var i = 0; i < spans.length; i++) {
+        for (let i = 0; i < spans.length; i++) {
           spans[i].style.display = 'initial';
         }
       }

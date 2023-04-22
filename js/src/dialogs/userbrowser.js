@@ -55,11 +55,13 @@ class UserBrowserDialog {
             );
           }
           for (const i in data.recent) {
-            $('#recent-collaborators').append(
-                `<div class="user" data-name="${data.recent[i]}">
-                  <img src="/static/images/user.png">${data.recent[i]}
-                </div>`,
-            );
+            if (Object.hasOwn(data.recent, i)) {
+              $('#recent-collaborators').append(
+                  `<div class="user" data-name="${data.recent[i]}">
+                    <img src="/static/images/user.png">${data.recent[i]}
+                  </div>`,
+              );
+            }
           }
           // set up click event
           $('.user').one('click', function(event) {

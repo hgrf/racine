@@ -3,7 +3,9 @@ import $ from 'jquery';
 function dictToURI(dict) {
   const str = [];
   for (const p in dict) {
-    str.push(encodeURIComponent(p) + '=' + encodeURIComponent(dict[p]));
+    if (Object.hasOwn(dict, p)) {
+      str.push(encodeURIComponent(p) + '=' + encodeURIComponent(dict[p]));
+    }
   }
   return str.join('&');
 }
@@ -56,7 +58,7 @@ class BrowserView {
         processData: false,
         success: function(data) {
           if (data.uploaded) {
-            parent.CKEDITOR.dialog.getCurrent().hide();	// hide the file browser
+            parent.CKEDITOR.dialog.getCurrent().hide(); // hide the file browser
             parent.CKEDITOR.fbcallback(data.url); // call the call back
           } else {
             alert('Error: '+data.error['message']);

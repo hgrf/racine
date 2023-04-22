@@ -24,6 +24,9 @@ class MarkAsNewsDialog {
         } else if (response.body && response.body.error) {
           // form failed validation; because of invalid data or expired CSRF token
           for (const field in response.body.error) {
+            if (!Object.hasOwn(response.body.error, field)) {
+              continue;
+            }
             if (field === 'csrf_token') {
               R.errorDialog('The CSRF token has expired. Please reload the page.');
               continue;
@@ -34,6 +37,9 @@ class MarkAsNewsDialog {
             formgroup.addClass('has-error');
             // add the error message to the form group
             for (const i in response.body.error[field]) {
+              if (!Object.hasOwn(response.body.error, field)) {
+                continue;
+              }
               formgroup.append(
                   '<span class="help-block">' +
                                 response.body.error[field][i] +

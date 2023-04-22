@@ -1,6 +1,6 @@
 import jQuery from 'jquery';
 
-(function($) { // this is a jQuery plugin
+(function($) {
   $.fn.zoombutton = function() {
     const elements = $(this); // eslint-disable-line no-invalid-this
     elements.wrap(function() {

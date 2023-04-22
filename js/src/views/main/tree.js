@@ -164,7 +164,7 @@ class Tree {
     const self = this;
 
     $.ajax({
-      url: '/tree',
+      url: '/aview/tree',
       data: {'order': self.orderBy,
         'showarchived': self.showArchived},
       success: function(data) {

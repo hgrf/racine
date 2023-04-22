@@ -1,11 +1,11 @@
 from flask import abort, request, render_template
 from flask_login import current_user, login_required
 
-from .. import main
+from . import ajaxviews
 from ...models import User, build_tree
 
 
-@main.route("/tree", methods=["GET"])
+@ajaxviews.route("/tree", methods=["GET"])
 @login_required
 def tree():
     if request.args.get("order") not in ["id", "name", "last_modified"]:

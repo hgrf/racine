@@ -2,12 +2,12 @@ from datetime import date
 from flask import request, render_template
 from flask_login import current_user, login_required
 
-from .. import main
+from . import ajaxviews
 from ..forms import NewActionForm
 from ...models import Action, Sample
 
 
-@main.route("/editor/<sampleid>", methods=["GET", "POST"])
+@ajaxviews.route("/editor/<sampleid>", methods=["GET", "POST"])
 @login_required
 def editor(sampleid):
     sample = Sample.query.get(sampleid)

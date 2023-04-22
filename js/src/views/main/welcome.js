@@ -3,7 +3,7 @@ import AjaxView from './ajaxview';
 class WelcomeView extends AjaxView {
   load(state, pushState=true, reload=false) {
     state.ajaxView = 'welcome';
-    state.url = '/welcome';
+    state.url = '/aview/welcome';
     state.navUrl = '/';
     super.load(state, pushState, reload);
   }

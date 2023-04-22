@@ -5,12 +5,12 @@ from flask import current_app, render_template
 from flask_login import current_user, login_required
 from sqlalchemy.sql import func
 
-from .. import main
+from . import ajaxviews
 from ... import db, plugins, smbinterface
 from ...models import Action, Activity, Upload, User, Sample
 
 
-@main.route("/welcome")
+@ajaxviews.route("/welcome")
 @login_required
 def welcome():
     # get free disk space

@@ -66,7 +66,7 @@ class SampleView extends AjaxView {
 
   load(state, pushState=true, reload=false) {
     state.ajaxView = 'sample';
-    state.url = `/editor/${state.sampleid}` +
+    state.url = `/aview/editor/${state.sampleid}` +
     `?invertactionorder=${this.invertactionorder}&showparentactions=${this.showparentactions}`;
     state.navUrl = `/sample/${state.sampleid}`;
     super.load(state, pushState, reload);

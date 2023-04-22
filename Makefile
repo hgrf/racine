@@ -363,10 +363,15 @@ eslint:
 	cd js && npx eslint .
 
 eslint-badge:
-	cd js && npx eslint . | grep "problems (" | (IFS='()' read _ SUMMARY; echo $$SUMMARY) | ( \
-		read ERRORS _ WARNINGS _; \
-		echo $$ERRORS C, $$WARNINGS W@`if [ $$ERRORS -gt 0 ]; then echo red; else echo green; fi` \
-	)
+	OUTPUT=`cd js && npx eslint .`; \
+		if [ "$$?" -eq 0 ]; then \
+			echo "pass@green"; \
+		else \
+			echo "$$OUTPUT" | \
+				grep "problem* (" | \
+				(IFS='()' read _ SUMMARY; echo $$SUMMARY) | \
+				(read ERRORS _ WARNINGS _; echo $$ERRORS C, $$WARNINGS W@red); \
+		fi
 
 doc: api-spec
 	# generate markdown documentation

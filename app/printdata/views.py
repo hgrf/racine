@@ -12,7 +12,8 @@ def overview():
     actions = []
     if form.validate_on_submit():
         if form.sampleid.data:
-            samples = [Sample.query.get(int(form.sampleid.data))]
+            sample = Sample.query.get(int(form.sampleid.data))
+            samples = [sample] if sample else []
         else:
             samples = list_tree(current_user)
 

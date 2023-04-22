@@ -5,7 +5,7 @@ const samples = new Bloodhound({
   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
   queryTokenizer: Bloodhound.tokenizers.whitespace,
   remote: {
-    url: '/search?autocomplete&term=%QUERY',
+    url: '/aview/search?autocomplete&term=%QUERY',
     wildcard: '%QUERY',
     transform: function(data) {
       return data.results;

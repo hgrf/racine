@@ -5,12 +5,7 @@ from werkzeug.security import safe_join
 
 from . import main
 from .forms import NewSampleForm, MarkActionAsNewsForm
-from ..models import (
-    Sample,
-    User,
-    Share,
-    search_tree,
-)
+from ..models import Sample, Share, User
 
 
 @main.route("/")
@@ -42,13 +37,6 @@ def sample(sampleid):
     )
 
 
-@main.route("/help")
-@login_required
-def help():
-    admins = User.query.filter_by(is_admin=True).all()
-    return render_template("help.html", admins=admins)
-
-
 @main.route("/search", methods=["GET"])
 @login_required
 def search():
@@ -56,35 +44,22 @@ def search():
     if keyword is None or keyword == "":
         return jsonify(error="Please specify a search term")
 
-    results = [
-        {
-            "name": sample.name,
-            "id": sample.id,
-            "ownername": sample.owner.username,
-            "mysample": (sample.owner == current_user),
-            "parentname": sample.parent.name if sample.parent_id else "",
-        }
-        for sample in search_tree(
-            user=current_user,
-            query=keyword,
-            limit=10,
-        )
-    ]
+    return render_template(
+        "main/main.html",
+        view="main",
+        params={"ajaxView": "searchResults", "term": keyword},
+        sample=None,
+        term=keyword,
+        newsampleform=NewSampleForm(),
+        dlg_markasnews_form=MarkActionAsNewsForm(),
+    )
 
-    if request.args.get("autocomplete") is not None:
-        return jsonify(results=results)
-    elif request.args.get("ajax") is not None:
-        return render_template("main/searchresults.html", results=results, term=keyword)
-    else:
-        return render_template(
-            "main/main.html",
-            view="main",
-            params={"ajaxView": "searchResults", "term": keyword},
-            sample=None,
-            term=keyword,
-            newsampleform=NewSampleForm(),
-            dlg_markasnews_form=MarkActionAsNewsForm(),
-        )
+
+@main.route("/help")
+@login_required
+def help():
+    admins = User.query.filter_by(is_admin=True).all()
+    return render_template("help.html", admins=admins)
 
 
 @main.route("/userlist", methods=["POST"])

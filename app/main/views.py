@@ -8,17 +8,21 @@ from .forms import NewSampleForm, MarkActionAsNewsForm
 from ..models import Sample, Share, User
 
 
-@main.route("/")
-@login_required
-def index():
+def render_main_template(**params):
     return render_template(
         "main/main.html",
         view="main",
-        params={"ajaxView": "welcome"},
         api_token=current_user.get_token(),
         newsampleform=NewSampleForm(),
         dlg_markasnews_form=MarkActionAsNewsForm(),
+        params=params,
     )
+
+
+@main.route("/")
+@login_required
+def index():
+    return render_main_template(ajaxView="welcome")
 
 
 @main.route("/sample/<int:sampleid>")
@@ -27,14 +31,7 @@ def sample(sampleid):
     sample = Sample.query.get(sampleid)
     if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
         return render_template("errors/404.html"), 404
-    return render_template(
-        "main/main.html",
-        view="main",
-        params={"ajaxView": "sample", "sampleid": sampleid},
-        api_token=current_user.get_token(),
-        newsampleform=NewSampleForm(),
-        dlg_markasnews_form=MarkActionAsNewsForm(),
-    )
+    return render_main_template(ajaxView="sample", sampleid=sampleid)
 
 
 @main.route("/search", methods=["GET"])
@@ -44,15 +41,7 @@ def search():
     if keyword is None or keyword == "":
         return jsonify(error="Please specify a search term")
 
-    return render_template(
-        "main/main.html",
-        view="main",
-        params={"ajaxView": "searchResults", "term": keyword},
-        sample=None,
-        term=keyword,
-        newsampleform=NewSampleForm(),
-        dlg_markasnews_form=MarkActionAsNewsForm(),
-    )
+    return render_main_template(ajaxView="searchResults", term=keyword)
 
 
 @main.route("/help")

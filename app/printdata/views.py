@@ -1,6 +1,6 @@
 from flask import render_template
 from . import printdata
-from ..models import list_tree
+from ..models import Sample, list_tree
 from .forms import RequestActionsForm
 from flask_login import login_required, current_user
 
@@ -14,9 +14,8 @@ def overview():
         sampleid = int(form.sampleid.data) if form.sampleid.data else 0
 
         actions = []
-        for s in list_tree(current_user):
-            if sampleid and sampleid != s.id:
-                continue
+        samples = list_tree(current_user) if sampleid == 0 else [Sample.query.get(sampleid)]
+        for s in samples:
             for a in s.actions:
                 if form.datefrom.data and a.timestamp and a.timestamp < form.datefrom.data:
                     continue

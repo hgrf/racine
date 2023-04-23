@@ -8,6 +8,8 @@ import ConfirmDeleteDialog from '../../dialogs/confirmdelete';
 
 import ckeditorconfig from '../../util/ckeditorconfig';
 
+let hiddeneditor;
+
 /* Disable caching for AJAX requests.
  * This fixes a bug in Internet Explorer, e.g. when reloading the sample
  * after adding an action, the new action is not shown / when modifying an
@@ -103,7 +105,7 @@ class SampleView extends AjaxView {
 
     document.title = 'Racine - '+$('#samplename').text();
 
-    this.#initEditor(sampleid, this, this.mainView);
+    this.#initEditor(sampleid);
     // highlight in tree, if it is already loaded
     if ($(`#nav-entry${sampleid}`).length) {
       $(`#nav-entry${sampleid}`).css('background-color', '#BBBBFF');
@@ -117,7 +119,10 @@ class SampleView extends AjaxView {
     R.errorDialog(`Sample #${state.sampleid} does not exist or you do not have access to it.`);
   }
 
-  #initEditor(sampleid, sampleview, mainview) {
+  #initEditor(sampleid) {
+    const self = this;
+    const mV = this.mainView;
+
     if ($('#hiddenckeditor').length) {
       hiddeneditor = CKEDITOR.inline(
           $('#hiddenckeditor')[0],
@@ -178,7 +183,7 @@ class SampleView extends AjaxView {
     });
   
     $('#showinnavigator').click(function() {
-      mainview.tree.highlight(sampleid, true);
+      mV.tree.highlight(sampleid, true);
     });
   
     $('#scrolltobottom').click(function() {
@@ -186,13 +191,13 @@ class SampleView extends AjaxView {
     });
   
     $('#invertactionorder').click(function() {
-      sampleview.invertactionorder = !sampleview.invertactionorder; // toggle
-      mainview.loadSample(sampleid, true);
+      self.invertactionorder = !self.invertactionorder;
+      mV.loadSample(sampleid, true);
     });
   
     $('#showparentactions').click(function() {
-      sampleview.showparentactions = !sampleview.showparentactions; // toggle
-      mainview.loadSample(sampleid, true);
+      self.showparentactions = !self.showparentactions;
+      mV.loadSample(sampleid, true);
     });
   
     // handler for new action submit button
@@ -201,7 +206,7 @@ class SampleView extends AjaxView {
       event.preventDefault();
   
       // check if the user is still modifying any actions before submitting the new one
-      if (!mainview.ajaxViews.sample.confirmUnload(
+      if (!mV.ajaxViews.sample.confirmUnload(
           true,
           ['description'],
           'You have been editing the sample description or one or more past actions. Your changes ' +
@@ -241,17 +246,15 @@ class SampleView extends AjaxView {
         // destroy it so that it doesn't bother us with confirmation dialogs when we
         // reload the sample
         CKEDITOR.instances['description'].destroy();
-        mainview.loadSample(sampleid, true);
+        mV.loadSample(sampleid, true);
       });
     });
   
-    // set up the sample image
-    setupSampleImage(sampleid);
-  
+    this.#setupSampleImage(sampleid);
+
     $('#sampledescription').racinecontent();
     $('.actiondescription').racinecontent();
-  
-  
+
     /* Typeset all equations with MathJax. If it is not ready now, it should typeset automatically
      * once it is ready.
      */
@@ -294,7 +297,7 @@ class SampleView extends AjaxView {
                 R.errorDialog(response.error);
               }
             } else {
-              mainview.loadSample(sampleid, true);
+              mV.loadSample(sampleid, true);
             }
           });
     });
@@ -305,7 +308,7 @@ class SampleView extends AjaxView {
   
       // is this action not yet marked as news?
       if (flag.hasClass('markasnews')) {
-        sampleview.dlgMarkAsNews.show(actionid);
+        self.dlgMarkAsNews.show(actionid);
       } else {
         R.actionsAPI.unmarkAsNews({'actionid': actionid}, function(error, data, response) {
           if (!response) {
@@ -327,6 +330,46 @@ class SampleView extends AjaxView {
     $(document).trigger('editor_initialised');
   }
 
+  #setupSampleImage(sampleid) {
+    const self = this;
+
+    $('#sampleimage').zoombutton();
+    $('#sampleimage').wrap(R.lightboxWrapper);
+  
+    // handler for button that changes sample image
+    $('#changesampleimage').click(function(event) {
+      CKEDITOR.fbtype = 'img';
+      CKEDITOR.fbupload = true;
+      CKEDITOR.fbcallback = function(url) {
+        R.fieldsAPI.setField('sample', sampleid, 'image', {'value': url}, (error, data, response) => {
+          // check if there is currently a sample image
+          if ($('#sampleimage').length) {
+            // update the sample image
+            $('#sampleimage').attr('src', url);
+          } else {
+            // add sample image and remove "add sample image" link
+            const div = $('div.newsampleimage');
+            div.removeClass('newsampleimage');
+            div.addClass('imgeditable');
+            div.empty();
+            /* TODO: this is duplicated code from templates/main/sample.html, there is probably a
+              *       more elegant way to sort this out
+              */
+            div.append(
+                `<img id="sampleimage" src="${url}">` +
+              '<img id="changesampleimage" src="/static/images/insertimage.png"' +
+                ' title="Change sample image">',
+            );
+            self.#setupSampleImage(sampleid);
+          }
+        });
+      };
+      // use hidden CKEDITOR instance to open the filebrowser dialog
+      hiddeneditor.execCommand('fb');
+      event.preventDefault();
+    });
+  }
+
   #responseHasError(response) {
     let errorMsg = null;
     if (!response) {
@@ -344,46 +387,6 @@ class SampleView extends AjaxView {
     }
     return false;
   }
-}
-
-let hiddeneditor;
-
-function setupSampleImage(sampleid) {
-  $('#sampleimage').zoombutton();
-  $('#sampleimage').wrap(R.lightboxWrapper);
-
-  // handler for button that changes sample image
-  $('#changesampleimage').click(function(event) {
-    CKEDITOR.fbtype = 'img';
-    CKEDITOR.fbupload = true;
-    CKEDITOR.fbcallback = function(url) {
-      R.fieldsAPI.setField('sample', sampleid, 'image', {'value': url}, (error, data, response) => {
-        // check if there is currently a sample image
-        if ($('#sampleimage').length) {
-          // update the sample image
-          $('#sampleimage').attr('src', url);
-        } else {
-          // add sample image and remove "add sample image" link
-          const div = $('div.newsampleimage');
-          div.removeClass('newsampleimage');
-          div.addClass('imgeditable');
-          div.empty();
-          /* TODO: this is duplicated code from templates/main/sample.html, there is probably a
-            *       more elegant way to sort this out
-            */
-          div.append(
-              `<img id="sampleimage" src="${url}">` +
-            '<img id="changesampleimage" src="/static/images/insertimage.png"' +
-              ' title="Change sample image">',
-          );
-          setupSampleImage(sampleid);
-        }
-      });
-    };
-    // use hidden CKEDITOR instance to open the filebrowser dialog
-    hiddeneditor.execCommand('fb');
-    event.preventDefault();
-  });
 }
 
 export default SampleView;

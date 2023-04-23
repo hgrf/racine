@@ -1,25 +1,23 @@
 import $ from 'jquery';
+import Dialog from './dialog';
 
-class ConfirmDeleteDialog {
+class ConfirmDeleteDialog extends Dialog {
   constructor(callback) {
-    const dialog = $('#confirm-delete');
-    const okButton = dialog.find('.btn-ok');
+    super('#confirm-delete');
 
-    dialog.on('show.bs.modal', function(e) {
-      const type = $(e.relatedTarget).data('type');
-      const id = $(e.relatedTarget).data('id');
-      okButton.data('type', type);
-      okButton.attr('id', id);
-      $('.debug-id').html(
-          `Delete <strong>${type}</strong> ID: <strong>${id}</strong>`,
-      );
-    });
+    this.type = null;
+    this.id = null;
 
-    okButton.on('click', function(e) {
-      const type = okButton.data('type');
-      const id = okButton.attr('id');
-      callback(type, id);
-    });
+    this.btnOk = this.dialog.find('.btn-ok');
+    this.btnOk.on('click', () => callback(this.type, this.id));
+
+    this.text = this.dialog.find('.debug-id').first();
+  }
+
+  onShow(event) {
+    this.type = $(event.relatedTarget).data('type');
+    this.id = $(event.relatedTarget).data('id');
+    this.text.html(`Delete <strong>${this.type}</strong> ID: <strong>${this.id}</strong>`);
   }
 }
 

@@ -1,87 +1,94 @@
 import $ from 'jquery';
-
+import Dialog from './dialog';
 import substringMatcher from '../util/substringmatcher';
 
-class UserBrowserDialog {
-  constructor(mainView) {
-    this.mainView = mainView;
+class UserBrowserDialog extends Dialog {
+  constructor(sampleid) {
+    super('#userbrowser');
 
-    const self = this;
+    this.sampleid = sampleid;
+    this.btnOk = this.dialog.find('#userbrowserok');
+    this.searchField = this.dialog.find('#username');
+    this.recentCollaborators = $('#recent-collaborators');
 
-    // set up the OK button and the enter button
-    $('#userbrowserok').click(function(event) {
-      self.#shareSelected();
-    });
-    $('#username').keyup(function(ev) {
-      if (ev.keyCode == 13) self.#shareSelected();
-    });
-
-    // user browser (for sample sharing)
-    $('#userbrowser').on('show.bs.modal', function(event) {
-      // empty the text field and disable autocompletion
-      $('#username').val('');
-      $('#username').typeahead('destroy');
-
-      // empty recent collaborators list
-      $('#recent-collaborators').html('');
-
-      // update autocompletion for the text field and recent collaborators list
-      $.ajax({
-        url: '/userlist',
-        type: 'post',
-        data: {'mode': 'share', 'sampleid': self.mainView.state.sampleid},
-        success: function(data) {
-          // set up autocompletion
-          $('#username').typeahead({
-            minLength: 1,
-            highlight: true,
-          },
-          {
-            name: 'users',
-            source: substringMatcher(data.users),
-            templates: {
-              suggestion: function(data) {
-                return `<div>
-                  <img src="/static/images/user.png" width="24px" height="24px">
-                  ${data}
-                  </div>`;
-              },
-            },
-          });
-          // make recent collaborators list
-          if (data.recent.length > 0) {
-            $('#recent-collaborators').append(
-                '<div>Recent collaborators:<br>&nbsp</div>',
-            );
-          }
-          for (const i in data.recent) {
-            if (Object.hasOwn(data.recent, i)) {
-              $('#recent-collaborators').append(
-                  `<div class="user" data-name="${data.recent[i]}">
-                    <img src="/static/images/user.png">${data.recent[i]}
-                  </div>`,
-              );
-            }
-          }
-          // set up click event
-          $('.user').one('click', function(event) {
-            const username = $(this).data('name'); // eslint-disable-line no-invalid-this
-            $('#username').val(username);
-            self.#shareSelected();
-          });
-        },
-      });
-    });
-
-    // once the modal dialog is open, put the cursor in the username field
-    $('#userbrowser').on('shown.bs.modal', function(event) {
-      $('#username').focus();
+    this.btnOk.on('click', () => this.#shareSelected());
+    this.searchField.on('keyup', (event) => {
+      if (event.keyCode == 13) {
+        this.#shareSelected();
+      }
     });
   }
 
-  #shareSelected(event, suggestion) {
+  userlistCallback(data) {
+    // set up autocompletion
+    this.searchField.typeahead(
+      {minLength: 1, highlight: true},
+      {
+        name: 'users',
+        source: substringMatcher(data.users),
+        templates: {
+          suggestion: function(data) {
+            return `<div>
+              <img src="/static/images/user.png" width="24px" height="24px">
+              ${data}
+              </div>`;
+          },
+        },
+      }
+    );
+
+    // make recent collaborators list
+    if (data.recent.length > 0) {
+      this.recentCollaborators.append(
+          '<div>Recent collaborators:<br>&nbsp</div>',
+      );
+    }
+    for (const i in data.recent) {
+      if (Object.hasOwn(data.recent, i)) {
+        this.recentCollaborators.append(
+            `<div class="user" data-name="${data.recent[i]}">
+              <img src="/static/images/user.png">${data.recent[i]}
+            </div>`,
+        );
+      }
+    }
+
+    // set up click event
+    this.recentCollaborators.find('.user').one(
+      'click', (event) => this.#shareWith($(event.target).data('name'))
+    );
+  }
+
+  onShow(event) {
+    // empty the text field and disable autocompletion
+    this.searchField.val('');
+    this.searchField.typeahead('destroy');
+
+    // empty recent collaborators list
+    $('#recent-collaborators').html('');
+
+    // update autocompletion for the text field and recent collaborators list
+    $.ajax({
+      url: '/userlist',
+      type: 'post',
+      data: {'mode': 'share', 'sampleid': this.sampleid},
+      success: (data) => this.userlistCallback(data),
+    });
+  }
+
+  onShown(event) {
+    this.searchField.trigger('focus');
+  }
+
+  #shareWith(username) {
+    this.searchField.val(username);
+    this.#shareSelected();
+  }
+
+  #shareSelected() {
+    const self = this;
     R.sharesAPI.createShare(
-        {'sampleid': this.mainView.state.sampleid, 'username': $('#username').val()},
+        {'sampleid': this.sampleid, 'username': this.searchField.val()},
         function(error, data, response) {
           if (!response) {
             R.errorDialog('Server error. Please check your connection.');
@@ -101,7 +108,7 @@ class UserBrowserDialog {
                 </div>`,
             );
           }
-          $('#userbrowser').modal('hide');
+          self.dialog.modal('hide');
         },
     );
   }

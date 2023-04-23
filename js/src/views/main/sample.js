@@ -30,7 +30,7 @@ class SampleView extends AjaxView {
     const self = this;
 
     this.dlgMarkAsNews = new MarkAsNewsDialog();
-    new UserBrowserDialog(this.mainView);
+    new UserBrowserDialog(this.mainView.state.sampleid);
     new ConfirmDeleteDialog(function(type, id) {
       switch (type) {
         case 'action':

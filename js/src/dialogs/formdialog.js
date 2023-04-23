@@ -9,7 +9,7 @@ class FormDialog {
     const self = this;
 
     this.dialog = $(dialog);
-    this.prefix = this.dialog.find('.modal-body').first().data('prefix');
+    this.prefix = this.dialog.find('.modal-dialog').first().data('prefix');
     this.form = this.dialog.find('form').first();
 
     this.fields = Object.fromEntries(

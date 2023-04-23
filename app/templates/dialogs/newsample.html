@@ -1,8 +1,8 @@
 {% import "util/wtf.html" as wtf %}
 {% import "util/dialog.html" as dialog %}
 
-{{ dialog.begin_modal_dialog('dlg-new-sample', 'New sample', 'modal-lg') }}
-    <div class="modal-body" data-prefix="{{ newsampleform._prfx }}">
+{% call dialog.render_form_dialog(newsampleform, 'dlg-new-sample', 'New sample', 'modal-lg') %}
+    <div class="modal-body">
         <form>
             {{ newsampleform.hidden_tag() }}  {# also contains newsampleform.parentid #}
             {{ wtf.form_field(newsampleform.name) }}
@@ -14,4 +14,4 @@
         <button type="button" class="btn btn-primary frm-dlg-submit">Submit</button>
         <button type="button" class="btn btn-default frm-dlg-clear">Clear</button>
     </div>
-{{ dialog.end_modal_dialog() }}
+{% endcall %}

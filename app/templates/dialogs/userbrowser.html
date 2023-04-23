@@ -1,6 +1,6 @@
 {% import "util/dialog.html" as dialog %}
 
-{{ dialog.begin_modal_dialog('userbrowser', 'Select a user') }}
+{% call dialog.render_modal_dialog('userbrowser', 'Select a user') %}
     <div class="modal-body">
         <div>Select a user you want to share this sample with:<br>&nbsp;</div>
         <div class="form-group input-group">
@@ -15,4 +15,4 @@
         </button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
     </div>
-{{ dialog.end_modal_dialog() }}
+{% endcall %}

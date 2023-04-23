@@ -1,8 +1,8 @@
 {% import "util/wtf.html" as wtf %}
 {% import "util/dialog.html" as dialog %}
 
-{{ dialog.begin_modal_dialog('dlg-mark-as-news', 'Mark as news', 'modal-lg') }}
-    <div class="modal-body" data-prefix="{{ markasnewsform._prfx }}">
+{% call dialog.render_form_dialog(markasnewsform, 'dlg-mark-as-news', 'Mark as news', 'modal-lg') %}
+    <div class="modal-body">
         <p>
             Mark this action as news to all users who share this sample.
         </p>
@@ -13,4 +13,4 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-primary frm-dlg-submit">Submit</button>
     </div>
-{{ dialog.end_modal_dialog() }}
+{% endcall %}

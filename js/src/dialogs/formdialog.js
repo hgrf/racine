@@ -13,6 +13,16 @@ class FormDialog extends Dialog {
 
     this.prefix = this.dialog.find('.modal-dialog').first().data('prefix');
     this.form = this.dialog.find('form').first();
+    // prevent default form submission on enter, use this class instead
+    this.form.on('keydown', (event) => {
+      if (event.keyCode == 13) {
+        event.preventDefault();
+        self.submitButton.trigger('click');
+      } else if (event.keyCode == 27) {
+        event.preventDefault();
+        self.hide();
+      }
+    });
 
     this.fields = Object.fromEntries(
         this.form.find('input').toArray().map(

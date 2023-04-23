@@ -16,7 +16,7 @@
 | app/auth/forms.py                                                                  |       15 |        0 |    100% |           |
 | app/auth/views.py                                                                  |       75 |       37 |     51% |18-24, 37, 43-45, 54, 75-97, 102-112, 119-123 |
 | app/browser/\_\_init\_\_.py                                                        |        3 |        0 |    100% |           |
-| app/browser/views.py                                                               |      300 |      247 |     18% |58-78, 100-126, 130-143, 147-163, 186-242, 263, 288-335, 354-379, 397-425, 433-494, 503-528, 536-577, 585-592, 599-635, 639-643 |
+| app/browser/views.py                                                               |      301 |      248 |     18% |58-78, 100-125, 129-142, 146-162, 185-241, 262, 287-334, 353-378, 396-424, 432-493, 502-527, 535-576, 584-591, 598-634, 638-642 |
 | app/config.py                                                                      |       31 |        0 |    100% |           |
 | app/decorators.py                                                                  |       12 |        3 |     75% |     10-12 |
 | app/emailing.py                                                                    |       17 |       11 |     35% |9-19, 26-29 |
@@ -77,7 +77,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2259** | **1140** | **50%** |           |
+|                                                                          **TOTAL** | **2260** | **1141** | **50%** |           |
 
 
 ## Setup coverage badge

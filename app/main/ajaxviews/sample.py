@@ -12,18 +12,8 @@ from ...models import Action, Sample
 def editor(sampleid):
     sample = Sample.query.get(sampleid)
     shares = sample.shares
-    showparentactions = (
-        True
-        if request.args.get("showparentactions") is not None
-        and request.args.get("showparentactions") == "true"
-        else False
-    )
-    invertactionorder = (
-        True
-        if request.args.get("invertactionorder") is not None
-        and request.args.get("invertactionorder") == "true"
-        else False
-    )
+    showparentactions = request.args.get("showparentactions") == "true"
+    invertactionorder = request.args.get("invertactionorder") == "true"
 
     if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
         return render_template("errors/404.html"), 404
@@ -32,7 +22,7 @@ def editor(sampleid):
         form.description.data = ""
         form.timestamp.data = date.today()
 
-        # ----- get actions for this sample and all parent samples and order them by ordnum
+        # get actions for this sample and all parent samples and order them by ordnum
         actions = []
         s = sample
         while s is not None:
@@ -46,7 +36,7 @@ def editor(sampleid):
             "main/sample.html",
             sample=sample,
             actions=actions,
-            form=form,
+            newactionform=form,
             shares=shares,
             showparentactions=showparentactions,
             invertactionorder=invertactionorder,

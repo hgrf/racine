@@ -5,12 +5,6 @@ from wtforms.validators import Length, Regexp
 from ..models import Sample, SAMPLE_NAME_LENGTH
 
 
-class NewActionForm(FlaskForm):
-    timestamp = DateField("Date:", format="%Y-%m-%d", render_kw={"placeholder": "yyyy-mm-dd"})
-    description = TextAreaField("Description:")
-    submit = SubmitField("Submit")
-
-
 class APIForm(FlaskForm):
     # add customizable prefix to avoid name collisions with other forms
     _prfx = "api-form-"
@@ -24,6 +18,14 @@ class APIForm(FlaskForm):
             # add prefix before passing to base class
             formdata = ImmutableMultiDict([(self._prfx + k, v) for k, v in formdata.items()])
         return super(APIForm, self).process(formdata, *args, **kwargs)
+
+
+class NewActionForm(APIForm):
+    _prfx = "new-action-"
+
+    timestamp = DateField("Date:", format="%Y-%m-%d", render_kw={"placeholder": "yyyy-mm-dd"})
+    description = TextAreaField("Description:")
+    submit = SubmitField("Submit")
 
 
 class NewSampleForm(APIForm):

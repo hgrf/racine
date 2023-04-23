@@ -122,7 +122,7 @@ class SampleView extends AjaxView {
     this.#setupTopRightButtons(sampleid);
     this.#setupSampleImage(sampleid);
     this.#setupActions(sampleid);
-    $('#submit').on('click', this.onActionSubmit.bind(this));
+    $('#new-action-submit').on('click', this.onActionSubmit.bind(this));
 
     $('#sampledescription').racinecontent();
     $('.actiondescription').racinecontent();
@@ -135,7 +135,7 @@ class SampleView extends AjaxView {
     }
   
     // set up CKEditor for new action form
-    CKEDITOR.replace('description', ckeditorconfig);
+    CKEDITOR.replace('new-action-description', ckeditorconfig);
   
     // set up editables (i.e. in-situ editors)
   
@@ -320,18 +320,19 @@ class SampleView extends AjaxView {
     // check if the user is still modifying any actions before submitting the new one
     if (!mV.ajaxViews.sample.confirmUnload(
         true,
-        ['description'],
+        ['new-action-description'],
         'You have been editing the sample description or one or more past actions. Your changes ' +
         'will be lost if you do not save them, are you sure you want to continue?')) {
       return;
     }
 
     // make sure content of editor is transmitted
-    CKEDITOR.instances['description'].updateElement();
+    CKEDITOR.instances['new-action-description'].updateElement();
 
     const formdata = {};
     $('#newactionform').serializeArray().map(function(x) {
-      formdata[x.name] = x.value;
+      const prefix = 'new-action-';
+      formdata[x.name.startsWith(prefix) ? x.name.slice(prefix.length) : x.name] = x.value;
     });
 
     R.actionsAPI.createAction(sampleid, formdata, function(error, data, response) {
@@ -343,7 +344,7 @@ class SampleView extends AjaxView {
           // we still reload the sample in order to get a new CSRF token, but we
           // want to keep the text that the user has written in the description field
           $(document).one('editor_initialised', formdata, function(event) {
-            CKEDITOR.instances.description.setData(event.data.description);
+            CKEDITOR.instances['new-action-description'].setData(event.data.description);
             R.errorDialog('Form is not valid. Either you entered an invalid date ' +
                                       'or the session has expired. Try submitting again.');
           });
@@ -357,7 +358,7 @@ class SampleView extends AjaxView {
       // TODO: it would be sufficient to just add the new action
       // destroy it so that it doesn't bother us with confirmation dialogs when we
       // reload the sample
-      CKEDITOR.instances['description'].destroy();
+      CKEDITOR.instances['new-action-description'].destroy();
       mV.loadSample(sampleid, true);
     });
   }

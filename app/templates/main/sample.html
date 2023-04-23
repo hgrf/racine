@@ -82,12 +82,12 @@
     {% if invertactionorder %}
     <div class="row list-entry">
         <form id="newactionform">
-            {{ form.hidden_tag() }}
+            {{ newactionform.hidden_tag() }}
             <div class="col-md-2">
-                {{ wtf.form_field(form.timestamp) }}
-                {{ wtf.form_field(form.submit) }}
+                {{ wtf.form_field(newactionform.timestamp) }}
+                {{ wtf.form_field(newactionform.submit) }}
             </div>
-            <div class="col-md-10">{{ wtf.form_field(form.description) }}</div>
+            <div class="col-md-10">{{ wtf.form_field(newactionform.description) }}</div>
         </form>
     </div>
     {% endif %}
@@ -117,12 +117,12 @@
     {% if not invertactionorder %}
     <div class="row list-entry">
         <form id="newactionform">
-            {{ form.hidden_tag() }}
+            {{ newactionform.hidden_tag() }}
             <div class="col-md-2">
-                {{ wtf.form_field(form.timestamp) }}
-                {{ wtf.form_field(form.submit) }}
+                {{ wtf.form_field(newactionform.timestamp) }}
+                {{ wtf.form_field(newactionform.submit) }}
             </div>
-            <div class="col-md-10">{{ wtf.form_field(form.description) }}</div>
+            <div class="col-md-10">{{ wtf.form_field(newactionform.description) }}</div>
         </form>
     </div>
     {% endif %}

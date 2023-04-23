@@ -368,7 +368,7 @@ eslint-badge:
 			echo "pass@green"; \
 		else \
 			echo "$$OUTPUT" | \
-				grep "problem* (" | \
+				grep -E "problems? \(" | \
 				(IFS='()' read _ SUMMARY; echo $$SUMMARY) | \
 				(read ERRORS _ WARNINGS _; echo $$ERRORS C, $$WARNINGS W@red); \
 		fi

@@ -8,6 +8,18 @@ class FormDialog {
     this.form = $(form);
     this.submitButton = $(submitButton);
 
+    this.dialog.on('show.bs.modal', function(event) {
+      self.onShow();
+    });
+
+    this.dialog.on('shown.bs.modal', function(event) {
+      self.onShown();
+    });
+
+    this.dialog.on('hide.bs.modal', function(event) {
+      self.onHide();
+    });
+
     this.submitButton.on('click', function(event) {
       event.preventDefault();
 
@@ -27,7 +39,16 @@ class FormDialog {
   submit(formdata) {
   }
 
-  onSuccess() {
+  onShow() {
+  }
+
+  onShown() {
+  }
+
+  onHide() {
+  }
+
+  onSuccess(data) {
   }
 
   makeAPICallback() {
@@ -59,7 +80,7 @@ class FormDialog {
         }
       } else {
         self.dialog.modal('hide');
-        self.onSuccess();
+        self.onSuccess(data);
       }
     };
   }

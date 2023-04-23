@@ -13,8 +13,7 @@ class MarkAsNewsDialog extends FormDialog {
     R.actionsAPI.markActionAsNews(formdata, this.makeAPICallback());
   }
 
-  onSuccess() {
-    console.log('success');
+  onSuccess(data) {
     // toggle the flag
     this.flag.removeClass('markasnews');
     this.flag.addClass('unmarkasnews');

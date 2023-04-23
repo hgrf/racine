@@ -110,7 +110,11 @@ def createsample():
             db.session.rollback()
             return jsonify(error={"newsamplename": [str(e)]}), 400
     elif form.is_submitted():
-        return jsonify(error={field: errors for field, errors in form.errors.items()}), 400
+        error = {field: errors for field, errors in form.errors.items()}
+        # workaround to get correct display of error message in FormDialog
+        if "newsampleparentid" in error:
+            error["newsampleparent"] = error["newsampleparentid"]
+        return jsonify(error=error), 400
 
     return "", 500  # this should never happen
 

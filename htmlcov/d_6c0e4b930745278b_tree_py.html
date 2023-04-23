@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="d_6c0e4b930745278b_upload_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.2.3">coverage.py v7.2.3</a>,
-            created at 2023-04-23 20:28 +0000
+            created at 2023-04-23 20:37 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"/>
@@ -122,7 +122,7 @@
     <p class="pln"><span class="n"><a id="t40" href="#t40">40</a></span><span class="t">    <span class="com"># if the sample is directly shared with the current user, return the mount point</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t41" href="#t41">41</a></span><span class="t">    <span class="key">if</span> <span class="nam">user</span> <span class="key">in</span> <span class="op">[</span><span class="nam">s</span><span class="op">.</span><span class="nam">user</span> <span class="key">for</span> <span class="nam">s</span> <span class="key">in</span> <span class="nam">sample</span><span class="op">.</span><span class="nam">shares</span><span class="op">]</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t42" href="#t42">42</a></span><span class="t">        <span class="nam">share</span> <span class="op">=</span> <span class="nam">Share</span><span class="op">.</span><span class="nam">query</span><span class="op">.</span><span class="nam">filter_by</span><span class="op">(</span><span class="nam">sample</span><span class="op">=</span><span class="nam">sample</span><span class="op">,</span> <span class="nam">user</span><span class="op">=</span><span class="nam">user</span><span class="op">)</span><span class="op">.</span><span class="nam">first</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t43" href="#t43">43</a></span><span class="t">        <span class="key">return</span> <span class="nam">share</span><span class="op">.</span><span class="nam">mountpoint</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t43" href="#t43">43</a></span><span class="t">        <span class="key">return</span> <span class="nam">share</span><span class="op">.</span><span class="nam">mountpoint</span> <span class="key">if</span> <span class="nam">share</span><span class="op">.</span><span class="nam">mountpoint_id</span> <span class="key">else</span> <span class="key">None</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t44" href="#t44">44</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t45" href="#t45">45</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t46" href="#t46">46</a></span><span class="t"><span class="key">def</span> <span class="nam">build_tree</span><span class="op">(</span><span class="nam">user</span><span class="op">,</span> <span class="nam">order</span><span class="op">=</span><span class="str">"id"</span><span class="op">,</span> <span class="nam">callback</span><span class="op">=</span><span class="key">None</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -191,7 +191,7 @@
             <a id="nextFileLink" class="nav" href="d_6c0e4b930745278b_upload_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.2.3">coverage.py v7.2.3</a>,
-            created at 2023-04-23 20:28 +0000
+            created at 2023-04-23 20:37 +0000
         </p>
     </div>
 </footer>

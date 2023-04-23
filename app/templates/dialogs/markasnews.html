@@ -2,7 +2,7 @@
 {% import "util/dialog.html" as dialog %}
 
 {{ dialog.begin_modal_dialog('dlg-mark-as-news', 'Mark as news', 'modal-lg') }}
-    <div class="modal-body">
+    <div class="modal-body" data-prefix="{{ markasnewsform._prfx }}">
         <p>
             Mark this action as news to all users who share this sample.
         </p>

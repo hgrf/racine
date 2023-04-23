@@ -7,7 +7,7 @@ import ckeditorconfig from '../util/ckeditorconfig';
 
 class NewSampleDialog extends FormDialog {
   constructor(mainView, selector) {
-    super(selector, 'new-sample-');
+    super(selector);
 
     const self = this;
 

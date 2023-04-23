@@ -5,11 +5,11 @@ function removePrefix(str, prefix) {
 }
 
 class FormDialog {
-  constructor(dialog, prefix='') {
+  constructor(dialog) {
     const self = this;
 
     this.dialog = $(dialog);
-    this.prefix = prefix;
+    this.prefix = this.dialog.find('.modal-body').first().data('prefix');
     this.form = this.dialog.find('form').first();
 
     this.fields = Object.fromEntries(

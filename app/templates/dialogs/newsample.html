@@ -2,7 +2,7 @@
 {% import "util/dialog.html" as dialog %}
 
 {{ dialog.begin_modal_dialog('dlg-new-sample', 'New sample', 'modal-lg') }}
-    <div class="modal-body">
+    <div class="modal-body" data-prefix="{{ newsampleform._prfx }}">
         <form>
             {{ newsampleform.hidden_tag() }}  {# also contains newsampleform.parentid #}
             {{ wtf.form_field(newsampleform.name) }}

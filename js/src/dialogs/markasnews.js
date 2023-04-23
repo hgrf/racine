@@ -4,7 +4,7 @@ import FormDialog from './formdialog';
 
 class MarkAsNewsDialog extends FormDialog {
   constructor() {
-    super('#dlg-mark-as-news', 'mark-as-news-');
+    super('#dlg-mark-as-news');
   }
 
   show(actionid) {

@@ -19,6 +19,6 @@ import jQuery from 'jquery';
     elements.find('img').zoombutton();
 
     // put lightbox link around images
-    elements.find('img').wrap(R.lightboxWrapper);
+    elements.find('img').lightbox();
   };
 })(jQuery);

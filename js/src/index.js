@@ -8,6 +8,7 @@ import 'bootstrap-toc/bootstrap-toc';
 import 'lightbox2';
 import './jquery-plugins/jquery.jeditable';
 import './jquery-plugins/ckeditable';
+import './jquery-plugins/lightbox';
 import './jquery-plugins/zoombutton';
 import './jquery-plugins/racinecontent';
 
@@ -90,15 +91,6 @@ class Racine {
   errorDialog(message) {
     // TODO: think about uniting this with flash messages
     R.dlgError.show(message)
-  }
-
-  lightboxWrapper() {
-    const id = R.view.state.sampleid;
-    if (this.src.includes('?')) {
-      return `<a class="lightboxlink" href="${this.src}&fullsize" data-lightbox="${id}">`;
-    } else {
-      return `<a class="lightboxlink" href="${this.src}?fullsize" data-lightbox="${id}">`;
-    }
   }
 
   #setupHeaderSearch() {

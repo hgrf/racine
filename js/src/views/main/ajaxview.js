@@ -21,7 +21,9 @@ class AjaxView {
         }
         self.onLoadSuccess(state, reload);
       },
-      error: this.onLoadError.bind(this),
+      error: function(jqXHR, textStatus, error) {
+        self.onLoadError(state);
+      },
     });
   }
 
@@ -32,7 +34,7 @@ class AjaxView {
   onLoadSuccess(state, reload) {
   }
 
-  onLoadError() {
+  onLoadError(state, jqXHR) {
   }
 
   onDocumentReady() {

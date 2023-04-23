@@ -119,8 +119,8 @@ class SampleView extends AjaxView {
     }
   }
 
-  onLoadError() {
-    R.errorDialog(`Sample #${sampleid} does not exist or you do not have access to it.`);
+  onLoadError(state) {
+    R.errorDialog(`Sample #${state.sampleid} does not exist or you do not have access to it.`);
   }
 
   #responseHasError(response) {

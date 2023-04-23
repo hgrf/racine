@@ -6,12 +6,16 @@ class Dialog {
 
     this.dialog.on('show.bs.modal', (event) => this.onShow(event));
     this.dialog.on('shown.bs.modal', (event) => this.onShown(event));
+    this.dialog.on('hide.bs.modal', (event) => this.onHide(event));
   }
 
   onShow(event) {
   }
 
   onShown(event) {
+  }
+
+  onHide(event) {
   }
 }
 

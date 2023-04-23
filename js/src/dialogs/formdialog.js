@@ -1,14 +1,16 @@
 import $ from 'jquery';
+import Dialog from './dialog';
 
 function removePrefix(str, prefix) {
   return str.startsWith(prefix) ? str.slice(prefix.length) : str;
 }
 
-class FormDialog {
-  constructor(dialog) {
+class FormDialog extends Dialog {
+  constructor(selector) {
+    super(selector);
+
     const self = this;
 
-    this.dialog = $(dialog);
     this.prefix = this.dialog.find('.modal-dialog').first().data('prefix');
     this.form = this.dialog.find('form').first();
 
@@ -20,18 +22,6 @@ class FormDialog {
 
     this.submitButton = this.dialog.find('button.frm-dlg-submit').first();
     this.clearButton = this.dialog.find('button.frm-dlg-clear').first();
-
-    this.dialog.on('show.bs.modal', function(event) {
-      self.onShow();
-    });
-
-    this.dialog.on('shown.bs.modal', function(event) {
-      self.onShown();
-    });
-
-    this.dialog.on('hide.bs.modal', function(event) {
-      self.onHide();
-    });
 
     this.submitButton.on('click', function(event) {
       event.preventDefault();
@@ -58,15 +48,6 @@ class FormDialog {
   }
 
   clear() {
-  }
-
-  onShow() {
-  }
-
-  onShown() {
-  }
-
-  onHide() {
   }
 
   onSuccess(data) {

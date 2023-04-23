@@ -42,7 +42,7 @@
         {% endif %}
         <div class="col-md-5 sampledescription">
             <div><strong>Description:</strong></div>
-            <div id="sampledescription" class="{% if sample.owner == current_user %}ckeditable editable{% endif %}" data-getter="/api/get/sample/description/{{ sample.id }}" data-setter="/api/set/sample/description/{{ sample.id }}">
+            <div id="sampledescription" class="{% if sample.owner == current_user %}ckeditable editable{% endif %}" data-type="sample" data-field="description" data-id="{{ sample.id }}">
                 {{ sample.description|safe }}
             </div>
         </div>
@@ -111,7 +111,7 @@
                 <i id="togglenews-{{ action.id }}" class="actionicon glyphicon glyphicon-flag togglenews {% if not action.news_id %}markasnews{% else %}unmarkasnews{% endif %}" data-id="{{ action.id }}"></i>
             </div>
         </div>
-        <div class="col-md-10 actiondescription{% if action.owner == current_user or sample.iscollaborative %} editable ckeditable{% endif %}" data-getter="/api/get/action/description/{{ action.id }}" data-setter="/api/set/action/description/{{ action.id }}">{{ action.description|safe }}</div>
+        <div class="col-md-10 actiondescription{% if action.owner == current_user or sample.iscollaborative %} editable ckeditable{% endif %}" data-type="action" data-field="description" data-id="{{ action.id }}">{{ action.description|safe }}</div>
     </div>
     {% endfor %}
     {% if not invertactionorder %}

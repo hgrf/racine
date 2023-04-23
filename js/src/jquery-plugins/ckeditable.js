@@ -124,31 +124,30 @@ const serverErrorMsg = 'Could not connect to the server. ' +
     /* read original HTML from server in order to remove all modifications
      * like Latex parsing or Lightbox
      */
-    $.ajax({
-      url: field.data('getter'),
-      type: 'get',
-      headers: {'Authorization': 'Bearer ' + R.apiToken},
-      success: function( data ) {
-        // prepare div content for editing
-        field.empty();
-        field.append(data.value);
-        field.attr('contenteditable', true);
-        field.addClass('ckeditabling');
+    R.fieldsAPI.getField(
+        field.data('type'), field.data('id'), field.data('field'), (err, data, response) => {
+          if (err) {
+            R.errorDialog(err);
+            field.trigger('editabledone');
+            return;
+          }
 
-        // prepare settings for CKEditor
-        const clone = $.extend({}, ckeditorconfig); // clone main settings
-        clone.startupFocus = true;
-        clone.field = field;
+          // prepare div content for editing
+          field.empty();
+          field.append(data.value);
+          field.attr('contenteditable', true);
+          field.addClass('ckeditabling');
 
-        // activate CKEditor
-        const editor = CKEDITOR.inline(field.get()[0], clone);
-        editor.on('done', onCkeditableDone);
-      },
-      error: function( jqXHR, textStatus ) {
-        R.errorDialog(serverErrorMsg);
-        field.trigger('editabledone');
-      },
-    });
+          // prepare settings for CKEditor
+          const clone = $.extend({}, ckeditorconfig); // clone main settings
+          clone.startupFocus = true;
+          clone.field = field;
+
+          // activate CKEditor
+          const editor = CKEDITOR.inline(field.get()[0], clone);
+          editor.on('done', onCkeditableDone);
+        },
+    );
   }
 
   function onCkeditableDone(event) {
@@ -159,19 +158,16 @@ const serverErrorMsg = 'Could not connect to the server. ' +
     event.editor.updateElement();
 
     if (event.data == 'save') {
-      $.ajax({
-        url: field.data('setter'),
-        type: 'post',
-        headers: {'Authorization': 'Bearer ' + R.apiToken},
-        data: {'value': data},
-        success: function( data ) {
-          if (data.code) R.errorDialog('An error occured.');
-          ckeditableFinish(editor, field);
-        },
-        error: function( jqXHR, textStatus ) {
-          R.errorDialog(serverErrorMsg);
-        },
-      });
+      R.fieldsAPI.setField(
+          field.data('type'), field.data('id'), field.data('field'), {'value': data},
+          (err, data, response) => {
+            if (err) {
+              R.errorDialog(err);
+              return;
+            }
+            ckeditableFinish(editor, field);
+          },
+      );
     } else {
       ckeditableFinish(editor, field);
     }
@@ -179,32 +175,31 @@ const serverErrorMsg = 'Could not connect to the server. ' +
 
   function ckeditableFinish(editor, field) {
     // read new HTML from server (i.e. either the modified or unmodified version)
-    $.ajax({
-      url: field.data('getter'),
-      type: 'get',
-      headers: {'Authorization': 'Bearer ' + R.apiToken},
-      success: function( data ) {
-        editor.destroy();
+    R.fieldsAPI.getField(
+        field.data('type'), field.data('id'), field.data('field'), (err, data, response) => {
+          if (err) {
+            R.errorDialog(err);
+            field.trigger('editabledone');
+            return;
+          }
+          editor.destroy();
 
-        // prepare div content for editing
-        field.empty();
-        field.append(data.value);
-        field.attr('contenteditable', false);
-        field.removeClass('ckeditabling');
+          // prepare div content for editing
+          field.empty();
+          field.append(data.value);
+          field.attr('contenteditable', false);
+          field.removeClass('ckeditabling');
 
-        // typeset all equations in this field
-        if (MathJax.Hub) {
-          MathJax.Hub.Queue(['Typeset', MathJax.Hub, field.get()]); // eslint-disable-line new-cap
-        }
+          // typeset all equations in this field
+          if (MathJax.Hub) {
+            MathJax.Hub.Queue(['Typeset', MathJax.Hub, field.get()]); // eslint-disable-line new-cap
+          }
 
-        field.racinecontent();
+          field.racinecontent();
 
-        field.trigger('editableupdate', data);
-        field.trigger('editabledone');
-      },
-      error: function( jqXHR, textStatus ) {
-        R.errorDialog(serverErrorMsg);
-      },
-    });
+          field.trigger('editableupdate', data);
+          field.trigger('editabledone');
+        },
+    );
   }
 })(jQuery);

@@ -8,8 +8,6 @@ import ConfirmDeleteDialog from '../../dialogs/confirmdelete';
 
 import ckeditorconfig from '../../util/ckeditorconfig';
 
-let hiddeneditor;
-
 /* Disable caching for AJAX requests.
  * This fixes a bug in Internet Explorer, e.g. when reloading the sample
  * after adding an action, the new action is not shown / when modifying an
@@ -26,6 +24,7 @@ class SampleView extends AjaxView {
     super(mainView);
     this.invertactionorder = false;
     this.showparentactions = false;
+    this.hiddenEditor = null;
   }
 
   onDocumentReady() {
@@ -120,20 +119,6 @@ class SampleView extends AjaxView {
   }
 
   #initEditor(sampleid) {
-    const self = this;
-    const mV = this.mainView;
-
-    if ($('#hiddenckeditor').length) {
-      hiddeneditor = CKEDITOR.inline(
-          $('#hiddenckeditor')[0],
-          $.extend(
-              {'removePlugins': 'toolbar,clipboard,pastetext,pastefromword,tableselection,' +
-            'widget,uploadwidget,pastefromexcel,uploadimage,uploadfile'},
-              ckeditorconfig,
-          ),
-      );
-    }
-
     this.#setupTopRightButtons(sampleid);
     this.#setupSampleImage(sampleid);
     this.#setupActions(sampleid);
@@ -263,9 +248,19 @@ class SampleView extends AjaxView {
 
     $('#sampleimage').zoombutton();
     $('#sampleimage').wrap(R.lightboxWrapper);
-  
-    // handler for button that changes sample image
-    $('#changesampleimage').click(function(event) {
+
+    if ($('#hiddenckeditor').length) {
+      self.hiddenEditor = CKEDITOR.inline(
+          $('#hiddenckeditor')[0],
+          $.extend(
+              {'removePlugins': 'toolbar,clipboard,pastetext,pastefromword,tableselection,' +
+            'widget,uploadwidget,pastefromexcel,uploadimage,uploadfile'},
+              ckeditorconfig,
+          ),
+      );
+    }
+
+    $('#changesampleimage').on('click', function(event) {
       CKEDITOR.fbtype = 'img';
       CKEDITOR.fbupload = true;
       CKEDITOR.fbcallback = function(url) {
@@ -293,7 +288,7 @@ class SampleView extends AjaxView {
         });
       };
       // use hidden CKEDITOR instance to open the filebrowser dialog
-      hiddeneditor.execCommand('fb');
+      self.hiddenEditor.execCommand('fb');
       event.preventDefault();
     });
   }

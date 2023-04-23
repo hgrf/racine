@@ -14,6 +14,8 @@ import './jquery-plugins/racinecontent';
 import * as API from './api';
 import views from './views';
 
+import ErrorDialog from './dialogs/errordialog';
+
 import {createSearchSample} from './util/searchsample';
 
 class Racine {
@@ -47,6 +49,8 @@ class Racine {
       this.view.onDocumentReady();
       return;
     }
+
+    this.dlgError = new ErrorDialog('#dlg-error');
 
     $('#toggle-sidebar').click(function() {
       if ($('.sidebar').hasClass('overlay')) {
@@ -84,8 +88,7 @@ class Racine {
 
   errorDialog(message) {
     // TODO: think about uniting this with flash messages
-    $('#errordialog').find('.modal-body').text(message);
-    $('#errordialog').modal('show');
+    R.dlgError.show(message)
   }
 
   lightboxWrapper() {

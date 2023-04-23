@@ -13,6 +13,10 @@ class Dialog {
     this.dialog.modal('hide');
   }
 
+  show() {
+    this.dialog.modal('show');
+  }
+
   onShow(event) {
   }
 

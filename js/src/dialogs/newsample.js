@@ -44,7 +44,7 @@ class NewSampleDialog extends FormDialog {
     // make sure content of editor is transmitted
     CKEDITOR.instances[`${this.prefix}description`].updateElement();
 
-    R.samplesAPI.createSample(formdata, this.makeAPICallback());
+    R.samplesAPI.createSample(formdata, this.apiCallback.bind(this));
   }
 
   clear() {

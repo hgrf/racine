@@ -17,7 +17,7 @@ class MarkAsNewsDialog extends FormDialog {
   submit(formdata) {
     const actionid = this.fields.actionid.val();
     this.flag = $(`#togglenews-${actionid}`);
-    R.actionsAPI.markAsNews(formdata, this.makeAPICallback());
+    R.actionsAPI.markAsNews(formdata, this.apiCallback.bind(this));
   }
 
   clear() {

@@ -2,7 +2,6 @@ import inspect
 
 from datetime import datetime
 from flask import jsonify, request
-from flask_login import current_user
 from marshmallow import Schema, fields, validate
 
 from . import api
@@ -10,6 +9,7 @@ from .errors import bad_request
 
 from .. import db
 from ..models import Action, Sample, Share, SMBResource, User, record_activity, token_auth
+from ..models.user import current_user
 from ..validators import validate_form_field
 
 from ..main.forms import NewSampleForm
@@ -125,9 +125,9 @@ def getfield(target, field, id):
 
     # check if the current user is authorized to access this item
     if (
-        not (target["auth"] == "owner" and item.owner == current_user)
-        and not (target["auth"] == "admin" and current_user.is_admin)
-        and not (target["auth"] == "action_auth" and item.has_read_access(current_user))
+        not (target["auth"] == "owner" and item.owner == current_user())
+        and not (target["auth"] == "admin" and current_user().is_admin)
+        and not (target["auth"] == "action_auth" and item.has_read_access(current_user()))
     ):
         return bad_request("Invalid request.")
 
@@ -176,9 +176,9 @@ def updatefield(target, field, id):
 
     # check if the current user is authorized to access this item
     if (
-        not (target["auth"] == "owner" and item.owner == current_user)
-        and not (target["auth"] == "admin" and current_user.is_admin)
-        and not (target["auth"] == "action_auth" and item.has_write_access(current_user))
+        not (target["auth"] == "owner" and item.owner == current_user())
+        and not (target["auth"] == "admin" and current_user().is_admin)
+        and not (target["auth"] == "action_auth" and item.has_write_access(current_user()))
     ):
         return bad_request("Invalid request.")
 
@@ -210,7 +210,7 @@ def updatefield(target, field, id):
                 sample = item.sample
             else:
                 sample = None
-            record_activity("update:" + target_name + ":" + field, current_user, sample)
+            record_activity("update:" + target_name + ":" + field, current_user(), sample)
 
     except Exception as e:
         return jsonify(value=str(getattr(item, field)), message="Error: " + str(e)), 400

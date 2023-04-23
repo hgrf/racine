@@ -147,33 +147,27 @@ function setupSampleImage(sampleid) {
     CKEDITOR.fbtype = 'img';
     CKEDITOR.fbupload = true;
     CKEDITOR.fbcallback = function(url) {
-      $.ajax({
-        url: `/api/set/sample/image/${sampleid}`,
-        type: 'post',
-        headers: {'Authorization': 'Bearer ' + R.apiToken},
-        data: {'value': url},
-        success: function() {
-          // check if there is currently a sample image
-          if ($('#sampleimage').length) {
-            // update the sample image
-            $('#sampleimage').attr('src', url);
-          } else {
-            // add sample image and remove "add sample image" link
-            const div = $('div.newsampleimage');
-            div.removeClass('newsampleimage');
-            div.addClass('imgeditable');
-            div.empty();
-            /* TODO: this is duplicated code from templates/main/sample.html, there is probably a
-             *       more elegant way to sort this out
-             */
-            div.append(
-                `<img id="sampleimage" src="${url}">` +
-              '<img id="changesampleimage" src="/static/images/insertimage.png"' +
-                ' title="Change sample image">',
-            );
-            setupSampleImage(sampleid);
-          }
-        },
+      R.fieldsAPI.setField('sample', sampleid, 'image', {'value': url}, (error, data, response) => {
+        // check if there is currently a sample image
+        if ($('#sampleimage').length) {
+          // update the sample image
+          $('#sampleimage').attr('src', url);
+        } else {
+          // add sample image and remove "add sample image" link
+          const div = $('div.newsampleimage');
+          div.removeClass('newsampleimage');
+          div.addClass('imgeditable');
+          div.empty();
+          /* TODO: this is duplicated code from templates/main/sample.html, there is probably a
+            *       more elegant way to sort this out
+            */
+          div.append(
+              `<img id="sampleimage" src="${url}">` +
+            '<img id="changesampleimage" src="/static/images/insertimage.png"' +
+              ' title="Change sample image">',
+          );
+          setupSampleImage(sampleid);
+        }
       });
     };
     // use hidden CKEDITOR instance to open the filebrowser dialog

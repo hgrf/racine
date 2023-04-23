@@ -3,7 +3,7 @@
 
 {{ dialog.begin_modal_dialog('newsample', 'New sample', 'modal-lg') }}
     <div class="modal-body">
-        <form id="newsampleform">
+        <form>
             {{ newsampleform.hidden_tag() }}  {# also contains newsampleform.newsampleparentid #}
             {{ wtf.form_field(newsampleform.newsamplename) }}
             {{ wtf.form_field(newsampleform.newsampleparent) }}
@@ -11,7 +11,7 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button id="newsamplesubmit" type="button" class="btn btn-primary">Submit</button>
-        <button id="newsampleclear" type="button" class="btn btn-default">Clear</button>
+        <button type="button" class="btn btn-primary frm-dlg-submit">Submit</button>
+        <button type="button" class="btn btn-default frm-dlg-clear">Clear</button>
     </div>
 {{ dialog.end_modal_dialog() }}

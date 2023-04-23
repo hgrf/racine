@@ -4,7 +4,7 @@ import FormDialog from './formdialog';
 
 class MarkAsNewsDialog extends FormDialog {
   constructor() {
-    super('#dlg_markasnews', '#dlg_markasnews_form', '#dlg_markasnews_submit');
+    super('#dlg_markasnews');
   }
 
   submit(formdata) {

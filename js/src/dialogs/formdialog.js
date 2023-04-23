@@ -1,12 +1,12 @@
 import $ from 'jquery';
 
 class FormDialog {
-  constructor(dialog, form, submitButton) {
+  constructor(dialog) {
     const self = this;
 
     this.dialog = $(dialog);
-    this.form = $(form);
-    this.submitButton = $(submitButton);
+    this.form = this.dialog.find('form').first();
+    this.submitButton = this.dialog.find('button.frm-dlg-submit').first();
 
     this.dialog.on('show.bs.modal', function(event) {
       self.onShow();

@@ -7,12 +7,12 @@ import ckeditorconfig from '../util/ckeditorconfig';
 
 class NewSampleDialog extends FormDialog {
   constructor(mainView, selector) {
-    super(selector, '#newsampleform', '#newsamplesubmit');
+    super(selector);
 
     const self = this;
 
     this.mainView = mainView;
-    this.clearButton = $('#newsampleclear');
+    this.clearButton = this.dialog.find('button.frm-dlg-clear').first();
     this.newsamplename = $('#newsamplename');
     this.newsampleparent = $('#newsampleparent');
     this.newsampleparentid = $('#newsampleparentid');

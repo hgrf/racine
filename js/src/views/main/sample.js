@@ -36,7 +36,7 @@ class SampleView extends AjaxView {
         case 'action':
           R.actionsAPI.deleteAction(id, function(error, data, response) {
             if (!self.#responseHasError(response)) {
-              $('#' + id + '.list-entry').remove();
+              $(`#${id}.list-entry`).remove();
             }
             $('#confirm-delete').modal('hide');
           });
@@ -44,6 +44,7 @@ class SampleView extends AjaxView {
         case 'sample':
           R.samplesAPI.deleteSample(id, function(error, data, response) {
             if (!self.#responseHasError(response)) {
+              $(`#nav-entry${id}`).remove();
               self.mainView.loadWelcome();
             }
             $('#confirm-delete').modal('hide');
@@ -52,8 +53,12 @@ class SampleView extends AjaxView {
         case 'share':
           R.sharesAPI.deleteShare(id, function(error, data, response) {
             if (!self.#responseHasError(response)) {
-              $('#sharelistentry' + id).remove();
-              if (response.status == 205) { // if the user removed himself from the sharer list
+              $(`#sharelistentry${id}`).remove();
+              if (response.status == 205) {
+                /* if the user removed himself from the sharer list, remove the item from the
+                 * tree and load the welcome page
+                 */
+                $(`#nav-entry${self.mainView.state.sampleid}`).remove();
                 self.mainView.loadWelcome();
               }
               $('#confirm-delete').modal('hide');

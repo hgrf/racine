@@ -25,6 +25,10 @@ class MarkAsNewsDialog extends FormDialog {
     this.fields.expires.val('');
   }
 
+  onShown() {
+    this.fields.title.focus();
+  }
+
   onSuccess(data) {
     // toggle the flag
     this.flag.removeClass('markasnews');

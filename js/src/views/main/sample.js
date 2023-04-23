@@ -382,11 +382,10 @@ function initEditor(sampleid, sampleview, mainview) {
     // is this action not yet marked as news?
     if (flag.hasClass('markasnews')) {
       // set the action ID hidden field
-      // TODO: it seems a bit dangerous that this form field is just called "actionid"
-      $('#actionid').val(actionid);
+      $('#mark-as-news-actionid').val(actionid);
       // clear other fields
-      $('#title').val('');
-      $('#expires').val('');
+      $('#mark-as-news-title').val('');
+      $('#mark-as-news-expires').val('');
       $('#dlg-mark-as-news').modal('show');
     } else {
       R.actionsAPI.unmarkAsNews({'actionid': actionid}, function(error, data, response) {

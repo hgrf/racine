@@ -46,7 +46,9 @@ class NewSampleForm(APIForm):
             raise ValidationError("Please select a valid parent sample or leave that field empty.")
 
 
-class MarkAsNewsForm(FlaskForm):
+class MarkAsNewsForm(APIForm):
+    _prfx = "mark-as-news-"
+
     title = StringField("Title:")
     expires = DateField("Expires:", format="%Y-%m-%d", render_kw={"placeholder": "yyyy-mm-dd"})
 

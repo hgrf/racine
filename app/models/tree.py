@@ -40,7 +40,7 @@ def logical_parent(sample, user):
     # if the sample is directly shared with the current user, return the mount point
     if user in [s.user for s in sample.shares]:
         share = Share.query.filter_by(sample=sample, user=user).first()
-        return share.mountpoint
+        return share.mountpoint if share.mountpoint_id else None
 
 
 def build_tree(user, order="id", callback=None):

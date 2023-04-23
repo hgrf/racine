@@ -18,10 +18,10 @@ class SampleIdParameter(Schema):
 
 class NewSampleFormContent(Schema):
     csrf_token = fields.Str()
-    newsamplename = fields.Str()
-    newsampleparent = fields.Str()
-    newsampleparentid = fields.Int()
-    newsampledescription = fields.Str()
+    name = fields.Str()
+    parent = fields.Str()
+    parentid = fields.Int()
+    description = fields.Str()
 
 
 class NewSampleResponse(Schema):
@@ -93,12 +93,12 @@ def createsample():
     form = NewSampleForm()
     if form.validate_on_submit():
         try:
-            parent_id = int(form.newsampleparentid.data) if form.newsampleparentid.data else 0
+            parent_id = int(form.parentid.data) if form.parentid.data else 0
             sample = Sample(
                 owner=token_auth.current_user(),
-                name=form.newsamplename.data,
+                name=form.name.data,
                 parent_id=parent_id,
-                description=form.newsampledescription.data,
+                description=form.description.data,
                 isarchived=False,
                 isdeleted=False,
             )
@@ -108,12 +108,12 @@ def createsample():
             return jsonify(sampleid=sample.id), 201
         except Exception as e:
             db.session.rollback()
-            return jsonify(error={"newsamplename": [str(e)]}), 400
+            return jsonify(error={"name": [str(e)]}), 400
     elif form.is_submitted():
         error = {field: errors for field, errors in form.errors.items()}
         # workaround to get correct display of error message in FormDialog
-        if "newsampleparentid" in error:
-            error["newsampleparent"] = error["newsampleparentid"]
+        if "parentid" in error:
+            error["parent"] = error["parentid"]
         return jsonify(error=error), 400
 
     return "", 500  # this should never happen

@@ -44,7 +44,7 @@ class MainView {
   onDocumentReady() {
     this.#setupBrowserNavigation();
 
-    new NewSampleDialog(this, '#newsample');
+    new NewSampleDialog(this, '#dlg-new-sample');
 
     for (const view in this.ajaxViews) {
       if (Object.hasOwn(this.ajaxViews, view)) {

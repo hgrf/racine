@@ -1,10 +1,11 @@
 import $ from 'jquery';
 
 class FormDialog {
-  constructor(dialog) {
+  constructor(dialog, prefix='') {
     const self = this;
 
     this.dialog = $(dialog);
+    this.prefix = prefix;
     this.form = this.dialog.find('form').first();
     this.submitButton = this.dialog.find('button.frm-dlg-submit').first();
 
@@ -29,7 +30,8 @@ class FormDialog {
 
       const formdata = {};
       self.form.serializeArray().map(function(x) {
-        formdata[x.name] = x.value;
+        const name = x.name.startsWith(self.prefix) ? x.name.slice(self.prefix.length) : x.name;
+        formdata[name] = x.value;
       });
 
       self.submit(formdata);
@@ -68,7 +70,7 @@ class FormDialog {
             continue;
           }
           // get form group
-          const formgroup = $(`#${field}`).closest('.form-group');
+          const formgroup = $(`#${self.prefix}${field}`).closest('.form-group');
           // add the has-error to the form group
           formgroup.addClass('has-error');
           // add the error message to the form group

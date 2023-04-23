@@ -79,7 +79,7 @@ class SampleView extends AjaxView {
 
   confirmUnload(ajax=true, ignore=[], message='') {
     const msg = message ? message : 'Are you sure you want to leave before saving modifications?';
-    ignore = ignore.concat(['newsampledescription']);
+    ignore = ignore.concat(['new-sample-description']);
 
     for (const i in CKEDITOR.instances) {
       // check if the editor is not in the ignore list and has modifications

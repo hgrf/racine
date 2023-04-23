@@ -40,7 +40,7 @@ supported_targets = {
         "dbobject": Sample,
         "auth": "owner",
         "fields": {
-            "name": lambda x: validate_form_field(NewSampleForm(), "newsamplename", x),
+            "name": lambda x: validate_form_field(NewSampleForm(), "name", x),
             "description": str,
             "image": str,
         },

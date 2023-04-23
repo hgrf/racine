@@ -145,10 +145,7 @@ class SampleView extends AjaxView {
     this.#setupSampleImage(sampleid);
     $('#samplename.editable').texteditable();
     $('#samplename.editable').on('editableupdate', function(event, data) {
-      // TODO: data.code is deprecated
-      if (!data.code) {
         $(`#nav-entry${sampleid} > .nav-entry-name`).html(data.value);
-      }
     });
     $('#sampledescription').racinecontent();
     this.#setupTopRightButtons(sampleid);

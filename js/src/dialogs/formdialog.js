@@ -1,5 +1,9 @@
 import $ from 'jquery';
 
+function removePrefix(str, prefix) {
+  return str.startsWith(prefix) ? str.slice(prefix.length) : str;
+}
+
 class FormDialog {
   constructor(dialog, prefix='') {
     const self = this;
@@ -7,6 +11,13 @@ class FormDialog {
     this.dialog = $(dialog);
     this.prefix = prefix;
     this.form = this.dialog.find('form').first();
+
+    this.fields = Object.fromEntries(
+      this.form.find('input').toArray().map(
+        (field) => [removePrefix(field.id, this.prefix), $(field)]
+      )
+    );
+
     this.submitButton = this.dialog.find('button.frm-dlg-submit').first();
 
     this.dialog.on('show.bs.modal', function(event) {
@@ -30,8 +41,7 @@ class FormDialog {
 
       const formdata = {};
       self.form.serializeArray().map(function(x) {
-        const name = x.name.startsWith(self.prefix) ? x.name.slice(self.prefix.length) : x.name;
-        formdata[name] = x.value;
+        formdata[removePrefix(x.name, self.prefix)] = x.value;
       });
 
       self.submit(formdata);

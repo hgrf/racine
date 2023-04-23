@@ -13,20 +13,17 @@ class NewSampleDialog extends FormDialog {
 
     this.mainView = mainView;
     this.clearButton = this.dialog.find('button.frm-dlg-clear').first();
-    this.name = $(`#${this.prefix}name`);
-    this.parent = $(`#${this.prefix}parent`);
-    this.parentid = $(`#${this.prefix}parentid`);
 
-    createSelectSample(this.parent, this.parentid);
+    createSelectSample(this.fields.parent, this.fields.parentid);
     CKEDITOR.replace(`${this.prefix}description`, ckeditorconfig);
 
     this.clearButton.on('click', function(event) {
       event.preventDefault();
 
-      self.name.val('');
-      self.parent.typeahead('val', '');
-      self.parent.markvalid();
-      self.parentid.val('');
+      self.fields.name.val('');
+      self.fields.parent.typeahead('val', '');
+      self.fields.parent.markvalid();
+      self.fields.parentid.val('');
       CKEDITOR.instances[`${self.prefix}description`].setData('');
     });
   }
@@ -34,8 +31,8 @@ class NewSampleDialog extends FormDialog {
   onShow() {
     // set the parent field to the current sample
     if ('sampleid' in this.mainView.state) {
-      this.parent.typeahead('val', $('#samplename').text());
-      this.parentid.val(this.mainView.state.sampleid);
+      this.fields.parent.typeahead('val', $('#samplename').text());
+      this.fields.parentid.val(this.mainView.state.sampleid);
     }
   }
 
@@ -47,7 +44,7 @@ class NewSampleDialog extends FormDialog {
     CKEDITOR.instances[`${this.prefix}description`].setData('');
 
     // put the cursor in the sample name field
-    this.name.focus();
+    this.fields.name.focus();
   }
 
   onHide() {

@@ -37,6 +37,6 @@
 {% block scripts %}
 {{ super() }}
 <script>
-    var R = new Racine("{{ api_token }}", "users");        
+    R.init("{{ api_token }}", "users");        
 </script>
 {% endblock %}

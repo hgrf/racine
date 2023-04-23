@@ -9,7 +9,7 @@ export default {
   output: {
     format: 'iife',
     file: '../app/static/racine.js',
-    name: 'Racine',
+    name: 'R',
   },
   plugins: [
     commonjs({esmExternals: true}),

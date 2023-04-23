@@ -20,7 +20,10 @@ import ErrorDialog from './dialogs/errordialog';
 import {createSearchSample} from './util/searchsample';
 
 class Racine {
-  constructor(apiToken, view, params) {
+  constructor() {
+  }
+
+  init(apiToken, view, params) {
     const self = this;
 
     this.apiToken = apiToken;
@@ -139,4 +142,6 @@ class Racine {
   }
 }
 
-export default Racine;
+R = new Racine();
+
+export default R;

@@ -60,6 +60,6 @@
     {% include "util/mathjax.html" %}
     <script src="{{ url_for('static', filename='racine.js', version='20230402') }}"></script>
     <script>
-        var R = new Racine("{{ api_token }}", "print", {'sampleerror': {{ "true" if sampleerror else "false" }} });        
+        R.init("{{ api_token }}", "print", {'sampleerror': {{ "true" if sampleerror else "false" }} });        
     </script>
 {% endblock %}

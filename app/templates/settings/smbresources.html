@@ -57,6 +57,6 @@
 {% block scripts %}
 {{ super() }}
 <script>
-    var R = new Racine("{{ api_token }}", "smbresources");
+    R.init("{{ api_token }}", "smbresources");
 </script>
 {% endblock %}

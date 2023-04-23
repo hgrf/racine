@@ -33,7 +33,7 @@
     </script>
     <script src="{{ url_for('static', filename='racine.js', version='20230402') }}"></script>
     <script>
-        var R = new Racine("{{ api_token }}", "{{ view }}", {{ params|tojson }});
+        R.init("{{ api_token }}", "{{ view }}", {{ params|tojson }});
     </script>
 {% endblock %}
 

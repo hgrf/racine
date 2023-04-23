@@ -29,7 +29,7 @@ class SampleView extends AjaxView {
   onDocumentReady() {
     const self = this;
 
-    new MarkAsNewsDialog();
+    this.dlgMarkAsNews = new MarkAsNewsDialog();
     new UserBrowserDialog(this.mainView);
     new ConfirmDeleteDialog(function(type, id) {
       switch (type) {
@@ -381,12 +381,7 @@ function initEditor(sampleid, sampleview, mainview) {
 
     // is this action not yet marked as news?
     if (flag.hasClass('markasnews')) {
-      // set the action ID hidden field
-      $('#mark-as-news-actionid').val(actionid);
-      // clear other fields
-      $('#mark-as-news-title').val('');
-      $('#mark-as-news-expires').val('');
-      $('#dlg-mark-as-news').modal('show');
+      sampleview.dlgMarkAsNews.show(actionid);
     } else {
       R.actionsAPI.unmarkAsNews({'actionid': actionid}, function(error, data, response) {
         if (!response) {

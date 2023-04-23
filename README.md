@@ -22,12 +22,12 @@
 | app/emailing.py                                                                    |       17 |       11 |     35% |9-19, 26-29 |
 | app/main/\_\_init\_\_.py                                                           |        5 |        0 |    100% |           |
 | app/main/ajaxviews/\_\_init\_\_.py                                                 |        3 |        0 |    100% |           |
-| app/main/ajaxviews/sample.py                                                       |       27 |       18 |     33% |     13-45 |
+| app/main/ajaxviews/sample.py                                                       |       27 |       18 |     33% |     13-35 |
 | app/main/ajaxviews/search.py                                                       |       13 |        7 |     46% |     10-31 |
 | app/main/ajaxviews/tree.py                                                         |       14 |        7 |     50% |     11-19 |
 | app/main/ajaxviews/welcome.py                                                      |       51 |       40 |     22% |    17-102 |
 | app/main/errors.py                                                                 |       19 |        6 |     68% |9, 19, 24-28 |
-| app/main/forms.py                                                                  |       33 |        8 |     76% |19, 22-26, 44-46 |
+| app/main/forms.py                                                                  |       34 |        8 |     76% |13, 16-20, 46-48 |
 | app/main/views.py                                                                  |       70 |       38 |     46% |12, 25, 31-34, 40-44, 50-51, 58-109, 115-124, 134 |
 | app/models/\_\_init\_\_.py                                                         |       13 |        0 |    100% |           |
 | app/models/action.py                                                               |       22 |        7 |     68% |20, 23-29, 32 |
@@ -77,7 +77,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2258** | **1140** | **50%** |           |
+|                                                                          **TOTAL** | **2259** | **1140** | **50%** |           |
 
 
 ## Setup coverage badge

@@ -137,15 +137,7 @@ class SampleView extends AjaxView {
     // handler for archive button
     $('#archive').click(function() {
       R.samplesAPI.toggleArchived(sampleid, function(error, data, response) {
-        if (!response) {
-          R.errorDialog('Server error. Please check your connection.');
-        } else if (response.error) {
-          if (response.body.message) {
-            R.errorDialog(response.body.message);
-          } else {
-            R.errorDialog(response.error);
-          }
-        } else {
+        if(!self.#responseHasError(response)) {
           if (data.isarchived) {
             $('#archive').attr('title', 'De-archive');
             $('#archive').attr('src', '/static/images/dearchive.png');
@@ -162,15 +154,7 @@ class SampleView extends AjaxView {
     // handler for collaborative button
     $('#collaborate').click(function() {
       R.samplesAPI.toggleCollaborative(sampleid, function(error, data, response) {
-        if (!response) {
-          R.errorDialog('Server error. Please check your connection.');
-        } else if (response.error) {
-          if (response.body.message) {
-            R.errorDialog(response.body.message);
-          } else {
-            R.errorDialog(response.error);
-          }
-        } else {
+        if(!self.#responseHasError(response)) {
           if (data.iscollaborative) {
             $('#collaborate').attr('title', 'Make non-collaborative');
             $('#collaborate').attr('src', '/static/images/non-collaborative.png');
@@ -288,15 +272,7 @@ class SampleView extends AjaxView {
       R.actionsAPI.swapActionOrder(
           {'actionid': element.data('id'), 'swapid': element.data('swapid')},
           function(error, data, response) {
-            if (!response) {
-              R.errorDialog('Server error. Please check your connection.');
-            } else if (response.error) {
-              if (response.body.message) {
-                R.errorDialog(response.body.message);
-              } else {
-                R.errorDialog(response.error);
-              }
-            } else {
+            if(!self.#responseHasError(response)) {
               mV.loadSample(sampleid, true);
             }
           });
@@ -311,15 +287,7 @@ class SampleView extends AjaxView {
         self.dlgMarkAsNews.show(actionid);
       } else {
         R.actionsAPI.unmarkAsNews({'actionid': actionid}, function(error, data, response) {
-          if (!response) {
-            R.errorDialog('Server error. Please check your connection.');
-          } else if (response.error) {
-            if (response.body.message) {
-              R.errorDialog(response.body.message);
-            } else {
-              R.errorDialog(response.error);
-            }
-          } else {
+          if(!self.#responseHasError(response)) {
             flag.removeClass('unmarkasnews');
             flag.addClass('markasnews');
           }

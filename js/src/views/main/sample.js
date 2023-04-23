@@ -136,6 +136,7 @@ class SampleView extends AjaxView {
 
     this.#setupTopRightButtons(sampleid);
     this.#setupSampleImage(sampleid);
+    this.#setupActions(sampleid);
     $('#submit').on('click', this.onActionSubmit.bind(this));
 
     $('#sampledescription').racinecontent();
@@ -165,35 +166,6 @@ class SampleView extends AjaxView {
       // TODO: data.code is deprecated
       if (!data.code) {
         $(`#nav-entry${sampleid} > .nav-entry-name`).html(data.value);
-      }
-    });
-    $('.actiondate.editable').texteditable();
-  
-    $('.swapaction').click( function(event) {
-      const element = $(this); // eslint-disable-line no-invalid-this
-      R.actionsAPI.swapActionOrder(
-          {'actionid': element.data('id'), 'swapid': element.data('swapid')},
-          function(error, data, response) {
-            if(!self.#responseHasError(response)) {
-              mV.loadSample(sampleid, true);
-            }
-          });
-    });
-  
-    $('.togglenews').click(function(event) {
-      const flag = $(this); // eslint-disable-line no-invalid-this
-      const actionid = flag.data('id');
-  
-      // is this action not yet marked as news?
-      if (flag.hasClass('markasnews')) {
-        self.dlgMarkAsNews.show(actionid);
-      } else {
-        R.actionsAPI.unmarkAsNews({'actionid': actionid}, function(error, data, response) {
-          if(!self.#responseHasError(response)) {
-            flag.removeClass('unmarkasnews');
-            flag.addClass('markasnews');
-          }
-        });
       }
     });
   
@@ -248,6 +220,41 @@ class SampleView extends AjaxView {
     $('#showparentactions').on('click', function() {
       self.showparentactions = !self.showparentactions;
       mV.loadSample(sampleid, true);
+    });
+  }
+
+  #setupActions(sampleid) {
+    const self = this;
+    const mV = this.mainView;
+
+    $('.actiondate.editable').texteditable();
+
+    $('.swapaction').on('click', function(event) {
+      const element = $(this); // eslint-disable-line no-invalid-this
+      R.actionsAPI.swapActionOrder(
+          {'actionid': element.data('id'), 'swapid': element.data('swapid')},
+          function(error, data, response) {
+            if(!self.#responseHasError(response)) {
+              mV.loadSample(sampleid, true);
+            }
+          });
+    });
+
+    $('.togglenews').on('click', function(event) {
+      const flag = $(this); // eslint-disable-line no-invalid-this
+      const actionid = flag.data('id');
+  
+      // is this action not yet marked as news?
+      if (flag.hasClass('markasnews')) {
+        self.dlgMarkAsNews.show(actionid);
+      } else {
+        R.actionsAPI.unmarkAsNews({'actionid': actionid}, function(error, data, response) {
+          if(!self.#responseHasError(response)) {
+            flag.removeClass('unmarkasnews');
+            flag.addClass('markasnews');
+          }
+        });
+      }
     });
   }
 

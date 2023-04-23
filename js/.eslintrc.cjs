@@ -11,13 +11,14 @@ module.exports = {
     'sourceType': 'module',
   },
   'rules': {
-    'require-jsdoc': 0,
+    'require-jsdoc': 'off',
     'max-len': [
       'error',
       {
         "code": 100,
       }
-    ]
+    ],
+    'no-undef': 'warn'
   },
   'ignorePatterns': [
     'src/api/**',

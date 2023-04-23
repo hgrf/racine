@@ -15,6 +15,12 @@
 {% macro render_form_dialog(form, id, title, class='') %}
     {% set content = caller() %}
     {% call render_modal_dialog(id, title, class, 'data-prefix=' + form._prfx) %}
-        {{ content }}
+        <div class="modal-body">
+            {{ content }}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary frm-dlg-submit">Submit</button>
+            <button type="button" class="btn btn-default frm-dlg-clear">Clear</button>
+        </div>
     {% endcall %}
 {% endmacro %}

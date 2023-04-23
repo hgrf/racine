@@ -12,20 +12,9 @@ class NewSampleDialog extends FormDialog {
     const self = this;
 
     this.mainView = mainView;
-    this.clearButton = this.dialog.find('button.frm-dlg-clear').first();
 
     createSelectSample(this.fields.parent, this.fields.parentid);
     CKEDITOR.replace(`${this.prefix}description`, ckeditorconfig);
-
-    this.clearButton.on('click', function(event) {
-      event.preventDefault();
-
-      self.fields.name.val('');
-      self.fields.parent.typeahead('val', '');
-      self.fields.parent.markvalid();
-      self.fields.parentid.val('');
-      CKEDITOR.instances[`${self.prefix}description`].setData('');
-    });
   }
 
   onShow() {
@@ -48,8 +37,7 @@ class NewSampleDialog extends FormDialog {
   }
 
   onHide() {
-    // clear the dialog
-    this.clearButton.trigger('click');
+    this.clear();
   }
 
   submit(formdata) {
@@ -57,6 +45,14 @@ class NewSampleDialog extends FormDialog {
     CKEDITOR.instances[`${this.prefix}description`].updateElement();
 
     R.samplesAPI.createSample(formdata, this.makeAPICallback());
+  }
+
+  clear() {
+    this.fields.name.val('');
+    this.fields.parent.typeahead('val', '');
+    this.fields.parent.markvalid();
+    this.fields.parentid.val('');
+    CKEDITOR.instances[`${this.prefix}description`].setData('');
   }
 
   onSuccess(data) {

@@ -19,6 +19,7 @@ class FormDialog {
     );
 
     this.submitButton = this.dialog.find('button.frm-dlg-submit').first();
+    this.clearButton = this.dialog.find('button.frm-dlg-clear').first();
 
     this.dialog.on('show.bs.modal', function(event) {
       self.onShow();
@@ -46,9 +47,17 @@ class FormDialog {
 
       self.submit(formdata);
     });
+
+    this.clearButton.on('click', function(event) {
+      event.preventDefault();
+      self.clear();
+    });
   }
 
   submit(formdata) {
+  }
+
+  clear() {
   }
 
   onShow() {

@@ -10,9 +10,7 @@ class MarkAsNewsDialog extends FormDialog {
   show(actionid) {
     // set the action ID hidden field
     this.fields.actionid.val(actionid);
-    // clear other fields
-    this.fields.title.val('');
-    this.fields.expires.val('');
+    this.clear();
     this.dialog.modal('show');
   }
 
@@ -20,6 +18,11 @@ class MarkAsNewsDialog extends FormDialog {
     const actionid = this.fields.actionid.val();
     this.flag = $(`#togglenews-${actionid}`);
     R.actionsAPI.markAsNews(formdata, this.makeAPICallback());
+  }
+
+  clear() {
+    this.fields.title.val('');
+    this.fields.expires.val('');
   }
 
   onSuccess(data) {

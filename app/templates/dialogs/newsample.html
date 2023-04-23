@@ -2,16 +2,10 @@
 {% import "util/dialog.html" as dialog %}
 
 {% call dialog.render_form_dialog(newsampleform, 'dlg-new-sample', 'New sample', 'modal-lg') %}
-    <div class="modal-body">
-        <form>
-            {{ newsampleform.hidden_tag() }}  {# also contains newsampleform.parentid #}
-            {{ wtf.form_field(newsampleform.name) }}
-            {{ wtf.form_field(newsampleform.parent) }}
-            {{ wtf.form_field(newsampleform.description) }}
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-primary frm-dlg-submit">Submit</button>
-        <button type="button" class="btn btn-default frm-dlg-clear">Clear</button>
-    </div>
+    <form>
+        {{ newsampleform.hidden_tag() }}  {# also contains newsampleform.parentid #}
+        {{ wtf.form_field(newsampleform.name) }}
+        {{ wtf.form_field(newsampleform.parent) }}
+        {{ wtf.form_field(newsampleform.description) }}
+    </form>
 {% endcall %}

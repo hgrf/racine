@@ -2,15 +2,10 @@
 {% import "util/dialog.html" as dialog %}
 
 {% call dialog.render_form_dialog(markasnewsform, 'dlg-mark-as-news', 'Mark as news', 'modal-lg') %}
-    <div class="modal-body">
-        <p>
-            Mark this action as news to all users who share this sample.
-        </p>
-        <form>
-            {{ wtf.quick_form(markasnewsform) }}
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-primary frm-dlg-submit">Submit</button>
-    </div>
+    <p>
+        Mark this action as news to all users who share this sample.
+    </p>
+    <form>
+        {{ wtf.quick_form(markasnewsform) }}
+    </form>
 {% endcall %}

@@ -38,7 +38,7 @@ class SampleView extends AjaxView {
             if (!self.#responseHasError(response)) {
               $(`#${id}.list-entry`).remove();
             }
-            $('#confirm-delete').modal('hide');
+            $('#dlg-confirm-delete').modal('hide');
           });
           break;
         case 'sample':
@@ -47,7 +47,7 @@ class SampleView extends AjaxView {
               $(`#nav-entry${id}`).remove();
               self.mainView.loadWelcome();
             }
-            $('#confirm-delete').modal('hide');
+            $('#dlg-confirm-delete').modal('hide');
           });
           break;
         case 'share':
@@ -61,7 +61,7 @@ class SampleView extends AjaxView {
                 $(`#nav-entry${self.mainView.state.sampleid}`).remove();
                 self.mainView.loadWelcome();
               }
-              $('#confirm-delete').modal('hide');
+              $('#dlg-confirm-delete').modal('hide');
             }
           });
           break;

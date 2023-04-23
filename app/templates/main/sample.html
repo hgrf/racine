@@ -9,7 +9,7 @@
     {% endif %}
     <div id="samplename" class="{% if sample.owner == current_user %}editable{% endif %}" data-setter="/api/set/sample/name/{{ sample.id }}">{{ sample.name }}</div>
     {% if sample.owner == current_user %}
-        <img class="editor-shortcut" title="Delete sample" src="/static/images/delete.png" data-href="/delsample/{{ sample.id }}" data-type="sample" data-id="{{ sample.id }}" data-toggle="modal" data-target="#confirm-delete">
+        <img class="editor-shortcut" title="Delete sample" src="/static/images/delete.png" data-href="/delsample/{{ sample.id }}" data-type="sample" data-id="{{ sample.id }}" data-toggle="modal" data-target="#dlg-confirm-delete">
         <img class="editor-shortcut" title="{% if sample.isarchived %}De-archive{% else %}Archive{% endif %}" id="archive" src="{% if sample.isarchived %}/static/images/dearchive.png{% else %}/static/images/archive.png{% endif %}">
         <img class="editor-shortcut" title="{% if sample.iscollaborative %}Make non-collaborative{% else %}Make collaborative{% endif %}" id="collaborate" src="{% if sample.iscollaborative %}/static/images/non-collaborative.png{% else %}/static/images/collaborative.png{% endif %}">
     {% endif %}
@@ -54,7 +54,7 @@
             {% for share in shares %}
                 <div class="sharelistentry" id="sharelistentry{{ share.id }}">
                     {% if sample.owner == current_user or share.user == current_user %}
-                        <a data-type="share" data-id="{{ share.id }}" data-toggle="modal" data-target="#confirm-delete" href="">
+                        <a data-type="share" data-id="{{ share.id }}" data-toggle="modal" data-target="#dlg-confirm-delete" href="">
                             <i class="glyphicon glyphicon-remove"></i>
                         </a>
                     {% else %}
@@ -100,7 +100,7 @@
                 {% if action.owner != current_user %}<div style="font-style: italic">{{ action.owner.username }}</div>{% endif %}
                 {% if action.sample != sample %}<div style="font-style: italic;">{{ action.sample.name }}</div>{% endif %}
                 {% if action.owner == current_user or sample.iscollaborative %}
-                    <i class="actionicon glyphicon glyphicon-trash" data-type="action" data-id="{{ action.id }}" data-toggle="modal" data-target="#confirm-delete"></i>
+                    <i class="actionicon glyphicon glyphicon-trash" data-type="action" data-id="{{ action.id }}" data-toggle="modal" data-target="#dlg-confirm-delete"></i>
                 {% if not i == 0 %} {# can  be moved up #}
                     <i class="actionicon glyphicon glyphicon-arrow-up swapaction" data-id="{{ action.id }}" data-swapid="{{ actions[i-1].id }}"></i>
                 {% endif %}

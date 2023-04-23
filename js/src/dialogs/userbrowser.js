@@ -102,7 +102,7 @@ class UserBrowserDialog extends Dialog {
             $('#sharelist').append(
                 `<div class="sharelistentry" id="sharelistentry${data.shareid}">
                 <a data-type="share" data-id="${data.shareid}" data-toggle="modal"
-                    data-target="#confirm-delete" href="">
+                    data-target="#dlg-confirm-delete" href="">
                   <i class="glyphicon glyphicon-remove"></i>
                 </a>${data.username}
                 </div>`,

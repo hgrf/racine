@@ -3,7 +3,7 @@ import Dialog from './dialog';
 
 class ConfirmDeleteDialog extends Dialog {
   constructor(callback) {
-    super('#confirm-delete');
+    super('#dlg-confirm-delete');
 
     this.type = null;
     this.id = null;

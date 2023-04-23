@@ -7,7 +7,9 @@ class UsersView {
   }
 
   onDocumentReady() {
-    new ConfirmDeleteDialog({'user': (id) => { location.href = `/settings/users?delete=${id}`; }});
+    new ConfirmDeleteDialog({'user': (id) => {
+      location.href = `/settings/users?delete=${id}`;
+    }});
 
     $('.loginas').click(function(event) {
       $.ajax({

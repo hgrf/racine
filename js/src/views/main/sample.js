@@ -33,29 +33,35 @@ class SampleView extends AjaxView {
     this.dlgMarkAsNews = new MarkAsNewsDialog();
     new UserBrowserDialog(this.mainView.state.sampleid);
     new ConfirmDeleteDialog({
-        'action': (id) => {R.actionsAPI.deleteAction(id, (error, data, response) => {
-            if (!self.#responseHasError(response)) {
-              $(`#${id}.list-entry`).remove();
-            }
-        })},
-        'sample': (id) => {R.samplesAPI.deleteSample(id, (error, data, response) => {
-            if (!self.#responseHasError(response)) {
-              $(`#nav-entry${id}`).remove();
-              self.mainView.loadWelcome();
-            }
-        })},
-        'share': (id) => {R.sharesAPI.deleteShare(id, (error, data, response) => {
-            if (!self.#responseHasError(response)) {
-              $(`#sharelistentry${id}`).remove();
-              if (response.status == 205) {
-                /* if the user removed himself from the sharer list, remove the item from the
+      'action': (id) => {
+        R.actionsAPI.deleteAction(id, (error, data, response) => {
+          if (!self.#responseHasError(response)) {
+            $(`#${id}.list-entry`).remove();
+          }
+        });
+      },
+      'sample': (id) => {
+        R.samplesAPI.deleteSample(id, (error, data, response) => {
+          if (!self.#responseHasError(response)) {
+            $(`#nav-entry${id}`).remove();
+            self.mainView.loadWelcome();
+          }
+        });
+      },
+      'share': (id) => {
+        R.sharesAPI.deleteShare(id, (error, data, response) => {
+          if (!self.#responseHasError(response)) {
+            $(`#sharelistentry${id}`).remove();
+            if (response.status == 205) {
+            /* if the user removed himself from the sharer list, remove the item from the
                  * tree and load the welcome page
                  */
-                $(`#nav-entry${self.mainView.state.sampleid}`).remove();
-                self.mainView.loadWelcome();
-              }
+              $(`#nav-entry${self.mainView.state.sampleid}`).remove();
+              self.mainView.loadWelcome();
             }
-        })}
+          }
+        });
+      },
     });
   }
 
@@ -122,7 +128,7 @@ class SampleView extends AjaxView {
   #setupView(sampleid) {
     this.#setupHeader(sampleid);
     this.#setupActions(sampleid);
-  
+
     // set up new action form
     CKEDITOR.replace('new-action-description', ckeditorconfig);
     $('#new-action-submit').on('click', this.onActionSubmit.bind(this));
@@ -134,10 +140,10 @@ class SampleView extends AjaxView {
 
     // add a trigger image to all editables
     $('.editable').setup_triggers();
-  
+
     // set up editors for sample and action descriptions (CKEditors)
     $('.ckeditable').ckeditable();
-  
+
     $(document).trigger('editor_initialised');
   }
 
@@ -145,7 +151,7 @@ class SampleView extends AjaxView {
     this.#setupSampleImage(sampleid);
     $('#samplename.editable').texteditable();
     $('#samplename.editable').on('editableupdate', function(event, data) {
-        $(`#nav-entry${sampleid} > .nav-entry-name`).html(data.value);
+      $(`#nav-entry${sampleid} > .nav-entry-name`).html(data.value);
     });
     $('#sampledescription').racinecontent();
     this.#setupTopRightButtons(sampleid);
@@ -157,7 +163,7 @@ class SampleView extends AjaxView {
 
     $('#archive').on('click', function() {
       R.samplesAPI.toggleArchived(sampleid, function(error, data, response) {
-        if(!self.#responseHasError(response)) {
+        if (!self.#responseHasError(response)) {
           if (data.isarchived) {
             $('#archive').attr('title', 'De-archive');
             $('#archive').attr('src', '/static/images/dearchive.png');
@@ -173,7 +179,7 @@ class SampleView extends AjaxView {
 
     $('#collaborate').on('click', function() {
       R.samplesAPI.toggleCollaborative(sampleid, function(error, data, response) {
-        if(!self.#responseHasError(response)) {
+        if (!self.#responseHasError(response)) {
           if (data.iscollaborative) {
             $('#collaborate').attr('title', 'Make non-collaborative');
             $('#collaborate').attr('src', '/static/images/non-collaborative.png');
@@ -185,7 +191,9 @@ class SampleView extends AjaxView {
       });
     });
 
-    $('#showinnavigator').on('click', () => { mV.tree.highlight(sampleid, true)});
+    $('#showinnavigator').on('click', () => {
+      mV.tree.highlight(sampleid, true);
+    });
 
     $('#scrolltobottom').on('click', function() {
       $('html, body').stop().animate({scrollTop: $('div#editor-frame').height()}, 1000);
@@ -214,7 +222,7 @@ class SampleView extends AjaxView {
       R.actionsAPI.swapActionOrder(
           {'actionid': element.data('id'), 'swapid': element.data('swapid')},
           function(error, data, response) {
-            if(!self.#responseHasError(response)) {
+            if (!self.#responseHasError(response)) {
               mV.loadSample(sampleid, true);
             }
           });
@@ -223,13 +231,13 @@ class SampleView extends AjaxView {
     $('.togglenews').on('click', function(event) {
       const flag = $(this); // eslint-disable-line no-invalid-this
       const actionid = flag.data('id');
-  
+
       // is this action not yet marked as news?
       if (flag.hasClass('markasnews')) {
         self.dlgMarkAsNews.show(actionid);
       } else {
         R.actionsAPI.unmarkAsNews({'actionid': actionid}, function(error, data, response) {
-          if(!self.#responseHasError(response)) {
+          if (!self.#responseHasError(response)) {
             flag.removeClass('unmarkasnews');
             flag.addClass('markasnews');
           }

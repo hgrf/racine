@@ -1,4 +1,4 @@
-import Dialog from "./dialog";
+import Dialog from './dialog';
 
 class ErrorDialog extends Dialog {
   show(message) {

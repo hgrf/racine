@@ -15,9 +15,9 @@ class FormDialog extends Dialog {
     this.form = this.dialog.find('form').first();
 
     this.fields = Object.fromEntries(
-      this.form.find('input').toArray().map(
-        (field) => [removePrefix(field.id, this.prefix), $(field)]
-      )
+        this.form.find('input').toArray().map(
+            (field) => [removePrefix(field.id, this.prefix), $(field)],
+        ),
     );
 
     this.submitButton = this.dialog.find('button.frm-dlg-submit').first();

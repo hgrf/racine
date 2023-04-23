@@ -22,19 +22,19 @@ class UserBrowserDialog extends Dialog {
   userlistCallback(data) {
     // set up autocompletion
     this.searchField.typeahead(
-      {minLength: 1, highlight: true},
-      {
-        name: 'users',
-        source: substringMatcher(data.users),
-        templates: {
-          suggestion: function(data) {
-            return `<div>
+        {minLength: 1, highlight: true},
+        {
+          name: 'users',
+          source: substringMatcher(data.users),
+          templates: {
+            suggestion: function(data) {
+              return `<div>
               <img src="/static/images/user.png" width="24px" height="24px">
               ${data}
               </div>`;
+            },
           },
         },
-      }
     );
 
     // make recent collaborators list
@@ -55,7 +55,7 @@ class UserBrowserDialog extends Dialog {
 
     // set up click event
     this.recentCollaborators.find('.user').one(
-      'click', (event) => this.#shareWith($(event.target).data('name'))
+        'click', (event) => this.#shareWith($(event.target).data('name')),
     );
   }
 

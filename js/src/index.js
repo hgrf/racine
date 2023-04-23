@@ -90,7 +90,7 @@ class Racine {
 
   errorDialog(message) {
     // TODO: think about uniting this with flash messages
-    R.dlgError.show(message)
+    R.dlgError.show(message);
   }
 
   #setupHeaderSearch() {

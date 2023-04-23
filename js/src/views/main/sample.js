@@ -135,58 +135,8 @@ class SampleView extends AjaxView {
     }
 
     this.#setupTopRightButtons(sampleid);
-  
-    // handler for new action submit button
-    $('#submit').click( function(event) {
-      // prevent "normal" submission of form
-      event.preventDefault();
-  
-      // check if the user is still modifying any actions before submitting the new one
-      if (!mV.ajaxViews.sample.confirmUnload(
-          true,
-          ['description'],
-          'You have been editing the sample description or one or more past actions. Your changes ' +
-          'will be lost if you do not save them, are you sure you want to continue?')) {
-        return;
-      }
-  
-      // make sure content of editor is transmitted
-      CKEDITOR.instances['description'].updateElement();
-  
-      const formdata = {};
-      $('#newactionform').serializeArray().map(function(x) {
-        formdata[x.name] = x.value;
-      });
-  
-      R.actionsAPI.createAction(sampleid, formdata, function(error, data, response) {
-        if (!response) {
-          R.errorDialog('Server error. Please check your connection.');
-        } else if (response.error) {
-          if (response.body.resubmit) {
-            // form failed validation; because of invalid data or expired CSRF token
-            // we still reload the sample in order to get a new CSRF token, but we
-            // want to keep the text that the user has written in the description field
-            $(document).one('editor_initialised', formdata, function(event) {
-              CKEDITOR.instances.description.setData(event.data.description);
-              R.errorDialog('Form is not valid. Either you entered an invalid date ' +
-                                       'or the session has expired. Try submitting again.');
-            });
-          } else {
-            R.errorDialog(response.error);
-            return;
-          }
-        }
-  
-        // reload the sample
-        // TODO: it would be sufficient to just add the new action
-        // destroy it so that it doesn't bother us with confirmation dialogs when we
-        // reload the sample
-        CKEDITOR.instances['description'].destroy();
-        mV.loadSample(sampleid, true);
-      });
-    });
-  
     this.#setupSampleImage(sampleid);
+    $('#submit').on('click', this.onActionSubmit.bind(this));
 
     $('#sampledescription').racinecontent();
     $('.actiondescription').racinecontent();
@@ -357,6 +307,57 @@ class SampleView extends AjaxView {
       return true;
     }
     return false;
+  }
+
+  onActionSubmit(event) {
+    event.preventDefault();
+
+    const mV = this.mainView;
+    const sampleid = mV.state.sampleid;
+
+    // check if the user is still modifying any actions before submitting the new one
+    if (!mV.ajaxViews.sample.confirmUnload(
+        true,
+        ['description'],
+        'You have been editing the sample description or one or more past actions. Your changes ' +
+        'will be lost if you do not save them, are you sure you want to continue?')) {
+      return;
+    }
+
+    // make sure content of editor is transmitted
+    CKEDITOR.instances['description'].updateElement();
+
+    const formdata = {};
+    $('#newactionform').serializeArray().map(function(x) {
+      formdata[x.name] = x.value;
+    });
+
+    R.actionsAPI.createAction(sampleid, formdata, function(error, data, response) {
+      if (!response) {
+        R.errorDialog('Server error. Please check your connection.');
+      } else if (response.error) {
+        if (response.body.resubmit) {
+          // form failed validation; because of invalid data or expired CSRF token
+          // we still reload the sample in order to get a new CSRF token, but we
+          // want to keep the text that the user has written in the description field
+          $(document).one('editor_initialised', formdata, function(event) {
+            CKEDITOR.instances.description.setData(event.data.description);
+            R.errorDialog('Form is not valid. Either you entered an invalid date ' +
+                                      'or the session has expired. Try submitting again.');
+          });
+        } else {
+          R.errorDialog(response.error);
+          return;
+        }
+      }
+
+      // reload the sample
+      // TODO: it would be sufficient to just add the new action
+      // destroy it so that it doesn't bother us with confirmation dialogs when we
+      // reload the sample
+      CKEDITOR.instances['description'].destroy();
+      mV.loadSample(sampleid, true);
+    });
   }
 }
 

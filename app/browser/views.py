@@ -109,12 +109,11 @@ def store_file(file_obj, source, ext, type):
     # TODO: if anything goes wrong here, we should delete the reference in the upload database again
     # check if the file_obj has a save method (flask uploads have it, pillow images have it,
     # but the file_obj from the smb_interface does not, so we have to save the file "manually")
+    uploadpath = os.path.join(app.config["UPLOAD_FOLDER"], str(upload.id) + "." + upload.ext)
     if hasattr(file_obj, "save"):
-        file_obj.save(os.path.join(app.config["UPLOAD_FOLDER"], str(upload.id) + "." + upload.ext))
+        file_obj.save(uploadpath)
     else:
-        with open(
-            os.path.join(app.config["UPLOAD_FOLDER"], str(upload.id) + "." + upload.ext), "w"
-        ) as f:
+        with open(uploadpath, "wb") as f:
             f.write(file_obj.read())
 
     # calculate filesize, SHA-256 hash and check for duplicates

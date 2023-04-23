@@ -133,56 +133,8 @@ class SampleView extends AjaxView {
           ),
       );
     }
-  
-    // handler for archive button
-    $('#archive').click(function() {
-      R.samplesAPI.toggleArchived(sampleid, function(error, data, response) {
-        if(!self.#responseHasError(response)) {
-          if (data.isarchived) {
-            $('#archive').attr('title', 'De-archive');
-            $('#archive').attr('src', '/static/images/dearchive.png');
-            $(`#nav-entry${sampleid}`).addClass('nav-entry-archived');
-          } else {
-            $('#archive').attr('title', 'Archive');
-            $('#archive').attr('src', '/static/images/archive.png');
-            $(`#nav-entry${sampleid}`).removeClass('nav-entry-archived');
-          }
-        }
-      });
-    });
-  
-    // handler for collaborative button
-    $('#collaborate').click(function() {
-      R.samplesAPI.toggleCollaborative(sampleid, function(error, data, response) {
-        if(!self.#responseHasError(response)) {
-          if (data.iscollaborative) {
-            $('#collaborate').attr('title', 'Make non-collaborative');
-            $('#collaborate').attr('src', '/static/images/non-collaborative.png');
-          } else {
-            $('#collaborate').attr('title', 'Make collaborative');
-            $('#collaborate').attr('src', '/static/images/collaborative.png');
-          }
-        }
-      });
-    });
-  
-    $('#showinnavigator').click(function() {
-      mV.tree.highlight(sampleid, true);
-    });
-  
-    $('#scrolltobottom').click(function() {
-      $('html, body').stop().animate({scrollTop: $('div#editor-frame').height()}, 1000);
-    });
-  
-    $('#invertactionorder').click(function() {
-      self.invertactionorder = !self.invertactionorder;
-      mV.loadSample(sampleid, true);
-    });
-  
-    $('#showparentactions').click(function() {
-      self.showparentactions = !self.showparentactions;
-      mV.loadSample(sampleid, true);
-    });
+
+    this.#setupTopRightButtons(sampleid);
   
     // handler for new action submit button
     $('#submit').click( function(event) {
@@ -296,6 +248,57 @@ class SampleView extends AjaxView {
     });
   
     $(document).trigger('editor_initialised');
+  }
+
+  #setupTopRightButtons(sampleid) {
+    const self = this;
+    const mV = this.mainView;
+
+    $('#archive').on('click', function() {
+      R.samplesAPI.toggleArchived(sampleid, function(error, data, response) {
+        if(!self.#responseHasError(response)) {
+          if (data.isarchived) {
+            $('#archive').attr('title', 'De-archive');
+            $('#archive').attr('src', '/static/images/dearchive.png');
+            $(`#nav-entry${sampleid}`).addClass('nav-entry-archived');
+          } else {
+            $('#archive').attr('title', 'Archive');
+            $('#archive').attr('src', '/static/images/archive.png');
+            $(`#nav-entry${sampleid}`).removeClass('nav-entry-archived');
+          }
+        }
+      });
+    });
+
+    $('#collaborate').on('click', function() {
+      R.samplesAPI.toggleCollaborative(sampleid, function(error, data, response) {
+        if(!self.#responseHasError(response)) {
+          if (data.iscollaborative) {
+            $('#collaborate').attr('title', 'Make non-collaborative');
+            $('#collaborate').attr('src', '/static/images/non-collaborative.png');
+          } else {
+            $('#collaborate').attr('title', 'Make collaborative');
+            $('#collaborate').attr('src', '/static/images/collaborative.png');
+          }
+        }
+      });
+    });
+
+    $('#showinnavigator').on('click', () => { mV.tree.highlight(sampleid, true)});
+
+    $('#scrolltobottom').on('click', function() {
+      $('html, body').stop().animate({scrollTop: $('div#editor-frame').height()}, 1000);
+    });
+
+    $('#invertactionorder').on('click', function() {
+      self.invertactionorder = !self.invertactionorder;
+      mV.loadSample(sampleid, true);
+    });
+
+    $('#showparentactions').on('click', function() {
+      self.showparentactions = !self.showparentactions;
+      mV.loadSample(sampleid, true);
+    });
   }
 
   #setupSampleImage(sampleid) {

@@ -7,9 +7,9 @@ class SMBResourcesView {
   }
 
   onDocumentReady() {
-    new ConfirmDeleteDialog(function(type, id) {
+    new ConfirmDeleteDialog({'smbresource': (id) => {
       location.href = `/settings/smbresources?delete=${id}`;
-    });
+    }});
 
     // set up editables
     $('.editable').texteditable();

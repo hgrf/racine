@@ -2,14 +2,17 @@ import $ from 'jquery';
 import Dialog from './dialog';
 
 class ConfirmDeleteDialog extends Dialog {
-  constructor(callback) {
+  constructor(callbacks) {
     super('#dlg-confirm-delete');
 
     this.type = null;
     this.id = null;
 
     this.btnOk = this.dialog.find('.btn-ok');
-    this.btnOk.on('click', () => callback(this.type, this.id));
+    this.btnOk.on('click', () => {
+      callbacks[this.type](this.id);
+      this.hide();
+    });
 
     this.text = this.dialog.find('.debug-id').first();
   }

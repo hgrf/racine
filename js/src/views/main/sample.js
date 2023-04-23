@@ -31,27 +31,19 @@ class SampleView extends AjaxView {
 
     this.dlgMarkAsNews = new MarkAsNewsDialog();
     new UserBrowserDialog(this.mainView.state.sampleid);
-    new ConfirmDeleteDialog(function(type, id) {
-      switch (type) {
-        case 'action':
-          R.actionsAPI.deleteAction(id, function(error, data, response) {
+    new ConfirmDeleteDialog({
+        'action': (id) => {R.actionsAPI.deleteAction(id, (error, data, response) => {
             if (!self.#responseHasError(response)) {
               $(`#${id}.list-entry`).remove();
             }
-            $('#dlg-confirm-delete').modal('hide');
-          });
-          break;
-        case 'sample':
-          R.samplesAPI.deleteSample(id, function(error, data, response) {
+        })},
+        'sample': (id) => {R.samplesAPI.deleteSample(id, (error, data, response) => {
             if (!self.#responseHasError(response)) {
               $(`#nav-entry${id}`).remove();
               self.mainView.loadWelcome();
             }
-            $('#dlg-confirm-delete').modal('hide');
-          });
-          break;
-        case 'share':
-          R.sharesAPI.deleteShare(id, function(error, data, response) {
+        })},
+        'share': (id) => {R.sharesAPI.deleteShare(id, (error, data, response) => {
             if (!self.#responseHasError(response)) {
               $(`#sharelistentry${id}`).remove();
               if (response.status == 205) {
@@ -61,11 +53,8 @@ class SampleView extends AjaxView {
                 $(`#nav-entry${self.mainView.state.sampleid}`).remove();
                 self.mainView.loadWelcome();
               }
-              $('#dlg-confirm-delete').modal('hide');
             }
-          });
-          break;
-      }
+        })}
     });
   }
 

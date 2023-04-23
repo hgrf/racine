@@ -103,7 +103,7 @@ class SampleView extends AjaxView {
 
     document.title = 'Racine - '+$('#samplename').text();
 
-    initEditor(sampleid, this, this.mainView);
+    this.#initEditor(sampleid, this, this.mainView);
     // highlight in tree, if it is already loaded
     if ($(`#nav-entry${sampleid}`).length) {
       $(`#nav-entry${sampleid}`).css('background-color', '#BBBBFF');
@@ -115,6 +115,216 @@ class SampleView extends AjaxView {
 
   onLoadError(state) {
     R.errorDialog(`Sample #${state.sampleid} does not exist or you do not have access to it.`);
+  }
+
+  #initEditor(sampleid, sampleview, mainview) {
+    if ($('#hiddenckeditor').length) {
+      hiddeneditor = CKEDITOR.inline(
+          $('#hiddenckeditor')[0],
+          $.extend(
+              {'removePlugins': 'toolbar,clipboard,pastetext,pastefromword,tableselection,' +
+            'widget,uploadwidget,pastefromexcel,uploadimage,uploadfile'},
+              ckeditorconfig,
+          ),
+      );
+    }
+  
+    // handler for archive button
+    $('#archive').click(function() {
+      R.samplesAPI.toggleArchived(sampleid, function(error, data, response) {
+        if (!response) {
+          R.errorDialog('Server error. Please check your connection.');
+        } else if (response.error) {
+          if (response.body.message) {
+            R.errorDialog(response.body.message);
+          } else {
+            R.errorDialog(response.error);
+          }
+        } else {
+          if (data.isarchived) {
+            $('#archive').attr('title', 'De-archive');
+            $('#archive').attr('src', '/static/images/dearchive.png');
+            $(`#nav-entry${sampleid}`).addClass('nav-entry-archived');
+          } else {
+            $('#archive').attr('title', 'Archive');
+            $('#archive').attr('src', '/static/images/archive.png');
+            $(`#nav-entry${sampleid}`).removeClass('nav-entry-archived');
+          }
+        }
+      });
+    });
+  
+    // handler for collaborative button
+    $('#collaborate').click(function() {
+      R.samplesAPI.toggleCollaborative(sampleid, function(error, data, response) {
+        if (!response) {
+          R.errorDialog('Server error. Please check your connection.');
+        } else if (response.error) {
+          if (response.body.message) {
+            R.errorDialog(response.body.message);
+          } else {
+            R.errorDialog(response.error);
+          }
+        } else {
+          if (data.iscollaborative) {
+            $('#collaborate').attr('title', 'Make non-collaborative');
+            $('#collaborate').attr('src', '/static/images/non-collaborative.png');
+          } else {
+            $('#collaborate').attr('title', 'Make collaborative');
+            $('#collaborate').attr('src', '/static/images/collaborative.png');
+          }
+        }
+      });
+    });
+  
+    $('#showinnavigator').click(function() {
+      mainview.tree.highlight(sampleid, true);
+    });
+  
+    $('#scrolltobottom').click(function() {
+      $('html, body').stop().animate({scrollTop: $('div#editor-frame').height()}, 1000);
+    });
+  
+    $('#invertactionorder').click(function() {
+      sampleview.invertactionorder = !sampleview.invertactionorder; // toggle
+      mainview.loadSample(sampleid, true);
+    });
+  
+    $('#showparentactions').click(function() {
+      sampleview.showparentactions = !sampleview.showparentactions; // toggle
+      mainview.loadSample(sampleid, true);
+    });
+  
+    // handler for new action submit button
+    $('#submit').click( function(event) {
+      // prevent "normal" submission of form
+      event.preventDefault();
+  
+      // check if the user is still modifying any actions before submitting the new one
+      if (!mainview.ajaxViews.sample.confirmUnload(
+          true,
+          ['description'],
+          'You have been editing the sample description or one or more past actions. Your changes ' +
+          'will be lost if you do not save them, are you sure you want to continue?')) {
+        return;
+      }
+  
+      // make sure content of editor is transmitted
+      CKEDITOR.instances['description'].updateElement();
+  
+      const formdata = {};
+      $('#newactionform').serializeArray().map(function(x) {
+        formdata[x.name] = x.value;
+      });
+  
+      R.actionsAPI.createAction(sampleid, formdata, function(error, data, response) {
+        if (!response) {
+          R.errorDialog('Server error. Please check your connection.');
+        } else if (response.error) {
+          if (response.body.resubmit) {
+            // form failed validation; because of invalid data or expired CSRF token
+            // we still reload the sample in order to get a new CSRF token, but we
+            // want to keep the text that the user has written in the description field
+            $(document).one('editor_initialised', formdata, function(event) {
+              CKEDITOR.instances.description.setData(event.data.description);
+              R.errorDialog('Form is not valid. Either you entered an invalid date ' +
+                                       'or the session has expired. Try submitting again.');
+            });
+          } else {
+            R.errorDialog(response.error);
+            return;
+          }
+        }
+  
+        // reload the sample
+        // TODO: it would be sufficient to just add the new action
+        // destroy it so that it doesn't bother us with confirmation dialogs when we
+        // reload the sample
+        CKEDITOR.instances['description'].destroy();
+        mainview.loadSample(sampleid, true);
+      });
+    });
+  
+    // set up the sample image
+    setupSampleImage(sampleid);
+  
+    $('#sampledescription').racinecontent();
+    $('.actiondescription').racinecontent();
+  
+  
+    /* Typeset all equations with MathJax. If it is not ready now, it should typeset automatically
+     * once it is ready.
+     */
+    if (typeof(MathJax) !== 'undefined' && MathJax.isReady) {
+      MathJax.Hub.Queue(['Typeset', MathJax.Hub]); // eslint-disable-line new-cap
+    }
+  
+    // set up CKEditor for new action form
+    CKEDITOR.replace('description', ckeditorconfig);
+  
+    // set up editables (i.e. in-situ editors)
+  
+    // add a trigger image to all editables
+    $('.editable').setup_triggers();
+  
+    // set up editors for sample and action descriptions (CKEditors)
+    $('.ckeditable').ckeditable();
+  
+    // other editables:
+    $('#samplename.editable').texteditable();
+    $('#samplename.editable').on('editableupdate', function(event, data) {
+      // TODO: data.code is deprecated
+      if (!data.code) {
+        $(`#nav-entry${sampleid} > .nav-entry-name`).html(data.value);
+      }
+    });
+    $('.actiondate.editable').texteditable();
+  
+    $('.swapaction').click( function(event) {
+      const element = $(this); // eslint-disable-line no-invalid-this
+      R.actionsAPI.swapActionOrder(
+          {'actionid': element.data('id'), 'swapid': element.data('swapid')},
+          function(error, data, response) {
+            if (!response) {
+              R.errorDialog('Server error. Please check your connection.');
+            } else if (response.error) {
+              if (response.body.message) {
+                R.errorDialog(response.body.message);
+              } else {
+                R.errorDialog(response.error);
+              }
+            } else {
+              mainview.loadSample(sampleid, true);
+            }
+          });
+    });
+  
+    $('.togglenews').click(function(event) {
+      const flag = $(this); // eslint-disable-line no-invalid-this
+      const actionid = flag.data('id');
+  
+      // is this action not yet marked as news?
+      if (flag.hasClass('markasnews')) {
+        sampleview.dlgMarkAsNews.show(actionid);
+      } else {
+        R.actionsAPI.unmarkAsNews({'actionid': actionid}, function(error, data, response) {
+          if (!response) {
+            R.errorDialog('Server error. Please check your connection.');
+          } else if (response.error) {
+            if (response.body.message) {
+              R.errorDialog(response.body.message);
+            } else {
+              R.errorDialog(response.error);
+            }
+          } else {
+            flag.removeClass('unmarkasnews');
+            flag.addClass('markasnews');
+          }
+        });
+      }
+    });
+  
+    $(document).trigger('editor_initialised');
   }
 
   #responseHasError(response) {
@@ -174,216 +384,6 @@ function setupSampleImage(sampleid) {
     hiddeneditor.execCommand('fb');
     event.preventDefault();
   });
-}
-
-function initEditor(sampleid, sampleview, mainview) {
-  if ($('#hiddenckeditor').length) {
-    hiddeneditor = CKEDITOR.inline(
-        $('#hiddenckeditor')[0],
-        $.extend(
-            {'removePlugins': 'toolbar,clipboard,pastetext,pastefromword,tableselection,' +
-          'widget,uploadwidget,pastefromexcel,uploadimage,uploadfile'},
-            ckeditorconfig,
-        ),
-    );
-  }
-
-  // handler for archive button
-  $('#archive').click(function() {
-    R.samplesAPI.toggleArchived(sampleid, function(error, data, response) {
-      if (!response) {
-        R.errorDialog('Server error. Please check your connection.');
-      } else if (response.error) {
-        if (response.body.message) {
-          R.errorDialog(response.body.message);
-        } else {
-          R.errorDialog(response.error);
-        }
-      } else {
-        if (data.isarchived) {
-          $('#archive').attr('title', 'De-archive');
-          $('#archive').attr('src', '/static/images/dearchive.png');
-          $(`#nav-entry${sampleid}`).addClass('nav-entry-archived');
-        } else {
-          $('#archive').attr('title', 'Archive');
-          $('#archive').attr('src', '/static/images/archive.png');
-          $(`#nav-entry${sampleid}`).removeClass('nav-entry-archived');
-        }
-      }
-    });
-  });
-
-  // handler for collaborative button
-  $('#collaborate').click(function() {
-    R.samplesAPI.toggleCollaborative(sampleid, function(error, data, response) {
-      if (!response) {
-        R.errorDialog('Server error. Please check your connection.');
-      } else if (response.error) {
-        if (response.body.message) {
-          R.errorDialog(response.body.message);
-        } else {
-          R.errorDialog(response.error);
-        }
-      } else {
-        if (data.iscollaborative) {
-          $('#collaborate').attr('title', 'Make non-collaborative');
-          $('#collaborate').attr('src', '/static/images/non-collaborative.png');
-        } else {
-          $('#collaborate').attr('title', 'Make collaborative');
-          $('#collaborate').attr('src', '/static/images/collaborative.png');
-        }
-      }
-    });
-  });
-
-  $('#showinnavigator').click(function() {
-    mainview.tree.highlight(sampleid, true);
-  });
-
-  $('#scrolltobottom').click(function() {
-    $('html, body').stop().animate({scrollTop: $('div#editor-frame').height()}, 1000);
-  });
-
-  $('#invertactionorder').click(function() {
-    sampleview.invertactionorder = !sampleview.invertactionorder; // toggle
-    mainview.loadSample(sampleid, true);
-  });
-
-  $('#showparentactions').click(function() {
-    sampleview.showparentactions = !sampleview.showparentactions; // toggle
-    mainview.loadSample(sampleid, true);
-  });
-
-  // handler for new action submit button
-  $('#submit').click( function(event) {
-    // prevent "normal" submission of form
-    event.preventDefault();
-
-    // check if the user is still modifying any actions before submitting the new one
-    if (!mainview.ajaxViews.sample.confirmUnload(
-        true,
-        ['description'],
-        'You have been editing the sample description or one or more past actions. Your changes ' +
-        'will be lost if you do not save them, are you sure you want to continue?')) {
-      return;
-    }
-
-    // make sure content of editor is transmitted
-    CKEDITOR.instances['description'].updateElement();
-
-    const formdata = {};
-    $('#newactionform').serializeArray().map(function(x) {
-      formdata[x.name] = x.value;
-    });
-
-    R.actionsAPI.createAction(sampleid, formdata, function(error, data, response) {
-      if (!response) {
-        R.errorDialog('Server error. Please check your connection.');
-      } else if (response.error) {
-        if (response.body.resubmit) {
-          // form failed validation; because of invalid data or expired CSRF token
-          // we still reload the sample in order to get a new CSRF token, but we
-          // want to keep the text that the user has written in the description field
-          $(document).one('editor_initialised', formdata, function(event) {
-            CKEDITOR.instances.description.setData(event.data.description);
-            R.errorDialog('Form is not valid. Either you entered an invalid date ' +
-                                     'or the session has expired. Try submitting again.');
-          });
-        } else {
-          R.errorDialog(response.error);
-          return;
-        }
-      }
-
-      // reload the sample
-      // TODO: it would be sufficient to just add the new action
-      // destroy it so that it doesn't bother us with confirmation dialogs when we
-      // reload the sample
-      CKEDITOR.instances['description'].destroy();
-      mainview.loadSample(sampleid, true);
-    });
-  });
-
-  // set up the sample image
-  setupSampleImage(sampleid);
-
-  $('#sampledescription').racinecontent();
-  $('.actiondescription').racinecontent();
-
-
-  /* Typeset all equations with MathJax. If it is not ready now, it should typeset automatically
-   * once it is ready.
-   */
-  if (typeof(MathJax) !== 'undefined' && MathJax.isReady) {
-    MathJax.Hub.Queue(['Typeset', MathJax.Hub]); // eslint-disable-line new-cap
-  }
-
-  // set up CKEditor for new action form
-  CKEDITOR.replace('description', ckeditorconfig);
-
-  // set up editables (i.e. in-situ editors)
-
-  // add a trigger image to all editables
-  $('.editable').setup_triggers();
-
-  // set up editors for sample and action descriptions (CKEditors)
-  $('.ckeditable').ckeditable();
-
-  // other editables:
-  $('#samplename.editable').texteditable();
-  $('#samplename.editable').on('editableupdate', function(event, data) {
-    // TODO: data.code is deprecated
-    if (!data.code) {
-      $(`#nav-entry${sampleid} > .nav-entry-name`).html(data.value);
-    }
-  });
-  $('.actiondate.editable').texteditable();
-
-  $('.swapaction').click( function(event) {
-    const element = $(this); // eslint-disable-line no-invalid-this
-    R.actionsAPI.swapActionOrder(
-        {'actionid': element.data('id'), 'swapid': element.data('swapid')},
-        function(error, data, response) {
-          if (!response) {
-            R.errorDialog('Server error. Please check your connection.');
-          } else if (response.error) {
-            if (response.body.message) {
-              R.errorDialog(response.body.message);
-            } else {
-              R.errorDialog(response.error);
-            }
-          } else {
-            mainview.loadSample(sampleid, true);
-          }
-        });
-  });
-
-  $('.togglenews').click(function(event) {
-    const flag = $(this); // eslint-disable-line no-invalid-this
-    const actionid = flag.data('id');
-
-    // is this action not yet marked as news?
-    if (flag.hasClass('markasnews')) {
-      sampleview.dlgMarkAsNews.show(actionid);
-    } else {
-      R.actionsAPI.unmarkAsNews({'actionid': actionid}, function(error, data, response) {
-        if (!response) {
-          R.errorDialog('Server error. Please check your connection.');
-        } else if (response.error) {
-          if (response.body.message) {
-            R.errorDialog(response.body.message);
-          } else {
-            R.errorDialog(response.error);
-          }
-        } else {
-          flag.removeClass('unmarkasnews');
-          flag.addClass('markasnews');
-        }
-      });
-    }
-  });
-
-  $(document).trigger('editor_initialised');
 }
 
 export default SampleView;

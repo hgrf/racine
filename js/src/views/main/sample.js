@@ -267,7 +267,7 @@ class SampleView extends AjaxView {
       CKEDITOR.fbtype = 'img';
       CKEDITOR.fbupload = true;
       CKEDITOR.fbcallback = function(url) {
-        R.fieldsAPI.setField('sample', sampleid, 'image', {'value': url}, (error, data, response) => {
+        R.fieldsAPI.setField('sample', sampleid, 'image', {'value': url}, (err, data, response) => {
           // check if there is currently a sample image
           if ($('#sampleimage').length) {
             // update the sample image

@@ -8,9 +8,6 @@ import ckeditorconfig from '../util/ckeditorconfig';
 class NewSampleDialog extends FormDialog {
   constructor(mainView, selector) {
     super(selector);
-
-    const self = this;
-
     this.mainView = mainView;
 
     createSelectSample(this.fields.parent, this.fields.parentid);

@@ -4,7 +4,7 @@ from sqlalchemy import not_
 from werkzeug.security import safe_join
 
 from . import main
-from .forms import NewSampleForm, MarkActionAsNewsForm
+from .forms import NewSampleForm, MarkAsNewsForm
 from ..models import Sample, Share, User
 
 
@@ -14,7 +14,7 @@ def render_main_template(**params):
         view="main",
         api_token=current_user.get_token(),
         newsampleform=NewSampleForm(),
-        dlg_markasnews_form=MarkActionAsNewsForm(),
+        markasnewsform=MarkAsNewsForm(),
         params=params,
     )
 

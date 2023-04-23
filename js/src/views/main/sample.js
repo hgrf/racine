@@ -387,9 +387,9 @@ function initEditor(sampleid, sampleview, mainview) {
       // clear other fields
       $('#title').val('');
       $('#expires').val('');
-      $('#dlg_markasnews').modal('show');
+      $('#dlg-mark-as-news').modal('show');
     } else {
-      R.actionsAPI.unmarkActionAsNews({'actionid': actionid}, function(error, data, response) {
+      R.actionsAPI.unmarkAsNews({'actionid': actionid}, function(error, data, response) {
         if (!response) {
           R.errorDialog('Server error. Please check your connection.');
         } else if (response.error) {

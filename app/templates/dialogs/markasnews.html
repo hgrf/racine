@@ -1,13 +1,13 @@
 {% import "util/wtf.html" as wtf %}
 {% import "util/dialog.html" as dialog %}
 
-{{ dialog.begin_modal_dialog('dlg_markasnews', 'Mark as news', 'modal-lg') }}
+{{ dialog.begin_modal_dialog('dlg-mark-as-news', 'Mark as news', 'modal-lg') }}
     <div class="modal-body">
         <p>
             Mark this action as news to all users who share this sample.
         </p>
         <form>
-            {{ wtf.quick_form(dlg_markasnews_form) }}
+            {{ wtf.quick_form(markasnewsform) }}
         </form>
     </div>
     <div class="modal-footer">

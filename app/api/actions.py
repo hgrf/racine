@@ -6,7 +6,7 @@ from . import api
 from .samples import validate_sample_access
 from .common import IdParameter, EmptySchema  # noqa: F401
 from .errors import bad_request
-from ..main.forms import MarkActionAsNewsForm, NewActionForm
+from ..main.forms import MarkAsNewsForm, NewActionForm
 
 from .. import db
 from ..models import Action, News, Sample, record_activity, token_auth
@@ -31,14 +31,14 @@ class SwapActionOrderContent(Schema):
     swapid = fields.Int()
 
 
-class MarkActionAsNewsContent(Schema):
+class MarkAsNewsContent(Schema):
     csrf_token = fields.Str()
     title = fields.Str()
     expires = fields.Date()
     actionid = fields.Int()
 
 
-class UnmarkActionAsNewsContent(Schema):
+class UnmarkAsNewsContent(Schema):
     actionid = fields.Int()
 
 
@@ -159,13 +159,13 @@ def markasnews():
     """Mark an action as news.
     ---
     post:
-      operationId: markActionAsNews
+      operationId: markAsNews
       tags: [actions]
       requestBody:
         required: true
         content:
           application/x-www-form-urlencoded:
-            schema: MarkActionAsNewsContent
+            schema: MarkAsNewsContent
       responses:
         200:
           content:
@@ -173,7 +173,7 @@ def markasnews():
               schema: EmptySchema
           description: Action marked as news
     """
-    form = MarkActionAsNewsForm()
+    form = MarkAsNewsForm()
     if form.validate_on_submit():
         # get action from database
         action = Action.query.get(form.actionid.data)
@@ -213,13 +213,13 @@ def unmarkasnews():
     """Unmark an action as news.
     ---
     post:
-      operationId: unmarkActionAsNews
+      operationId: unmarkAsNews
       tags: [actions]
       requestBody:
         required: true
         content:
           application/x-www-form-urlencoded:
-            schema: UnmarkActionAsNewsContent
+            schema: UnmarkAsNewsContent
       responses:
         200:
           content:

@@ -104,7 +104,8 @@ class SampleView extends AjaxView {
 
     document.title = 'Racine - '+$('#samplename').text();
 
-    this.#initEditor(sampleid);
+    this.#setupView(sampleid);
+
     // highlight in tree, if it is already loaded
     if ($(`#nav-entry${sampleid}`).length) {
       $(`#nav-entry${sampleid}`).css('background-color', '#BBBBFF');
@@ -118,34 +119,30 @@ class SampleView extends AjaxView {
     R.errorDialog(`Sample #${state.sampleid} does not exist or you do not have access to it.`);
   }
 
-  #initEditor(sampleid) {
-    this.#setupTopRightButtons(sampleid);
-    this.#setupSampleImage(sampleid);
+  #setupView(sampleid) {
+    this.#setupHeader(sampleid);
     this.#setupActions(sampleid);
+  
+    // set up new action form
+    CKEDITOR.replace('new-action-description', ckeditorconfig);
     $('#new-action-submit').on('click', this.onActionSubmit.bind(this));
 
-    $('#sampledescription').racinecontent();
-    $('.actiondescription').racinecontent();
-
-    /* Typeset all equations with MathJax. If it is not ready now, it should typeset automatically
-     * once it is ready.
-     */
+    // Typeset equations with MathJax. If it is not ready now, typeset once it is ready.
     if (typeof(MathJax) !== 'undefined' && MathJax.isReady) {
       MathJax.Hub.Queue(['Typeset', MathJax.Hub]); // eslint-disable-line new-cap
     }
-  
-    // set up CKEditor for new action form
-    CKEDITOR.replace('new-action-description', ckeditorconfig);
-  
-    // set up editables (i.e. in-situ editors)
-  
+
     // add a trigger image to all editables
     $('.editable').setup_triggers();
   
     // set up editors for sample and action descriptions (CKEditors)
     $('.ckeditable').ckeditable();
   
-    // other editables:
+    $(document).trigger('editor_initialised');
+  }
+
+  #setupHeader(sampleid) {
+    this.#setupSampleImage(sampleid);
     $('#samplename.editable').texteditable();
     $('#samplename.editable').on('editableupdate', function(event, data) {
       // TODO: data.code is deprecated
@@ -153,8 +150,8 @@ class SampleView extends AjaxView {
         $(`#nav-entry${sampleid} > .nav-entry-name`).html(data.value);
       }
     });
-  
-    $(document).trigger('editor_initialised');
+    $('#sampledescription').racinecontent();
+    this.#setupTopRightButtons(sampleid);
   }
 
   #setupTopRightButtons(sampleid) {
@@ -212,6 +209,7 @@ class SampleView extends AjaxView {
     const self = this;
     const mV = this.mainView;
 
+    $('.actiondescription').racinecontent();
     $('.actiondate.editable').texteditable();
 
     $('.swapaction').on('click', function(event) {

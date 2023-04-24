@@ -20,13 +20,10 @@ class Action(db.Model):
         return "<Action %r>" % self.id
 
     def has_read_access(self, user):
-        if self.owner == user:
-            return True
-
-        if self.sample.iscollaborative and self.sample.is_accessible_for(user):
-            return True
-
-        return False
+        # actions inherit read permissions from their sample
+        return self.sample.is_accessible_for(user)
 
     def has_write_access(self, user):
-        return self.has_read_access(user)
+        return (user == self.owner) or (
+            self.sample.iscollaborative and self.sample.is_accessible_for(user)
+        )

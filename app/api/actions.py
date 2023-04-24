@@ -1,10 +1,10 @@
 from datetime import date, datetime
 from flask import jsonify, request
-from marshmallow import Schema, fields
+from marshmallow import fields
 
 from . import api
 from .samples import validate_sample_access
-from .common import IdParameter, EmptySchema  # noqa: F401
+from .common import OrderedSchema, IdParameter, EmptySchema  # noqa: F401
 from .errors import bad_request
 from ..main.forms import MarkAsNewsForm, NewActionForm
 
@@ -12,33 +12,33 @@ from .. import db
 from ..models import Action, News, Sample, record_activity, token_auth
 
 
-class SampleParameter(Schema):
+class SampleParameter(OrderedSchema):
     sampleid = fields.Int()
 
 
-class NewActionFormContent(Schema):
+class NewActionFormContent(OrderedSchema):
     csrf_token = fields.Str()
     timestamp = fields.Date()
     description = fields.Str()
 
 
-class CreateActionError(Schema):
+class CreateActionError(OrderedSchema):
     resubmit = fields.Bool()
 
 
-class SwapActionOrderContent(Schema):
+class SwapActionOrderContent(OrderedSchema):
     actionid = fields.Int()
     swapid = fields.Int()
 
 
-class MarkAsNewsContent(Schema):
+class MarkAsNewsContent(OrderedSchema):
     csrf_token = fields.Str()
     title = fields.Str()
     expires = fields.Date()
     actionid = fields.Int()
 
 
-class UnmarkAsNewsContent(Schema):
+class UnmarkAsNewsContent(OrderedSchema):
     actionid = fields.Int()
 
 

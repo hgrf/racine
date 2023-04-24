@@ -1,8 +1,8 @@
 from flask import jsonify, request
-from marshmallow import Schema, fields
+from marshmallow import fields
 
 from . import api
-from .common import IdParameter, EmptySchema  # noqa: F401
+from .common import OrderedSchema, IdParameter, EmptySchema  # noqa: F401
 from .errors import bad_request
 
 from .. import db
@@ -11,13 +11,13 @@ from ..models import Sample, User
 from ..models import News, Share, record_activity, token_auth
 
 
-class CreateShareContent(Schema):
+class CreateShareContent(OrderedSchema):
     sampleid = fields.Int()
     userid = fields.Int()
     username = fields.Str()
 
 
-class CreateShareError(Schema):
+class CreateShareError(OrderedSchema):
     pass
 
 

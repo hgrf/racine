@@ -1,9 +1,14 @@
 from marshmallow import Schema, fields
 
 
-class IdParameter(Schema):
+class OrderedSchema(Schema):
+    class Meta:
+        ordered = True
+
+
+class IdParameter(OrderedSchema):
     id = fields.Int()
 
 
-class EmptySchema(Schema):
+class EmptySchema(OrderedSchema):
     pass

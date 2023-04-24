@@ -1,9 +1,9 @@
 from flask import jsonify
 from functools import wraps
-from marshmallow import Schema, fields
+from marshmallow import fields
 
 from . import api
-from .common import EmptySchema  # noqa: F401
+from .common import OrderedSchema, EmptySchema  # noqa: F401
 from .errors import bad_request
 from ..main.forms import NewSampleForm
 
@@ -12,11 +12,11 @@ from ..models import News, Sample, Share, record_activity, token_auth
 from ..models.tree import is_indirectly_shared, logical_parent
 
 
-class SampleIdParameter(Schema):
+class SampleIdParameter(OrderedSchema):
     sampleid = fields.Int()
 
 
-class NewSampleFormContent(Schema):
+class NewSampleFormContent(OrderedSchema):
     csrf_token = fields.Str()
     name = fields.Str()
     parent = fields.Str()
@@ -24,19 +24,19 @@ class NewSampleFormContent(Schema):
     description = fields.Str()
 
 
-class NewSampleResponse(Schema):
+class NewSampleResponse(OrderedSchema):
     sampleid = fields.Int()
 
 
-class ToggleArchivedResponse(Schema):
+class ToggleArchivedResponse(OrderedSchema):
     isarchived = fields.Bool()
 
 
-class ToggleCollaborativeResponse(Schema):
+class ToggleCollaborativeResponse(OrderedSchema):
     iscollaborative = fields.Bool()
 
 
-class ParentIdParameter(Schema):
+class ParentIdParameter(OrderedSchema):
     parentid = fields.Int()
 
 

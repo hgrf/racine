@@ -2,9 +2,10 @@ import inspect
 
 from datetime import datetime
 from flask import jsonify, request
-from marshmallow import Schema, fields, validate
+from marshmallow import fields, validate
 
 from . import api
+from .common import OrderedSchema
 from .errors import bad_request
 
 from .. import db
@@ -78,14 +79,14 @@ supported_targets = {
 }
 
 
-class FieldParameters(Schema):
+class FieldParameters(OrderedSchema):
     target = fields.Str(validate=validate.OneOf(supported_targets.keys()))
+    id = fields.Int()
     # TODO: add target-specific field validation
     field = fields.Str()
-    id = fields.Int()
 
 
-class ValueSchema(Schema):
+class ValueSchema(OrderedSchema):
     value = fields.Str()
 
 

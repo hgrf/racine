@@ -7,9 +7,9 @@
 | app/\_\_init\_\_.py                                                                |       70 |        5 |     93% |16, 98-102 |
 | app/api/\_\_init\_\_.py                                                            |        3 |        0 |    100% |           |
 | app/api/actions.py                                                                 |       98 |       54 |     45% |74-95, 116-123, 147-153, 176-207, 230-253 |
-| app/api/common.py                                                                  |        5 |        0 |    100% |           |
+| app/api/common.py                                                                  |        8 |        0 |    100% |           |
 | app/api/errors.py                                                                  |       11 |        7 |     36% |  6-11, 15 |
-| app/api/fields.py                                                                  |       82 |       55 |     33% |20-25, 29-34, 113-135, 161-220 |
+| app/api/fields.py                                                                  |       83 |       55 |     34% |21-26, 30-35, 114-136, 162-221 |
 | app/api/samples.py                                                                 |      123 |       70 |     43% |46-55, 63-68, 93-119, 141-144, 166-168, 190-192, 216-256 |
 | app/api/shares.py                                                                  |       63 |       43 |     32% |49-75, 101-126 |
 | app/auth/\_\_init\_\_.py                                                           |        3 |        0 |    100% |           |
@@ -77,7 +77,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2260** | **1141** | **50%** |           |
+|                                                                          **TOTAL** | **2264** | **1141** | **50%** |           |
 
 
 ## Setup coverage badge

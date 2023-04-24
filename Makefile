@@ -15,7 +15,6 @@ api-client: api-spec
 	
 	java -jar build/openapi-generator-cli.jar generate \
 		-i api.yaml -g javascript -p modelPropertyNaming=original -o js/src/api
-	cd js/src/api && npm install
 
 website:
 	# clone bootstrap

@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import * as API from './api';
+import * as API from './api/src';
 import views from './views';
 import ErrorDialog from './dialogs/errordialog';
 import {createSearchSample} from './util/searchsample';

@@ -30,7 +30,7 @@
 | app/main/forms.py                                                                  |       34 |        8 |     76% |13, 16-20, 46-48 |
 | app/main/views.py                                                                  |       70 |       38 |     46% |12, 25, 31-34, 40-44, 50-51, 58-109, 115-124, 134 |
 | app/models/\_\_init\_\_.py                                                         |       13 |        0 |    100% |           |
-| app/models/action.py                                                               |       22 |        7 |     68% |20, 23-29, 32 |
+| app/models/action.py                                                               |       18 |        3 |     83% |20, 24, 27 |
 | app/models/activity.py                                                             |       30 |        4 |     87% |16, 32, 39, 49 |
 | app/models/handlers.py                                                             |       38 |       29 |     24% |8-59, 63-90, 102-103, 106-107 |
 | app/models/news.py                                                                 |       46 |       24 |     48% |28-53, 57-65 |
@@ -77,7 +77,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2264** | **1141** | **50%** |           |
+|                                                                          **TOTAL** | **2260** | **1137** | **50%** |           |
 
 
 ## Setup coverage badge

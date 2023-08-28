@@ -3,10 +3,10 @@ import Dialog from './dialog';
 import substringMatcher from '../util/substringmatcher';
 
 class UserBrowserDialog extends Dialog {
-  constructor(sampleid) {
+  constructor(sampleidGetter) {
     super('#userbrowser');
 
-    this.sampleid = sampleid;
+    this.sampleidGetter = sampleidGetter;
     this.btnOk = this.dialog.find('#userbrowserok');
     this.searchField = this.dialog.find('#username');
     this.recentCollaborators = $('#recent-collaborators');
@@ -71,7 +71,7 @@ class UserBrowserDialog extends Dialog {
     $.ajax({
       url: '/userlist',
       type: 'post',
-      data: {'mode': 'share', 'sampleid': this.sampleid},
+      data: {'mode': 'share', 'sampleid': this.sampleidGetter()},
       success: (data) => this.userlistCallback(data),
     });
   }
@@ -88,7 +88,7 @@ class UserBrowserDialog extends Dialog {
   #shareSelected() {
     const self = this;
     R.sharesAPI.createShare(
-        {'sampleid': this.sampleid, 'username': this.searchField.val()},
+        {'sampleid': this.sampleidGetter(), 'username': this.searchField.val()},
         function(error, data, response) {
           if (!response) {
             R.errorDialog('Server error. Please check your connection.');

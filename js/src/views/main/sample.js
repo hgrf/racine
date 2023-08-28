@@ -31,7 +31,7 @@ class SampleView extends AjaxView {
     const self = this;
 
     this.dlgMarkAsNews = new MarkAsNewsDialog();
-    new UserBrowserDialog(this.mainView.state.sampleid);
+    new UserBrowserDialog(() => this.mainView.state.sampleid);
     new ConfirmDeleteDialog({
       'action': (id) => {
         R.actionsAPI.deleteAction(id, (error, data, response) => {

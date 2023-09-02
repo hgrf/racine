@@ -10,6 +10,7 @@ services:
       - database:/app/database
       - ./ssl:/etc/nginx/ssl
   redis:
+    container_name: racine-redis
     image: redis:7.0.11
   celery-worker:
     depends_on:

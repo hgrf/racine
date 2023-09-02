@@ -14,6 +14,11 @@ class Config:
     )
     RACINE_FOLDER = basedir
     UPLOAD_FOLDER = os.path.join(basedir, "uploads")
+    CELERY = dict(
+        broker_url="redis://racine-redis",
+        result_backend="redis://racine-redis",
+        task_ignore_result=True,
+    )
 
     @staticmethod
     def init_app(app):

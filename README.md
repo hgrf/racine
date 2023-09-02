@@ -43,7 +43,7 @@ used/available disk space.
 
     mkdir racine && cd racine
     wget hgrf.github.io/racine/docker-compose.yml
-    docker compose up web
+    docker compose up
 
 If you want to use SSL, add the certificate `server.crt` and key `server.key` in the folder
 `racine/ssl`. Also create a file `server_name.txt` which contains the server name.

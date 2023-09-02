@@ -3,6 +3,7 @@ apispec==6.3.0
 apispec-webframeworks==0.5.2
 Authlib==1.2.0
 blinker==1.5
+celery==5.2.7
 certifi==2023.7.22
 cffi==1.15.1
 charset-normalizer==3.1.0
@@ -32,6 +33,7 @@ pyasn1==0.4.8
 pycparser==2.21
 pysmb==1.2.9.1
 PyYAML==6.0
+redis==4.5.4
 requests==2.31.0
 SQLAlchemy==2.0.8
 tqdm==4.65.0

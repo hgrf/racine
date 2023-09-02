@@ -1,0 +1,47 @@
+version: "3.9"
+services:
+  web-dev:
+    depends_on:
+      - redis
+      - celery-worker-dev
+      - celery-beat-dev
+      - smb-dev
+    container_name: racine-web-dev
+    image: racine-dev
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: racine-base
+    ports:
+      - "5000:80"
+    volumes:
+      - ..:/app
+  redis:
+    container_name: racine-redis
+    image: redis:7.0.11
+  celery-worker-dev:
+    depends_on:
+      - redis
+    container_name: racine-celery-worker-dev
+    image: racine-dev
+    volumes:
+      - ..:/app
+    command: celery -A make_celery worker --loglevel=INFO
+  celery-beat-dev:
+    depends_on:
+      - redis
+    container_name: racine-celery-beat-dev
+    image: racine-dev
+    volumes:
+      - ..:/app
+    command: celery -A make_celery beat --loglevel=INFO
+  smb-dev:
+    container_name: racine-smb-dev
+    image: ghcr.io/crazy-max/samba:4.16.8
+    # uncomment if you want to expose the SMB ports
+    # ports:
+    #  - "139:139"
+    #  - "445:445"
+    volumes:
+      - ./smb-data:/data
+      - ./smb-files:/samba

@@ -298,23 +298,23 @@ build: down
 	docker compose -f docker/docker-compose.yml build web
 
 run:
-	docker compose -f docker/docker-compose.yml up web
+	docker compose -f docker/docker-compose.yml up
 
 run-no-docker:
 	flask run --debug
 
 build-dev: down
-	docker compose -f docker/docker-compose.yml build web-dev
+	docker compose -f docker/docker-compose-dev.yml build web-dev
 
 test-dev:
-	docker compose -f docker/docker-compose.yml exec web-dev python -m pytest
+	docker compose -f docker/docker-compose-dev.yml exec web-dev python -m pytest
 
 run-dev:
-	docker compose -f docker/docker-compose.yml up web-dev smb-dev & \
+	docker compose -f docker/docker-compose-dev.yml up & \
 		watchman-make -p 'app/**/*.py' -s 1 --run 'touch uwsgi-reload'
 
 shell-dev:
-	docker compose -f docker/docker-compose.yml exec web-dev bash
+	docker compose -f docker/docker-compose-dev.yml exec web-dev bash
 
 down:
 	docker compose -f docker/docker-compose.yml down

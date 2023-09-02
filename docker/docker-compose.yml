@@ -13,27 +13,24 @@ services:
       - uploads:/app/uploads
       - database:/app/database
       - ./ssl:/etc/nginx/ssl
-  web-dev:
-    container_name: racine-dev
-    image: racine-dev
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
-      target: racine-base
-    ports:
-      - "8080:80"
+  redis:
+    container_name: racine-redis
+    image: redis:7.0.11
+  celery-worker:
+    depends_on:
+      - redis
+    container_name: racine-celery-worker
+    image: ghcr.io/hgrf/racine
+    command: celery -A make_celery worker --loglevel=INFO
     volumes:
-      - ..:/app
-  smb-dev:
-    container_name: racine-smb-dev
-    image: ghcr.io/crazy-max/samba:4.16.8
-    # uncomment if you want to expose the SMB ports
-    # ports:
-    #  - "139:139"
-    #  - "445:445"
-    volumes:
-      - ./smb-data:/data
-      - ./smb-files:/samba
+      - uploads:/app/uploads
+      - database:/app/database
+  celery-beat:
+    depends_on:
+      - redis
+    container_name: racine-celery-beat
+    image: ghcr.io/hgrf/racine
+    command: celery -A make_celery beat --loglevel=INFO
 volumes:
   uploads:
   database:

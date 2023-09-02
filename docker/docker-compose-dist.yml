@@ -9,6 +9,23 @@ services:
       - uploads:/app/uploads
       - database:/app/database
       - ./ssl:/etc/nginx/ssl
+  redis:
+    image: redis:7.0.11
+  celery-worker:
+    depends_on:
+      - redis
+    container_name: racine-celery-worker
+    image: ghcr.io/hgrf/racine
+    command: celery -A make_celery worker --loglevel=INFO
+    volumes:
+      - uploads:/app/uploads
+      - database:/app/database
+  celery-beat:
+    depends_on:
+      - redis
+    container_name: racine-celery-beat
+    image: ghcr.io/hgrf/racine
+    command: celery -A make_celery beat --loglevel=INFO
 volumes:
   uploads:
   database:

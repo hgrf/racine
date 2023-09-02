@@ -1,15 +1,16 @@
 import imp
 import os
 
+from celery import Celery, Task
 from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from glob import glob
 
-from .config import config
-
 from wtforms.fields import HiddenField
+
+from .config import config
 
 
 def is_hidden_field_filter(field):
@@ -25,14 +26,36 @@ login_manager.session_protection = "strong"
 login_manager.login_view = "auth.login"
 migrate = Migrate()
 
-from .smbinterface import (  # noqa: E402
-    SMBInterface,
-)  # has to be here, because it will import db and login_manager from this file
+# has to be here, because it will import db and login_manager from this file
+from .smbinterface import SMBInterface  # noqa: E402
 
 smbinterface = SMBInterface()
-from .usagestats import (  # noqa: E402
-    UsageStatisticsThread,
-)  # has to be here, because it will import db from this file
+
+# has to be here, because it will import db from this file
+from .usagestats import periodic_task  # noqa: F401, E261
+
+
+def celery_init_app(app: Flask) -> Celery:
+    class FlaskTask(Task):
+        def __call__(self, *args: object, **kwargs: object) -> object:
+            with app.app_context():
+                return self.run(*args, **kwargs)
+
+    celery_app = Celery(app.name, task_cls=FlaskTask)
+    celery_app.config_from_object(app.config["CELERY"])
+    celery_app.conf.update(
+        dict(
+            CELERYBEAT_SCHEDULE=dict(
+                usage_stats_task=dict(
+                    task="usage_stats_task",
+                    schedule=60.0,
+                )
+            )
+        )
+    )
+    celery_app.set_default()
+    app.extensions["celery"] = celery_app
+    return celery_app
 
 
 def create_app(config_name=os.getenv("FLASK_CONFIG") or "default"):
@@ -43,6 +66,7 @@ def create_app(config_name=os.getenv("FLASK_CONFIG") or "default"):
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
+    celery_init_app(app)
 
     # https://github.com/mbr/flask-bootstrap/blob/3.3.7.1/flask_bootstrap/__init__.py
     app.jinja_env.globals["bootstrap_is_hidden_field"] = is_hidden_field_filter
@@ -88,9 +112,6 @@ def create_app(config_name=os.getenv("FLASK_CONFIG") or "default"):
             # in case the table is not created yet, do nothing (this happens
             # when we do 'flask db upgrade')
             pass
-
-    # run usage statistics thread
-    UsageStatisticsThread(app)
 
     # look for plugins
     plugin_files = glob("plugins/*/*.py")

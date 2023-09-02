@@ -33,14 +33,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/NewSampleResponse'
           description: Sample created
-  /api/sample/{id}:
+  /api/sample/{sampleid}:
     delete:
       operationId: deleteSample
       tags:
       - samples
       parameters:
       - in: path
-        name: id
+        name: sampleid
         schema:
           type: integer
         required: true
@@ -51,14 +51,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Empty'
           description: Sample deleted
-  /api/sample/{id}/togglearchived:
+  /api/sample/{sampleid}/togglearchived:
     post:
       operationId: toggleArchived
       tags:
       - samples
       parameters:
       - in: path
-        name: id
+        name: sampleid
         schema:
           type: integer
         required: true
@@ -69,14 +69,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/ToggleArchivedResponse'
           description: isarchived-flag toggled
-  /api/sample/{id}/togglecollaborative:
+  /api/sample/{sampleid}/togglecollaborative:
     post:
       operationId: toggleCollaborative
       tags:
       - samples
       parameters:
       - in: path
-        name: id
+        name: sampleid
         schema:
           type: integer
         required: true
@@ -87,14 +87,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/ToggleCollaborativeResponse'
           description: iscollaborative-flag toggled
-  /api/sample/{id}/changeparent/{parentid}:
+  /api/sample/{sampleid}/changeparent/{parentid}:
     post:
       operationId: changeParent
       tags:
       - samples
       parameters:
       - in: path
-        name: id
+        name: sampleid
         schema:
           type: integer
         required: true
@@ -226,7 +226,7 @@ paths:
           description: Action order swapped
   /api/action/markasnews:
     post:
-      operationId: markActionAsNews
+      operationId: markAsNews
       tags:
       - actions
       requestBody:
@@ -234,7 +234,7 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/MarkActionAsNewsContent'
+              $ref: '#/components/schemas/MarkAsNewsContent'
       responses:
         '200':
           content:
@@ -244,7 +244,7 @@ paths:
           description: Action marked as news
   /api/action/unmarkasnews:
     post:
-      operationId: unmarkActionAsNews
+      operationId: unmarkAsNews
       tags:
       - actions
       requestBody:
@@ -252,7 +252,7 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/UnmarkActionAsNewsContent'
+              $ref: '#/components/schemas/UnmarkAsNewsContent'
       responses:
         '200':
           content:
@@ -266,11 +266,6 @@ paths:
       tags:
       - fields
       parameters:
-      - in: path
-        name: field
-        schema:
-          type: string
-        required: true
       - in: path
         name: target
         schema:
@@ -286,6 +281,11 @@ paths:
         name: id
         schema:
           type: integer
+        required: true
+      - in: path
+        name: field
+        schema:
+          type: string
         required: true
       responses:
         '200':
@@ -301,11 +301,6 @@ paths:
       - fields
       parameters:
       - in: path
-        name: field
-        schema:
-          type: string
-        required: true
-      - in: path
         name: target
         schema:
           type: string
@@ -320,6 +315,11 @@ paths:
         name: id
         schema:
           type: integer
+        required: true
+      - in: path
+        name: field
+        schema:
+          type: string
         required: true
       requestBody:
         required: true
@@ -340,15 +340,15 @@ components:
     NewSampleFormContent:
       type: object
       properties:
-        newsampleparent:
-          type: string
-        newsamplename:
-          type: string
-        newsampledescription:
-          type: string
-        newsampleparentid:
-          type: integer
         csrf_token:
+          type: string
+        name:
+          type: string
+        parent:
+          type: string
+        parentid:
+          type: integer
+        description:
           type: string
     NewSampleResponse:
       type: object
@@ -383,12 +383,12 @@ components:
     NewActionFormContent:
       type: object
       properties:
+        csrf_token:
+          type: string
         timestamp:
           type: string
           format: date
         description:
-          type: string
-        csrf_token:
           type: string
     CreateActionError:
       type: object
@@ -402,19 +402,19 @@ components:
           type: integer
         swapid:
           type: integer
-    MarkActionAsNewsContent:
+    MarkAsNewsContent:
       type: object
       properties:
+        csrf_token:
+          type: string
+        title:
+          type: string
         expires:
           type: string
           format: date
         actionid:
           type: integer
-        title:
-          type: string
-        csrf_token:
-          type: string
-    UnmarkActionAsNewsContent:
+    UnmarkAsNewsContent:
       type: object
       properties:
         actionid:

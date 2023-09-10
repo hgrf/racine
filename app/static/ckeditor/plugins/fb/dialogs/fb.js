@@ -54,7 +54,7 @@ CKEDITOR.dialog.add( 'fbDialog', function(editor) {
         },
         onShow: function(event) {
             // check if sample_id is defined or assign default value 0
-            var sample_id = (('state' in window.R.view) && ('sampleid' in window.R.view.state)) ? window.R.view.state : 0;
+            var sample_id = (('state' in window.R.view) && ('sampleid' in window.R.view.state)) ? window.R.view.state['sampleid'] : 0;
             var iframe = document.getElementById(this.getContentElement('tab-basic', 'fbiframe').domId);
             // resize the dialog
             this.move(0.1*window.innerWidth, 0.1*window.innerHeight, false);

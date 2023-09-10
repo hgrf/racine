@@ -52,6 +52,7 @@ website:
 	cp site/emmanuel_baudin.png build/bootstrap/site/static/images/emmanuel_baudin.png
 	cp site/screenshots/overview.png build/bootstrap/site/static/images/overview.png
 	cp site/screenshots/smb-import.png build/bootstrap/site/static/images/smb-import.png
+	cp site/screenshots/latex.png build/bootstrap/site/static/images/latex.png
 	cp site/icons.html build/bootstrap/site/layouts/partials/icons.html
 	cp site/scripts.html build/bootstrap/site/layouts/partials/scripts.html
 	cp site/_navbar.scss build/bootstrap/site/assets/scss/_navbar.scss

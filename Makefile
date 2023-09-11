@@ -54,6 +54,7 @@ website:
 	cp site/screenshots/smb-import.png build/bootstrap/site/static/images/smb-import.png
 	cp site/screenshots/latex.png build/bootstrap/site/static/images/latex.png
 	cp site/screenshots/osi.png build/bootstrap/site/static/images/osi.png
+	cp site/screenshots/upload.png build/bootstrap/site/static/images/upload.png
 	cp site/icons.html build/bootstrap/site/layouts/partials/icons.html
 	cp site/scripts.html build/bootstrap/site/layouts/partials/scripts.html
 	cp site/_navbar.scss build/bootstrap/site/assets/scss/_navbar.scss

@@ -57,6 +57,7 @@ website:
 	cp site/screenshots/print.png build/bootstrap/site/static/images/print.png
 	cp site/screenshots/upload.png build/bootstrap/site/static/images/upload.png
 	cp site/screenshots/setup.png build/bootstrap/site/static/images/setup.png
+	cp site/screenshots/archi.png build/bootstrap/site/static/images/archi.png
 	cp site/icons.html build/bootstrap/site/layouts/partials/icons.html
 	cp site/scripts.html build/bootstrap/site/layouts/partials/scripts.html
 	cp site/_navbar.scss build/bootstrap/site/assets/scss/_navbar.scss

@@ -17,63 +17,23 @@ api-client: api-spec
 		-i api.yaml -g javascript -p modelPropertyNaming=original -o js/src/api
 
 website:
-	# clone bootstrap
-	rm -rf build/bootstrap
-	git clone -b v5.2.3 --depth 1 https://github.com/twbs/bootstrap.git build/bootstrap
-	rm -rf build/bootstrap/.git
-
-	rm -rf build/bootstrap/site/content/docs
-	rm -rf build/bootstrap/site/static/docs
-	rm build/bootstrap/site/.eslintrc.json
-	rm build/bootstrap/site/static/CNAME
-	rm build/bootstrap/site/layouts/partials/docs-versions.html
-
-	cd build/bootstrap && npm install
-	cd build/bootstrap && npm install hugo-extended --save-dev
-
-	cp site/config.yml build/bootstrap/config.yml
-	cp site/linkedin.svg build/bootstrap/site/layouts/partials/icons/linkedin.svg
-	cp site/piggy-bank-fill.svg build/bootstrap/site/layouts/partials/icons/piggy-bank-fill.svg
-	cp site/docs-navbar.html build/bootstrap/site/layouts/partials/docs-navbar.html
-	cp site/favicons.html build/bootstrap/site/layouts/partials/favicons.html
-	cp site/footer.html build/bootstrap/site/layouts/partials/footer.html
-	cp site/header.html build/bootstrap/site/layouts/partials/header.html
-	cp site/masthead.html build/bootstrap/site/layouts/partials/home/masthead.html
-	cp site/masthead-followup.html \
-		build/bootstrap/site/layouts/partials/home/masthead-followup.html
-	mkdir -p build/bootstrap/site/static/images
-	cp app/static/images/racine.svg build/bootstrap/site/static/images/racine.svg
-	cp app/static/images/racine-icon.svg build/bootstrap/site/static/images/racine-icon.svg
-	cp app/static/images/racine-icon.png build/bootstrap/site/static/images/racine-icon.png
-	cp site/IMGP8279.JPG build/bootstrap/site/static/images/IMGP8279.JPG
-	cp site/EB-FDP3_v3.jpeg build/bootstrap/site/static/images/EB-FDP3_v3.jpeg
-	cp site/IMG_7415_portrait.jpg build/bootstrap/site/static/images/IMG_7415_portrait.jpg
-	cp site/IMG_20230201_133822_575.jpg build/bootstrap/site/static/images/IMG_20230201_133822_575.jpg
-	cp site/emmanuel_baudin.png build/bootstrap/site/static/images/emmanuel_baudin.png
-	cp site/screenshots/overview.png build/bootstrap/site/static/images/overview.png
-	cp site/screenshots/smb-import.png build/bootstrap/site/static/images/smb-import.png
-	cp site/screenshots/latex.png build/bootstrap/site/static/images/latex.png
-	cp site/screenshots/osi.png build/bootstrap/site/static/images/osi.png
-	cp site/screenshots/print.png build/bootstrap/site/static/images/print.png
-	cp site/screenshots/upload.png build/bootstrap/site/static/images/upload.png
-	cp site/screenshots/setup.png build/bootstrap/site/static/images/setup.png
-	cp site/screenshots/archi.png build/bootstrap/site/static/images/archi.png
-	cp site/icons.html build/bootstrap/site/layouts/partials/icons.html
-	cp site/scripts.html build/bootstrap/site/layouts/partials/scripts.html
-	cp site/_navbar.scss build/bootstrap/site/assets/scss/_navbar.scss
-	cp site/_variables.scss build/bootstrap/site/assets/scss/_variables.scss
+	cp app/static/images/racine.svg site/site/static/images/racine.svg
+	cp app/static/images/racine-icon.svg site/site/static/images/racine-icon.svg
+	cp app/static/images/racine-icon.png site/site/static/images/racine-icon.png
 
 	# build website
-	cd build/bootstrap && npx hugo --cleanDestinationDir
-
-	# copy build to Racine
-	rm -rf ./_site
-	cp -r build/bootstrap/_site ./_site
+	cd site && npm install
+	cd site && npm install hugo-extended --save-dev
+	cd site && npx hugo --cleanDestinationDir
 
 	# add docker-compose.yml
 	cp docker/docker-compose-dist.yml ./_site/docker-compose.yml
 
 website-prepare-deploy: website
+	# copy build to Racine
+	rm -rf ./_site
+	cp -r site/_site ./_site
+
 	pre-commit uninstall
 	git stash
 	git checkout gh-pages
@@ -84,7 +44,7 @@ website-prepare-deploy: website
 	git add docs
 
 hugo-serve:
-	cd build/bootstrap && npx hugo server --port 9001 --disableFastRender --verbose
+	cd site && npx hugo server --port 9001 --disableFastRender --verbose
 
 install-ckeditor:
 	# clone CKEditor 4.9.2

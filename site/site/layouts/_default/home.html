@@ -1,0 +1,8 @@
+{{ define "main" }}
+  <main data-bs-spy="scroll" data-bs-target="#bdNavbar" tabindex="0">
+    {{ partial "home/masthead" . }}
+    {{ partial "home/masthead-followup" . }}
+  </main>
+
+  {{ .Content }}
+{{ end }}

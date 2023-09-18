@@ -2,3 +2,4 @@ node_modules/
 resources/
 
 .hugo_build.lock
+.build-deps-done

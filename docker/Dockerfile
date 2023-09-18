@@ -7,6 +7,10 @@ ENV STATIC_URL /static
 ENV STATIC_PATH /app/app/static
 
 COPY ./Makefile /app/Makefile
+# TODO: is there any way to auto-detect these?
+COPY ./docker/module.mk /app/docker/module.mk
+COPY ./docs/module.mk /app/docs/module.mk
+COPY ./site/module.mk /app/site/module.mk
 COPY ./requirements.txt /app/requirements.txt
 COPY ./requirements-dev.txt /app/requirements-dev.txt
 
@@ -34,6 +38,10 @@ COPY ./migrations /app/migrations/
 COPY ./uwsgi.ini /app/
 
 COPY ./Makefile /tmp/app_static/Makefile
+# TODO: is there any way to auto-detect these?
+COPY ./docker/module.mk /tmp/app_static/docker/module.mk
+COPY ./docs/module.mk /tmp/app_static/docs/module.mk
+COPY ./site/module.mk /tmp/app_static/site/module.mk
 COPY ./patches /tmp/app_static/patches
 COPY ./js /tmp/app_static/js
 

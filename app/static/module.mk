@@ -7,7 +7,7 @@ install-ckeditor:
 	git clone -b release.4.9.2.0 --depth 1 \
 		https://github.com/WebSpellChecker/ckeditor-plugin-scayt.git \
 		/tmp/ckeditor4/plugins/scayt
-	cp patches/scayt.patch /tmp/ckeditor4/plugins/scayt/scayt.patch
+	cp patches/ckeditor/scayt.patch /tmp/ckeditor4/plugins/scayt/scayt.patch
 	cd /tmp/ckeditor4/plugins/scayt && git apply scayt.patch
 	rm /tmp/ckeditor4/plugins/scayt/scayt.patch
 
@@ -34,7 +34,7 @@ install-ckeditor:
 	dos2unix /tmp/ckeditor4/dev/builder/build.sh
 
 	# build CKEditor release
-	cp patches/build-config.js /tmp/ckeditor4/dev/builder/build-config.js
+	cp patches/ckeditor/build-config.js /tmp/ckeditor4/dev/builder/build-config.js
 	cd /tmp/ckeditor4 && \
 		bash ./dev/builder/build.sh \
 			-s --no-zip --no-tar --build-config build-config.js
@@ -53,7 +53,7 @@ install-ckeditor:
 	#      https://github.com/hgrf/racine/commit/276a495413d6654cad1695cd1ef33daa558f3fa7
 	#      https://github.com/hgrf/racine/commit/3f33c7f58e41eec70f8749d756aaae5f5755a348
 	#      https://github.com/hgrf/racine/commit/7791aa8db771323ed8a1997beb50ddc17583b460
-	cp patches/image.patch /tmp/ckeditor4/plugins/image/plugin.patch
+	cp patches/ckeditor/image.patch /tmp/ckeditor4/plugins/image/plugin.patch
 	cd /tmp/ckeditor4 && git apply plugins/image/plugin.patch
 	rm /tmp/ckeditor4/plugins/image/plugin.patch
 
@@ -62,7 +62,7 @@ install-ckeditor:
 	#      https://github.com/hgrf/racine/commit/56471eaf168d4f34e930368f95e8b330b4bb8d90
 	#      https://github.com/hgrf/racine/commit/109e8c57fbb0655245160cc42e0bc1d871c9dabd
 	#      https://github.com/hgrf/racine/commit/e9af7953866a6f26fd30a96f3293f2be0d192ce3
-	cp patches/imagerotate/plugin.patch /tmp/ckeditor4/plugins/imagerotate/plugin.patch
+	cp patches/ckeditor/imagerotate/plugin.patch /tmp/ckeditor4/plugins/imagerotate/plugin.patch
 	cd /tmp/ckeditor4/plugins/imagerotate && git apply plugin.patch
 	rm /tmp/ckeditor4/plugins/imagerotate/plugin.patch
 
@@ -73,7 +73,7 @@ install-ckeditor:
 	#      https://github.com/hgrf/racine/commit/cac9cf5bd1cba27551b3335998692a9ba072e29e
 	#      https://github.com/hgrf/racine/commit/b2940d7d35fd2a725f88d394e815c1bc57f6d10f
 	#      https://github.com/hgrf/racine/commit/7791aa8db771323ed8a1997beb50ddc17583b460
-	cp patches/link.patch /tmp/ckeditor4/plugins/link/plugin.patch
+	cp patches/ckeditor/link.patch /tmp/ckeditor4/plugins/link/plugin.patch
 	cd /tmp/ckeditor4 && git apply plugins/link/plugin.patch
 	rm /tmp/ckeditor4/plugins/link/plugin.patch
 
@@ -81,7 +81,7 @@ install-ckeditor:
 	# c.f. https://github.com/hgrf/racine/commit/e98b8fa093778f0a1331f1d4b56619d669f9e8a5
 	#      https://github.com/hgrf/racine/commit/cac9cf5bd1cba27551b3335998692a9ba072e29e
 	#      https://github.com/hgrf/racine/commit/0f6fe60cd646d7e95b0330b246ad7c7c1b968aae
-	cp patches/save/plugin.patch /tmp/ckeditor4/plugins/save/plugin.patch
+	cp patches/ckeditor/save/plugin.patch /tmp/ckeditor4/plugins/save/plugin.patch
 	cd /tmp/ckeditor4 && git apply plugins/save/plugin.patch
 	rm /tmp/ckeditor4/plugins/save/plugin.patch
 
@@ -109,10 +109,10 @@ install-ckeditor:
 	cp -r /tmp/ckeditor4/plugins/save app/static/ckeditor/plugins/save
 
 	# add missing icons
-	cp patches/save/icons/hidpi/closebtn.png \
+	cp patches/ckeditor/save/icons/hidpi/closebtn.png \
 		app/static/ckeditor/plugins/save/icons/hidpi/closebtn.png
-	cp patches/save/icons/closebtn.png app/static/ckeditor/plugins/save/icons/closebtn.png
-	cp patches/save/icons/loader.gif app/static/ckeditor/plugins/save/icons/loader.gif
+	cp patches/ckeditor/save/icons/closebtn.png app/static/ckeditor/plugins/save/icons/closebtn.png
+	cp patches/ckeditor/save/icons/loader.gif app/static/ckeditor/plugins/save/icons/loader.gif
 
 	# add (superfluous) files
 	cp /tmp/ckeditor4/plugins/pastefromexcel/.editorconfig \
@@ -128,16 +128,17 @@ install-ckeditor:
 		app/static/ckeditor/plugins/pastefromexcel/tests/pastefromexcel.js
 
 	# install custom plugins
-	cp -r patches/fb app/static/ckeditor/plugins/fb
+	cp -r patches/ckeditor/fb app/static/ckeditor/plugins/fb
 
 	# apply various patches
-	cp patches/README.md app/static/ckeditor/README.md
-	cp patches/config.js app/static/ckeditor/config.js
-	cp patches/build-config.js app/static/ckeditor/build-config.js
-	cp patches/pastefromexcel.js app/static/ckeditor/plugins/pastefromexcel/tests/pastefromexcel.js
-	cp patches/imagerotate/NOTES.md app/static/ckeditor/plugins/imagerotate/NOTES.md
-	python patches/langorder.py
-	python patches/timestamp.py
+	cp patches/ckeditor/README.md app/static/ckeditor/README.md
+	cp patches/ckeditor/config.js app/static/ckeditor/config.js
+	cp patches/ckeditor/build-config.js app/static/ckeditor/build-config.js
+	cp patches/ckeditor/pastefromexcel.js \
+		app/static/ckeditor/plugins/pastefromexcel/tests/pastefromexcel.js
+	cp patches/ckeditor/imagerotate/NOTES.md app/static/ckeditor/plugins/imagerotate/NOTES.md
+	python patches/ckeditor/langorder.py
+	python patches/ckeditor/timestamp.py
 
 	# remove unneeded files
 	rm -rf app/static/ckeditor/.github

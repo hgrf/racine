@@ -8,6 +8,7 @@ ENV STATIC_PATH /app/app/static
 
 COPY ./Makefile /app/Makefile
 # TODO: is there any way to auto-detect these?
+COPY ./.github/workflows/module.mk /app/.github/workflows/module.mk
 COPY ./app/static/module.mk /app/app/static/module.mk
 COPY ./docker/module.mk /app/docker/module.mk
 COPY ./docs/module.mk /app/docs/module.mk
@@ -40,6 +41,7 @@ COPY ./uwsgi.ini /app/
 
 COPY ./Makefile /tmp/app_static/Makefile
 # TODO: is there any way to auto-detect these?
+COPY ./.github/workflows/module.mk /tmp/app_static/.github/workflows/module.mk
 COPY ./app/static/module.mk /tmp/app_static/app/static/module.mk
 COPY ./docker/module.mk /tmp/app_static/docker/module.mk
 COPY ./docs/module.mk /tmp/app_static/docs/module.mk

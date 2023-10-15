@@ -1,2 +1,5 @@
 # override parent folder exclusion
 !*
+images/.gitignore
+images/*.drawio
+images/*.excalidraw

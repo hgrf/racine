@@ -13,7 +13,7 @@ site/.build-deps-done:
 website-build: website-build-deps
 	cd site && npx hugo --cleanDestinationDir
 
-website-prepare-deploy: website
+website-prepare-deploy: website-build
 	# copy build to Racine
 	rm -rf ./_site
 	cp -r site/_site ./_site

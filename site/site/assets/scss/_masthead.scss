@@ -58,6 +58,12 @@
 }
 
 .masthead-followup {
+  // Offset content from fixed navbar when jumping to headings
+  > :target {
+    padding-top: 5rem;
+    margin-top: -5rem;
+  }
+
   .lead {
     @include font-size(1rem);
   }

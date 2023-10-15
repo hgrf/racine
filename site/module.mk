@@ -13,13 +13,13 @@ site/.build-deps-done:
 website-build: website-build-deps
 	cd site && npx hugo --cleanDestinationDir
 
-	# add docker-compose.yml
-	cp docker/docker-compose-dist.yml ./_site/docker-compose.yml
-
 website-prepare-deploy: website
 	# copy build to Racine
 	rm -rf ./_site
 	cp -r site/_site ./_site
+
+	# add docker-compose.yml
+	cp docker/docker-compose-dist.yml ./_site/docker-compose.yml
 
 	pre-commit uninstall
 	git stash

@@ -150,3 +150,14 @@ jobs:
 
     - name: Push to ghcr
       run: docker push ghcr.io/hgrf/racine:latest
+
+    - name: Push to ghcr (tagged)
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        docker tag ghcr.io/hgrf/racine:latest \
+                   ghcr.io/hgrf/racine:${{ github.ref }}
+        docker push ghcr.io/hgrf/racine:${{ github.ref }}
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')

@@ -4,6 +4,8 @@ import json
 from flask_mail import Mail
 from flask import current_app as app
 
+from .settings.forms import EmailSettings
+
 
 def send_mail(to, subject, **kwargs):
     # load email settings and update app config dynamically
@@ -21,8 +23,29 @@ def send_mail(to, subject, **kwargs):
     )
 
 
-def read_mailconfig():
+def read_mailconfig(form: EmailSettings):
     # load email settings
     with open("data/mailconfig.json") as f:
         mailconfig = json.load(f)
-    return mailconfig
+        form.sender.data = mailconfig["MAIL_SENDER"]
+        form.server.data = mailconfig["MAIL_SERVER"]
+        form.port.data = mailconfig["MAIL_PORT"]
+        form.use_ssl.data = mailconfig["MAIL_USE_SSL"]
+        form.use_tls.data = mailconfig["MAIL_USE_TLS"]
+        form.username.data = mailconfig["MAIL_USERNAME"]
+
+
+def write_mailconfig(form: EmailSettings):
+    with open("data/mailconfig.json", "w") as f:
+        json.dump(
+            {
+                "MAIL_SENDER": form.sender.data,
+                "MAIL_SERVER": form.server.data,
+                "MAIL_PORT": form.port.data,
+                "MAIL_USE_SSL": form.use_ssl.data,
+                "MAIL_USE_TLS": form.use_tls.data,
+                "MAIL_USERNAME": form.username.data,
+                "MAIL_PASSWORD": base64.b64encode(form.password.data.encode("utf8")).decode("utf8"),
+            },
+            f,
+        )

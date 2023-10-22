@@ -27,7 +27,7 @@ doc: api-spec
 	sed -i 's/- content.code.annotate/- content.code.annotate\n    - content.code.copy/g' docs/mkdocs.yml
 
 	# add API page
-	mv swagger.json docs/markdown/swagger.json
+	mv docs/swagger.json docs/markdown/swagger.json
 	cp patches/api.md docs/markdown/API.md
 
 	# convert to HTML documentation

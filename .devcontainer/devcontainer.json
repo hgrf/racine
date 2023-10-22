@@ -1,0 +1,25 @@
+{
+  "name": "Racine",
+
+  "dockerComposeFile": "../docker/docker-compose-dev.yml",
+  "service": "web-dev",
+  "workspaceFolder": "/app",
+
+  "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "samuelcolvin.jinjahtml",
+        "ms-python.black-formatter",
+        "ms-python.python",
+        "ms-python.flake8",
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-docker",
+        "github.copilot",
+        "eamodio.gitlens"
+      ]
+    }
+  },
+
+  "postCreateCommand": "cd /app && make install-dependencies && make install-js-dependencies"
+}

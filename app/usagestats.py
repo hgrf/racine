@@ -21,17 +21,17 @@ usage_statistics_url_source = (
 @shared_task(name="usage_stats_task")
 def periodic_task():
     # determine site key or create one
-    if os.path.exists("usage_stats_key"):
-        with open("usage_stats_key", "r") as f:
+    if os.path.exists("data/usage_stats_key"):
+        with open("data/usage_stats_key", "r") as f:
             key = f.readline().strip()
     else:
         key = str(uuid.uuid4())
-        with open("usage_stats_key", "w") as f:
+        with open("data/usage_stats_key", "w") as f:
             f.write(key)
 
     # read site name from file if possible
-    if os.path.exists("usage_stats_site"):
-        with open("usage_stats_site", "r") as f:
+    if os.path.exists("data/usage_stats_site"):
+        with open("data/usage_stats_site", "r") as f:
             usage_statistics_site_name = f.readline().strip()
     else:
         usage_statistics_site_name = "unknown"

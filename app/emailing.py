@@ -7,7 +7,19 @@ from flask import current_app as app
 from .settings.forms import EmailSettings
 
 
-def send_mail(to, subject, **kwargs):
+def send_mail(to: list[str], subject: str, **kwargs) -> None:
+    """
+    Send a mail using the current app configuration.
+
+    Examples::
+
+        >>> send_mail(["john.doe@gmail.com"], "Hello", body="Hello, John!")
+
+    Arguments:
+        to -- List of recipients.
+        subject -- Subject of the email.
+        **kwargs -- Additional arguments to be passed to flask_mail.Mail.send_message.
+    """
     # load email settings and update app config dynamically
     with open("data/mailconfig.json") as f:
         mailconfig = json.load(f)

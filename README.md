@@ -47,8 +47,8 @@
 | app/profile/forms.py                                                               |       24 |        6 |     75% |37-38, 41-45, 48-49 |
 | app/profile/views.py                                                               |       55 |       40 |     27% |12-23, 29-38, 44-71 |
 | app/settings/\_\_init\_\_.py                                                       |        3 |        0 |    100% |           |
-| app/settings/forms.py                                                              |       31 |        0 |    100% |           |
-| app/settings/views.py                                                              |      136 |      105 |     23% |18-48, 60-76, 85-110, 115-123, 127-140, 149-199, 212-215 |
+| app/settings/forms.py                                                              |       35 |        0 |    100% |           |
+| app/settings/views.py                                                              |      153 |      118 |     23% |18-48, 60-76, 85-110, 117-131, 136-144, 148-161, 170-220, 233-236 |
 | app/smbinterface.py                                                                |       83 |       67 |     19% |29-51, 57-71, 94-110, 114-145, 149, 154-173 |
 | app/tests/\_\_init\_\_.py                                                          |        0 |        0 |    100% |           |
 | app/tests/test\_main.py                                                            |       26 |        0 |    100% |           |
@@ -77,7 +77,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2262** | **1136** | **50%** |           |
+|                                                                          **TOTAL** | **2283** | **1149** | **50%** |           |
 
 
 ## Setup coverage badge

@@ -1,0 +1,4 @@
+*
+!.gitignore
+!.readthedocs.yml
+!module.mk

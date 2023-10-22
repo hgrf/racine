@@ -91,7 +91,7 @@ section (you will find the corresponding button on the top right after logging i
 set up an email account in the corresponding subsection of the "Settings" page.
 
 You can set up a site name for usage statistics by writing it into a file "usage_stats_site" in the
-Racine folder.
+data folder.
 
 You can start the development server by simply executing:
 

@@ -21,6 +21,7 @@ services:
     image: ghcr.io/hgrf/racine
     command: celery -A make_celery worker --loglevel=INFO
     volumes:
+      - data:/app/data
       - database:/app/database
       - uploads:/app/uploads
   celery-beat:

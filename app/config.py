@@ -23,7 +23,7 @@ class Config:
     @staticmethod
     def init_app(app):
         file_handler = logging.handlers.RotatingFileHandler(
-            os.path.join(basedir, "racine.log"), maxBytes=10000
+            os.path.join(basedir, "data", "racine.log"), maxBytes=10000
         )
         file_handler.setFormatter(
             Formatter("%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]")

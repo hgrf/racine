@@ -236,6 +236,6 @@ def uploads():
 @admin_required
 def log():
     log = "Failed to load log"
-    with open("racine.log", "r") as f:
+    with open("data/racine.log", "r") as f:
         log = f.read()
     return render_template("settings/log.html", log=log)

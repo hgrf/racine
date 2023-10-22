@@ -53,6 +53,9 @@ COPY ./make_celery.py /app/make_celery.py
 
 RUN cd /tmp/app_static && \
     mkdir -p app/static/images && \
+# for racine.log
+    mkdir -p /app/data && \
     make install-js-dependencies && \
+    rm -rf /app/data && \
     cp -r /tmp/app_static/app/static /app/app/ && \
     rm -rf /tmp/app_static

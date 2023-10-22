@@ -49,8 +49,6 @@ COPY ./site/module.mk /tmp/app_static/site/module.mk
 COPY ./patches /tmp/app_static/patches
 COPY ./js /tmp/app_static/js
 
-COPY ./make_celery.py /app/make_celery.py
-
 RUN cd /tmp/app_static && \
     mkdir -p app/static/images && \
 # for racine.log

@@ -20,6 +20,7 @@ website-prepare-deploy: website-build
 
 	# add docker-compose.yml
 	cp docker/docker-compose-dist.yml ./_site/docker-compose.yml
+	sed -i "s/__RACINE_VERSION__/${RACINE_VERSION}/g" ./_site/docker-compose.yml
 
 	pre-commit uninstall
 	git stash

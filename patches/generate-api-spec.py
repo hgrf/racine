@@ -55,5 +55,5 @@ with app.test_request_context():
 with open("swagger.json", "w") as f:
     json.dump(spec.to_dict(), f, indent=4)
 
-with open("api.yaml", "w") as f:
+with open("docs/api.yaml", "w") as f:
     f.write(spec.to_yaml())

@@ -36,7 +36,6 @@ doc: api-spec
 	echo -n "\nplugins:\n  - render_swagger" >> docs/mkdocs.yml
 	cd docs && python -m mkdocs build
 
-	rm api.yaml
 	mv docs/.readthedocs.yml .
 
 doc-serve:

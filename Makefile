@@ -12,7 +12,7 @@ install-dependencies:
 
 api-spec:
 	python patches/generate-api-spec.py
-	cat patches/api.yaml >> api.yaml
+	cat patches/api.yaml >> docs/api.yaml
 
 api-client: api-spec
 	rm -rf js/src/api
@@ -21,7 +21,7 @@ api-client: api-spec
 		-O build/openapi-generator-cli.jar
 	
 	java -jar build/openapi-generator-cli.jar generate \
-		-i api.yaml -g javascript -p modelPropertyNaming=original -o js/src/api
+		-i docs/api.yaml -g javascript -p modelPropertyNaming=original -o js/src/api
 
 install-mathjax:
 	rm -rf app/static/mathjax

@@ -5,6 +5,7 @@ from werkzeug.security import safe_join
 
 from . import main
 from .forms import NewSampleForm, MarkAsNewsForm
+from .. import RACINE_VERSION
 from ..models import Sample, Share, User
 
 
@@ -48,7 +49,7 @@ def search():
 @login_required
 def help():
     admins = User.query.filter_by(is_admin=True).all()
-    return render_template("help.html", admins=admins)
+    return render_template("help.html", admins=admins, racine_version=RACINE_VERSION)
 
 
 @main.route("/userlist", methods=["POST"])

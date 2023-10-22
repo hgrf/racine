@@ -7,6 +7,9 @@ include docker/module.mk
 include docs/module.mk
 include site/module.mk
 
+version:
+	@echo ${RACINE_VERSION}
+
 install-dependencies:
 	python -m pip install ${PIP_OPTIONS} --upgrade pip
 	pip install ${PIP_OPTIONS} -r requirements-dev.txt

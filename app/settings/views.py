@@ -4,7 +4,7 @@ from flask import current_app as app, flash, render_template, redirect, request,
 from flask_login import current_user, login_required
 
 from . import settings
-from .forms import NewSMBResourceForm, NewUserForm, EmailSettings
+from .forms import NewSMBResourceForm, NewUserForm, EmailSettings, UsageStatsSettings
 from .. import db
 from ..decorators import admin_required
 from ..emailing import send_mail, read_mailconfig, write_mailconfig
@@ -108,6 +108,27 @@ def email():
         pass
 
     return render_template("settings/email.html", form=form)
+
+
+@settings.route("/stats", methods=["GET", "POST"])
+@login_required
+@admin_required
+def stats():
+    form = UsageStatsSettings()
+    if form.validate_on_submit():
+        with open("data/usage_stats_site", "w") as f:
+            f.write(form.site.data)
+        flash("Saved changes")
+
+    try:
+        with open("data/usage_stats_key") as f:
+            form.key.data = f.read()
+        with open("data/usage_stats_site") as f:
+            form.site.data = f.read()
+    except Exception:
+        pass
+
+    return render_template("settings/stats.html", form=form)
 
 
 # ----- two helper functions for the settings/uploads page

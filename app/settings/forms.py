@@ -53,3 +53,9 @@ class EmailSettings(FlaskForm):
     username = StringField("User name:")
     password = PasswordField("Password:")
     submit = SubmitField("Save changes and send test email")
+
+
+class UsageStatsSettings(FlaskForm):
+    key = StringField("Key:", validators=[DataRequired()], render_kw={"readonly": True})
+    site = StringField("Site name:", validators=[DataRequired()])
+    submit = SubmitField("Save changes")

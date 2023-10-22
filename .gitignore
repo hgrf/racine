@@ -13,8 +13,6 @@ venv/*
 # ignore usage statistics related files
 usage_stats_key
 usage_stats_site
-# ignore email config
-mailconfig.py
 # ignore coverage reports
 .coverage
 # ignore file that is used to trigger UWSGI reload

@@ -6,7 +6,7 @@ import base64
 
 def send_mail(to, subject, **kwargs):
     # load email settings and update app config dynamically
-    with open("mailconfig.py") as f:
+    with open("data/mailconfig.py") as f:
         mailconfig = f.read()
         mailconfig = ast.literal_eval(mailconfig)
     mailconfig["MAIL_PASSWORD"] = base64.b64decode(
@@ -23,7 +23,7 @@ def send_mail(to, subject, **kwargs):
 
 def read_mailconfig():
     # load email settings
-    with open("mailconfig.py") as f:
+    with open("data/mailconfig.py") as f:
         mailconfig = f.read()
         mailconfig = ast.literal_eval(mailconfig)
     return mailconfig

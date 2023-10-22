@@ -2,6 +2,7 @@ version: "3.9"
 services:
   web:
     image: ghcr.io/hgrf/racine
+    container_name: racine-web
     build:
       context: ..
       dockerfile: docker/Dockerfile
@@ -10,8 +11,9 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - uploads:/app/uploads
+      - data:/app/data
       - database:/app/database
+      - uploads:/app/uploads
       - ./ssl:/etc/nginx/ssl
   redis:
     container_name: racine-redis
@@ -23,8 +25,8 @@ services:
     image: ghcr.io/hgrf/racine
     command: celery -A make_celery worker --loglevel=INFO
     volumes:
-      - uploads:/app/uploads
       - database:/app/database
+      - uploads:/app/uploads
   celery-beat:
     depends_on:
       - redis
@@ -32,5 +34,6 @@ services:
     image: ghcr.io/hgrf/racine
     command: celery -A make_celery beat --loglevel=INFO
 volumes:
-  uploads:
+  data:
   database:
+  uploads:

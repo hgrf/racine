@@ -1,16 +1,15 @@
-from flask import render_template, redirect, request, url_for, flash
+import base64
+import os
+
+from flask import current_app as app, flash, render_template, redirect, request, url_for
+from flask_login import current_user, login_required
+
+from . import settings
+from .forms import NewSMBResourceForm, NewUserForm, EmailSettings
 from .. import db
 from ..decorators import admin_required
-from ..models import SMBResource, User, Upload, Action, Sample
-from .forms import NewSMBResourceForm, NewUserForm, EmailSettings
-from . import settings
-from flask_login import current_user, login_required
-from ..config import basedir
-from flask import current_app as app
 from ..emailing import send_mail, read_mailconfig
-import os
-from .. import plugins
-import base64
+from ..models import SMBResource, User, Upload, Action, Sample
 
 
 @settings.route("/smbresources", methods=["GET", "POST"])
@@ -89,7 +88,7 @@ def email():
     if form.validate_on_submit():
         # save settings
         try:
-            with open("mailconfig.py", "w") as f:
+            with open("data/mailconfig.py", "w") as f:
                 f.write(
                     """{{
     'MAIL_SENDER': '{}',

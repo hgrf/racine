@@ -19,7 +19,7 @@
 | app/browser/views.py                                                               |      301 |      248 |     18% |58-78, 100-125, 129-142, 146-162, 185-241, 262, 287-334, 353-378, 396-424, 432-493, 502-527, 535-576, 584-591, 598-634, 638-642 |
 | app/config.py                                                                      |       32 |        0 |    100% |           |
 | app/decorators.py                                                                  |       12 |        3 |     75% |     10-12 |
-| app/emailing.py                                                                    |       17 |       11 |     35% |9-19, 26-29 |
+| app/emailing.py                                                                    |       15 |        9 |     40% |10-19, 26-28 |
 | app/main/\_\_init\_\_.py                                                           |        5 |        0 |    100% |           |
 | app/main/ajaxviews/\_\_init\_\_.py                                                 |        3 |        0 |    100% |           |
 | app/main/ajaxviews/sample.py                                                       |       27 |       18 |     33% |     13-35 |
@@ -48,7 +48,7 @@
 | app/profile/views.py                                                               |       55 |       40 |     27% |12-23, 29-38, 44-71 |
 | app/settings/\_\_init\_\_.py                                                       |        3 |        0 |    100% |           |
 | app/settings/forms.py                                                              |       31 |        0 |    100% |           |
-| app/settings/views.py                                                              |      144 |      112 |     22% |19-49, 61-77, 86-136, 141-149, 153-166, 175-225, 238-241 |
+| app/settings/views.py                                                              |      145 |      112 |     23% |20-50, 62-78, 87-132, 137-145, 149-162, 171-221, 234-237 |
 | app/smbinterface.py                                                                |       83 |       67 |     19% |29-51, 57-71, 94-110, 114-145, 149, 154-173 |
 | app/tests/\_\_init\_\_.py                                                          |        0 |        0 |    100% |           |
 | app/tests/test\_main.py                                                            |       26 |        0 |    100% |           |
@@ -77,7 +77,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2263** | **1138** | **50%** |           |
+|                                                                          **TOTAL** | **2262** | **1136** | **50%** |           |
 
 
 ## Setup coverage badge

@@ -14,7 +14,8 @@ doc: api-spec
 		--exclude app/api
 
 	rm requirements.mkdocs.txt
-	sed -i 's/requirements.mkdocs.txt/requirements.txt/g' .readthedocs.yml
+	sed -i 's/requirements.mkdocs.txt/requirements.txt\n   - requirements: requirements-dev.txt/g' .readthedocs.yml
+	sed -i 's/mkdocs.yml/docs\/mkdocs.yml/g' .readthedocs.yml
 	cat patches/readthedocs.yml >> .readthedocs.yml
 
 	# replace main page of documentation
@@ -34,6 +35,9 @@ doc: api-spec
 	# convert to HTML documentation
 	echo -n "\nplugins:\n  - render_swagger" >> mkdocs.yml
 	python -m mkdocs build
+
+	rm api.yaml
+	mv mkdocs.yml docs/
 
 	mv module.mk docs/
 

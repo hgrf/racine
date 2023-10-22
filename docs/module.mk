@@ -1,6 +1,4 @@
 doc: api-spec
-	mv docs/module.mk ./
-
 	# generate markdown documentation
 	cd docs && handsdown \
 		--branch master \
@@ -40,8 +38,6 @@ doc: api-spec
 
 	rm api.yaml
 	mv docs/.readthedocs.yml .
-
-	mv module.mk docs/
 
 doc-serve:
 	cd docs/html && python -m http.server 8000

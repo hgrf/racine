@@ -1,9 +1,5 @@
 # ignore all pyc files
 *.pyc
-# ignore all "backup" files created by gedit
-*~
-# ignore log file
-racine.log
 # ignore virtual environment files
 venv/*
 # ignore PyCharm specific files

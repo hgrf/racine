@@ -23,7 +23,7 @@ services:
       - redis
     container_name: racine-celery-worker
     image: ghcr.io/hgrf/racine
-    command: celery -A make_celery worker --loglevel=INFO
+    command: celery -A app.make_celery worker --loglevel=INFO
     volumes:
       - data:/app/data
       - database:/app/database
@@ -33,7 +33,7 @@ services:
       - redis
     container_name: racine-celery-beat
     image: ghcr.io/hgrf/racine
-    command: celery -A make_celery beat --loglevel=INFO
+    command: celery -A app.make_celery beat --loglevel=INFO
     volumes:
       - data:/app/data
 volumes:

@@ -8,7 +8,7 @@ from celery.utils.log import get_task_logger
 from flask import current_app
 from sqlalchemy.sql import func
 
-from . import db
+from . import db, RACINE_VERSION
 from .models import User, Sample, Action, Upload
 
 logger = get_task_logger(__name__)
@@ -45,6 +45,7 @@ def periodic_task():
     data = {
         "key": key,
         "site": usage_statistics_site_name,
+        "version": RACINE_VERSION,
         "users": User.query.count(),
         "samples": Sample.query.filter_by(isdeleted=False).count(),
         "actions": Action.query.join(Sample).filter(not Sample.isdeleted).count(),

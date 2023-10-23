@@ -18,7 +18,9 @@ def is_hidden_field_filter(field):
     return isinstance(field, HiddenField)
 
 
-RACINE_VERSION = subprocess.run(["/usr/bin/make", "version"], capture_output=True).stdout.decode("utf-8").strip()
+RACINE_VERSION = (
+    subprocess.run(["/usr/bin/make", "version"], capture_output=True).stdout.decode("utf-8").strip()
+)
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 plugins = []

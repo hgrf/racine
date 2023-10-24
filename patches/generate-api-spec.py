@@ -9,16 +9,16 @@ from apispec.ext.marshmallow import MarshmallowPlugin
 from apispec_webframeworks.flask import FlaskPlugin
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from app import create_app, api  # noqa: E402
+from app import create_app, api, RACINE_API_VERSION  # noqa: E402
 
 
 spec = APISpec(
     title="Racine API",
-    version="0.1.0-dev",
+    version=RACINE_API_VERSION,
     openapi_version="3.0.2",
     info=dict(
         description="Racine API",
-        version="0.1.0-dev",
+        version=RACINE_API_VERSION,
         contact=dict(
             email="holger.graef@gmail.com",
         ),

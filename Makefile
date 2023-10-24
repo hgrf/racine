@@ -1,4 +1,5 @@
 RACINE_VERSION="v0.0.3"
+RACINE_API_VERSION="0.1.0-dev"
 
 # TODO: for now, if you want to add an include, do not forget to update the Dockerfile
 include .github/workflows/module.mk
@@ -7,8 +8,13 @@ include docker/module.mk
 include docs/module.mk
 include site/module.mk
 
+.PHONY: version
 version:
 	@echo ${RACINE_VERSION}
+
+.PHONY: api-version
+api-version:
+	@echo ${RACINE_API_VERSION}
 
 install-dependencies:
 	python -m pip install ${PIP_OPTIONS} --upgrade pip

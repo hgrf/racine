@@ -11,7 +11,8 @@ site/.build-deps-done:
 	touch site/.build-deps-done
 
 website-build: website-build-deps
-	cd site && npx hugo --cleanDestinationDir
+	cd site && RACINE_VERSION=${RACINE_VERSION} \
+		npx hugo --cleanDestinationDir
 
 website-prepare-deploy: website-build
 	# copy build to Racine
@@ -32,4 +33,5 @@ website-prepare-deploy: website-build
 	git add docs
 
 website-serve:
-	cd site && npx hugo server --port 9001 --disableFastRender --verbose
+	cd site && RACINE_VERSION=${RACINE_VERSION} \
+		npx hugo server --port 9001 --disableFastRender --verbose

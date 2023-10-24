@@ -11,6 +11,7 @@ security:
     getenv:
       - ^HUGO_
       - NETLIFY
+      - RACINE_VERSION
 
 markup:
   goldmark:
@@ -55,7 +56,6 @@ params:
   description:          "Racine is a Flask-based web app that can run in the local network. Features include file import from Samba servers, sharing samples while protecting individual users' notes, LaTeX typesetting and many more..."
   authors:              "Holger Graef"
 
-  current_version:      "0.1.0-dev"
   docs_version:         "5.2"
   github_org:           "https://github.com/hgrf"
   repo:                 "https://github.com/hgrf/racine"

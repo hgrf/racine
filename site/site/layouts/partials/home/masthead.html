@@ -19,7 +19,7 @@
         </a>
       </div>
       <p class="text-muted mb-0">
-        Currently <strong>v{{ .Site.Params.current_version }}</strong>
+        Currently <strong>{{ getenv "RACINE_VERSION" }}</strong>
         <span class="px-1">&middot;</span>
         <a href="https://racine.readthedocs.io/en/latest/#using-pre-built-images" class="link-secondary">Download</a>
       </p>

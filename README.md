@@ -266,3 +266,22 @@ The server will now automatically - i.e. also after a reboot - be available on l
 
 More details:
 https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-14-04
+
+## For maintainers
+
+### Release workflow
+
+* update RACINE_VERSION (and, if applicable RACINE_API_VERSION) in Makefile
+* update CHANGELOG.md
+* `make install-js-dependencies` to update the version number of the JS library
+* `git checkout -b release` to create a branch for a subsequent PR (this enables to run
+  all CI checks, build and deployment before merging to master)
+* `git commit -m "Release vX.Y.Z"`
+* `git tag vX.Y.Z`
+* `git push --tags -u origin release`
+* `make website-prepare-deploy`
+* commit and push changes to `docker-compose.yml`
+* update release notes (with changelog) on GitHub
+* for new patch versions "vX.Y.Z", update the documentation tag "vX.Y.x" if it exists,
+  or create that tag and activate the corresponding version on
+  https://readthedocs.org/projects/racine/versions

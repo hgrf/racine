@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   web:
-    image: ghcr.io/hgrf/racine:v0.0.3
+    image: ghcr.io/hgrf/racine:v0.1.0
     container_name: racine-web
     ports:
       - "80:80"
@@ -18,7 +18,7 @@ services:
     depends_on:
       - redis
     container_name: racine-celery-worker
-    image: ghcr.io/hgrf/racine:v0.0.3
+    image: ghcr.io/hgrf/racine:v0.1.0
     command: celery -A app.make_celery worker --loglevel=INFO
     volumes:
       - data:/app/data
@@ -28,7 +28,7 @@ services:
     depends_on:
       - redis
     container_name: racine-celery-beat
-    image: ghcr.io/hgrf/racine:v0.0.3
+    image: ghcr.io/hgrf/racine:v0.1.0
     command: celery -A app.make_celery beat --loglevel=INFO
     volumes:
       - data:/app/data

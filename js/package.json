@@ -1,6 +1,6 @@
 {
   "name": "racine_js",
-  "version": "0.1.0-dev",
+  "version": "0.0.3",
   "type": "module",
   "description": "Racine JavaScript library",
   "license": "GPL v3",

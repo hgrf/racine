@@ -65,6 +65,7 @@ install-js-dependencies: install-mathjax api-client
 	# c.f. https://github.com/hgrf/racine/commit/89d8b57e795ccfbeb73dc18faecc1d0016a8a008#diff-5f8e3a2bd35e7f0079090b176e06d0568d5c8e4468c0febbfa61014d72b16246
 	git apply patches/jquery.jeditable.patch
 
+	cd js && npm version ${RACINE_VERSION}
 	cd js && npm install && npx rollup -c
 
 	cp js/node_modules/bootstrap/dist/css/bootstrap.min.css app/static/css/bootstrap.min.css

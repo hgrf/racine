@@ -2,7 +2,6 @@ import './util/jquery-global.js';
 import 'bootstrap';
 import './typeahead';
 
-import 'bootstrap-toc/bootstrap-toc';
 import 'lightbox2';
 import './jquery-plugins/jquery.jeditable';
 import './jquery-plugins/ckeditable';

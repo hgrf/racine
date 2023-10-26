@@ -2,16 +2,21 @@
 
 {% block styles %}
 {{super()}}
-    <link rel="stylesheet" href="/static/css/bootstrap-toc.min.css">
+    <link rel="stylesheet" href="/static/css/tocbot.css">
     <style>
-        /* see https://tscanlin.github.io/tocbot/ */
-        h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
-            display: block;
-            content: " ";
-            height: 60px;
-            margin-top: -60px;
-            visibility: hidden;
+        ul.toc-list {
+            list-style-type: none;
         }
+
+        ul.toc-list li {
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+        div#js-toc-content {
+            max-width: 800px;
+        }
+
         p {
             text-align:justify;
         }
@@ -20,12 +25,12 @@
 
 {% block sidebarnav %}
 <div id="sidebar" class="col-sm-3 col-md-2 sidebar">
-    <nav id="toc" data-toggle="toc"></nav>
+    <nav id="js-toc"></nav>
 </div>
 {% endblock %}
 
 {% block page_content %}
-<div style="max-width: 800px;">
+<div class="js-toc-content">
     <h2>Racine version</h2>
     You are using Racine <b>{{ racine_version }}</b>.
     <h2>Introduction</h2>

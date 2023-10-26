@@ -71,7 +71,7 @@ install-js-dependencies: install-mathjax api-client
 	cp js/node_modules/bootstrap/dist/css/bootstrap.min.css app/static/css/bootstrap.min.css
 	cp js/node_modules/bootstrap/dist/fonts/* app/static/fonts/
 
-	cp js/node_modules/bootstrap-toc/dist/bootstrap-toc.min.css app/static/css/bootstrap-toc.min.css
+	cp js/node_modules/tocbot/dist/tocbot.css app/static/css/tocbot.css
 
 	cp js/node_modules/lightbox2/dist/css/lightbox.css app/static/css/lightbox.css
 	cp js/node_modules/lightbox2/dist/images/* app/static/images/

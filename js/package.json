@@ -7,10 +7,10 @@
   "browser": "index.js",
   "dependencies": {
     "bootstrap": "3.4.1",
-    "bootstrap-toc": "git+https://github.com/afeld/bootstrap-toc.git#v0.4.1",
     "jquery": "1.11.3",
     "lightbox2": "2.8.2",
-    "superagent": "^5.3.0"
+    "superagent": "^5.3.0",
+    "tocbot": "^4.21.2"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.0.1",

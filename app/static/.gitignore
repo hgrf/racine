@@ -1,8 +1,8 @@
 mathjax/
 
 css/bootstrap.min.css
-css/bootstrap-toc.min.css
 css/lightbox.css
+css/tocbot.css
 css/typeahead.css
 
 fonts/

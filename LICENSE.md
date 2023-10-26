@@ -26,7 +26,6 @@ The following libraries are included in Racine under the MIT license
 * jQuery - Copyright (c) jQuery Foundation and other contributors.
 * jquery.jeditable.js - Copyright (c) 2006 Mika Tuupola, Dylan Verheul, Nicolas Carpi.
 * typeahead.js - Copyright (c) Twitter, Inc.
-* bootstrap-toc.min.js and bootstrap-toc.min.css - Copyright (c) 2015-2016 Aidan Feldman.
 * Lightbox2 - Copyright (c) 2015 Lokesh Dhakar.
 
 The following libraries are included in Racine under the Apache license

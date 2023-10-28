@@ -62,8 +62,9 @@ class TestingConfig(Config):
 
 class StandaloneConfig(Config):
     STANDALONE = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'database/data-sa.sqlite')
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or "sqlite:///" + os.path.join(
+        basedir, "database/data-sa.sqlite"
+    )
     LOG_EXCEPTIONS = False
 
 

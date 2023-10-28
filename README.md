@@ -138,6 +138,12 @@ The software can then be started using:
 
     desktop/dist/RacineDesktop-0.1.0.AppImage
 
+### References
+
+- https://github.com/matbloch/electron-flask
+- https://medium.com/red-buffer/integrating-python-flask-backend-with-electron-nodejs-frontend-8ac621d13f72
+- https://www.npmjs.com/package/generator-electron-flask/v/1.0.8
+
 ## Deployment with gunicorn and nginx
 
 Carry out the steps described above in order to [set up the development

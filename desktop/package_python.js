@@ -8,7 +8,7 @@ const spawn = require("child_process").spawn,
       "--onefile",
       `--add-data app/templates${path.delimiter}templates`,
       `--add-data app/static${path.delimiter}static`,
-      "--distpath dist-python",
+      "--distpath desktop/dist-python",
       "app/__init__.py",
     ],
     {

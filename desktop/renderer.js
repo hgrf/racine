@@ -35,7 +35,7 @@ const startPythonSubprocess = () => {
   let script = getPythonScriptPath();
   // TODO: should make SURE that these processes are killed when the app is closed
   if (isRunningInBundle()) {
-    console.log("Executing python script");
+    console.log("Running in bundle");
     // TODO: figure out when this occurs and test it
     subpy = require("child_process").execFile(script, [], (error, stdout, stderr) => {
       if (error) {
@@ -45,6 +45,7 @@ const startPythonSubprocess = () => {
       console.log(`stdout: ${stderr}`);
     });
   } else {
+    console.log("Running in dev mode"); 
     subpy = require("child_process").spawn("flask", ["run", "--port", "4040"], { cwd: path.join(process.cwd(), ".."), env: process.env });
     subpy.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);

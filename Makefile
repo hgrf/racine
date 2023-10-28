@@ -16,6 +16,18 @@ version:
 api-version:
 	@echo ${RACINE_API_VERSION}
 
+.PHONY: desktop
+desktop:
+	cd desktop && npm install
+	cd desktop && npm run start
+
+desktop-dist:
+	cd desktop && npm install
+	cd desktop && npm run package
+
+desktop-run-dist:
+	cd desktop && ./dist/ElectronFlask-0.1.0.AppImage
+
 install-dependencies:
 	python -m pip install ${PIP_OPTIONS} --upgrade pip
 	pip install ${PIP_OPTIONS} -r requirements-dev.txt

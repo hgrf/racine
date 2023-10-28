@@ -9,9 +9,11 @@ from .models import Upload
 # from https://stackoverflow.com/a/2372171
 def get_free_space(dirname):
     """Return folder/drive free space."""
-    if platform.system() == 'Windows':
+    if platform.system() == "Windows":
         free_bytes = ctypes.c_ulonglong(0)
-        ctypes.windll.kernel32.GetDiskFreeSpaceExW(ctypes.c_wchar_p(dirname), None, None, ctypes.pointer(free_bytes))
+        ctypes.windll.kernel32.GetDiskFreeSpaceExW(
+            ctypes.c_wchar_p(dirname), None, None, ctypes.pointer(free_bytes)
+        )
         return free_bytes.value
     else:
         st = os.statvfs(dirname)
@@ -21,7 +23,7 @@ def get_free_space(dirname):
 def filesystem_usage(app):
     with app.app_context():
         # get size of the SQLite database
-        dbsize = os.path.getsize(app.config['SQLALCHEMY_DATABASE_URI'][10:])
+        dbsize = os.path.getsize(app.config["SQLALCHEMY_DATABASE_URI"][10:])
 
         # get total upload volume (code redundant with main/views.py)
         totuploadvol = db.session.query(func.sum(Upload.size)).first()[0]

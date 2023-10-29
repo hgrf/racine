@@ -23,7 +23,7 @@ if __name__ == "__main__":
             upgrade()
 
         print("Running app...")
-        app.run(port=4040, debug=True)
+        app.run(port=4040)
     except Exception as e:
         print(e)
         sys.exit(1)

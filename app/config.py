@@ -24,7 +24,7 @@ class Config:
     @staticmethod
     def init_app(app):
         file_handler = logging.handlers.RotatingFileHandler(
-            os.path.join(basedir, "data", "racine.log"), maxBytes=10000
+            os.path.join("data", "racine.log"), maxBytes=10000
         )
         file_handler.setFormatter(
             Formatter("%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]")
@@ -62,10 +62,10 @@ class TestingConfig(Config):
 
 class StandaloneConfig(Config):
     STANDALONE = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or "sqlite:///" + os.path.join(
-        basedir, "database/data-sa.sqlite"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///{}".format(
+        os.path.join(os.getcwd(), "database", "data-sa.sqlite")
     )
-    LOG_EXCEPTIONS = False
+    LOG_EXCEPTIONS = True
 
 
 config = {

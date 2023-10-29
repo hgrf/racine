@@ -24,7 +24,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='racine-backend',
+    name='run_app',
     debug=True,
     bootloader_ignore_signals=False,
     strip=False,

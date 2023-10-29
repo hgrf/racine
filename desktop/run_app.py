@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
         print("Running migrations...")
         with app.app_context():
-            upgrade()
+            upgrade(os.path.join(os.path.dirname(__file__), "migrations"))
 
         print("Running app...")
         app.run(port=4040)

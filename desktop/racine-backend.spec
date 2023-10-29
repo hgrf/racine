@@ -6,6 +6,7 @@ a = Analysis(
     pathex=['/home/holger/racine'],
     binaries=[],
     datas=[
+        ('../migrations', 'migrations'),
         ('../app/templates', 'app/templates'),
         ('../app/static', 'app/static'),
     ],

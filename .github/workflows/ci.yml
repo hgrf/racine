@@ -179,6 +179,7 @@ jobs:
       - name: Install developer dependencies
         run: |
           make install-dependencies
+          make install-js-dependencies
           pip install pyinstaller==6.1.0
 
       - name: Build AppImage
@@ -203,6 +204,7 @@ jobs:
       - name: Install developer dependencies
         run: |
           make install-dependencies
+          make install-js-dependencies
           pip install pyinstaller==6.1.0
 
       - name: Build executable

@@ -10,8 +10,8 @@ let mainWindow = null;
 let subpy = null;
 
 const PY_DIST_FOLDER = "dist-python"; // python distributable folder
-const PY_SRC_FOLDER = "../app"; // path to the python source
-const PY_MODULE = "__init__.py"; // the name of the main module
+const PY_SRC_FOLDER = "../desktop"; // path to the python source
+const PY_MODULE = "run_app.py"; // the name of the main module
 
 const isRunningInBundle = () => {
   return require("fs").existsSync(path.join(__dirname, PY_DIST_FOLDER));
@@ -27,6 +27,12 @@ const getPythonScriptPath = () => {
       PY_DIST_FOLDER,
       PY_MODULE.slice(0, -3) + ".exe"
     );
+  } else if (process.platform === "linux") {
+    return path.join(
+      __dirname,
+      PY_DIST_FOLDER,
+      PY_MODULE.slice(0, -3)
+    );
   }
   return path.join(__dirname, PY_DIST_FOLDER, PY_MODULE);
 };
@@ -36,7 +42,6 @@ const startPythonSubprocess = () => {
   // TODO: should make SURE that these processes are killed when the app is closed
   if (isRunningInBundle()) {
     console.log("Running in bundle");
-    // TODO: figure out when this occurs and test it
     subpy = require("child_process").execFile(script, [], (error, stdout, stderr) => {
       if (error) {
         throw error;
@@ -45,8 +50,10 @@ const startPythonSubprocess = () => {
       console.log(`stdout: ${stderr}`);
     });
   } else {
-    console.log("Running in dev mode");
-    subpy = require("child_process").spawn("flask", ["run", "--port", "4040"], { cwd: path.join(process.cwd(), ".."), env: process.env });
+    let env = process.env;
+    env.PYTHONPATH = path.join(__dirname, "..");
+    console.log(`Running in dev mode with PYTHONPATH=${env.PYTHONPATH}`);
+    subpy = require("child_process").spawn("python", [script], { cwd: path.join(process.cwd(), ".."), env: env });
     subpy.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });

@@ -4,6 +4,7 @@ RACINE_API_VERSION="0.1.0"
 # TODO: for now, if you want to add an include, do not forget to update the Dockerfile
 include .github/workflows/module.mk
 include app/static/module.mk
+include desktop/module.mk
 include docker/module.mk
 include docs/module.mk
 include site/module.mk
@@ -15,18 +16,6 @@ version:
 .PHONY: api-version
 api-version:
 	@echo ${RACINE_API_VERSION}
-
-.PHONY: desktop
-desktop:
-	cd desktop && npm install
-	cd desktop && npm run start
-
-desktop-dist:
-	cd desktop && npm install
-	cd desktop && npm run package
-
-desktop-run-dist:
-	cd desktop && ./dist/RacineDesktop-0.1.0.AppImage
 
 install-dependencies:
 	python -m pip install ${PIP_OPTIONS} --upgrade pip

@@ -23,6 +23,7 @@
     "files": [
       "renderer.js",
       "icon.png",
+      "spinner.html",
       "node_modules/**/*"
     ],
     "extraResources": [

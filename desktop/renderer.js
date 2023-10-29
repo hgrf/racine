@@ -119,9 +119,17 @@ const createMainWindow = () => {
     }, 500);
   });
 
+  mainWindow.webContents.on("did-finish-load", function (event, errorCode, errorDescription, validatedURL) {
+    console.log(`Finished loading page ${validatedURL}.`);
+    if (validatedURL !== "http://localhost:4040/") {
+      console.log("Reloading in 500 ms..");
+      let timer = setTimeout(function() {
+        mainWindow.loadURL("http://localhost:4040/");
+      }, 500);
+    }
+  });
 
-  // Load the index page
-  mainWindow.loadURL("http://localhost:4040/");
+  mainWindow.loadFile(path.join(__dirname, "spinner.html"));
 
   // Open the DevTools.
   //mainWindow.webContents.openDevTools();

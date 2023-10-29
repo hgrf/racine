@@ -1,9 +1,9 @@
 import os
-
-from app import create_app
+import sys
 
 from celery import fixups  # noqa: F401
 from celery.fixups import django  # noqa: F401
+from logging.config import fileConfig  # noqa: F401
 from flask_migrate import upgrade
 
 if __name__ == "__main__":
@@ -14,7 +14,9 @@ if __name__ == "__main__":
         os.makedirs("uploads", exist_ok=True)
 
         print("Creating app...")
-        app = create_app("production")
+        from app import create_app
+
+        app = create_app("standalone")
 
         print("Running migrations...")
         with app.app_context():
@@ -24,4 +26,4 @@ if __name__ == "__main__":
         app.run(port=4040, debug=True)
     except Exception as e:
         print(e)
-        exit(1)
+        sys.exit(1)

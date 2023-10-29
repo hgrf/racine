@@ -18,11 +18,11 @@ let pyinstaller_proc = spawn(
 );
 
 pyinstaller_proc.stdout.on("data", function (data) {
-  console.log(data.toString());
+  console.log("[PYINSTALLER] " + data.toString().trim());
 });
 
 pyinstaller_proc.stderr.on("data", function (data) {
-  console.log("Packaging error: " + data.toString());
+  console.log("[PYINSTALLER] " + data.toString().trim());
 });
 
 pyinstaller_proc.on("exit", function (code) {

@@ -55,6 +55,8 @@ RUN cd /tmp/app_static && \
     mkdir -p app/static/images && \
 # for racine.log
     mkdir -p /app/data && \
+# also for racine.log
+    mkdir -p data && \
     make install-js-dependencies && \
     rm -rf /app/data && \
     cp -r /tmp/app_static/app/static /app/app/ && \

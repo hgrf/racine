@@ -26,7 +26,7 @@ desktop-dist:
 	cd desktop && npm run package
 
 desktop-run-dist:
-	cd desktop && ./dist/ElectronFlask-0.1.0.AppImage
+	cd desktop && ./dist/RacineDesktop-0.1.0.AppImage
 
 install-dependencies:
 	python -m pip install ${PIP_OPTIONS} --upgrade pip

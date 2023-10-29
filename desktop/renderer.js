@@ -101,8 +101,8 @@ const killPythonSubprocesses = (main_pid) => {
 const createMainWindow = () => {
   // Create the browser mainWindow
   mainWindow = new BrowserWindow({
-    width: 1024,
-    height: 768,
+    width: 1200,
+    height: 800,
     // transparent: true, // transparent header bar
     icon: __dirname + "/icon.png",
     // fullscreen: true,

@@ -44,6 +44,7 @@ COPY ./Makefile /tmp/app_static/Makefile
 # TODO: is there any way to auto-detect these?
 COPY ./.github/workflows/module.mk /tmp/app_static/.github/workflows/module.mk
 COPY ./app/static/module.mk /tmp/app_static/app/static/module.mk
+COPY ./desktop/module.mk /tmp/app_static/desktop/module.mk
 COPY ./docker/module.mk /tmp/app_static/docker/module.mk
 COPY ./docs/module.mk /tmp/app_static/docs/module.mk
 COPY ./site/module.mk /tmp/app_static/site/module.mk

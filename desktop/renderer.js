@@ -45,7 +45,7 @@ const startPythonSubprocess = () => {
       console.log(`stdout: ${stderr}`);
     });
   } else {
-    console.log("Running in dev mode"); 
+    console.log("Running in dev mode");
     subpy = require("child_process").spawn("flask", ["run", "--port", "4040"], { cwd: path.join(process.cwd(), ".."), env: process.env });
     subpy.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);

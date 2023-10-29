@@ -176,3 +176,6 @@ jobs:
 
       - name: Install developer dependencies
         run: make install-dependencies
+
+      - name: Build windows executable
+        run: make desktop-dist

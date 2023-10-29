@@ -144,6 +144,19 @@ The software can then be started using:
 - https://medium.com/red-buffer/integrating-python-flask-backend-with-electron-nodejs-frontend-8ac621d13f72
 - https://www.npmjs.com/package/generator-electron-flask/v/1.0.8
 
+## Testing GitHub actions
+
+```sh
+wget https://github.com/nektos/act/releases/latest/download/act_Linux_x86_64.tar.gz
+tar xvf act_Linux_x86_64.tar.gz act
+rm act_Linux_x86_64.tar.gz
+./act -j build-appimage
+```
+
+### References
+
+- https://earthly.dev/blog/using-github-actions-locally/
+
 ## Deployment with gunicorn and nginx
 
 Carry out the steps described above in order to [set up the development

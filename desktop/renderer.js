@@ -105,6 +105,14 @@ const createMainWindow = () => {
     resizeable: true,
   });
 
+  mainWindow.webContents.on("did-fail-load", function () {
+    console.log("Failed to load page. Reloading in 500 ms...");
+    let timer = setTimeout(function() {
+      mainWindow.loadURL("http://localhost:4040/");
+    }, 500);
+  });
+
+
   // Load the index page
   mainWindow.loadURL("http://localhost:4040/");
 

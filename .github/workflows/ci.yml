@@ -185,4 +185,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: "RacineDesktop Setup 0.1.0"
-          path: "dist\RacineDesktop Setup 0.1.0.exe"
+          path: "dist/RacineDesktop Setup 0.1.0.exe"

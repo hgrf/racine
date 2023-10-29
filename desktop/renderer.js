@@ -119,9 +119,10 @@ const createMainWindow = () => {
     }, 500);
   });
 
-  mainWindow.webContents.on("did-finish-load", function (event, errorCode, errorDescription, validatedURL) {
-    console.log(`Finished loading page ${validatedURL}.`);
-    if (validatedURL !== "http://localhost:4040/") {
+  mainWindow.webContents.on("did-finish-load", function () {
+    let url = mainWindow.webContents.getURL();
+    console.log(`Finished loading page ${url}.`);
+    if (url.substr(0, 22) !== "http://localhost:4040/") {
       console.log("Reloading in 500 ms..");
       let timer = setTimeout(function() {
         mainWindow.loadURL("http://localhost:4040/");

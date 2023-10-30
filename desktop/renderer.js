@@ -46,9 +46,9 @@ const startPythonSubprocess = () => {
       if (error) {
         throw error;
       }
-      console.log(`stdout: ${stdout}`);
-      console.log(`stdout: ${stderr}`);
     });
+    subpy.stdout.on('data', (data) => { console.log(`stdout: ${data.trim()}`); });
+    subpy.stderr.on('data', (data) => { console.error(`stderr: ${data.trim()}`); });
   } else {
     let env = process.env;
     env.PYTHONPATH = path.join(__dirname, "..");

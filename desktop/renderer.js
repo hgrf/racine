@@ -113,10 +113,8 @@ const createMainWindow = () => {
   });
 
   mainWindow.webContents.on("did-fail-load", function () {
-    console.log("Failed to load page. Reloading in 500 ms...");
-    let timer = setTimeout(function() {
-      mainWindow.loadURL("http://localhost:4040/");
-    }, 500);
+    console.log("Failed to load page...");
+    mainWindow.loadFile(path.join(__dirname, "spinner.html"));
   });
 
   mainWindow.webContents.on("did-finish-load", function () {

@@ -22,6 +22,9 @@ if __name__ == "__main__":
         with app.app_context():
             upgrade(os.path.join(os.path.dirname(__file__), "migrations"))
 
+        # recreate the app to make sure activity types are initialized
+        app = create_app("standalone")
+
         print("Running app...")
         app.run(port=4040)
     except Exception as e:

@@ -129,8 +129,10 @@ const createMainWindow = () => {
 
   mainWindow.loadFile(path.join(__dirname, "spinner.html"));
 
-  // Open the DevTools.
-  //mainWindow.webContents.openDevTools();
+  // Open the DevTools if flask is running in development mode
+  if (process.env.FLASK_ENV === "development") {
+    mainWindow.webContents.openDevTools();
+  }
 
   // Emitted when the mainWindow is closed.
   mainWindow.on("closed", function () {

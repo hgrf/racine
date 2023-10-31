@@ -134,9 +134,13 @@ Tested in Ubuntu 22.04:
 
     make desktop-dist
 
-The software can then be started using:
+The software (in `desktop/dist/`) can then be started using:
 
-    desktop/dist/RacineDesktop-0.1.0.AppImage
+    ./RacineDesktop-0.1.0.AppImage
+
+Debugging both the Flask backend and the Electron frontend can be activated as follows:
+
+    FLASK_ENV=development ./RacineDesktop-0.1.0.AppImage
 
 ### References
 

@@ -65,6 +65,7 @@ class StandaloneConfig(Config):
     SQLALCHEMY_DATABASE_URI = "sqlite:///{}".format(
         os.path.join(os.getcwd(), "database", "data-sa.sqlite")
     )
+    UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
     LOG_EXCEPTIONS = True
 
 

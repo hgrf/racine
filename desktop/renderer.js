@@ -48,7 +48,13 @@ const startPythonSubprocess = () => {
       }
     });
     subpy.stdout.on('data', (data) => { console.log(`stdout: ${data.trim()}`); });
-    subpy.stderr.on('data', (data) => { console.error(`stderr: ${data.trim()}`); });
+    subpy.stderr.on('data', (data) => {
+      console.error(`stderr: ${data.trim()}`);
+      if (data.includes("Running on http")) {
+        console.log("Python subprocess is ready to accept connections.");
+        mainWindow.loadURL("http://localhost:4040/");
+      }
+    });
   } else {
     let env = process.env;
     env.PYTHONPATH = path.join(__dirname, "..");
@@ -114,18 +120,11 @@ const createMainWindow = () => {
 
   mainWindow.webContents.on("did-fail-load", function () {
     console.log("Failed to load page...");
-    mainWindow.loadFile(path.join(__dirname, "spinner.html"));
   });
 
   mainWindow.webContents.on("did-finish-load", function () {
     let url = mainWindow.webContents.getURL();
     console.log(`Finished loading page ${url}.`);
-    if (url.substr(0, 22) !== "http://localhost:4040/") {
-      console.log("Reloading in 500 ms..");
-      let timer = setTimeout(function() {
-        mainWindow.loadURL("http://localhost:4040/");
-      }, 500);
-    }
   });
 
   mainWindow.loadFile(path.join(__dirname, "spinner.html"));

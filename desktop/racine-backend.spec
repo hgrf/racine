@@ -3,7 +3,7 @@
 
 a = Analysis(
     ['run_app.py'],
-    pathex=['/home/holger/racine'],
+    pathex=['.'],
     binaries=[],
     datas=[
         ('../migrations', 'migrations'),

@@ -1,5 +1,6 @@
 import os
 import sys
+import traceback
 
 from celery import fixups  # noqa: F401
 from celery.fixups import django  # noqa: F401
@@ -28,5 +29,5 @@ if __name__ == "__main__":
         print("Running app...")
         app.run(port=4040)
     except Exception as e:
-        print(e)
+        traceback.print_exception(e)
         sys.exit(1)

@@ -15,6 +15,10 @@ if __name__ == "__main__":
         os.makedirs("uploads", exist_ok=True)
 
         print("Creating app...")
+
+        os.environ["RACINE_VERSION"] = "v0.1.0"
+        os.environ["RACINE_API_VERSION"] = "0.1.0"
+
         from app import create_app
 
         app = create_app("standalone")

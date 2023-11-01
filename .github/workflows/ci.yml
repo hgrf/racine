@@ -206,6 +206,7 @@ jobs:
           make install-dependencies
           make install-js-dependencies
           pip install pyinstaller==6.1.0
+        shell: bash
 
       - name: Build executable
         run: make desktop-dist

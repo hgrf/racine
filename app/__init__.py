@@ -19,14 +19,22 @@ def is_hidden_field_filter(field):
 
 
 RACINE_VERSION = (
-    subprocess.run(["/usr/bin/make", "--silent", "version"], capture_output=True)
-    .stdout.decode("utf-8")
-    .strip()
+    os.environ["RACINE_VERSION"]
+    if "RACINE_VERSION" in os.environ
+    else (
+        subprocess.run(["/usr/bin/make", "--silent", "version"], capture_output=True)
+        .stdout.decode("utf-8")
+        .strip()
+    )
 )
 RACINE_API_VERSION = (
-    subprocess.run(["/usr/bin/make", "--silent", "api-version"], capture_output=True)
-    .stdout.decode("utf-8")
-    .strip()
+    os.environ["RACINE_API_VERSION"]
+    if "RACINE_API_VERSION" in os.environ
+    else (
+        subprocess.run(["/usr/bin/make", "--silent", "api-version"], capture_output=True)
+        .stdout.decode("utf-8")
+        .strip()
+    )
 )
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False

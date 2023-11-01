@@ -9,6 +9,10 @@ from apispec.ext.marshmallow import MarshmallowPlugin
 from apispec_webframeworks.flask import FlaskPlugin
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
+os.environ["RACINE_VERSION"] = "v0.1.0"
+os.environ["RACINE_API_VERSION"] = "0.1.0"
+
 from app import create_app, api, RACINE_API_VERSION  # noqa: E402
 
 

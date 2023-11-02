@@ -7,6 +7,7 @@ ENV STATIC_URL /static
 ENV STATIC_PATH /app/app/static
 
 COPY ./Makefile /app/Makefile
+COPY ./version.csv /app/version.csv
 # TODO: is there any way to auto-detect these?
 COPY ./.github/workflows/module.mk /app/.github/workflows/module.mk
 COPY ./app/static/module.mk /app/app/static/module.mk
@@ -41,6 +42,7 @@ COPY ./migrations /app/migrations/
 COPY ./uwsgi.ini /app/
 
 COPY ./Makefile /tmp/app_static/Makefile
+COPY ./version.csv /tmp/app_static/version.csv
 # TODO: is there any way to auto-detect these?
 COPY ./.github/workflows/module.mk /tmp/app_static/.github/workflows/module.mk
 COPY ./app/static/module.mk /tmp/app_static/app/static/module.mk

@@ -18,17 +18,19 @@ def is_hidden_field_filter(field):
     return isinstance(field, HiddenField)
 
 
-RACINE_VERSION = (
-    subprocess.run(["make", "--silent", "version"], capture_output=True)
-    .stdout.decode("utf-8")
-    .strip()
-)
+with open(os.path.join(os.path.dirname(__file__), "..", "version.csv"), "r") as f:
+    RACINE_VERSION = None
+    RACINE_API_VERSION = None
+    for line in f:
+        key, val = line.split(",", 1)
+        if key == "RACINE_VERSION":
+            RACINE_VERSION = val.strip()
+        elif key == "RACINE_API_VERSION":
+            RACINE_API_VERSION = val.strip()
 
-RACINE_API_VERSION = (
-    subprocess.run(["make", "--silent", "api-version"], capture_output=True)
-    .stdout.decode("utf-8")
-    .strip()
-)
+    if RACINE_VERSION is None or RACINE_API_VERSION is None:
+        raise Exception("version.csv is missing RACINE_VERSION or RACINE_API_VERSION")
+
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 plugins = []

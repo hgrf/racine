@@ -304,7 +304,7 @@ https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications
 
 ### Release workflow
 
-* update RACINE_VERSION (and, if applicable RACINE_API_VERSION) in Makefile
+* update RACINE_VERSION (and, if applicable RACINE_API_VERSION) in version.csv
 * update CHANGELOG.md
 * `make install-js-dependencies` to update the version number of the JS library
 * `git checkout -b release` to create a branch for a subsequent PR (this enables to run

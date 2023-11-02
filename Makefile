@@ -29,8 +29,8 @@ api-spec:
 api-client: api-spec
 	rm -rf js/src/api
 	mkdir -p build
-	curl https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/6.2.1/openapi-generator-cli-6.2.1.jar \
-		--output build/openapi-generator-cli.jar
+	wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/6.2.1/openapi-generator-cli-6.2.1.jar \
+		-O build/openapi-generator-cli.jar
 	
 	java -jar build/openapi-generator-cli.jar generate \
 		-i docs/api.yaml -g javascript -p modelPropertyNaming=original -o js/src/api
@@ -49,11 +49,11 @@ install-js-dependencies: install-mathjax api-client
 	mkdir -p app/static/fonts
 
 	# install typeahead.js
-	curl --output js/src/typeahead/typeahead.bundle.js \
+	wget -O js/src/typeahead/typeahead.bundle.js \
 		https://raw.githubusercontent.com/twitter/typeahead.js/v0.11.1/dist/typeahead.bundle.js
-	curl --output js/src/typeahead/bloodhound.js \
+	wget -O js/src/typeahead/bloodhound.js \
 		https://raw.githubusercontent.com/twitter/typeahead.js/v0.11.1/dist/bloodhound.js
-	curl --output app/static/css/typeahead.css \
+	wget -O app/static/css/typeahead.css \
 		https://raw.githubusercontent.com/hyspace/typeahead.js-bootstrap3.less/v0.2.3/typeahead.css
 	# c.f. https://github.com/hgrf/racine/commit/19fc41b1797112d2980b08ad53d1f945d9e36b17
 	#      https://github.com/twitter/typeahead.js/issues/1218
@@ -61,7 +61,7 @@ install-js-dependencies: install-mathjax api-client
 	git apply patches/typeahead.patch
 
 	# install jeditable
-	curl --output js/src/jquery-plugins/jquery.jeditable.js \
+	wget -O js/src/jquery-plugins/jquery.jeditable.js \
 		https://sscdn.net/js/jquery/latest/jeditable/1.7.1/jeditable.js
 	# c.f. https://github.com/hgrf/racine/commit/89d8b57e795ccfbeb73dc18faecc1d0016a8a008#diff-5f8e3a2bd35e7f0079090b176e06d0568d5c8e4468c0febbfa61014d72b16246
 	git apply patches/jquery.jeditable.patch

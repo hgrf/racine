@@ -43,11 +43,7 @@ const startPythonSubprocess = () => {
   // TODO: should make SURE that these processes are killed when the app is closed
   if (isRunningInBundle()) {
     console.log("Running in bundle");
-    subpy = require("child_process").execFile(script, [], (error, stdout, stderr) => {
-      if (error) {
-        throw error;
-      }
-    });
+    subpy = require("child_process").execFile(script, []);
     subpy.stdout.on('data', (data) => { console.log(`stdout: ${data.trim()}`); });
     subpy.stderr.on('data', (data) => {
       console.error(`stderr: ${data.trim()}`);
@@ -55,6 +51,11 @@ const startPythonSubprocess = () => {
         console.log("Python subprocess is ready to accept connections.");
         mainWindow.loadURL("http://localhost:4040/");
       }
+    });
+    subpy.on('close', (code) => {
+      console.log(`child process exited with code ${code}`);
+      if (code !== 0)
+        throw new Error("Child process failed with code " + code.toString() + ".");
     });
   } else {
     let env = process.env;

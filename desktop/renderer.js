@@ -52,11 +52,13 @@ const startPythonSubprocess = () => {
         mainWindow.loadURL("http://localhost:4040/");
       }
     });
-    subpy.on('close', (code) => {
-      console.log(`child process exited with code ${code}`);
-      if (code !== 0)
-        throw new Error("Child process failed with code " + code.toString() + ".");
-    });
+    // TODO: this does not work with the current mechanism of killing the python subprocesses
+    //       => we need a better way to shut down the app
+    // subpy.on('close', (code) => {
+    //   console.log(`child process exited with code ${code}`);
+    //   if (code !== 0)
+    //     throw new Error("Child process failed with code " + code.toString() + ".");
+    // });
   } else {
     let env = process.env;
     env.PYTHONPATH = path.join(__dirname, "..");

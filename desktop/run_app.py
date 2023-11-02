@@ -22,7 +22,12 @@ if __name__ == "__main__":
 
         print("Running migrations...")
         with app.app_context():
-            upgrade(os.path.join(os.path.dirname(__file__), "migrations"))
+            if os.path.exists(os.path.join(os.path.dirname(__file__), "migrations")):
+                # for dist
+                upgrade(os.path.join(os.path.dirname(__file__), "migrations"))
+            else:
+                # for dev
+                upgrade("migrations")
 
         # recreate the app to make sure activity types are initialized
         app = create_app("standalone")

@@ -9,10 +9,9 @@ const { env } = require("process");
 let mainWindow = null;
 let subpy = null;
 
-const PY_DIST_FOLDER = "dist-python"; // python distributable folder
+const PY_DIST_FOLDER = "dist-python/run_app"; // python distributable folder
 const PY_SRC_FOLDER = "../desktop"; // path to the python source
-// temporary hack to get the dist exe to run in the right place
-const PY_MODULE = "run_app/run_app.py"; // the name of the main module
+const PY_MODULE = "run_app.py"; // the name of the main module
 
 const isRunningInBundle = () => {
   return require("fs").existsSync(path.join(__dirname, PY_DIST_FOLDER));

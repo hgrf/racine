@@ -13,7 +13,6 @@ from ...models import Action, Activity, Upload, User, Sample
 @ajaxviews.route("/welcome")
 @login_required
 def welcome():
-    # TODO: should use filesystem_usage() from util.py here
     # get free disk space
     statvfs = os.statvfs(os.getcwd())
     availablevol = statvfs.f_frsize * statvfs.f_bavail

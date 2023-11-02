@@ -180,11 +180,14 @@ jobs:
         run: |
           make install-dependencies
           make install-js-dependencies
+      
+      - name: Archive app/static
+        run: tar -czvf app-static.tar.gz app/static
 
       - uses: actions/upload-artifact@v3
         with:
           name: "app-static"
-          path: "app/static"
+          path: "app-static.tar.gz"
 
   build-appimage:
     needs: build-app-static
@@ -207,6 +210,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: "app-static"
+
+      - name: Unpack app/static
+        run: |
+          ls app-static.tar.gz
+          tar -xzvf app-static.tar.gz
 
       - name: Build AppImage
         run: make desktop-dist
@@ -238,6 +246,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: "app-static"
+
+      - name: Unpack app/static
+        run: |
+          ls app-static.tar.gz
+          tar -xzvf app-static.tar.gz
 
       - name: Build executable
         run: make desktop-dist

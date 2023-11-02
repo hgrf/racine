@@ -1,5 +1,13 @@
-RACINE_VERSION="v0.1.0"
-RACINE_API_VERSION="0.1.0"
+RACINE_VERSION := $(shell							\
+	while IFS=, read key value;						\
+		do export $$key=$$value; 					\
+	done < version.csv && echo $$RACINE_VERSION		\
+)
+RACINE_API_VERSION := $(shell						\
+	while IFS=, read key value;						\
+		do export $$key=$$value;					\
+	done < version.csv && echo $$RACINE_API_VERSION	\
+)
 
 # TODO: for now, if you want to add an include, do not forget to update the Dockerfile
 include .github/workflows/module.mk

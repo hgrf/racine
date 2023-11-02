@@ -6,6 +6,7 @@ a = Analysis(
     pathex=['.'],
     binaries=[],
     datas=[
+        ('../version.csv', '.'),
         ('../migrations', 'migrations'),
         ('../app/templates', 'app/templates'),
         ('../app/static', 'app/static'),

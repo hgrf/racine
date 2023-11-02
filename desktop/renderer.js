@@ -64,12 +64,13 @@ const startPythonSubprocess = () => {
     env.PYTHONPATH = path.join(__dirname, "..");
     console.log(`Running in dev mode with PYTHONPATH=${env.PYTHONPATH}`);
     subpy = require("child_process").spawn("python", [script], { cwd: path.join(process.cwd(), ".."), env: env });
-    subpy.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
-    
+    subpy.stdout.on('data', (data) => { console.log(`stdout: ${data}`); });
     subpy.stderr.on('data', (data) => {
       console.error(`stderr: ${data}`);
+      if (data.includes("Running on http")) {
+        console.log("Python subprocess is ready to accept connections.");
+        mainWindow.loadURL("http://localhost:4040/");
+      }
     });
     
     subpy.on('close', (code) => {

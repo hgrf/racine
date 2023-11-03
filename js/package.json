@@ -7,7 +7,7 @@
   "browser": "index.js",
   "dependencies": {
     "bootstrap": "3.4.1",
-    "jquery": "1.11.3",
+    "jquery": "3.5.0",
     "lightbox2": "2.8.2",
     "superagent": "^5.3.0",
     "tocbot": "^4.21.2"

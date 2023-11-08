@@ -13,7 +13,7 @@ dnspython==2.3.0
 dominate==2.7.0
 email-validator==1.3.1
 Flask==2.3.3
-Flask-HTTPAuth==4.7.0
+Flask-HTTPAuth==4.8.0
 # TODO: use 0.7.0 once it's released
 Flask-Login @ git+https://github.com/maxcountryman/flask-login.git@ea80968c10f3d521ea4983652f183aa42e2f44fc
 Flask-Mail==0.9.1

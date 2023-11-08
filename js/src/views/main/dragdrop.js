@@ -2,15 +2,13 @@ import $ from 'jquery';
 
 import {updateGlyphicon} from './glyphicons';
 
-$.event.props.push('dataTransfer'); // otherwise jQuery event does not have function dataTransfer
-
 function draggableHandlers(activeEntry) {
   return {
     dragstart: function(event) {
       const id = $(event.target).data('id');
       const name = $(event.target).data('name');
-      event.dataTransfer.setData('sampleid', id);
-      event.dataTransfer.setData('text/html', `<a href="/sample/${id}">${name}</a>`);
+      event.originalEvent.dataTransfer.setData('sampleid', id);
+      event.originalEvent.dataTransfer.setData('text/html', `<a href="/sample/${id}">${name}</a>`);
     },
     drop: function(event) {
     // reset background color (but highlight if sample is active)
@@ -37,7 +35,7 @@ function dropZoneHandlers(activeEntry) {
       activeEntry.css('background-color', '#BBBBFF');
     },
     drop: function(event) {
-      const draggedId = parseInt(event.dataTransfer.getData('sampleid'));
+      const draggedId = parseInt(event.originalEvent.dataTransfer.getData('sampleid'));
       const parentId = parseInt($(this).data('id'));
       event.preventDefault();
       event.stopPropagation();

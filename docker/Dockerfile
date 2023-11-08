@@ -3,6 +3,9 @@
 # see also: https://medium.com/swlh/alpine-slim-stretch-buster-jessie-bullseye-bookworm-what-are-the-differences-in-docker-62171ed4531d
 FROM tiangolo/uwsgi-nginx-flask:python3.10 AS racine-base
 
+LABEL maintainer="Holger Graef"
+LABEL org.opencontainers.image.authors="Holger Graef"
+
 ENV STATIC_URL /static
 ENV STATIC_PATH /app/app/static
 

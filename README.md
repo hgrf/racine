@@ -4,7 +4,7 @@
 
 | Name                                                                               |    Stmts |     Miss |   Cover |   Missing |
 |----------------------------------------------------------------------------------- | -------: | -------: | ------: | --------: |
-| app/\_\_init\_\_.py                                                                |       93 |        8 |     91% |17, 31, 55-56, 133-137 |
+| app/\_\_init\_\_.py                                                                |       86 |        4 |     95% |17, 31, 54-55 |
 | app/api/\_\_init\_\_.py                                                            |        3 |        0 |    100% |           |
 | app/api/actions.py                                                                 |       98 |       54 |     45% |74-95, 116-123, 147-153, 176-207, 230-253 |
 | app/api/common.py                                                                  |        8 |        0 |    100% |           |
@@ -25,10 +25,10 @@
 | app/main/ajaxviews/sample.py                                                       |       27 |       18 |     33% |     13-35 |
 | app/main/ajaxviews/search.py                                                       |       13 |        7 |     46% |     10-31 |
 | app/main/ajaxviews/tree.py                                                         |       14 |        7 |     50% |     11-19 |
-| app/main/ajaxviews/welcome.py                                                      |       51 |       40 |     22% |    17-102 |
+| app/main/ajaxviews/welcome.py                                                      |       44 |       33 |     25% |     17-93 |
 | app/main/errors.py                                                                 |       19 |        6 |     68% |9, 19, 24-28 |
 | app/main/forms.py                                                                  |       34 |        8 |     76% |13, 16-20, 46-48 |
-| app/main/views.py                                                                  |       71 |       38 |     46% |13, 26, 32-35, 41-45, 51-52, 59-110, 116-125, 135 |
+| app/main/views.py                                                                  |       64 |       37 |     42% |13, 26, 32-35, 41-45, 51-52, 59-110, 116-125 |
 | app/models/\_\_init\_\_.py                                                         |       13 |        0 |    100% |           |
 | app/models/action.py                                                               |       18 |        3 |     83% |20, 24, 27 |
 | app/models/activity.py                                                             |       30 |        4 |     87% |16, 32, 39, 49 |
@@ -77,7 +77,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2301** | **1150** | **50%** |           |
+|                                                                          **TOTAL** | **2280** | **1138** | **50%** |           |
 
 
 ## Setup coverage badge

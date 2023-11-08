@@ -6,7 +6,7 @@ from flask_login import current_user, login_required
 from sqlalchemy.sql import func
 
 from . import ajaxviews
-from ... import db, plugins, smbinterface
+from ... import db, smbinterface
 from ...models import Action, Activity, Upload, User, Sample
 
 
@@ -74,15 +74,6 @@ def welcome():
     # NB: this might reduce the recent_samples list to less than five elements
     recent_samples = [s for s in recent_samples if s.is_accessible_for(current_user)]
 
-    # execute plugin display functions
-    plugin_display = []
-    for p in plugins:
-        try:
-            display = p.display()
-        except Exception:
-            display = "Error in plugin"
-        plugin_display.append([p.title, display])
-
     # assemble news
     news = [link.news for link in current_user.news_links]
     news = sorted(news, key=lambda n: n.id, reverse=True)
@@ -107,7 +98,6 @@ def welcome():
         maxcountallusers=maxcountallusers,
         uploadvols=uploadvols,
         maxuploadvol=maxuploadvol,
-        plugin_display=plugin_display,
         totuploadvol=totuploadvol,
         availablevol=availablevol,
         dbsize=dbsize,

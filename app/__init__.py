@@ -32,7 +32,6 @@ with open(os.path.join(os.path.dirname(__file__), "..", "version.csv"), "r") as 
 
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-plugins = []
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -126,14 +125,5 @@ def create_app(config_name=os.getenv("FLASK_CONFIG") or "default"):
             # in case the table is not created yet, do nothing (this happens
             # when we do 'flask db upgrade')
             pass
-
-    # look for plugins
-    plugin_files = glob("plugins/*/*.py")
-    for f in plugin_files:
-        p = imp.load_source(f[8:-3], f)
-        if not hasattr(p, "display") or not hasattr(p, "title"):
-            # TODO: report this some other way, e.g. raise Exception or log warning...
-            print("Incompatible plugin: ", f[8:-3])
-        plugins.append(p)
 
     return app

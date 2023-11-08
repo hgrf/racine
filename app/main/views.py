@@ -123,13 +123,3 @@ def login_as():
     login_user(user)
 
     return redirect("/")
-
-
-@main.route("/plugins/<path:path>")
-@login_required
-def static_file(path):
-    path = safe_join("../plugins/", path)
-    if path is None:
-        abort(404)
-    else:
-        return send_file(path)

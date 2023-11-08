@@ -1,6 +1,5 @@
 import imp
 import os
-import subprocess
 
 from celery import Celery, Task
 from flask import Flask
@@ -47,7 +46,7 @@ from .smbinterface import SMBInterface  # noqa: E402
 smbinterface = SMBInterface()
 
 # has to be here, because it will import db from this file
-from .usagestats import periodic_task  # noqa: F401, E261
+from .usagestats import periodic_task  # noqa: F401, E402, E261
 
 
 def celery_init_app(app: Flask) -> Celery:

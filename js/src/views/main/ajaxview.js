@@ -8,6 +8,8 @@ class AjaxView {
   load(state, pushState, reload) {
     const self = this;
 
+    $('#editor-frame').html('<div class="loader"></div>');
+
     $.ajax({
       url: state.url,
       success: function(data) {

@@ -36,19 +36,19 @@ module:
   mounts:
     - source:           dist
       target:           static/docs/5.2/dist
-    - source:           site/assets
+    - source:           assets
       target:           assets
-    - source:           site/content
+    - source:           content
       target:           content
-    - source:           site/data
+    - source:           data
       target:           data
-    - source:           site/layouts
+    - source:           layouts
       target:           layouts
-    - source:           site/static
+    - source:           static
       target:           static
-    - source:           site/static/docs/5.2/assets/img/favicons/apple-touch-icon.png
+    - source:           static/docs/5.2/assets/img/favicons/apple-touch-icon.png
       target:           static/apple-touch-icon.png
-    - source:           site/static/docs/5.2/assets/img/favicons/favicon.ico
+    - source:           static/docs/5.2/assets/img/favicons/favicon.ico
       target:           static/favicon.ico
 
 params:

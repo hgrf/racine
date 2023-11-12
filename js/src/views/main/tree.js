@@ -1,5 +1,6 @@
 import $ from 'jquery';
 
+import R from '../../racine';
 import {draggableHandlers, dropZoneHandlers} from './dragdrop';
 import {addGlyphicon} from './glyphicons';
 

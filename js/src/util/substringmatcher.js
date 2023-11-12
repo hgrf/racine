@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 const substringMatcher = function(strs) {
   return function findMatches(q, cb) {
     // an array that will be populated with substring matches

@@ -1,5 +1,7 @@
 import jQuery from 'jquery';
 
+import R from '../racine';
+
 (function($) {
   $.fn.lightbox = function() {
     const elements = $(this); // eslint-disable-line no-invalid-this

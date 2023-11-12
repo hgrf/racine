@@ -1,5 +1,6 @@
 import $ from 'jquery';
 
+import R from '../racine';
 import FormDialog from './formdialog';
 
 import {createSelectSample} from '../util/searchsample';

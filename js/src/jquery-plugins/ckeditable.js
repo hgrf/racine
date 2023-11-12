@@ -1,4 +1,6 @@
 import jQuery from 'jquery';
+
+import R from '../racine';
 import ckeditorconfig from '../util/ckeditorconfig';
 
 const serverErrorMsg = 'Could not connect to the server. ' +

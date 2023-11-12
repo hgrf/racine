@@ -23,7 +23,10 @@ module.exports = {
   'ignorePatterns': [
     'src/api/**',
     'src/jquery-plugins/jquery.jeditable.js',
-    'src/typeahead/bloodhound.js',
-    'src/typeahead/typeahead.bundle.js',
+    'src/typeahead/**',
   ],
+  'globals': {
+    'CKEDITOR': 'readonly',
+    'MathJax': 'readonly',
+  },
 };

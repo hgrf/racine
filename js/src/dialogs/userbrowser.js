@@ -1,4 +1,6 @@
 import $ from 'jquery';
+
+import R from '../racine';
 import Dialog from './dialog';
 import substringMatcher from '../util/substringmatcher';
 

@@ -1,5 +1,6 @@
 import $ from 'jquery';
 
+import R from '../../racine';
 import {updateGlyphicon} from './glyphicons';
 
 function draggableHandlers(activeEntry) {

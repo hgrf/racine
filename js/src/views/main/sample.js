@@ -1,5 +1,7 @@
 import $ from 'jquery';
 
+import R from '../../racine';
+
 import AjaxView from './ajaxview';
 
 import MarkAsNewsDialog from '../../dialogs/markasnews';

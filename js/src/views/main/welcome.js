@@ -1,3 +1,4 @@
+import R from '../../racine';
 import AjaxView from './ajaxview';
 
 class WelcomeView extends AjaxView {

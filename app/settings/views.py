@@ -164,7 +164,7 @@ def handle_img_tags(text, itemid, refdlist):
 @settings.route("/uploads", methods=["GET"])
 @login_required
 @admin_required
-def uploads():
+def uploads():  # noqa: C901 (ignore complexity, this function is not used in production)
     # ----- Find duplicates and empty files
     # could probably do this much better with an elegant DB query
     uploads = Upload.query.all()

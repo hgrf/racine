@@ -1,7 +1,6 @@
-from flask import abort, jsonify, redirect, render_template, request, send_file
+from flask import jsonify, redirect, render_template, request
 from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy import not_
-from werkzeug.security import safe_join
 
 from . import main
 from .forms import NewSampleForm, MarkAsNewsForm

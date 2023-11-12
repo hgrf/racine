@@ -192,6 +192,16 @@ def togglecollaborative(sample):
     return jsonify(iscollaborative=sample.iscollaborative), 200
 
 
+def recursive_news_dispatch(sample):
+    affected_samples = [sample]
+    while affected_samples:
+        s = affected_samples.pop()
+        affected_samples.extend(s.children)
+        news = News.query.filter_by(sample_id=s.id).all()
+        for n in news:
+            n.dispatch()
+
+
 @api.route("/sample/<int:sampleid>/changeparent/<int:parentid>", methods=["POST"])
 @token_auth.login_required
 @validate_sample_access
@@ -244,13 +254,7 @@ def changeparent(sample, parentid):
             db.session.commit()
 
             # re-dispatch news for this sample and for all children
-            affected_samples = [sample]
-            while affected_samples:
-                s = affected_samples.pop()
-                affected_samples.extend(s.children)
-                news = News.query.filter_by(sample_id=s.id).all()
-                for n in news:
-                    n.dispatch()
+            recursive_news_dispatch(sample)
         except Exception as e:
             return bad_request(str(e))
     return "", 200

@@ -136,6 +136,36 @@ def getfield(target, field, id):
     return jsonify(value=getattr(item, field)), 200
 
 
+def assign(target_name, target, field, item, value):
+    # check if a modifier is to be applied
+    modifier = target["fields"][field]
+    if modifier is None:
+        setvalue = value
+    # check if the modifier is a function
+    elif inspect.isfunction(modifier):
+        argno = len(inspect.getargspec(modifier).args)
+        if argno == 1:
+            setvalue = modifier(value)
+        elif argno == 2:
+            setvalue = modifier(value, item)
+        elif argno == 3:
+            setvalue = modifier(value, item, field)
+        else:
+            raise Exception("Invalid modifier")
+    # otherwise it is probably simply type casting
+    else:
+        setvalue = modifier(value)
+    if getattr(item, field) != setvalue:
+        setattr(item, field, setvalue)
+        if target_name == "sample":
+            sample = item
+        elif target_name == "action":
+            sample = item.sample
+        else:
+            sample = None
+        record_activity("update:" + target_name + ":" + field, current_user(), sample)
+
+
 @api.route("/set/<target>/<field>/<int:id>", methods=["POST"])
 @token_auth.login_required
 def updatefield(target, field, id):
@@ -185,34 +215,7 @@ def updatefield(target, field, id):
 
     # try to assign value
     try:
-        # check if a modifier is to be applied
-        modifier = target["fields"][field]
-        if modifier is None:
-            setvalue = value
-        # check if the modifier is a function
-        elif type(modifier) == type(lambda x: x):
-            argno = len(inspect.getargspec(modifier).args)
-            if argno == 1:
-                setvalue = modifier(value)
-            elif argno == 2:
-                setvalue = modifier(value, item)
-            elif argno == 3:
-                setvalue = modifier(value, item, field)
-            else:
-                raise Exception("Invalid modifier")
-        # otherwise it is probably simply type casting
-        else:
-            setvalue = modifier(value)
-        if getattr(item, field) != setvalue:
-            setattr(item, field, setvalue)
-            if target_name == "sample":
-                sample = item
-            elif target_name == "action":
-                sample = item.sample
-            else:
-                sample = None
-            record_activity("update:" + target_name + ":" + field, current_user(), sample)
-
+        assign(target_name, target, field, item, value)
     except Exception as e:
         return jsonify(value=str(getattr(item, field)), message="Error: " + str(e)), 400
 

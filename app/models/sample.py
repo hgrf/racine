@@ -56,4 +56,4 @@ class Sample(db.Model):
         return is_accessible(self, user)
 
 
-from .tree import is_accessible
+from .tree import is_accessible  # noqa: E402 (tree imports Sample)

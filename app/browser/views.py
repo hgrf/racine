@@ -125,6 +125,32 @@ def store_file(file_obj, source, ext, type):
     return upload, uploadurl
 
 
+def store_svg(file_obj, source, ext):
+    # see also:
+    # https://stackoverflow.com/questions/24316032/can-pil-be-used-to-get-dimensions-of-an-svg-file
+    # https://graphicdesign.stackexchange.com/questions/71568/is-there-any-concept-of-size-in-an-svg
+    # http://osgeo-org.1560.x6.nabble.com/Get-size-of-SVG-in-Python-td5273032.html
+    def_dims = (800, 600)
+    try:
+        tree = ElementTree.parse(file_obj)
+        attrib = tree.getroot().attrib
+        if "height" in attrib and "width" in attrib:
+            width = attrib["width"]
+            height = attrib["height"]
+            # remove unit (mm...) from these values
+
+            width, height = strip_unit(width), strip_unit(height)
+            height = int(height / width * 800)
+            width = 800
+        else:
+            width, height = def_dims
+    except Exception:
+        width, height = def_dims
+    file_obj.seek(0)  # return to beginning of file after parsing
+
+    return store_file(file_obj, source, ext, "img") + ((width, height),)
+
+
 def make_preview(upload, image):
     path = os.path.join(app.config["UPLOAD_FOLDER"], str(upload.id) + ".preview.jpg")
     if os.path.exists(path):
@@ -194,30 +220,8 @@ def store_image(file_obj, source, ext):
         )
 
     # hack for SVG files (since we cannot open them with PIL)
-    # see also:
-    # https://stackoverflow.com/questions/24316032/can-pil-be-used-to-get-dimensions-of-an-svg-file
-    # https://graphicdesign.stackexchange.com/questions/71568/is-there-any-concept-of-size-in-an-svg
-    # http://osgeo-org.1560.x6.nabble.com/Get-size-of-SVG-in-Python-td5273032.html
     if ext == ".svg":
-        def_dims = (800, 600)
-        try:
-            tree = ElementTree.parse(file_obj)
-            attrib = tree.getroot().attrib
-            if "height" in attrib and "width" in attrib:
-                width = attrib["width"]
-                height = attrib["height"]
-                # remove unit (mm...) from these values
-
-                width, height = strip_unit(width), strip_unit(height)
-                height = int(height / width * 800)
-                width = 800
-            else:
-                width, height = def_dims
-        except Exception:
-            width, height = def_dims
-        file_obj.seek(0)  # return to beginning of file after parsing
-
-        return store_file(file_obj, source, ext, "img") + ((width, height),)
+        return store_svg(file_obj, source, ext)
 
     # check if image can be opened and if needs to be converted
     try:
@@ -267,6 +271,28 @@ def store_attachment(file_obj, source, ext):
 ####################################################################################################
 
 
+def retrieve_image_error(message):
+    if request.method == "GET":
+        return render_template("errors/404.html"), 404
+    else:
+        return jsonify(code=1, message=message)
+
+
+def angle_from_request():
+    if request.args.get("rot") is None:
+        return 0
+
+    try:
+        rot = int(request.args.get("rot"))
+    except Exception:
+        return None
+
+    if rot not in [0, 90, 180, 270]:
+        return None
+
+    return rot
+
+
 @browser.route("/ulimg/<upload_id>", methods=["GET", "POST"])
 @login_required
 def retrieve_image(upload_id):
@@ -284,21 +310,9 @@ def retrieve_image(upload_id):
     # TODO: check that user has right to view the image (this might be tricky because the sample
     #       might be a shared one)
 
-    def retrieve_image_error(message):
-        if request.method == "GET":
-            return render_template("errors/404.html"), 404
-        else:
-            return jsonify(code=1, message=message)
-
     # determine rotation angle and fullsize from query parameters
-    if request.args.get("rot") is None:
-        rot = 0
-    else:
-        try:
-            rot = int(request.args.get("rot"))
-        except Exception:
-            return retrieve_image_error("Could not parse angle")
-    if rot not in [0, 90, 180, 270]:
+    rot = angle_from_request()
+    if rot is None:
         return retrieve_image_error("Invalid rotation angle")
     fullsize = "fullsize" in request.args
 
@@ -314,26 +328,19 @@ def retrieve_image(upload_id):
     # rotate if requested
     if rot:
         rot_file = make_rotated(dbentry, rot, fullsize)
-        if rot_file:
-            return send_from_directory(app.config["UPLOAD_FOLDER"], rot_file)
-        else:
+        if not rot_file:
             return retrieve_image_error("Failed to rotate image.")
+        return send_from_directory(app.config["UPLOAD_FOLDER"], rot_file)
 
     # otherwise return original image
     if fullsize:
         return send_from_directory(app.config["UPLOAD_FOLDER"], str(dbentry.id) + "." + dbentry.ext)
-    else:
-        # check if preview exists, otherwise send full size
-        if os.path.exists(
-            os.path.join(app.config["UPLOAD_FOLDER"], str(dbentry.id) + ".preview.jpg")
-        ):
-            return send_from_directory(
-                app.config["UPLOAD_FOLDER"], str(dbentry.id) + ".preview.jpg"
-            )
-        else:
-            return send_from_directory(
-                app.config["UPLOAD_FOLDER"], str(dbentry.id) + "." + dbentry.ext
-            )
+
+    # check if preview exists, otherwise send full size
+    if os.path.exists(os.path.join(app.config["UPLOAD_FOLDER"], str(dbentry.id) + ".preview.jpg")):
+        return send_from_directory(app.config["UPLOAD_FOLDER"], str(dbentry.id) + ".preview.jpg")
+
+    return send_from_directory(app.config["UPLOAD_FOLDER"], str(dbentry.id) + "." + dbentry.ext)
 
 
 @browser.route("/ulatt/<upload_id>")

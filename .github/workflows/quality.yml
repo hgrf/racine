@@ -13,10 +13,6 @@ jobs:
     name: Run tests & display coverage
     runs-on: ubuntu-latest
     steps:
-      - run: echo "event name is:" ${{ github.event_name }} 
-      - run: echo "event type is:" ${{ github.event.action }} 
-      - run: echo "event ref is:" ${{ github.ref }}
-    
       - uses: actions/checkout@v2
 
       - name: Set up Python 3.10

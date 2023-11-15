@@ -60,8 +60,8 @@ def periodic_task():
     }
 
     # publish data to redis
-    r = redis.Redis(host='racine-redis', port=6379, decode_responses=True)
-    r.set('usage-stats', json.dumps(data, indent=4))
+    r = redis.Redis(host="racine-redis", port=6379, decode_responses=True)
+    r.set("usage-stats", json.dumps(data, indent=4))
 
     # get usage statistics script url from GitHub
     try:

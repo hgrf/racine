@@ -129,8 +129,8 @@ def stats():
     except Exception:
         pass
 
-    r = redis.Redis(host='racine-redis', port=6379, decode_responses=True)
-    stats = r.get('usage-stats')
+    r = redis.Redis(host="racine-redis", port=6379, decode_responses=True)
+    stats = r.get("usage-stats")
     if stats is None:
         stats = "No usage statistics transmitted yet."
     return render_template("settings/stats.html", form=form, stats=stats)

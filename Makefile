@@ -121,4 +121,4 @@ flake8-check:
 	FLAKE_EXTRA_ARGS= make flake8
 
 eslint:
-	cd js && npx eslint .
+	cd js && npx eslint --max-warnings 0 .

@@ -75,6 +75,23 @@ jobs:
       - name: Check coding style
         run: make black-check
 
+  eslint:
+    name: JS linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+
+      - name: Setup JS environment
+        run: cd js && npm install
+
+      - name: Lint with eslint
+        run: make eslint
+
   flake8-badge:
     if: github.event_name == 'push'
     name: Update flake8 badge
@@ -137,4 +154,3 @@ jobs:
           label: eslint
           message: ${{ env.ESLINT_BADGE_MESSAGE }}
           color: ${{ env.ESLINT_BADGE_COLOR }}
-

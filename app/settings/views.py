@@ -1,4 +1,5 @@
 import os
+import redis
 
 from flask import current_app as app, flash, render_template, redirect, request, url_for
 from flask_login import current_user, login_required
@@ -128,7 +129,11 @@ def stats():
     except Exception:
         pass
 
-    return render_template("settings/stats.html", form=form)
+    r = redis.Redis(host="racine-redis", port=6379, decode_responses=True)
+    stats = r.get("usage-stats")
+    if stats is None:
+        stats = "No usage statistics transmitted yet."
+    return render_template("settings/stats.html", form=form, stats=stats)
 
 
 # ----- two helper functions for the settings/uploads page

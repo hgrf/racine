@@ -10,7 +10,9 @@
             {{ me.menu_entry("uploads", "Uploads", active) }}
         {% endif %}
         {{ me.menu_entry("email", "Email", active) }}
+        {% if not config['STANDALONE'] %}
         {{ me.menu_entry("stats", "Usage stats", active) }}
+        {% endif %}
         {{ me.menu_entry("log", "Log", active) }}
     </ul>
 </div>

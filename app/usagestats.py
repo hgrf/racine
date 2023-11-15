@@ -1,5 +1,7 @@
+import json
 import os
 import time
+import redis
 import requests
 import uuid
 import psutil
@@ -56,6 +58,10 @@ def periodic_task():
         "availablevol": availablevol,
         "ramused": ram_used,
     }
+
+    # publish data to redis
+    r = redis.Redis(host="racine-redis", port=6379, decode_responses=True)
+    r.set("usage-stats", json.dumps(data, indent=4))
 
     # get usage statistics script url from GitHub
     try:

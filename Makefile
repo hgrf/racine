@@ -100,6 +100,7 @@ black:
 black-check:
 	black . --check
 
+FLAKE_EXTRA_ARGS ?=	--exit-zero
 flake8:
 	# stop the build if there are Python syntax errors or undefined names
 	flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
@@ -112,9 +113,12 @@ flake8:
 
 	# run flake8 and generate report
 	flake8 . \
-		--exit-zero \
 		--format=html --htmldir ./reports/flake8/ \
-		--tee --output-file ./reports/flake8/flake8stats.txt
+		--tee --output-file ./reports/flake8/flake8stats.txt \
+		${FLAKE_EXTRA_ARGS}
+
+flake8-check:
+	FLAKE_EXTRA_ARGS= make flake8
 
 eslint:
-	cd js && npx eslint .
+	cd js && npx eslint --max-warnings 0 .

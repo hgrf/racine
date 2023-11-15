@@ -1,0 +1,156 @@
+name: Quality
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  flake8:
+    name: Python linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+
+      - name: Install developer dependencies
+        run: make install-dependencies
+
+      - name: Lint with flake8
+        run: make flake8-check
+
+  pytest:
+    name: Python tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+
+      - name: Install developer dependencies
+        run: make install-dependencies
+
+      - name: Run tests and produce .coverage file
+        run: make test
+
+      - name: Coverage comment
+        id: coverage_comment
+        uses: py-cov-action/python-coverage-comment-action@v3
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Store Pull Request comment to be posted
+        uses: actions/upload-artifact@v3
+        if: steps.coverage_comment.outputs.COMMENT_FILE_WRITTEN == 'true'
+        with:
+          # If you use a different name, update COMMENT_ARTIFACT_NAME accordingly
+          name: python-coverage-comment-action
+          # If you use a different name, update COMMENT_FILENAME accordingly
+          path: python-coverage-comment-action.txt
+
+  black:
+    name: Python code formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+
+      - name: Install developer dependencies
+        run: make install-dependencies
+
+      - name: Check coding style
+        run: make black-check
+
+  eslint:
+    name: JS linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+
+      - name: Setup JS environment
+        run: cd js && npm install
+
+      - name: Lint with eslint
+        run: make eslint
+
+  flake8-badge:
+    if: github.event_name == 'push'
+    name: Update flake8 badge
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+
+      - name: Install developer dependencies
+        run: make install-dependencies
+
+      - name: Lint with flake8
+        run: make flake8
+
+      - name: Determine badge message and color
+        run: make flake8-badge | tail -1 | (IFS="@" read MESSAGE COLOR;
+            echo "FLAKE8_BADGE_MESSAGE=$MESSAGE" >> $GITHUB_ENV;
+            echo "FLAKE8_BADGE_COLOR=$COLOR" >> $GITHUB_ENV)
+
+      - name: Set up JSON file for badge
+        uses: schneegans/dynamic-badges-action@v1.6.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 1cfaee423c85504cd204cf4649e2cf29
+          filename: flake8-badge.json
+          label: flake8
+          message: ${{ env.FLAKE8_BADGE_MESSAGE }}
+          color: ${{ env.FLAKE8_BADGE_COLOR }}
+
+  eslint-badge:
+    if: github.event_name == 'push'
+    name: Update eslint badge
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+
+      - name: Setup JS environment
+        run: cd js && npm install
+
+      - name: Determine badge message and color
+        run: make eslint-badge | tail -1 | (IFS="@" read MESSAGE COLOR;
+            echo "ESLINT_BADGE_MESSAGE=$MESSAGE" >> $GITHUB_ENV;
+            echo "ESLINT_BADGE_COLOR=$COLOR" >> $GITHUB_ENV)
+
+      - name: Set up JSON file for badge
+        uses: schneegans/dynamic-badges-action@v1.6.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 1cfaee423c85504cd204cf4649e2cf29
+          filename: eslint-badge.json
+          label: eslint
+          message: ${{ env.ESLINT_BADGE_MESSAGE }}
+          color: ${{ env.ESLINT_BADGE_COLOR }}

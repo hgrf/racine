@@ -7,7 +7,7 @@ flake8-badge:
 		\r\n" | python
 
 eslint-badge:
-	OUTPUT=`cd js && npx eslint --max-warnings 0 .`; \
+	OUTPUT=`make eslint`; \
 		if [ "$$?" -eq 0 ]; then \
 			echo "pass@green"; \
 		else \

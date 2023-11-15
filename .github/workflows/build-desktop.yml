@@ -1,0 +1,105 @@
+name: Desktop build
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build-app-static:
+    name: Build app-static
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+
+      - name: Install developer dependencies
+        run: |
+          make install-dependencies
+          make install-js-dependencies
+      
+      - name: Archive app/static
+        run: tar -czvf app-static.tar.gz app/static
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: "app-static"
+          path: "app-static.tar.gz"
+
+  build-appimage:
+    needs: build-app-static
+    name: Build AppImage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+    
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+
+      - name: Install developer dependencies
+        run: |
+          make install-dependencies
+          pip install pyinstaller==6.1.0
+
+      - name: Download app-static
+        uses: actions/download-artifact@v3
+        with:
+          name: "app-static"
+
+      - name: Unpack app/static
+        run: |
+          ls app-static.tar.gz
+          tar -xzvf app-static.tar.gz
+
+      - name: Build AppImage
+        run: make desktop-dist
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: "RacineDesktop AppImage 0.1.0"
+          path: "desktop/dist/RacineDesktop-0.1.0.AppImage"
+
+  build-windows:
+    needs: build-app-static
+    name: Build Windows executable
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+    
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+
+      - name: Install developer dependencies
+        run: |
+          make install-dependencies
+          pip install pyinstaller==6.1.0
+        shell: bash
+
+      - name: Download app-static
+        uses: actions/download-artifact@v3
+        with:
+          name: "app-static"
+
+      - name: Unpack app/static
+        run: |
+          ls app-static.tar.gz
+          tar -xzvf app-static.tar.gz
+
+      - name: Build executable
+        run: make desktop-dist
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: "RacineDesktop Setup 0.1.0"
+          path: "desktop/dist/RacineDesktop Setup 0.1.0.exe"

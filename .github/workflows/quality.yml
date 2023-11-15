@@ -24,7 +24,7 @@ jobs:
         run: make install-dependencies
 
       - name: Lint with flake8
-        run: make flake8
+        run: make flake8-check
 
   pytest:
     name: Python tests

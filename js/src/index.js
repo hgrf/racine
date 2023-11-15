@@ -1,4 +1,4 @@
-import './util/jquery-global.js'; 
+import './util/jquery-global.js';
 import 'bootstrap';
 import './typeahead';
 

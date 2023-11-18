@@ -21,6 +21,7 @@ COPY ./requirements-dev.txt /app/requirements-dev.txt
 RUN apt update && \
     apt install -y default-jre && \
     apt install -y npm && \
+    apt install -y watchman && \
     npm install -g n && \
     n stable && \
     make install-dependencies PIP_OPTIONS=--no-cache-dir
@@ -39,7 +40,7 @@ ENV FLASK_CONFIG production
 
 COPY ./app /app/app/
 COPY ./migrations /app/migrations/
-COPY ./uwsgi.ini /app/
+COPY ./docker/uwsgi.ini /app/
 
 COPY ./Makefile /tmp/app_static/Makefile
 COPY ./version.csv /tmp/app_static/version.csv

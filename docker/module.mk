@@ -10,9 +10,13 @@ build-dev: down
 test-dev:
 	docker compose -f docker/docker-compose-dev.yml exec web-dev python -m pytest
 
+watchman-rule:
+	watchman watch ./app
+	cat docker/watchman.json | watchman -j
+	tail -F /dev/null
+
 run-dev:
-	docker compose -f docker/docker-compose-dev.yml up & \
-		watchman-make -p 'app/**/*.py' -s 1 --run 'touch uwsgi-reload'
+	docker compose -f docker/docker-compose-dev.yml up
 
 shell-dev:
 	docker compose -f docker/docker-compose-dev.yml exec web-dev bash

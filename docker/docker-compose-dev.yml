@@ -15,7 +15,15 @@ services:
     ports:
       - "5000:80"
     volumes:
-      - ..:/app
+      - ../app:/app/app
+      - ../data:/app/data
+      - ../database:/app/database
+      - ../uploads:/app/uploads
+      - ../js:/app/js
+      - ../migrations:/app/migrations
+      - ../patches:/app/patches
+      - ../docker:/app/docker
+      - ./uwsgi.ini:/app/uwsgi.ini
   redis:
     container_name: racine-redis
     image: redis:7.0.11
@@ -45,3 +53,10 @@ services:
     volumes:
       - ./smb-data:/data
       - ./smb-files:/samba
+  watchman:
+    container_name: racine-watchman
+    image: racine-dev
+    command: make watchman-rule
+    volumes:
+      - ../app:/app/app
+      - ../docker:/app/docker

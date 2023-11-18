@@ -1,0 +1,8 @@
+[
+    "trigger", "./app",
+    {
+        "name": "assets",
+        "expression": ["pcre", "\\.py"],
+        "command": ["touch", "../docker/uwsgi-reload"]
+    }
+]

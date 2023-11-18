@@ -1,0 +1,2 @@
+# ignore file that is used to trigger UWSGI reload
+uwsgi-reload

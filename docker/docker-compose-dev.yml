@@ -34,7 +34,7 @@ services:
     image: racine-dev
     volumes:
       - ..:/app
-    command: celery -A app.make_celery worker --loglevel=INFO
+    command: celery -A app.make_celery worker -s /app/data/celerybeat-schedule --loglevel=INFO
   celery-beat-dev:
     depends_on:
       - redis
@@ -42,7 +42,7 @@ services:
     image: racine-dev
     volumes:
       - ..:/app
-    command: celery -A app.make_celery beat --loglevel=INFO
+    command: celery -A app.make_celery beat -s /app/data/celerybeat-schedule --loglevel=INFO
   smb-dev:
     container_name: racine-smb-dev
     image: ghcr.io/crazy-max/samba:4.16.8

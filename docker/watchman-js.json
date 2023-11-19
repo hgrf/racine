@@ -1,0 +1,7 @@
+[
+    "trigger", "./js/src",
+    {
+        "name": "js",        
+        "command": ["bash", "-c", "cd .. && npx rollup -c"]
+    }
+]

@@ -59,4 +59,5 @@ services:
     command: make watchman-rule
     volumes:
       - ../app:/app/app
+      - ../js:/app/js
       - ../docker:/app/docker

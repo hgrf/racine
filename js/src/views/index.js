@@ -1,8 +1,11 @@
 import LoginView from './login';
 
+/* settings pages */
+import EmailView from './email';
 import SMBResourcesView from './smbresources';
 import UsersView from './users';
 
+/* normal user pages */
 import HelpView from './help';
 import LeaveView from './leave';
 import PrintView from './print';
@@ -14,6 +17,7 @@ const views = {
 
   main: MainView,
 
+  email: EmailView,
   smbresources: SMBResourcesView,
   users: UsersView,
 

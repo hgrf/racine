@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  dev-cont:
+    container_name: racine-dev-cont
+    image: racine-builder
+    build:
+      dockerfile: ../.devcontainer/Dockerfile
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    volumes:
+      - ..:/app

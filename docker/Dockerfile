@@ -6,6 +6,8 @@ FROM tiangolo/uwsgi-nginx-flask:python3.10 AS racine-base
 ENV STATIC_URL /static
 ENV STATIC_PATH /app/app/static
 
+ENV UWSGI_INI /app/docker/uwsgi.ini
+
 COPY ./Makefile /app/Makefile
 COPY ./version.csv /app/version.csv
 # TODO: is there any way to auto-detect these?
@@ -40,7 +42,7 @@ ENV FLASK_CONFIG production
 
 COPY ./app /app/app/
 COPY ./migrations /app/migrations/
-COPY ./docker/uwsgi.ini /app/
+COPY ./docker/uwsgi.ini /app/docker/uwsgi.ini
 
 COPY ./Makefile /tmp/app_static/Makefile
 COPY ./version.csv /tmp/app_static/version.csv

@@ -1,8 +1,12 @@
 {
   "name": "Racine",
 
-  "dockerComposeFile": "../docker/docker-compose-dev.yml",
-  "service": "web-dev",
+  "dockerComposeFile": [
+    "../docker/docker-compose-dev.yml",
+    "docker-compose.devcontainer.yml"
+  ],
+  "service": "dev-cont",
+  "mounts": [ "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind" ],
   "workspaceFolder": "/app",
 
   "customizations": {

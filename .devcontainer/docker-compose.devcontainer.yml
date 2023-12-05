@@ -4,6 +4,7 @@ services:
     container_name: racine-dev-cont
     image: racine-builder
     build:
+      context: .
       dockerfile: ../.devcontainer/Dockerfile
     stdin_open: true # docker run -i
     tty: true        # docker run -t

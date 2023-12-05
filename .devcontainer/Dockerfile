@@ -25,4 +25,6 @@ RUN apt update && apt install -y \
 RUN npm install -g n && \
     n stable
 
+RUN echo "sudo chown vscode /var/run/docker.sock" >> /home/vscode/.bashrc
+
 ENTRYPOINT [ "/bin/bash" ]

@@ -25,5 +25,5 @@
     }
   },
 
-  "postCreateCommand": "cd /app && make install-dependencies && make install-js-dependencies"
+  "postCreateCommand": "cd /app && make install-dependencies && make install-js-dependencies && flask db upgrade"
 }

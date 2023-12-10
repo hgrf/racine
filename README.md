@@ -8,6 +8,7 @@
 | app/api/\_\_init\_\_.py                                                            |        3 |        0 |    100% |           |
 | app/api/actions.py                                                                 |       98 |       54 |     45% |74-95, 116-123, 147-153, 176-207, 230-253 |
 | app/api/common.py                                                                  |        8 |        0 |    100% |           |
+| app/api/emailing.py                                                                |       44 |       21 |     52% |29-51, 71-95 |
 | app/api/errors.py                                                                  |       11 |        7 |     36% |  6-11, 15 |
 | app/api/fields.py                                                                  |       85 |       56 |     34% |21-26, 30-35, 114-136, 141-166, 192-224 |
 | app/api/samples.py                                                                 |      125 |       71 |     43% |46-55, 63-68, 93-119, 141-144, 166-168, 190-192, 196-202, 226-260 |
@@ -19,7 +20,7 @@
 | app/browser/views.py                                                               |      308 |      252 |     18% |58-78, 100-125, 133-151, 155-168, 172-188, 211-245, 266, 275-278, 282-293, 314-343, 360-385, 403-431, 439-500, 509-534, 542-583, 591-598, 605-641, 645-649 |
 | app/config.py                                                                      |       38 |        0 |    100% |           |
 | app/decorators.py                                                                  |       12 |        3 |     75% |     10-12 |
-| app/emailing.py                                                                    |       24 |       16 |     33% |24-33, 40-47, 51-52 |
+| app/emailing.py                                                                    |       19 |       12 |     37% |21-22, 27-34, 38-39 |
 | app/main/\_\_init\_\_.py                                                           |        5 |        0 |    100% |           |
 | app/main/ajaxviews/\_\_init\_\_.py                                                 |        3 |        0 |    100% |           |
 | app/main/ajaxviews/sample.py                                                       |       27 |       18 |     33% |     13-35 |
@@ -48,7 +49,7 @@
 | app/profile/views.py                                                               |       55 |       40 |     27% |12-23, 29-38, 44-71 |
 | app/settings/\_\_init\_\_.py                                                       |        3 |        0 |    100% |           |
 | app/settings/forms.py                                                              |       35 |        0 |    100% |           |
-| app/settings/views.py                                                              |      158 |      122 |     23% |19-49, 61-77, 86-111, 118-136, 141-149, 153-166, 175-225, 238-241 |
+| app/settings/views.py                                                              |      155 |      119 |     23% |19-49, 61-77, 86-107, 119-137, 142-150, 154-167, 176-226, 239-242 |
 | app/smbinterface.py                                                                |       83 |       67 |     19% |29-51, 57-71, 94-110, 114-145, 149, 154-173 |
 | app/tests/\_\_init\_\_.py                                                          |        0 |        0 |    100% |           |
 | app/tests/test\_main.py                                                            |       26 |        0 |    100% |           |
@@ -77,7 +78,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2297** | **1150** | **50%** |           |
+|                                                                          **TOTAL** | **2333** | **1164** | **50%** |           |
 
 
 ## Setup coverage badge

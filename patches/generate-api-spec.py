@@ -52,6 +52,8 @@ with app.test_request_context():
     spec.path(view=api.fields.getfield)
     spec.path(view=api.fields.updatefield)
 
+    spec.path(view=api.emailing.send_mail_progress)
+
 with open("docs/swagger.json", "w") as f:
     json.dump(spec.to_dict(), f, indent=4)
 

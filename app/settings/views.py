@@ -1,7 +1,7 @@
 import os
 import redis
 
-from flask import current_app as app, flash, render_template, redirect, request, url_for
+from flask import current_app as app, flash, jsonify, render_template, redirect, request, url_for
 from flask_login import current_user, login_required
 
 from . import settings
@@ -84,6 +84,7 @@ def users():
 @admin_required
 def email():
     form = EmailSettings()
+    task = None
 
     if form.validate_on_submit():
         # save settings
@@ -96,19 +97,19 @@ def email():
             )
 
         # send test mail
-        try:
-            send_mail([form.sender.data], "Test mail", body="This is a test mail from Racine.")
-        except Exception as e:
-            flash("Error: " + str(e))
-        else:
-            flash("Test message was successfully sent")
+        task = send_mail([form.sender.data], "Test mail", body="This is a test mail from Racine.")
 
     try:
         read_mailconfig(form)
     except Exception:
         pass
 
-    return render_template("settings/email.html", form=form)
+    return (
+        render_template("settings/email.html", api_token=current_user.get_token(), form=form)
+        if task is None
+        else jsonify({"task_id": task.id}),
+        200,
+    )
 
 
 @settings.route("/stats", methods=["GET", "POST"])

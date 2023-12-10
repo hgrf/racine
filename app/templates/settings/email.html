@@ -4,7 +4,7 @@
 
 {% block page_content %}
 <h3 class="page-header">Email</h3>
-<form method="POST">
+<form method="POST" id="emailform">
     {{ form.hidden_tag() }}
     {{ wtf.form_field(form.sender) }}
     {{ wtf.form_field(form.server) }}
@@ -16,4 +16,11 @@
     {{ wtf.form_field(form.password) }}
     {{ wtf.form_field(form.submit) }}
 </form>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    R.init("{{ api_token }}", "email", { "task_id": "{{ task.id if task else 'null' }}" });
+</script>
 {% endblock %}

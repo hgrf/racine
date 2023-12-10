@@ -46,7 +46,7 @@
 | app/printdata/views.py                                                             |       25 |       17 |     32% |     11-29 |
 | app/profile/\_\_init\_\_.py                                                        |        3 |        0 |    100% |           |
 | app/profile/forms.py                                                               |       24 |        6 |     75% |37-38, 41-45, 48-49 |
-| app/profile/views.py                                                               |       55 |       40 |     27% |12-23, 29-38, 44-71 |
+| app/profile/views.py                                                               |       59 |       41 |     31% |12, 18-29, 35-44, 50-77 |
 | app/settings/\_\_init\_\_.py                                                       |        3 |        0 |    100% |           |
 | app/settings/forms.py                                                              |       35 |        0 |    100% |           |
 | app/settings/views.py                                                              |      155 |      119 |     23% |19-49, 61-77, 86-107, 119-137, 142-150, 154-167, 176-226, 239-242 |
@@ -78,7 +78,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2333** | **1164** | **50%** |           |
+|                                                                          **TOTAL** | **2337** | **1165** | **50%** |           |
 
 
 ## Setup coverage badge

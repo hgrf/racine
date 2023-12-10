@@ -6,6 +6,12 @@ from .forms import ChangePasswordForm, ChangeDetailsForm
 from ..models import User
 
 
+@profile.route("/overview", methods=["GET"])
+@login_required
+def overview():
+    return render_template("profile/overview.html")
+
+
 @profile.route("/changedetails", methods=["GET", "POST"])
 @login_required
 def changedetails():

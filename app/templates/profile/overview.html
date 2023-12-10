@@ -1,0 +1,19 @@
+{% set active = "overview" %}
+{% extends "profile/base.html" %}
+
+{% block page_content %}
+    <h3 class="page-header">My details</h3>
+    <div class="row">
+        <div class="col-md-6">
+            <dl class="dl-horizontal">
+                <dt>Username</dt>
+                <dd>{{ current_user.username }}</dd>
+                <dt>Email</dt>
+                <dd>{{ current_user.email }}</dd>
+                <dt>API Token </dt>
+                <dd>{{ current_user.token }}</dd>
+                <dt>Token expiry</dt>
+                <dd>{{ current_user.token_expiration }}</dd>
+            </dl>
+        </div>
+{% endblock %}

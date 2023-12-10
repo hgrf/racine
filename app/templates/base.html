@@ -22,7 +22,7 @@
             <li><a href="/settings/smbresources"><i class="hidden-xs glyphicon glyphicon-wrench" title="Settings"></i><span class="visible-xs-block">Settings</span></a></li>
         {% endif %}
         <li><a href="/print"><i class="hidden-xs glyphicon glyphicon-print" title="Print"></i><span class="visible-xs-block">Print</span></a></li>
-        <li><a href="/profile/changedetails"><i class="hidden-xs glyphicon glyphicon-user" title="Profile"></i><span class="hidden-xs">&nbsp;&nbsp;{{ current_user.username }}</span><span class="visible-xs-block">Profile</span></a></li>
+        <li><a href="/profile/overview"><i class="hidden-xs glyphicon glyphicon-user" title="Profile"></i><span class="hidden-xs">&nbsp;&nbsp;{{ current_user.username }}</span><span class="visible-xs-block">Profile</span></a></li>
         <li><a href="{{ url_for('auth.logout') }}"><i class="hidden-xs glyphicon glyphicon-log-out" title="Sign out"></i><span class="visible-xs-block">Sign out</span></a></li>
         <li><a href="/help"><i class="hidden-xs glyphicon glyphicon-question-sign" title="Help"></i><span class="visible-xs-block">Help</span></a></li>
     </ul>

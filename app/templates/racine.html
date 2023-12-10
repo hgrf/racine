@@ -17,7 +17,7 @@
 {{ super() }}
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
-    <link rel="stylesheet" href="{{url_for('static', filename='base.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/base.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/typeahead.css')}}">
     {% if config['DEBUG'] %}
         <style>

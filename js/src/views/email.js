@@ -1,17 +1,26 @@
 import $ from 'jquery';
 import R from '../racine';
 
+import TimedLoader from '../util/timedloader';
+
 class EmailView {
   constructor(params) {
     this.task_id = params.task_id;
+    this.spinner = new TimedLoader(10000, false);
   }
 
   onDocumentReady() {
+    const self = this;
+
     $('#emailform').submit(function(event) {
       event.preventDefault();
       const formData = new FormData(this); // eslint-disable-line no-invalid-this
 
-      $('#overlaytext').text('Sending mail...');
+      $('#overlaytext').html(
+          'Sending test email...<br/>' +
+          '<canvas id="timed-loader" width="300" height="300"></canvas>',
+      );
+      self.spinner.start();
       $('#overlay').css('display', 'block');
 
       $.ajax({

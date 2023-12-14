@@ -1,8 +1,8 @@
 website-build-deps: site/.build-deps-done
 site/.build-deps-done:
-	cp app/static/images/racine.svg site/site/static/images/racine.svg
-	cp app/static/images/racine-icon.svg site/site/static/images/racine-icon.svg
-	cp app/static/images/racine-icon.png site/site/static/images/racine-icon.png
+	cp app/static/images/racine.svg site/static/images/racine.svg
+	cp app/static/images/racine-icon.svg site/static/images/racine-icon.svg
+	cp app/static/images/racine-icon.png site/static/images/racine-icon.png
 
 	# build website
 	cd site && npm install

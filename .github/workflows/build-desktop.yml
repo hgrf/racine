@@ -12,6 +12,8 @@ jobs:
   build-app-static:
     name: Build app-static
     runs-on: ubuntu-latest
+    outputs:
+      VERSION: ${{ steps.version_step.outputs.VERSION }}
     steps:
       - uses: actions/checkout@v2
       
@@ -24,7 +26,12 @@ jobs:
         run: |
           make install-dependencies
           make install-js-dependencies
-      
+
+      - name: Determine version
+        id: version_step
+        run: |
+          sed s'/refs\/tags\/v//g' <(echo "VERSION=${{ github.ref }}") >> "$GITHUB_OUTPUT"
+
       - name: Archive app/static
         run: tar -czvf app-static.tar.gz app/static
 
@@ -39,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-    
+
       - name: Set up Python 3.10
         uses: actions/setup-python@v3
         with:
@@ -65,8 +72,8 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: "RacineDesktop AppImage 0.1.0"
-          path: "desktop/dist/RacineDesktop-0.1.0.AppImage"
+          name: "RacineDesktop AppImage ${{ needs.build-app-static.outputs.VERSION }}"
+          path: "desktop/dist/RacineDesktop-${{ needs.build-app-static.outputs.VERSION }}.AppImage"
 
   build-windows:
     needs: build-app-static
@@ -101,5 +108,28 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: "RacineDesktop Setup 0.1.0"
-          path: "desktop/dist/RacineDesktop Setup 0.1.0.exe"
+          name: "RacineDesktop Setup ${{ needs.build-app-static.outputs.VERSION }}"
+          path: "desktop/dist/RacineDesktop Setup ${{ needs.build-app-static.outputs.VERSION }}.exe"
+
+  release:
+    name: Publish release
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [build-app-static, build-appimage, build-windows]
+    steps:
+      - name: Download AppImage
+        uses: actions/download-artifact@v3
+        with:
+          name: "RacineDesktop AppImage ${{ needs.build-app-static.outputs.VERSION }}"
+
+      - name: Download Windows executable
+        uses: actions/download-artifact@v3
+        with:
+          name: "RacineDesktop Setup ${{ needs.build-app-static.outputs.VERSION }}"
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            RacineDesktop-${{ needs.build-app-static.outputs.VERSION }}.AppImage
+            RacineDesktop Setup ${{ needs.build-app-static.outputs.VERSION }}.exe

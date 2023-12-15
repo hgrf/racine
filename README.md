@@ -26,7 +26,7 @@
 | app/main/ajaxviews/sample.py                                                       |       27 |       18 |     33% |     13-35 |
 | app/main/ajaxviews/search.py                                                       |       13 |        7 |     46% |     10-31 |
 | app/main/ajaxviews/tree.py                                                         |       14 |        7 |     50% |     11-19 |
-| app/main/ajaxviews/welcome.py                                                      |       44 |       33 |     25% |     17-93 |
+| app/main/ajaxviews/welcome.py                                                      |       50 |       37 |     26% |    19-102 |
 | app/main/errors.py                                                                 |       19 |        6 |     68% |9, 19, 24-28 |
 | app/main/forms.py                                                                  |       34 |        8 |     76% |13, 16-20, 46-48 |
 | app/main/views.py                                                                  |       63 |       37 |     41% |12, 25, 31-34, 40-44, 50-51, 58-109, 115-124 |
@@ -78,7 +78,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2337** | **1165** | **50%** |           |
+|                                                                          **TOTAL** | **2343** | **1169** | **50%** |           |
 
 
 ## Setup coverage badge

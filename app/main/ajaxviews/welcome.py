@@ -1,4 +1,6 @@
+import ctypes
 import os
+import platform
 
 from datetime import date, datetime, timedelta
 from flask import current_app, render_template
@@ -14,8 +16,15 @@ from ...models import Action, Activity, Upload, User, Sample
 @login_required
 def welcome():
     # get free disk space
-    statvfs = os.statvfs(os.getcwd())
-    availablevol = statvfs.f_frsize * statvfs.f_bavail
+    if platform.system() == "Windows":
+        free_bytes = ctypes.c_ulonglong(0)
+        ctypes.windll.kernel32.GetDiskFreeSpaceExW(
+            ctypes.c_wchar_p(os.getcwd()), None, None, ctypes.pointer(free_bytes)
+        )
+        availablevol = free_bytes.value
+    else:
+        statvfs = os.statvfs(os.getcwd())
+        availablevol = statvfs.f_bavail * statvfs.f_frsize
 
     # get size of the SQLite database
     dbsize = os.path.getsize(current_app.config["SQLALCHEMY_DATABASE_URI"][10:])

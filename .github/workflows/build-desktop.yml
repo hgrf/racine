@@ -30,7 +30,7 @@ jobs:
       - name: Determine version
         id: version_step
         run: |
-          sed s'/refs\/tags\/v//g' <(echo "VERSION=${{ github.ref }}") >> "$GITHUB_OUTPUT"
+          sed s'/v//g' <(echo "VERSION=`make version`") >> "$GITHUB_OUTPUT"
 
       - name: Archive app/static
         run: tar -czvf app-static.tar.gz app/static

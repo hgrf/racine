@@ -21,7 +21,14 @@
       <p class="text-muted mb-0">
         Currently <strong>{{ getenv "RACINE_VERSION" }}</strong>
         <span class="px-1">&middot;</span>
-        <a href="https://racine.readthedocs.io/en/latest/#using-pre-built-images" class="link-secondary">Download</a>
+        <a href="https://racine.readthedocs.io/en/latest/#using-pre-built-images" class="link-secondary">Set up a server</a>        
+        <br/><br/>
+        Download demo app for
+        <i class="fab fa-linux"></i>
+        <a href="https://github.com/hgrf/racine/releases/download/{{ getenv "RACINE_VERSION" }}/RacineDesktop-{{ replace (getenv "RACINE_VERSION") "v" "" }}.AppImage" class="link-secondary">Linux (AppImage)</a>
+        &nbsp;&middot;&nbsp;
+        <i class="fab fa-windows"></i>
+        <a href="https://github.com/hgrf/racine/releases/download/{{ getenv "RACINE_VERSION" }}/RacineDesktop.Setup.{{ replace (getenv "RACINE_VERSION") "v" "" }}.exe" class="link-secondary">Windows (Installer)</a>
       </p>
     </div>
   </div>

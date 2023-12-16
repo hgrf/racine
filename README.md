@@ -49,6 +49,12 @@ used/available disk space.
 If you want to use SSL, add the certificate `server.crt` and key `server.key` in the folder
 `racine/ssl`. Also create a file `server_name.txt` which contains the server name.
 
+## Using the Desktop app
+
+The latest Racine desktop application can be downloaded from the [Releases](https://github.com/hgrf/racine/releases)
+page. This demo application saves all data locally and can be used to get an idea of Racine's
+features and to take notes for yourself.
+
 ## For developers: getting started
 
 ### Installation of development server

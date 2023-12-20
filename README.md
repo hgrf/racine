@@ -53,7 +53,7 @@
 | app/smbinterface.py                                                                |       83 |       67 |     19% |29-51, 57-71, 94-110, 114-145, 149, 154-173 |
 | app/tests/\_\_init\_\_.py                                                          |        0 |        0 |    100% |           |
 | app/tests/test\_main.py                                                            |       26 |        0 |    100% |           |
-| app/usagestats.py                                                                  |       48 |       29 |     40% |26-74, 79-89 |
+| app/usagestats.py                                                                  |       49 |       30 |     39% |26-76, 81-91 |
 | app/validators.py                                                                  |       14 |        9 |     36% |6-7, 11-12, 16-21 |
 | migrations/env.py                                                                  |       33 |       10 |     70% |43-47, 62-66, 88 |
 | migrations/versions/1de13fd625b1\_added\_archived\_flag.py                         |        9 |        1 |     89% |        26 |
@@ -78,7 +78,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2343** | **1169** | **50%** |           |
+|                                                                          **TOTAL** | **2344** | **1170** | **50%** |           |
 
 
 ## Setup coverage badge

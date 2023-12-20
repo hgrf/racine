@@ -50,7 +50,7 @@ def periodic_task():
         "version": RACINE_VERSION,
         "users": User.query.count(),
         "samples": Sample.query.filter_by(isdeleted=False).count(),
-        "actions": Action.query.join(Sample).filter(not Sample.isdeleted).count(),
+        "actions": Action.query.join(Sample.isdeleted == False).count(),  # noqa: E712
         "starttime": start_time,
         "uptime": time.time() - start_time,
         "dbsize": dbsize,

@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="d_5f5a17c013354698_validators_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.3.3">coverage.py v7.3.3</a>,
-            created at 2023-12-20 13:27 +0000
+            created at 2023-12-20 13:35 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"/>
@@ -132,7 +132,7 @@
     <p class="pln"><span class="n"><a id="t50" href="#t50">50</a></span><span class="t">        <span class="str">"version"</span><span class="op">:</span> <span class="nam">RACINE_VERSION</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t51" href="#t51">51</a></span><span class="t">        <span class="str">"users"</span><span class="op">:</span> <span class="nam">User</span><span class="op">.</span><span class="nam">query</span><span class="op">.</span><span class="nam">count</span><span class="op">(</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t52" href="#t52">52</a></span><span class="t">        <span class="str">"samples"</span><span class="op">:</span> <span class="nam">Sample</span><span class="op">.</span><span class="nam">query</span><span class="op">.</span><span class="nam">filter_by</span><span class="op">(</span><span class="nam">isdeleted</span><span class="op">=</span><span class="key">False</span><span class="op">)</span><span class="op">.</span><span class="nam">count</span><span class="op">(</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t53" href="#t53">53</a></span><span class="t">        <span class="str">"actions"</span><span class="op">:</span> <span class="nam">Action</span><span class="op">.</span><span class="nam">query</span><span class="op">.</span><span class="nam">join</span><span class="op">(</span><span class="nam">Sample</span><span class="op">.</span><span class="nam">isdeleted</span> <span class="op">==</span> <span class="key">False</span><span class="op">)</span><span class="op">.</span><span class="nam">count</span><span class="op">(</span><span class="op">)</span><span class="op">,</span>  <span class="com"># noqa: E712</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t53" href="#t53">53</a></span><span class="t">        <span class="str">"actions"</span><span class="op">:</span> <span class="nam">Action</span><span class="op">.</span><span class="nam">query</span><span class="op">.</span><span class="nam">join</span><span class="op">.</span><span class="nam">filter</span><span class="op">(</span><span class="nam">Sample</span><span class="op">.</span><span class="nam">isdeleted</span> <span class="op">==</span> <span class="key">False</span><span class="op">)</span><span class="op">.</span><span class="nam">count</span><span class="op">(</span><span class="op">)</span><span class="op">,</span>  <span class="com"># noqa: E712</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t54" href="#t54">54</a></span><span class="t">        <span class="str">"starttime"</span><span class="op">:</span> <span class="nam">start_time</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t55" href="#t55">55</a></span><span class="t">        <span class="str">"uptime"</span><span class="op">:</span> <span class="nam">time</span><span class="op">.</span><span class="nam">time</span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="nam">start_time</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t56" href="#t56">56</a></span><span class="t">        <span class="str">"dbsize"</span><span class="op">:</span> <span class="nam">dbsize</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
@@ -178,7 +178,7 @@
             <a id="nextFileLink" class="nav" href="d_5f5a17c013354698_validators_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.3.3">coverage.py v7.3.3</a>,
-            created at 2023-12-20 13:27 +0000
+            created at 2023-12-20 13:35 +0000
         </p>
     </div>
 </footer>

@@ -44,13 +44,15 @@ def periodic_task():
     # obtain RAM usage
     ram_used = psutil.virtual_memory().used
 
+    action_count = Action.query.join(Sample).filter(Sample.isdeleted == False).count()  # noqa: E712
+
     data = {
         "key": key,
         "site": usage_statistics_site_name,
         "version": RACINE_VERSION,
         "users": User.query.count(),
         "samples": Sample.query.filter_by(isdeleted=False).count(),
-        "actions": Action.query.join.filter(Sample.isdeleted == False).count(),  # noqa: E712
+        "actions": action_count,
         "starttime": start_time,
         "uptime": time.time() - start_time,
         "dbsize": dbsize,

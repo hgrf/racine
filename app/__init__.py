@@ -88,8 +88,6 @@ def create_app(config_name=os.getenv("FLASK_CONFIG") or "default"):
     # https://github.com/mbr/flask-bootstrap/blob/3.3.7.1/flask_bootstrap/__init__.py
     app.jinja_env.globals["bootstrap_is_hidden_field"] = is_hidden_field_filter
 
-    # TODO: why is this here?
-
     app.register_blueprint(api_blueprint, url_prefix="/api")
     app.register_blueprint(main_blueprint)
     app.register_blueprint(auth_blueprint, url_prefix="/auth")

@@ -3,24 +3,12 @@ import os
 from celery import Celery, Task
 from flask import Flask
 from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
 
 from wtforms.fields import HiddenField
 
 from .config import config
 
-db = SQLAlchemy()
-login_manager = LoginManager()
-login_manager.session_protection = "strong"
-login_manager.login_view = "auth.login"
-
-
-def is_hidden_field_filter(field):
-    return isinstance(field, HiddenField)
-
-
-from .version import RACINE_VERSION, RACINE_API_VERSION
+from .common import db, login_manager
 
 from .api import api as api_blueprint
 from .main import main as main_blueprint
@@ -31,7 +19,6 @@ from .profile import profile as profile_blueprint
 from .printdata import printdata as printdata_blueprint
 
 from .smbinterface import SMBInterface
-from .usagestats import periodic_task
 
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -61,6 +48,10 @@ def celery_init_app(app: Flask) -> Celery:
     celery_app.set_default()
     app.extensions["celery"] = celery_app
     return celery_app
+
+
+def is_hidden_field_filter(field):
+    return isinstance(field, HiddenField)
 
 
 def create_app(config_name=os.getenv("FLASK_CONFIG") or "default"):

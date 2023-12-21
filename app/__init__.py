@@ -10,13 +10,10 @@ from wtforms.fields import HiddenField
 
 from .config import config
 
-from .api import api as api_blueprint
-from .main import main as main_blueprint
-from .auth import auth as auth_blueprint
-from .browser import browser as browser_blueprint
-from .settings import settings as settings_blueprint
-from .profile import profile as profile_blueprint
-from .printdata import printdata as printdata_blueprint
+db = SQLAlchemy()
+login_manager = LoginManager()
+login_manager.session_protection = "strong"
+login_manager.login_view = "auth.login"
 
 
 def is_hidden_field_filter(field):
@@ -37,12 +34,17 @@ with open(os.path.join(os.path.dirname(__file__), "..", "version.csv"), "r") as 
         raise Exception("version.csv is missing RACINE_VERSION or RACINE_API_VERSION")
 
 
+from .api import api as api_blueprint
+from .main import main as main_blueprint
+from .auth import auth as auth_blueprint
+from .browser import browser as browser_blueprint
+from .settings import settings as settings_blueprint
+from .profile import profile as profile_blueprint
+from .printdata import printdata as printdata_blueprint
+
+
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-db = SQLAlchemy()
-login_manager = LoginManager()
-login_manager.session_protection = "strong"
-login_manager.login_view = "auth.login"
 migrate = Migrate()
 
 # has to be here, because it will import db and login_manager from this file

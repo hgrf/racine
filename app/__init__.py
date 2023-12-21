@@ -10,6 +10,14 @@ from wtforms.fields import HiddenField
 
 from .config import config
 
+from .api import api as api_blueprint
+from .main import main as main_blueprint
+from .auth import auth as auth_blueprint
+from .browser import browser as browser_blueprint
+from .settings import settings as settings_blueprint
+from .profile import profile as profile_blueprint
+from .printdata import printdata as printdata_blueprint
+
 
 def is_hidden_field_filter(field):
     return isinstance(field, HiddenField)
@@ -82,13 +90,7 @@ def create_app(config_name=os.getenv("FLASK_CONFIG") or "default"):
     # https://github.com/mbr/flask-bootstrap/blob/3.3.7.1/flask_bootstrap/__init__.py
     app.jinja_env.globals["bootstrap_is_hidden_field"] = is_hidden_field_filter
 
-    from .api import api as api_blueprint
-    from .main import main as main_blueprint
-    from .auth import auth as auth_blueprint
-    from .browser import browser as browser_blueprint
-    from .settings import settings as settings_blueprint
-    from .profile import profile as profile_blueprint
-    from .printdata import printdata as printdata_blueprint
+    # TODO: why is this here?
 
     app.register_blueprint(api_blueprint, url_prefix="/api")
     app.register_blueprint(main_blueprint)

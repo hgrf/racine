@@ -42,18 +42,14 @@ from .settings import settings as settings_blueprint
 from .profile import profile as profile_blueprint
 from .printdata import printdata as printdata_blueprint
 
+from .smbinterface import SMBInterface
+from .usagestats import periodic_task
+
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 migrate = Migrate()
-
-# has to be here, because it will import db and login_manager from this file
-from .smbinterface import SMBInterface  # noqa: E402
-
 smbinterface = SMBInterface()
-
-# has to be here, because it will import db from this file
-from .usagestats import periodic_task  # noqa: F401, E402, E261
 
 
 def celery_init_app(app: Flask) -> Celery:

@@ -4,7 +4,7 @@ from sqlalchemy import not_
 
 from . import main
 from .forms import NewSampleForm, MarkAsNewsForm
-from .. import RACINE_VERSION
+from ..version import RACINE_VERSION
 from ..models import Sample, Share, User
 
 

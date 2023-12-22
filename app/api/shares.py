@@ -5,7 +5,7 @@ from . import api
 from .common import OrderedSchema, IdParameter, EmptySchema  # noqa: F401
 from .errors import bad_request
 
-from .. import db
+from ..common import db
 from ..models import Sample, User
 
 from ..models import News, Share, record_activity, token_auth

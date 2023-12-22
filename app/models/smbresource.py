@@ -1,4 +1,4 @@
-from .. import db
+from ..common import db
 
 
 class SMBResource(db.Model):

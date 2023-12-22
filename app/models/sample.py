@@ -1,5 +1,5 @@
 from .user import current_user
-from .. import db
+from ..common import db
 
 SAMPLE_NAME_LENGTH = 64
 

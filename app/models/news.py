@@ -1,5 +1,5 @@
 from .action import Action
-from .. import db
+from ..common import db
 
 
 class News(db.Model):

@@ -10,7 +10,8 @@ from celery.utils.log import get_task_logger
 from flask import current_app
 from sqlalchemy.sql import func
 
-from . import db, RACINE_VERSION
+from .common import db
+from .version import RACINE_VERSION
 from .models import User, Sample, Action, Upload
 
 logger = get_task_logger(__name__)

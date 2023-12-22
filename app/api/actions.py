@@ -8,7 +8,7 @@ from .common import OrderedSchema, IdParameter, EmptySchema  # noqa: F401
 from .errors import bad_request
 from ..main.forms import MarkAsNewsForm, NewActionForm
 
-from .. import db
+from ..common import db
 from ..models import Action, News, Sample, record_activity, token_auth
 
 

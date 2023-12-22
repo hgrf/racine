@@ -22,7 +22,7 @@ usage_statistics_url_source = (
 
 
 @shared_task(name="usage_stats_task")
-def periodic_task():
+def usage_stats_task():
     # determine site key or create one
     if os.path.exists("data/usage_stats_key"):
         with open("data/usage_stats_key", "r") as f:

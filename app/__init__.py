@@ -8,7 +8,7 @@ from wtforms.fields import HiddenField
 from .api.fields import maybe_update_activity_types
 from .common import db, login_manager, migrate
 from .config import config
-from .usagestats import periodic_task  # noqa: F401
+from .usagestats import usage_stats_task
 
 from .api import api as api_blueprint
 from .main import main as main_blueprint
@@ -39,6 +39,7 @@ def celery_init_app(app: Flask) -> Celery:
     )
     celery_app.set_default()
     app.extensions["celery"] = celery_app
+    usage_stats_task.delay()
     return celery_app
 
 

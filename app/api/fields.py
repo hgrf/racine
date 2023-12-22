@@ -3,13 +3,14 @@ import inspect
 from datetime import datetime
 from flask import jsonify, request
 from marshmallow import fields, validate
+from sqlalchemy.exc import OperationalError
 
 from . import api
 from .common import OrderedSchema
 from .errors import bad_request
 
-from .. import db
-from ..models import Action, Sample, Share, SMBResource, User, record_activity, token_auth
+from ..common import db
+from ..models import Action, ActivityType, Sample, Share, SMBResource, User, record_activity, token_auth
 from ..models.user import current_user
 from ..validators import validate_form_field
 
@@ -77,6 +78,36 @@ supported_targets = {
         },
     },
 }
+
+
+def maybe_update_activity_types(app):
+    """ Check if the activity types table is up to date and update it if needed.
+
+        NOTE: Activity types can evolve with the code in the future, since they are created for the
+        supported targets of the "fields API". In order to avoid having to create database migration
+        scripts every time we add a new supported target, we check and update the activity types
+        table when the app is started.
+    """
+    with app.app_context():
+        activity_types = ["selectsmbfile", "login", "logout"]
+        try:
+            registered_activity_types = [at.description for at in ActivityType.query.all()]
+
+            for key, target in supported_targets.items():
+                activity_types.append("add:" + key)
+                activity_types.append("delete:" + key)
+                for field in target["fields"]:
+                    activity_types.append("update:" + key + ":" + field)
+
+            for at in activity_types:
+                if at not in registered_activity_types:
+                    newat = ActivityType(description=at)
+                    db.session.add(newat)
+                    db.session.commit()
+        except OperationalError:
+            # in case the table is not created yet, do nothing (this happens
+            # when we do 'flask db upgrade')
+            pass
 
 
 class FieldParameters(OrderedSchema):

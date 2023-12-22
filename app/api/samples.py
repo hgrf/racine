@@ -7,7 +7,7 @@ from .common import OrderedSchema, EmptySchema  # noqa: F401
 from .errors import bad_request
 from ..main.forms import NewSampleForm
 
-from .. import db
+from ..common import db
 from ..models import News, Sample, Share, record_activity, token_auth
 from ..models.tree import is_indirectly_shared, logical_parent
 

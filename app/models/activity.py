@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from .. import db
+from ..common import db
 
 
 class Activity(db.Model):
@@ -19,8 +19,8 @@ class Activity(db.Model):
 # Since the activity table will probably contain a lot of entries, the activity
 # type, e.g. "update:sample:description" should be encoded as an integer ID
 # referring to this table. When the database models are amended, the supported
-# activity types will be adapted automatically in app/__init__.py based on the
-# supported_targets dictionary in app/main/views.py.
+# activity types will be adapted automatically based on the supported_targets
+# dictionary in app/api/fields.py.
 class ActivityType(db.Model):
     __tablename__ = "activitytypes"
     id = db.Column(db.Integer, primary_key=True)

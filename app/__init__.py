@@ -2,13 +2,13 @@ import os
 
 from celery import Celery, Task
 from flask import Flask
-from flask_migrate import Migrate
 
 from wtforms.fields import HiddenField
 
+from .api.fields import maybe_update_activity_types
+from .common import db, login_manager, migrate
 from .config import config
-
-from .common import db, login_manager
+from .smbinterface import SMBInterface
 
 from .api import api as api_blueprint
 from .main import main as main_blueprint
@@ -18,13 +18,9 @@ from .settings import settings as settings_blueprint
 from .profile import profile as profile_blueprint
 from .printdata import printdata as printdata_blueprint
 
-from .smbinterface import SMBInterface
-
+smbinterface = SMBInterface()
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-migrate = Migrate()
-smbinterface = SMBInterface()
 
 
 def celery_init_app(app: Flask) -> Celery:
@@ -60,6 +56,7 @@ def create_app(config_name=os.getenv("FLASK_CONFIG") or "default"):
     config[config_name].init_app(app)
 
     db.init_app(app)
+    maybe_update_activity_types(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
     celery_init_app(app)
@@ -74,31 +71,5 @@ def create_app(config_name=os.getenv("FLASK_CONFIG") or "default"):
     app.register_blueprint(settings_blueprint, url_prefix="/settings")
     app.register_blueprint(profile_blueprint, url_prefix="/profile")
     app.register_blueprint(printdata_blueprint, url_prefix="/print")
-
-    # update activity types table
-    with app.app_context():
-        from .api.fields import supported_targets
-        from .models import ActivityType
-        from sqlalchemy.exc import OperationalError
-
-        activity_types = ["selectsmbfile", "login", "logout"]
-        try:
-            registered_activity_types = [at.description for at in ActivityType.query.all()]
-
-            for key, target in supported_targets.items():
-                activity_types.append("add:" + key)
-                activity_types.append("delete:" + key)
-                for field in target["fields"]:
-                    activity_types.append("update:" + key + ":" + field)
-
-            for at in activity_types:
-                if at not in registered_activity_types:
-                    newat = ActivityType(description=at)
-                    db.session.add(newat)
-                    db.session.commit()
-        except OperationalError:
-            # in case the table is not created yet, do nothing (this happens
-            # when we do 'flask db upgrade')
-            pass
 
     return app

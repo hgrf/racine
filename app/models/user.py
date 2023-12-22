@@ -10,7 +10,7 @@ from flask_login import UserMixin
 from flask_login import current_user as flask_login_current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from .. import db, login_manager
+from ..common import db, login_manager
 
 token_auth = HTTPTokenAuth()
 

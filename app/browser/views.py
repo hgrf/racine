@@ -8,7 +8,7 @@ from . import browser
 import io
 import hashlib
 from xml.etree import ElementTree as ElementTree
-from .. import smbinterface
+from ..smbinterface import smbinterface
 from PIL import Image
 
 IMAGE_EXTENSIONS = set([".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".svg"])

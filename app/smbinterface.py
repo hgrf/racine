@@ -171,3 +171,6 @@ class SMBInterface:
             connected = False
 
         return conn if connected else None
+
+
+smbinterface = SMBInterface()

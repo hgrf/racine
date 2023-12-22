@@ -8,7 +8,7 @@ from flask_login import current_user, login_required
 from sqlalchemy.sql import func
 
 from . import ajaxviews
-from ... import smbinterface
+from ...smbinterface import smbinterface
 from ...common import db
 from ...models import Action, Activity, Upload, User, Sample
 

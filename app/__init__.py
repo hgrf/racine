@@ -8,7 +8,6 @@ from wtforms.fields import HiddenField
 from .api.fields import maybe_update_activity_types
 from .common import db, login_manager, migrate
 from .config import config
-from .smbinterface import SMBInterface
 
 from .api import api as api_blueprint
 from .main import main as main_blueprint
@@ -17,8 +16,6 @@ from .browser import browser as browser_blueprint
 from .settings import settings as settings_blueprint
 from .profile import profile as profile_blueprint
 from .printdata import printdata as printdata_blueprint
-
-smbinterface = SMBInterface()
 
 
 def celery_init_app(app: Flask) -> Celery:

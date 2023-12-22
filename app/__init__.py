@@ -46,10 +46,6 @@ def celery_init_app(app: Flask) -> Celery:
     return celery_app
 
 
-def is_hidden_field_filter(field):
-    return isinstance(field, HiddenField)
-
-
 def create_app(config_name=os.getenv("FLASK_CONFIG") or "default"):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
@@ -62,7 +58,9 @@ def create_app(config_name=os.getenv("FLASK_CONFIG") or "default"):
     celery_init_app(app)
 
     # https://github.com/mbr/flask-bootstrap/blob/3.3.7.1/flask_bootstrap/__init__.py
-    app.jinja_env.globals["bootstrap_is_hidden_field"] = is_hidden_field_filter
+    app.jinja_env.globals["bootstrap_is_hidden_field"] = lambda field: isinstance(
+        field, HiddenField
+    )
 
     app.register_blueprint(api_blueprint, url_prefix="/api")
     app.register_blueprint(main_blueprint)

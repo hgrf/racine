@@ -20,8 +20,6 @@ from .printdata import printdata as printdata_blueprint
 
 smbinterface = SMBInterface()
 
-SQLALCHEMY_TRACK_MODIFICATIONS = False
-
 
 def celery_init_app(app: Flask) -> Celery:
     class FlaskTask(Task):

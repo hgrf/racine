@@ -10,7 +10,16 @@ from .common import OrderedSchema
 from .errors import bad_request
 
 from ..common import db
-from ..models import Action, ActivityType, Sample, Share, SMBResource, User, record_activity, token_auth
+from ..models import (
+    Action,
+    ActivityType,
+    Sample,
+    Share,
+    SMBResource,
+    User,
+    record_activity,
+    token_auth,
+)
 from ..models.user import current_user
 from ..validators import validate_form_field
 
@@ -81,12 +90,12 @@ supported_targets = {
 
 
 def maybe_update_activity_types(app):
-    """ Check if the activity types table is up to date and update it if needed.
+    """Check if the activity types table is up to date and update it if needed.
 
-        NOTE: Activity types can evolve with the code in the future, since they are created for the
-        supported targets of the "fields API". In order to avoid having to create database migration
-        scripts every time we add a new supported target, we check and update the activity types
-        table when the app is started.
+    NOTE: Activity types can evolve with the code in the future, since they are created for the
+    supported targets of the "fields API". In order to avoid having to create database migration
+    scripts every time we add a new supported target, we check and update the activity types
+    table when the app is started.
     """
     with app.app_context():
         activity_types = ["selectsmbfile", "login", "logout"]

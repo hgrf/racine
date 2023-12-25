@@ -58,6 +58,9 @@ class TestingConfig(Config):
     LOG_EXCEPTIONS = True
     TESTING = True
     WTF_CSRF_ENABLED = False
+    CELERY = dict(
+        task_always_eager=True,
+    )
 
 
 class StandaloneConfig(Config):
@@ -67,6 +70,9 @@ class StandaloneConfig(Config):
     )
     UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
     LOG_EXCEPTIONS = True
+    CELERY = dict(
+        task_always_eager=True,
+    )
 
 
 config = {

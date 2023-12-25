@@ -2,10 +2,11 @@ import os
 import sys
 import traceback
 
-from celery import fixups  # noqa: F401
-from celery.fixups import django  # noqa: F401
 from logging.config import fileConfig  # noqa: F401
 from flask_migrate import upgrade
+
+# NOTE: workaround to make decorators for async tasks work correctly
+os.environ["USE_THREADED_ASYNC"] = "1"
 
 if __name__ == "__main__":
     try:

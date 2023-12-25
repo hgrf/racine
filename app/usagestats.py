@@ -1,15 +1,15 @@
 import json
 import os
 import time
-import redis
 import requests
 import uuid
 import psutil
-from celery import shared_task
 from celery.utils.log import get_task_logger
 from flask import current_app
 from sqlalchemy.sql import func
 
+from .abstract.async_task import shared_task
+from .abstract.kv_store import kvs_set
 from .common import db
 from .version import RACINE_VERSION
 from .models import User, Sample, Action, Upload
@@ -62,11 +62,8 @@ def usage_stats_task():
         "ramused": ram_used,
     }
 
-    # publish data to redis
-    # TODO: standalone does not support this for now, fix this using a global dict
-    if not current_app.config["STANDALONE"]:
-        r = redis.Redis(host="racine-redis", port=6379, decode_responses=True)
-        r.set("usage-stats", json.dumps(data, indent=4))
+    # publish data to key-value-store
+    kvs_set("usage-stats", json.dumps(data, indent=4))
 
     # get usage statistics script url from GitHub
     try:

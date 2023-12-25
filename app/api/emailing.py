@@ -1,13 +1,13 @@
 import base64
 import json
 
-from celery import shared_task, current_task
 from flask import current_app as app
 from flask import jsonify
 from flask_mail import Mail
 from marshmallow import fields
 
 from . import api
+from ..abstract.async_task import current_task, shared_task
 from .common import OrderedSchema
 from ..models import token_auth
 

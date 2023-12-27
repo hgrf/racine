@@ -11,7 +11,9 @@
 
   "customizations": {
     "vscode": {
-      "settings": {},
+      "settings": {
+        "editor.rulers": [ 100 ]
+      },
       "extensions": [
         "samuelcolvin.jinjahtml",
         "ms-python.black-formatter",

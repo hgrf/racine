@@ -1,6 +1,7 @@
 FROM mcr.microsoft.com/vscode/devcontainers/base:0-ubuntu22.04
 
 RUN apt update && apt install -y \
+    bash-completion \
     ca-certificates \
     curl \
     default-jre \

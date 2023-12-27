@@ -15,6 +15,9 @@ class MarkAsNewsDialog extends FormDialog {
     this.dialog.modal('show');
   }
 
+  beforeSubmit() {
+  }
+
   submit(formdata) {
     const actionid = this.fields.actionid.val();
     this.flag = $(`#togglenews-${actionid}`);

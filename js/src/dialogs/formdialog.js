@@ -42,6 +42,8 @@ class FormDialog extends Dialog {
       self.form.find('.form-group').removeClass('has-error');
       self.form.find('span.help-block').remove();
 
+      self.beforeSubmit();
+
       const formdata = {};
       self.form.serializeArray().map(function(x) {
         formdata[removePrefix(x.name, self.prefix)] = x.value;
@@ -54,6 +56,9 @@ class FormDialog extends Dialog {
       event.preventDefault();
       self.clear();
     });
+  }
+
+  beforeSubmit() {
   }
 
   submit(formdata) {

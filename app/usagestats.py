@@ -63,16 +63,24 @@ def usage_stats_task():
     }
 
     # publish data to redis
-    r = redis.Redis(host="racine-redis", port=6379, decode_responses=True)
-    r.set("usage-stats", json.dumps(data, indent=4))
+    # TODO: standalone does not support this for now, fix this using a global dict
+    if not current_app.config["STANDALONE"]:
+        r = redis.Redis(host="racine-redis", port=6379, decode_responses=True)
+        r.set("usage-stats", json.dumps(data, indent=4))
 
     # get usage statistics script url from GitHub
     try:
-        response = requests.get(usage_statistics_url_source)
+        response = requests.get(usage_statistics_url_source, timeout=5)
         if response.status_code == 200:
             url = response.content.strip()
             logger.info("Submitting data with {} to {}: {}".format(key, url, data))
-            requests.post(url, json=data)
+            response = requests.post(url, json=data, timeout=5)
+            if response.status_code == 200:
+                logger.info("Usage statistics data submitted successfully")
+            else:
+                logger.error("Could not submit usage statistics data")
+        else:
+            logger.error("Could not get usage statistics endpoint URL from GitHub")
     except Exception:
         pass  # do not crash when there is e.g. a ConnectionError, simply keep trying
 

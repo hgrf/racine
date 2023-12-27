@@ -74,7 +74,13 @@ def usage_stats_task():
         if response.status_code == 200:
             url = response.content.strip()
             logger.info("Submitting data with {} to {}: {}".format(key, url, data))
-            requests.post(url, json=data, timeout=5)
+            response = requests.post(url, json=data, timeout=5)
+            if response.status_code == 200:
+                logger.info("Usage statistics data submitted successfully")
+            else:
+                logger.error("Could not submit usage statistics data")
+        else:
+            logger.error("Could not get usage statistics endpoint URL from GitHub")
     except Exception:
         pass  # do not crash when there is e.g. a ConnectionError, simply keep trying
 

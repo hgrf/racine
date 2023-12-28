@@ -33,6 +33,7 @@ install-dependencies:
 api-spec:
 	python patches/generate-api-spec.py
 	cat patches/api.yaml >> docs/api.yaml
+	cp docs/api.yaml app/static/api.yaml
 
 api-client: api-spec
 	rm -rf js/src/api
@@ -83,6 +84,8 @@ install-js-dependencies: install-mathjax api-client
 
 	cp js/node_modules/lightbox2/dist/css/lightbox.css app/static/css/lightbox.css
 	cp js/node_modules/lightbox2/dist/images/* app/static/images/
+
+	cp js/node_modules/swagger-ui/dist/swagger-ui.css app/static/css/swagger-ui.css
 
 js-version:
 	cd js && npm version --allow-same-version ${RACINE_VERSION}

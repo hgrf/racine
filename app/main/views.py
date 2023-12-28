@@ -51,6 +51,12 @@ def help():
     return render_template("help.html", admins=admins, racine_version=RACINE_VERSION)
 
 
+@main.route("/swagger-ui")
+@login_required
+def swaggerui():
+    return render_template("swagger.html", api_token=current_user.get_token())
+
+
 @main.route("/userlist", methods=["POST"])
 @login_required
 def userlist():

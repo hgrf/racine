@@ -2,6 +2,7 @@ mathjax/
 
 css/bootstrap.min.css
 css/lightbox.css
+css/swagger-ui.css
 css/tocbot.css
 css/typeahead.css
 
@@ -12,4 +13,5 @@ images/loading.gif
 images/next.png
 images/prev.png
 
+api.yaml
 racine.js

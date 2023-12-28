@@ -10,6 +10,7 @@
     "jquery": "3.5.1",
     "lightbox2": "2.8.2",
     "superagent": "^5.3.0",
+    "swagger-ui": "^5.10.5",
     "tocbot": "^4.21.2"
   },
   "devDependencies": {

@@ -6,6 +6,7 @@ import SMBResourcesView from './smbresources';
 import UsersView from './users';
 
 /* normal user pages */
+import SwaggerUIView from './swagger';
 import HelpView from './help';
 import LeaveView from './leave';
 import PrintView from './print';
@@ -21,6 +22,7 @@ const views = {
   smbresources: SMBResourcesView,
   users: UsersView,
 
+  swagger: SwaggerUIView,
   help: HelpView,
   print: PrintView,
   leave: LeaveView,

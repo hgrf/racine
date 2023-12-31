@@ -108,7 +108,7 @@ def email():
         render_template("settings/email.html", api_token=current_user.get_token(), form=form)
         if task is None
         else jsonify({"task_id": task.id}),
-        200,
+        200 if task is None else 202,
     )
 
 

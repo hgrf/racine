@@ -66,9 +66,15 @@ def send_mail_progress(task_id: str):
           content:
             application/json:
               schema: MailProgressResponse
-          description: Field value fetched successfully
+          description: Mail task complete, check response for error
+        202:
+          content:
+            application/json:
+              schema: MailProgressResponse
+          description: Mail is being sent
     """
     task = send_mail_task.AsyncResult(task_id)
+    code = 200
     if task.state == "PENDING":
         response = {
             "state": task.state,
@@ -76,6 +82,7 @@ def send_mail_progress(task_id: str):
             "total": 1,
             "status": "Pending...",
         }
+        code = 202
     elif task.state != "FAILURE":
         response = {
             "state": task.state,
@@ -92,4 +99,4 @@ def send_mail_progress(task_id: str):
             "total": 1,
             "status": str(task.info),  # this is the exception raised
         }
-    return jsonify(response)
+    return jsonify(response), code

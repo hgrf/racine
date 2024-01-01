@@ -28,6 +28,13 @@ body {
   border: 0;
 }
 
+.navbar-brand > img {
+  float: left;
+  height: 1.4em;
+  margin-top: -0.2em;
+  margin-right: 10px;
+}
+
 .nav-button {
     display: none;
 }

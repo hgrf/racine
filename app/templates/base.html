@@ -1,21 +1,5 @@
 {% extends "racine.html" %}
 
-{% block styles %}
-{{ super() }}
-    <style>
-    /* TODO: this should be in something like base.css */
-    div.sample {
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
-
-    div.sample:hover {
-        background-color: #CCCCEE;
-        cursor: pointer;
-    }
-    </style>
-{% endblock %}
-
 {% block navbar_top %}
     <ul class="nav navbar-nav navbar-right">
         {% if current_user.is_admin %}

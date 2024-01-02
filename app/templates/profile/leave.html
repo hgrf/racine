@@ -4,11 +4,7 @@
 
 {% block styles %}
     {{ super() }}
-    <style>
-    #userform {
-        max-width: 400px;
-    }
-    </style>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/leave.css')}}">
 {% endblock %}
 
 {% block page_content %}

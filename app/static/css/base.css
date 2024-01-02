@@ -178,3 +178,16 @@ body {
   border-radius: 50%;
 }
 
+/*
+ * Clickable samples
+ */
+
+div.sample {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+div.sample:hover {
+  background-color: #CCCCEE;
+  cursor: pointer;
+}

@@ -73,7 +73,7 @@ def welcome():
     recent_samples = (
         db.session.query(Sample)
         .join(Activity)
-        .filter(Activity.user_id == current_user.id, not Sample.isdeleted)
+        .filter(Activity.user_id == current_user.id, Sample.isdeleted == False)  # noqa: E712
         .order_by(Activity.id.desc())
         .distinct()
         .limit(5)

@@ -3,7 +3,7 @@ ul.toc-list li {
     padding-bottom: 5px;
 }
 
-div#js-toc-content {
+div.js-toc-content {
     max-width: 800px;
 }
 

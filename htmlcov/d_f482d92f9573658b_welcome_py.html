@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="d_a5d895ee790ef868_errors_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.0">coverage.py v7.4.0</a>,
-            created at 2024-01-02 23:19 +0000
+            created at 2024-01-02 23:21 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"/>
@@ -155,7 +155,7 @@
     <p class="mis show_mis"><span class="n"><a id="t73" href="#t73">73</a></span><span class="t">    <span class="nam">recent_samples</span> <span class="op">=</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t74" href="#t74">74</a></span><span class="t">        <span class="nam">db</span><span class="op">.</span><span class="nam">session</span><span class="op">.</span><span class="nam">query</span><span class="op">(</span><span class="nam">Sample</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t75" href="#t75">75</a></span><span class="t">        <span class="op">.</span><span class="nam">join</span><span class="op">(</span><span class="nam">Activity</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t76" href="#t76">76</a></span><span class="t">        <span class="op">.</span><span class="nam">filter</span><span class="op">(</span><span class="nam">Activity</span><span class="op">.</span><span class="nam">user_id</span> <span class="op">==</span> <span class="nam">current_user</span><span class="op">.</span><span class="nam">id</span><span class="op">,</span> <span class="key">not</span> <span class="nam">Sample</span><span class="op">.</span><span class="nam">isdeleted</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t76" href="#t76">76</a></span><span class="t">        <span class="op">.</span><span class="nam">filter</span><span class="op">(</span><span class="nam">Activity</span><span class="op">.</span><span class="nam">user_id</span> <span class="op">==</span> <span class="nam">current_user</span><span class="op">.</span><span class="nam">id</span><span class="op">,</span> <span class="nam">Sample</span><span class="op">.</span><span class="nam">isdeleted</span> <span class="op">==</span> <span class="key">False</span><span class="op">)</span>  <span class="com"># noqa: E712</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t77" href="#t77">77</a></span><span class="t">        <span class="op">.</span><span class="nam">order_by</span><span class="op">(</span><span class="nam">Activity</span><span class="op">.</span><span class="nam">id</span><span class="op">.</span><span class="nam">desc</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t78" href="#t78">78</a></span><span class="t">        <span class="op">.</span><span class="nam">distinct</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t79" href="#t79">79</a></span><span class="t">        <span class="op">.</span><span class="nam">limit</span><span class="op">(</span><span class="num">5</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -204,7 +204,7 @@
             <a id="nextFileLink" class="nav" href="d_a5d895ee790ef868_errors_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.0">coverage.py v7.4.0</a>,
-            created at 2024-01-02 23:19 +0000
+            created at 2024-01-02 23:21 +0000
         </p>
     </div>
 </footer>

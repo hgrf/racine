@@ -1,8 +1,5 @@
 {% import "util/wtf.html" as wtf %}
 
-{# TODO: are these fields still required if we have everything in JS ? #}
-<div id="sampleid" style="display: none">{{ sample.id }}</div>
-<div id="samplename" style="display: none">{{ sample.name }}</div>
 <h2 class="page-header">
     {% if sample.owner != current_user and sample.iscollaborative %}
         <img class="sample-attr" title="Collaborative" src="/static/images/collaborative.png">

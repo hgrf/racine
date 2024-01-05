@@ -80,6 +80,7 @@ class FormDialog extends Dialog {
           continue;
         }
         if (field === 'csrf_token') {
+          this.dialog.modal('hide');
           R.errorDialog('The CSRF token has expired. Please reload the page.');
           continue;
         }

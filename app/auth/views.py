@@ -12,16 +12,7 @@ def login():
     last_logged_in = request.cookies.get("last_logins")
     last_logged_in = last_logged_in.split(",") if last_logged_in else []
 
-    # workaround to avoid server error when trying to connect with cookie from python 2 version
-    try:
-        form = LoginForm()
-    except TypeError:
-        # erroneous cookie for testing:
-        # session = eyJjc3JmX3Rva2VuIjp7IiBiIjoiT1RKaE4yTmpaRGc0WXpNMl
-        #           pqZGhPR1ZoTkRSa1lURmxaRGN5TjJZeU1EZzVObUZsT0ROa1pB
-        #           PT0ifX0.XeZ16g.Y3yco4lf1Ofku9GH_vj4ETg2itk
-        session.pop("csrf_token")
-        form = LoginForm()
+    form = LoginForm()
     resp = None
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()

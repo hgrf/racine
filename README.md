@@ -15,7 +15,7 @@
 | app/api/shares.py                                                                  |       63 |       43 |     32% |49-75, 101-126 |
 | app/auth/\_\_init\_\_.py                                                           |        3 |        0 |    100% |           |
 | app/auth/forms.py                                                                  |       15 |        0 |    100% |           |
-| app/auth/views.py                                                                  |       75 |       37 |     51% |18-24, 37, 43-45, 54, 75-97, 102-112, 119-123 |
+| app/auth/views.py                                                                  |       71 |       34 |     52% |28, 34-36, 45, 66-88, 93-103, 110-114 |
 | app/browser/\_\_init\_\_.py                                                        |        3 |        0 |    100% |           |
 | app/browser/views.py                                                               |      308 |      252 |     18% |58-78, 100-125, 133-151, 155-168, 172-188, 211-245, 266, 275-278, 282-293, 314-343, 360-385, 403-431, 439-500, 509-534, 542-583, 591-598, 605-641, 645-649 |
 | app/common.py                                                                      |        8 |        0 |    100% |           |
@@ -80,7 +80,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2355** | **1153** | **51%** |           |
+|                                                                          **TOTAL** | **2351** | **1150** | **51%** |           |
 
 
 ## Setup coverage badge

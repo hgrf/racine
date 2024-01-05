@@ -1,0 +1,18 @@
+{% import "util/wtf.html" as wtf %}
+{% import "util/dialog.html" as dialog %}
+
+{% call dialog.render_form_dialog(form, 'dlg-new-smbresource', 'New SMB resource', 'modal-lg') %}
+    <form method="POST">
+        {# TODO: might want to use wtf.quick_form() here #}
+        {{ form.hidden_tag() }}
+        {{ wtf.form_field(form.name) }}
+        {{ wtf.form_field(form.servername) }}
+        {{ wtf.form_field(form.serveraddr) }}
+        {{ wtf.form_field(form.serverport) }}
+        {{ wtf.form_field(form.domainname) }}
+        {{ wtf.form_field(form.sharename) }}
+        {{ wtf.form_field(form.path) }}
+        {{ wtf.form_field(form.userid) }}
+        {{ wtf.form_field(form.password) }}
+    </form>
+{% endcall %}

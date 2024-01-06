@@ -1,3 +1,5 @@
+{% import "util/wtf.html" as wtf %}
+
 {% macro render_modal_dialog(id, title, class='', attr='') %}
 <div class="modal fade" id="{{ id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog {{ class }}" {{ attr }}>
@@ -17,6 +19,7 @@
     {% call render_modal_dialog(id, title, class, 'data-prefix=' + form._prfx) %}
         <div class="modal-body">
             {{ content }}
+            {{ wtf.quick_form(form) }}
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-primary frm-dlg-submit">Submit</button>

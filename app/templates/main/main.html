@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% import "util/dialog.html" as dialog %}
+
 {% block styles %}
 {{super()}}
     <link rel="stylesheet" href="{{url_for('static', filename='css/lightbox.css')}}">
@@ -15,8 +17,13 @@
 {% block dialogs %}
 {{ super() }}
     {% include "dialogs/userbrowser.html" %}
-    {% include "dialogs/newsample.html" %}
-    {% include "dialogs/markasnews.html" %}
+    {% call dialog.render_form_dialog(newsampleform, 'dlg-new-sample', 'New sample', 'modal-lg') %}
+    {% endcall %}
+    {% call dialog.render_form_dialog(markasnewsform, 'dlg-mark-as-news', 'Mark as news', 'modal-lg') %}
+    <p>
+        Mark this action as news to all users who share this sample.
+    </p>
+    {% endcall %}
 {% endblock %}
 
 {% block scripts %}

@@ -10,6 +10,7 @@ from app.api import (  # noqa: E402
     shares,
     users,
     smbresources,
+    users,
 )
 
 

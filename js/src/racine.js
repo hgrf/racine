@@ -21,6 +21,7 @@ class Racine {
     this.actionsAPI = new API.ActionsApi(this.apiClient);
     this.usersAPI = new API.UsersApi(this.apiClient);
     this.smbresourcesAPI = new API.SmbresourcesApi(this.apiClient);
+    this.usersAPI = new API.UsersApi(this.apiClient);
     this.fieldsAPI = new API.FieldsApi(this.apiClient);
 
     if (view in views) {

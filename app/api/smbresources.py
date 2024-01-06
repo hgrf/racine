@@ -48,7 +48,6 @@ def createsmbresource():
               schema: EmptySchema
           description: SMB resource created
     """
-    # TODO: handle exception on creation (unique constraint)
     if not current_user().is_admin:
         return bad_request("Invalid request.")
     form = NewSMBResourceForm()

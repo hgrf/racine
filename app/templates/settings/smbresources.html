@@ -1,6 +1,6 @@
 {% set active = "smbresources" %}
 {% extends "settings/base.html" %}
-{% import "util/wtf.html" as wtf %}
+{% import "util/dialog.html" as dialog %}
 
 {% block styles %}
     {{super()}}
@@ -38,14 +38,15 @@
 </table>
 
 <a data-toggle="modal" data-target="#dlg-new-smbresource" href="" title="New SMB resource">
-    <i class="glyphicon glyphicon-plus"></i>New SMB resource
+    <i class="glyphicon glyphicon-plus"></i>&nbsp;New SMB resource
 </a>
 
 {% endblock %}
 
 {% block dialogs %}
 {{ super() }}
-    {% include "dialogs/newsmbresource.html" %}
+    {% call dialog.render_form_dialog(form, 'dlg-new-smbresource', 'New SMB resource', 'modal-lg') %}
+    {% endcall %}
 {% endblock %}
 
 {% block scripts %}

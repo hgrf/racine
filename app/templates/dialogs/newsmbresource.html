@@ -1,6 +1,0 @@
-{% import "util/wtf.html" as wtf %}
-{% import "util/dialog.html" as dialog %}
-
-{% call dialog.render_form_dialog(form, 'dlg-new-smbresource', 'New SMB resource', 'modal-lg') %}
-    {{ wtf.quick_form(form) }}
-{% endcall %}

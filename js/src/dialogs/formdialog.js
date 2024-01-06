@@ -58,6 +58,10 @@ class FormDialog extends Dialog {
     });
   }
 
+  onHide() {
+    this.clear();
+  }
+
   beforeSubmit() {
   }
 
@@ -65,6 +69,7 @@ class FormDialog extends Dialog {
   }
 
   clear() {
+    this.form[0].reset();
   }
 
   onSuccess(data) {

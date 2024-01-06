@@ -24,11 +24,6 @@ class MarkAsNewsDialog extends FormDialog {
     R.actionsAPI.markAsNews(formdata, this.apiCallback.bind(this));
   }
 
-  clear() {
-    this.fields.title.val('');
-    this.fields.expires.val('');
-  }
-
   onShown() {
     this.fields.title.focus();
   }

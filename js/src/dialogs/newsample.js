@@ -34,10 +34,6 @@ class NewSampleDialog extends FormDialog {
     this.fields.name.focus();
   }
 
-  onHide() {
-    this.clear();
-  }
-
   beforeSubmit() {
     // make sure content of editor is transmitted
     CKEDITOR.instances[`${this.prefix}description`].updateElement();

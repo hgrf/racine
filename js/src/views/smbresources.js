@@ -1,7 +1,17 @@
 import $ from 'jquery';
 import R from '../racine';
-import NewSMBResourceDialog from '../dialogs/newsmbresource';
+import FormDialog from '../dialogs/formdialog';
 import ConfirmDeleteDialog from '../dialogs/confirmdelete';
+
+class NewSMBResourceDialog extends FormDialog {
+  submit(formdata) {
+    R.smbresourcesAPI.createSMBResource(formdata, this.apiCallback.bind(this));
+  }
+
+  onSuccess(data) {
+    location.reload();
+  }
+}
 
 class SMBResourcesView {
   constructor(params) {

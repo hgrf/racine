@@ -1,12 +1,11 @@
 import os
 import redis
 
-from flask import current_app as app, flash, jsonify, render_template, redirect, request
+from flask import current_app as app, flash, jsonify, render_template
 from flask_login import current_user, login_required
 
 from . import settings
 from .forms import NewSMBResourceForm, NewUserForm, EmailSettings, UsageStatsSettings
-from ..common import db
 from ..decorators import admin_required
 from ..emailing import send_mail, read_mailconfig, write_mailconfig
 from ..models import SMBResource, User, Upload, Action, Sample

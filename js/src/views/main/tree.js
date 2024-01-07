@@ -2,7 +2,7 @@ import $ from 'jquery';
 
 import R from '../../racine';
 import {draggableHandlers, dropZoneHandlers} from './dragdrop';
-import {addGlyphicon} from './glyphicons';
+import {addNavCaret} from './navcarets';
 
 class Tree {
   constructor(mainView) {
@@ -49,9 +49,9 @@ class Tree {
       R.mobileHideSidebar();
     });
 
-    // add glyphicons to expandable items in the navbar
+    // add carets to expandable items in the navbar
     allEntries.each(function() {
-      addGlyphicon($(this)); // eslint-disable-line no-invalid-this
+      addNavCaret($(this)); // eslint-disable-line no-invalid-this
     });
 
     // enable sample drag and drop in navigation bar

@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
 import R from '../../racine';
-import {updateGlyphicon} from './glyphicons';
+import {updateNavCaret} from './navcarets';
 
 function draggableHandlers(activeEntry) {
   return {
@@ -62,14 +62,14 @@ function dropZoneHandlers(activeEntry) {
           if (parentId !== 0) {
           // moving to a regular nav-entry
             draggedItem.appendTo('#nav-children'+parentId);
-            updateGlyphicon($('#nav-entry'+parentId));
+            updateNavCaret($('#nav-entry'+parentId));
           } else {
           // moving to root
             draggedItem.appendTo('#nav-mysamples');
           }
-          // if it's not the root entry, update the glyphicon
+          // if it's not the root entry, update the caret
           if (oldParent.length) {
-            updateGlyphicon(oldParent);
+            updateNavCaret(oldParent);
           }
         }
       });

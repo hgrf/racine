@@ -8,7 +8,7 @@ class PrintView {
   }
 
   onDocumentReady() {
-    const images = document.getElementsByTagName('img');
+    const images = document.getElementById('printArea').getElementsByTagName('img');
     for (let i=0; i < images.length; i++) {
       images[i].orgwidth = images[i].style.width;
       images[i].orgheight = images[i].style.height;

@@ -20,10 +20,6 @@
     </div>
 {% endfor %}
 
-{% for p in plugin_display %}
-    <h2>{{ p[0] }}</h2>
-    {{ p[1]|safe }}
-{% endfor %}
 <h2>Disk space</h2>
 {{ (totuploadvol+dbsize)|filesizeformat }} out of {{ (availablevol+totuploadvol+dbsize)|filesizeformat }} occupied.
 <div class="progress" style="width: 200px;">

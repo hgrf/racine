@@ -7,8 +7,6 @@
     <meta http-equiv="refresh" content="1800">
 {% endblock %}
 
-{% set begin_flashmsg = "<div class='alert alert-warning'><button type='button' class='close' data-dismiss='alert'>&times;</button>" %}
-{% set end_flashmsg = "</div>" %}
 {% block content %}
     <div class="container" id="flashmessages">
     {% for message in get_flashed_messages() %}

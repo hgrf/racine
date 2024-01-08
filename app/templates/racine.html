@@ -1,5 +1,8 @@
 {% extends "skeleton.html" %}
 
+{% set begin_flashmsg = "<div class='alert alert-warning'><button type='button' class='close' data-dismiss='alert'>&times;</button>" %}
+{% set end_flashmsg = "</div>" %}
+
 {% block title %}
     {% if sample is defined and sample is not none %}
         Racine - {{ sample.name }}

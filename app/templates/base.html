@@ -1,6 +1,16 @@
 {% extends "racine.html" %}
 
+{% block navbar_top_header %}
+<div class="nav-button nav-button-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+  <i class="glyphicon glyphicon-option-vertical"></i>
+</div>
+<div id="toggle-sidebar" class="nav-button nav-button-left nav-button-toggle">
+  <i class="glyphicon glyphicon-menu-hamburger"></i>
+</div>
+{% endblock %}
+
 {% block navbar_top %}
+  <div id="navbar" class="navbar-collapse collapse">
     <ul class="nav navbar-nav navbar-right">
         {% if current_user.is_admin %}
             <li><a href="/settings/smbresources"><i class="hidden-xs glyphicon glyphicon-wrench" title="Settings"></i><span class="visible-xs-block">Settings</span></a></li>
@@ -13,6 +23,7 @@
     <form class="nav navbar-form navbar-right">
         <input type="text" id="navbar-search" class="form-control" placeholder="Search...">
     </form>
+  </div>
 {% endblock %}
 
 {% block content %}

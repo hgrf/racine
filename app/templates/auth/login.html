@@ -15,44 +15,42 @@
     {{ end_flashmsg|safe }}
     {% endfor %}
     </div>
-    <div class="container">
+    <div class="container login-container">
         <div class="row">
-            <div class="login-container">
-                <div class="col-sm-{{ '2' if last_logged_in else '4' }}"></div>
-                <div class="login col-sm-4">
-                    <form method="POST" action="#" id="loginform">
-                        {{ form.hidden_tag() }}
-                        <div class="form-group input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                            {{ form.username(class_='form-control', placeholder='username') }}
-                        </div>
-                        <div class="form-group input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                            {{ form.password(class_='form-control', placeholder='password') }}
-                        </div>
-                        <div class="form-group input-group">
-                            {{ wtf.form_field(form.remember_me) }}
-                        </div>
-                        <div class="form-group input-group">
-                            <a href="{{ url_for('auth.password_reset_request') }}">Reset password.</a></p>
-                        </div>
-                        <div class="form-group">
-                            {{ form.submit(class_='btn btn-primary btn-block') }}
-                        </div>
-                    </form>
-                </div>
-                {% if last_logged_in %}
-                <div class="quicklogin col-sm-4">
-                    {% for username in last_logged_in %}
-                        <div class="user" data-username="{{ username }}">
-                            <img src="/static/images/user.png">
-                            <span>{{ username }}</span>
-                        </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-                <div class="col-sm-{{ '2' if last_logged_in else '4' }}"></div>
+            <div class="col-sm-{{ '2' if last_logged_in else '4' }}"></div>
+            <div class="login col-sm-4">
+                <form method="POST" action="#" id="loginform">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        {{ form.username(class_='form-control', placeholder='username') }}
+                    </div>
+                    <div class="form-group input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        {{ form.password(class_='form-control', placeholder='password') }}
+                    </div>
+                    <div class="form-group input-group">
+                        {{ wtf.form_field(form.remember_me) }}
+                    </div>
+                    <div class="form-group input-group">
+                        <a href="{{ url_for('auth.password_reset_request') }}">Reset password.</a></p>
+                    </div>
+                    <div class="form-group">
+                        {{ form.submit(class_='btn btn-primary btn-block') }}
+                    </div>
+                </form>
             </div>
+            {% if last_logged_in %}
+            <div class="quicklogin col-sm-4">
+                {% for username in last_logged_in %}
+                    <div class="user" data-username="{{ username }}">
+                        <img src="/static/images/user.png">
+                        <span>{{ username }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="col-sm-{{ '2' if last_logged_in else '4' }}"></div>
         </div>
     </div>
 {% endblock %}

@@ -27,10 +27,15 @@ spec = APISpec(
     ),
     tags=[dict(name=m.name, description=m.description) for m in api.modules],
     plugins=[FlaskPlugin(), MarshmallowPlugin()],
+    security=[{"bearerAuth": []}],
 )
 
 app = create_app("testing")
 with app.test_request_context():
+    spec.components.security_scheme(
+        "bearerAuth", {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"}
+    )
+
     for m in api.modules:
         for name, attr in m.module.__dict__.items():
             if callable(attr):

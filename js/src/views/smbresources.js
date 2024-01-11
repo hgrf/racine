@@ -23,8 +23,9 @@ class SMBResourcesView {
 
     new ConfirmDeleteDialog({'smbresource': (id) => {
       R.smbresourcesAPI.deleteSMBResource(id, (error, data, response) => {
-        if (!R.responseHasError(response))
+        if (!R.responseHasError(response)) {
           location.reload();
+        }
       });
     }});
 

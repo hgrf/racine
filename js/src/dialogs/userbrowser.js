@@ -70,12 +70,14 @@ class UserBrowserDialog extends Dialog {
     $('#recent-collaborators').html('');
 
     // update autocompletion for the text field and recent collaborators list
-    $.ajax({
-      url: '/userlist',
-      type: 'post',
-      data: {'mode': 'share', 'sampleid': this.sampleidGetter()},
-      success: (data) => this.userlistCallback(data),
-    });
+    R.usersAPI.getUserList(
+        {mode: 'share', sampleid: this.sampleidGetter()},
+        (error, data, response) => {
+          if (!R.responseHasError(response)) {
+            this.userlistCallback(data);
+          }
+        },
+    );
   }
 
   onShown(event) {

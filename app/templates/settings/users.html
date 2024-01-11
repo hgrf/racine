@@ -1,6 +1,6 @@
 {% set active = "users" %}
 {% extends "settings/base.html" %}
-{% import "util/wtf.html" as wtf %}
+{% import "util/dialog.html" as dialog %}
 
 {% block styles %}
     {{super()}}
@@ -29,9 +29,15 @@
     </tbody>
 </table>
 
-<h3 class="page-header">Add user</h3>
-{{ wtf.quick_form(form) }}
+<a data-toggle="modal" data-target="#dlg-new-user" href="" title="New user">
+    <i class="glyphicon glyphicon-plus"></i>&nbsp;New user
+</a>
+{% endblock %}
 
+{% block dialogs %}
+{{ super() }}
+    {% call dialog.render_form_dialog(form, 'dlg-new-user', 'New user', 'modal-lg') %}
+    {% endcall %}
 {% endblock %}
 
 {% block scripts %}

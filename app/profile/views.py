@@ -74,4 +74,4 @@ def leave():
             u.heir = user
         db.session.commit()
 
-    return render_template("profile/leave.html", user=user)
+    return render_template("profile/leave.html", user=user, api_token=current_user.get_token())

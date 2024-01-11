@@ -37,14 +37,14 @@ class SampleView extends AjaxView {
     new ConfirmDeleteDialog({
       'action': (id) => {
         R.actionsAPI.deleteAction(id, (error, data, response) => {
-          if (!self.#responseHasError(response)) {
+          if (!R.responseHasError(response)) {
             $(`#${id}.list-entry`).remove();
           }
         });
       },
       'sample': (id) => {
         R.samplesAPI.deleteSample(id, (error, data, response) => {
-          if (!self.#responseHasError(response)) {
+          if (!R.responseHasError(response)) {
             $(`#nav-entry${id}`).remove();
             self.mainView.loadWelcome();
           }
@@ -52,7 +52,7 @@ class SampleView extends AjaxView {
       },
       'share': (id) => {
         R.sharesAPI.deleteShare(id, (error, data, response) => {
-          if (!self.#responseHasError(response)) {
+          if (!R.responseHasError(response)) {
             $(`#sharelistentry${id}`).remove();
             if (response.status == 205) {
             /* if the user removed himself from the sharer list, remove the item from the
@@ -165,7 +165,7 @@ class SampleView extends AjaxView {
 
     $('#archive').on('click', function() {
       R.samplesAPI.toggleArchived(sampleid, function(error, data, response) {
-        if (!self.#responseHasError(response)) {
+        if (!R.responseHasError(response)) {
           if (data.isarchived) {
             $('#archive').attr('title', 'De-archive');
             $('#archive').attr('src', '/static/images/dearchive.png');
@@ -181,7 +181,7 @@ class SampleView extends AjaxView {
 
     $('#collaborate').on('click', function() {
       R.samplesAPI.toggleCollaborative(sampleid, function(error, data, response) {
-        if (!self.#responseHasError(response)) {
+        if (!R.responseHasError(response)) {
           if (data.iscollaborative) {
             $('#collaborate').attr('title', 'Make non-collaborative');
             $('#collaborate').attr('src', '/static/images/non-collaborative.png');
@@ -224,7 +224,7 @@ class SampleView extends AjaxView {
       R.actionsAPI.swapActionOrder(
           {'actionid': element.data('id'), 'swapid': element.data('swapid')},
           function(error, data, response) {
-            if (!self.#responseHasError(response)) {
+            if (!R.responseHasError(response)) {
               mV.loadSample(sampleid, true);
             }
           });
@@ -239,7 +239,7 @@ class SampleView extends AjaxView {
         self.dlgMarkAsNews.show(actionid);
       } else {
         R.actionsAPI.unmarkAsNews({'actionid': actionid}, function(error, data, response) {
-          if (!self.#responseHasError(response)) {
+          if (!R.responseHasError(response)) {
             flag.removeClass('unmarkasnews');
             flag.addClass('markasnews');
           }
@@ -296,24 +296,6 @@ class SampleView extends AjaxView {
       self.hiddenEditor.execCommand('fb');
       event.preventDefault();
     });
-  }
-
-  #responseHasError(response) {
-    let errorMsg = null;
-    if (!response) {
-      errorMsg = 'Server error. Please check your connection.';
-    } else if (response.error) {
-      if (response.body.message) {
-        errorMsg = response.body.message;
-      } else {
-        errorMsg = response.error;
-      }
-    }
-    if (errorMsg !== null) {
-      R.errorDialog(errorMsg);
-      return true;
-    }
-    return false;
   }
 
   onActionSubmit(event) {

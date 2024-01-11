@@ -1,7 +1,7 @@
 import os
 import redis
 
-from flask import current_app as app, flash, jsonify, render_template, redirect, request, url_for
+from flask import current_app as app, flash, jsonify, render_template, redirect, request
 from flask_login import current_user, login_required
 
 from . import settings
@@ -54,28 +54,15 @@ def smbresources():
     )
 
 
-@settings.route("/users", methods=["GET", "POST"])
+@settings.route("/users", methods=["GET"])
 @login_required
 @admin_required
 def users():
-    if request.args.get("delete"):
-        user = User.query.filter_by(id=int(request.args.get("delete"))).first()
-        db.session.delete(user)
-        db.session.commit()
-        return redirect("/settings/users")
-    form = NewUserForm()
-    if form.validate_on_submit():
-        user = User(
-            is_admin=form.is_admin.data,
-            email=form.email.data,
-            username=form.username.data,
-            password=form.password.data,
-        )
-        db.session.add(user)
-        db.session.commit()
-        return redirect(url_for("settings.users"))
     return render_template(
-        "settings/users.html", api_token=current_user.get_token(), users=User.query.all(), form=form
+        "settings/users.html",
+        api_token=current_user.get_token(),
+        users=User.query.all(),
+        form=NewUserForm(),
     )
 
 

@@ -148,3 +148,21 @@ def test_create_share_with_nonexisting_sample(ctx: Context):
         data={"sampleid": 123, "userid": 2, "username": "Alice"},
     )
     expect_status_code(r, 400)
+
+
+def test_create_smbresource(ctx: Context):
+    """Test that SMB resources can be created using the API."""
+    r = ctx.client.put(
+        "/api/smbresource",
+        headers={"Authorization": "Bearer " + ctx.api_token},
+        data={
+            "name": "Test",
+            "servername": "smbserver",
+            "serveraddr": "smbserver",
+            "serverport": 445,
+            "sharename": "smbshare",
+            "userid": "smbuser",
+            "password": "smbpass",
+        },
+    )
+    expect_status_code(r, 201)

@@ -2,7 +2,7 @@ from flask import jsonify
 from marshmallow import fields
 
 from . import api
-from .common import OrderedSchema, EmptySchema  # noqa: F401
+from .common import OrderedSchema
 from .errors import bad_request
 from ..settings.forms import NewSMBResourceForm
 
@@ -11,21 +11,17 @@ from ..models import SMBResource, record_activity, token_auth
 from ..models.user import current_user
 
 
-class SMBResourceIdParameter(OrderedSchema):
-    resourceid = fields.Int()
-
-
 class NewSMBResourceFormContent(OrderedSchema):
-    csrf_token = fields.Str()
-    name = fields.Str()
-    servername = fields.Str()
-    serveraddr = fields.Str()
-    serverport = fields.Str()
-    domainname = fields.Str()
-    sharename = fields.Str()
-    path = fields.Str()
-    userid = fields.Str()
-    password = fields.Str()
+    csrf_token = fields.Str(metadata={"description": "CSRF (Cross Site Request Forgery) token"})
+    name = fields.Str(metadata={"description": "name of the SMB resource"})
+    servername = fields.Str(metadata={"description": "NetBIOS name of the SMB server"})
+    serveraddr = fields.Str(metadata={"description": "IP address or hostname of the SMB server"})
+    serverport = fields.Str(metadata={"description": "TCP port of the SMB server"})
+    domainname = fields.Str(metadata={"description": "domain name of the SMB server"})
+    sharename = fields.Str(metadata={"description": "share name on the SMB server"})
+    path = fields.Str(metadata={"description": "path to the desired resource on the SMB server"})
+    userid = fields.Str(metadata={"description": "user ID for authentication on the SMB server"})
+    password = fields.Str(metadata={"description": "password for authentication on the SMB server"})
 
 
 @api.route("/smbresource", methods=["PUT"])
@@ -35,6 +31,7 @@ def createsmbresource():
     ---
     put:
       operationId: createSMBResource
+      description: Create a SMB resource in the database.
       tags: [smbresources]
       requestBody:
         required: true
@@ -43,9 +40,6 @@ def createsmbresource():
             schema: NewSMBResourceFormContent
       responses:
         201:
-          content:
-            application/json:
-              schema: EmptySchema
           description: SMB resource created
     """
     if not current_user().is_admin:
@@ -85,15 +79,17 @@ def deletesmbresource(resourceid):
     ---
     delete:
       operationId: deleteSMBResource
+      description: Delete a SMB resource from the database.
       tags: [smbresources]
       parameters:
       - in: path
-        schema: SMBResourceIdParameter
+        name: resourceid
+        schema:
+          type: integer
+        required: true
+        description: Numeric ID of the SMB resource to delete.
       responses:
         204:
-          content:
-            application/json:
-              schema: EmptySchema
           description: SMB resource deleted
     """
     resource = SMBResource.query.get(resourceid)

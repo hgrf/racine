@@ -1,5 +1,17 @@
 import $ from 'jquery';
+import R from '../racine';
+import FormDialog from '../dialogs/formdialog';
 import ConfirmDeleteDialog from '../dialogs/confirmdelete';
+
+class NewUserDialog extends FormDialog {
+  submit(formdata) {
+    R.usersAPI.createUser(formdata, this.apiCallback.bind(this));
+  }
+
+  onSuccess(data) {
+    location.reload();
+  }
+}
 
 class UsersView {
   constructor(params) {
@@ -7,8 +19,14 @@ class UsersView {
   }
 
   onDocumentReady() {
+    new NewUserDialog('#dlg-new-user');
+
     new ConfirmDeleteDialog({'user': (id) => {
-      location.href = `/settings/users?delete=${id}`;
+      R.usersAPI.deleteUser(id, (error, data, response) => {
+        if (!R.responseHasError(response)) {
+          location.reload();
+        }
+      });
     }});
 
     $('.loginas').click(function(event) {

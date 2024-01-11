@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, StringField, PasswordField, BooleanField, IntegerField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
+from ..main.forms import APIForm
 from ..validators import email_already_registered, username_already_registered
 
 
@@ -17,7 +18,9 @@ class NewSMBResourceForm(FlaskForm):
     submit = SubmitField("Submit")
 
 
-class NewUserForm(FlaskForm):
+class NewUserForm(APIForm):
+    _prfx = "new-user-"
+
     is_admin = BooleanField("Admin")
     username = StringField(
         "User name",
@@ -41,7 +44,6 @@ class NewUserForm(FlaskForm):
         validators=[DataRequired(), EqualTo("password2", message="Passwords must match.")],
     )
     password2 = PasswordField("Confirm password", validators=[DataRequired()])
-    submit = SubmitField("Submit")
 
 
 class EmailSettings(FlaskForm):

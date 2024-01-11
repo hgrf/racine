@@ -62,6 +62,53 @@ def ctx():
     raise Exception("Could not create app context")
 
 
+def test_create_user(ctx: Context):
+    r = ctx.client.put(
+        "/api/user",
+        headers={"Authorization": "Bearer " + ctx.api_token},
+        data={
+            "username": "Alice",
+            "email": "alice@test.com",
+            "password": "test",
+            "password2": "test",
+            "is_admin": False,
+        },
+    )
+    assert r.status_code == 201
+
+
+def test_create_user_with_existing_username(ctx: Context):
+    """Test that users cannot be created if username already exists."""
+    r = ctx.client.put(
+        "/api/user",
+        headers={"Authorization": "Bearer " + ctx.api_token},
+        data={
+            "username": "Alice",
+            "email": "alice2@test.com",
+            "password": "test",
+            "password2": "test",
+            "is_admin": False,
+        },
+    )
+    expect_status_code(r, 400)
+
+
+def test_create_user_with_existing_email(ctx: Context):
+    """Test that users cannot be created if email already exists."""
+    r = ctx.client.put(
+        "/api/user",
+        headers={"Authorization": "Bearer " + ctx.api_token},
+        data={
+            "username": "Alice2",
+            "email": "alice@test.com",
+            "password": "test",
+            "password2": "test",
+            "is_admin": False,
+        },
+    )
+    expect_status_code(r, 400)
+
+
 def test_create_sample(ctx: Context):
     """Test that samples can be created using the API."""
     r = ctx.client.put(
@@ -81,3 +128,23 @@ def test_create_action(ctx: Context):
         data={"description": "Test action"},
     )
     expect_status_code(r, 201)
+
+
+def test_create_share(ctx: Context):
+    """Test that shares can be created using the API."""
+    r = ctx.client.put(
+        "/api/share",
+        headers={"Authorization": "Bearer " + ctx.api_token},
+        data={"sampleid": 1, "userid": 2, "username": "Alice"},
+    )
+    expect_status_code(r, 201)
+
+
+def test_create_share_with_nonexisting_sample(ctx: Context):
+    """Test that shares cannot be created if sample does not exist."""
+    r = ctx.client.put(
+        "/api/share",
+        headers={"Authorization": "Bearer " + ctx.api_token},
+        data={"sampleid": 123, "userid": 2, "username": "Alice"},
+    )
+    expect_status_code(r, 400)

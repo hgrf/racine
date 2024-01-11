@@ -19,6 +19,7 @@ class Racine {
     this.samplesAPI = new API.SamplesApi(this.apiClient);
     this.sharesAPI = new API.SharesApi(this.apiClient);
     this.actionsAPI = new API.ActionsApi(this.apiClient);
+    this.usersAPI = new API.UsersApi(this.apiClient);
     this.fieldsAPI = new API.FieldsApi(this.apiClient);
 
     if (view in views) {
@@ -125,6 +126,24 @@ class Racine {
         self.errorDialog('Loading samples is not implemented for this view yet.');
       }
     });
+  }
+
+  responseHasError(response) {
+    let errorMsg = null;
+    if (!response) {
+      errorMsg = 'Server error. Please check your connection.';
+    } else if (response.error) {
+      if (response.body.message) {
+        errorMsg = response.body.message;
+      } else {
+        errorMsg = response.error;
+      }
+    }
+    if (errorMsg !== null) {
+      this.errorDialog(errorMsg);
+      return true;
+    }
+    return false;
   }
 }
 

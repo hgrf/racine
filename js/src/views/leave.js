@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import R from '../racine';
 
 import substringMatcher from '../util/substringmatcher';
 
@@ -19,11 +20,8 @@ class LeaveView {
 
 
     // set up autocompletion for the text field
-    $.ajax({
-      url: '/userlist',
-      type: 'post',
-      data: {'mode': 'leave'},
-      success: function( data ) {
+    R.usersAPI.getUserList({mode: 'leave'}, (error, data, response) => {
+      if (!R.responseHasError(response)) {
         $('#username').typeahead({
           minLength: 1,
           highlight: true,
@@ -38,7 +36,7 @@ class LeaveView {
             },
           },
         });
-      },
+      }
     });
 
     $('#confirm').click(function( event ) {

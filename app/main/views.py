@@ -1,11 +1,10 @@
 from flask import jsonify, redirect, render_template, request
 from flask_login import current_user, login_required, login_user, logout_user
-from sqlalchemy import not_
 
 from . import main
 from .forms import NewSampleForm, MarkAsNewsForm
 from ..version import RACINE_VERSION
-from ..models import Sample, Share, User
+from ..models import Sample, User
 
 
 def render_main_template(**params):
@@ -49,64 +48,6 @@ def search():
 def help():
     admins = User.query.filter_by(is_admin=True).all()
     return render_template("help.html", admins=admins, racine_version=RACINE_VERSION)
-
-
-@main.route("/userlist", methods=["POST"])
-@login_required
-def userlist():
-    # get list of all users
-    users = User.query.all()
-
-    # determine mode
-    mode = request.form.get("mode")
-    if mode == "share":
-        # get list of people who already share this sample
-        sample = Sample.query.get(int(request.form.get("sampleid")))
-        sharers = [share.user for share in sample.shares]
-        sharers.append(sample.owner)
-
-        # get list of max. 5 people that the current user has recently shared with
-        list1 = [
-            {"id": share.id, "name": share.user.username}
-            for share in Share.query.outerjoin(Sample, Sample.id == Share.sample_id)
-            .filter(Sample.owner_id == current_user.id)
-            .filter(not_(Share.user_id.in_([x.id for x in sharers])))
-            .order_by(Share.id.desc())
-            .group_by(Share.user_id)
-            .limit(5)
-            .all()
-        ]
-
-        # get list of max. 5 people that have recently shared with current user
-        list2 = [
-            {"id": share.id, "name": share.sample.owner.username}
-            for share in Share.query.filter(Share.user_id == current_user.id)
-            .outerjoin(Sample, Sample.id == Share.sample_id)
-            .filter(not_(Sample.owner_id.in_([x.id for x in sharers])))
-            .order_by(Share.id.desc())
-            .group_by(Sample.owner_id)
-            .limit(5)
-            .all()
-        ]
-
-        # now combine them, order by descending ID, remove duplicates and truncate to 5 elements
-        list = sorted(list1 + list2, key=lambda x: x["id"], reverse=True)
-        finallist = []
-        for i, x in enumerate(list):
-            if len(finallist) > 4:
-                break
-            if x["name"] not in finallist:
-                finallist.append(x["name"])
-
-        return jsonify(
-            users=[user.username for user in users if user not in sharers], recent=finallist
-        )
-    elif mode == "leave":
-        return jsonify(
-            users=[user.username for user in users if user != current_user and user.heir is None]
-        )
-    else:
-        return jsonify(users=[user.username for user in users])
 
 
 @main.route("/loginas", methods=["GET"])

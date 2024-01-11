@@ -33,12 +33,13 @@ install-dependencies:
 api-spec:
 	python patches/generate-api-spec.py
 
-api-client: api-spec
-	rm -rf js/src/api
+build/openapi-generator-cli.jar:
 	mkdir -p build
 	wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/6.2.1/openapi-generator-cli-6.2.1.jar \
 		-O build/openapi-generator-cli.jar
-	
+
+api-client: api-spec build/openapi-generator-cli.jar
+	rm -rf js/src/api	
 	java -jar build/openapi-generator-cli.jar generate \
 		-i docs/api.yaml -g javascript -p modelPropertyNaming=original -o js/src/api
 

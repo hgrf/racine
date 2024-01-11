@@ -140,6 +140,7 @@ def getfield(target, field, id):
     ---
     get:
       operationId: getField
+      description: Get field value of a database item.
       tags: [fields]
       parameters:
       - in: path
@@ -213,6 +214,7 @@ def updatefield(target, field, id):
     ---
     post:
       operationId: setField
+      description: Set field value of a database item.
       tags: [fields]
       parameters:
       - in: path
@@ -224,9 +226,6 @@ def updatefield(target, field, id):
             schema: ValueSchema
       responses:
         200:
-          content:
-            application/json:
-              schema: EmptySchema
           description: Field value updated successfully
     """
     if not (id and target and field and target in supported_targets):

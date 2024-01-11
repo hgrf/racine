@@ -39,7 +39,8 @@ def celery_init_app(app: Flask) -> Celery:
     )
     celery_app.set_default()
     app.extensions["celery"] = celery_app
-    usage_stats_task.delay()
+    if not app.config["TESTING"]:
+        usage_stats_task.delay()
     return celery_app
 
 

@@ -1,6 +1,6 @@
 {% set active = "smbresources" %}
 {% extends "settings/base.html" %}
-{% import "util/wtf.html" as wtf %}
+{% import "util/dialog.html" as dialog %}
 
 {% block styles %}
     {{super()}}
@@ -34,24 +34,18 @@
         <td><div class="editable" data-setter="/api/set/smbresource/password/{{ smbresource.id }}">{{ smbresource.password }}</div></td>
     </tr>
     {% endfor %}
-    <form method="POST">
-    {{ form.hidden_tag() }}
-    <tr>
-        <td>{{ form.submit(class_='form-control', value='+') }}</td>
-        <td>{{ form.name(class_='form-control') }}</td>
-        <td>{{ form.servername(class_='form-control') }}</td>
-        <td>{{ form.serveraddr(class_='form-control') }}</td>
-        <td>{{ form.serverport(class_='form-control') }}</td>
-        <td>{{ form.domainname(class_='form-control') }}</td>
-        <td>{{ form.sharename(class_='form-control') }}</td>
-        <td>{{ form.path(class_='form-control') }}</td>
-        <td>{{ form.userid(class_='form-control') }}</td>
-        <td>{{ form.password(class_='form-control') }}</td>
-    </tr>
-    </form>
     </tbody>
 </table>
 
+<a data-toggle="modal" data-target="#dlg-new-smbresource" href="" title="New SMB resource">
+    <i class="glyphicon glyphicon-plus"></i>&nbsp;New SMB resource
+</a>
+{% endblock %}
+
+{% block dialogs %}
+{{ super() }}
+    {% call dialog.render_form_dialog(form, 'dlg-new-smbresource', 'New SMB resource', 'modal-lg') %}
+    {% endcall %}
 {% endblock %}
 
 {% block scripts %}

@@ -5,7 +5,9 @@ from ..main.forms import APIForm
 from ..validators import email_already_registered, username_already_registered
 
 
-class NewSMBResourceForm(FlaskForm):
+class NewSMBResourceForm(APIForm):
+    _prfx = "new-smbresource-"
+
     name = StringField("SMB Resource name:")
     servername = StringField("Server name (NetBIOS):")
     serveraddr = StringField("Server address:")
@@ -15,7 +17,6 @@ class NewSMBResourceForm(FlaskForm):
     path = StringField("Path:")
     userid = StringField("User name:")
     password = PasswordField("Password:")
-    submit = SubmitField("Submit")
 
 
 class NewUserForm(APIForm):

@@ -9,6 +9,7 @@ from app.api import (  # noqa: E402
     samples,
     shares,
     users,
+    smbresources,
 )
 
 
@@ -24,6 +25,7 @@ modules = [
     APIModule("shares", shares, "Endpoints related to shares"),
     APIModule("actions", actions, "Endpoints related to actions"),
     APIModule("users", users, "Endpoints related to users"),
+    APIModule("smbresources", smbresources, "Endpoints related to SMB resources"),
     APIModule("emailing", emailing, "Endpoints related to emailing"),
     APIModule("fields", fields, "Endpoints related to fields"),
 ]

@@ -238,7 +238,7 @@ class SampleView extends AjaxView {
       if (flag.hasClass('markasnews')) {
         self.dlgMarkAsNews.show(actionid);
       } else {
-        R.actionsAPI.unmarkAsNews({'actionid': actionid}, function(error, data, response) {
+        R.actionsAPI.unmarkAsNews(actionid, function(error, data, response) {
           if (!R.responseHasError(response)) {
             flag.removeClass('unmarkasnews');
             flag.addClass('markasnews');

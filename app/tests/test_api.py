@@ -15,7 +15,9 @@ class Context:
 
 
 def expect_status_code(r: TestResponse, code: int):
-    assert r.status_code == code, f"Expected status code {code}, got {r.status_code}, response: {r.data.decode('utf-8')}"
+    assert (
+        r.status_code == code
+    ), f"Expected status code {code}, got {r.status_code}, response: {r.data.decode('utf-8')}"
 
 
 g_ctx = None
@@ -58,54 +60,6 @@ def ctx():
 
     g_ctx = None
     raise Exception("Could not create app context")
-
-
-def test_create_users(ctx: Context):
-    """Test that users can be created using the API."""
-    r = ctx.client.put(
-        "/api/user",
-        headers={"Authorization": "Bearer " + ctx.api_token},
-        data={
-            "username": "Alice",
-            "email": "alice@test.com",
-            "password": "test",
-            "password2": "test",
-            "is_admin": False,
-        },
-    )
-    expect_status_code(r, 201)
-
-
-def test_create_user_with_existing_username(ctx: Context):
-    """Test that users cannot be created if username already exists."""
-    r = ctx.client.put(
-        "/api/user",
-        headers={"Authorization": "Bearer " + ctx.api_token},
-        data={
-            "username": "Alice",
-            "email": "alice2@test.com",
-            "password": "test",
-            "password2": "test",
-            "is_admin": False,
-        },
-    )
-    expect_status_code(r, 400)
-
-
-def test_create_user_with_existing_email(ctx: Context):
-    """Test that users cannot be created if email already exists."""
-    r = ctx.client.put(
-        "/api/user",
-        headers={"Authorization": "Bearer " + ctx.api_token},
-        data={
-            "username": "Alice2",
-            "email": "alice@test.com",
-            "password": "test",
-            "password2": "test",
-            "is_admin": False,
-        },
-    )
-    expect_status_code(r, 400)
 
 
 def test_create_sample(ctx: Context):

@@ -24,6 +24,16 @@ class UserListSchema(OrderedSchema):
     )
 
 
+class ModeParameter(OrderedSchema):
+    mode = fields.Str()                 # "share", "leave" or anything else (default)
+    sampleid = fields.Int()             # sample ID (only for mode="share")
+
+
+class UserListSchema(OrderedSchema):
+    users = fields.List(fields.Str())   # list of users according to mode
+    recent = fields.List(fields.Str())  # list of recently shared with / by users (mode="share")
+
+
 class NewUserFormContent(OrderedSchema):
     csrf_token = fields.Str(metadata={"description": "CSRF (Cross Site Request Forgery) token"})
     is_admin = fields.Bool(metadata={"description": "whether the user is an administrator"})

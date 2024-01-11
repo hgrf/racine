@@ -4,15 +4,15 @@
 
 | Name                                                                               |    Stmts |     Miss |   Cover |   Missing |
 |----------------------------------------------------------------------------------- | -------: | -------: | ------: | --------: |
-| app/\_\_init\_\_.py                                                                |       45 |        0 |    100% |           |
-| app/api/\_\_init\_\_.py                                                            |        3 |        0 |    100% |           |
-| app/api/actions.py                                                                 |       98 |       54 |     45% |74-95, 116-123, 147-153, 176-207, 230-253 |
-| app/api/common.py                                                                  |        8 |        0 |    100% |           |
+| app/\_\_init\_\_.py                                                                |       46 |        3 |     93% | 25-26, 43 |
+| app/api/\_\_init\_\_.py                                                            |        9 |        0 |    100% |           |
+| app/api/actions.py                                                                 |       92 |       54 |     41% |71-92, 115-122, 144-150, 171-202, 225-248 |
+| app/api/common.py                                                                  |        4 |        0 |    100% |           |
 | app/api/emailing.py                                                                |       46 |       23 |     50% |29-51, 76-102 |
 | app/api/errors.py                                                                  |       11 |        7 |     36% |  6-11, 15 |
-| app/api/fields.py                                                                  |      103 |       56 |     46% |31-36, 40-45, 154-176, 181-206, 232-264 |
-| app/api/samples.py                                                                 |      125 |       71 |     43% |46-55, 63-68, 93-119, 141-144, 166-168, 190-192, 196-202, 226-260 |
-| app/api/shares.py                                                                  |       63 |       43 |     32% |49-75, 101-126 |
+| app/api/fields.py                                                                  |      103 |       56 |     46% |31-36, 40-45, 155-177, 182-207, 231-263 |
+| app/api/samples.py                                                                 |      117 |       71 |     39% |30-39, 47-52, 83-109, 129-132, 159-161, 188-190, 194-200, 224-258 |
+| app/api/shares.py                                                                  |       65 |       43 |     34% |49-75, 100-125 |
 | app/auth/\_\_init\_\_.py                                                           |        3 |        0 |    100% |           |
 | app/auth/forms.py                                                                  |       15 |        0 |    100% |           |
 | app/auth/views.py                                                                  |       71 |       34 |     52% |28, 34-36, 45, 66-88, 93-103, 110-114 |
@@ -54,7 +54,7 @@
 | app/smbinterface.py                                                                |       84 |       67 |     20% |29-51, 57-71, 94-110, 114-145, 149, 154-173 |
 | app/tests/\_\_init\_\_.py                                                          |        0 |        0 |    100% |           |
 | app/tests/test\_main.py                                                            |       26 |        0 |    100% |           |
-| app/usagestats.py                                                                  |       55 |       14 |     75% |37-38, 72-85 |
+| app/usagestats.py                                                                  |       55 |       35 |     36% |27-85, 90-100 |
 | app/validators.py                                                                  |       14 |        9 |     36% |6-7, 11-12, 16-21 |
 | app/version.py                                                                     |       12 |        1 |     92% |        15 |
 | migrations/env.py                                                                  |       33 |       10 |     70% |43-47, 62-66, 88 |
@@ -80,7 +80,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2351** | **1150** | **51%** |           |
+|                                                                          **TOTAL** | **2342** | **1174** | **50%** |           |
 
 
 ## Setup coverage badge

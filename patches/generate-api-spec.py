@@ -25,35 +25,17 @@ spec = APISpec(
         ),
         license=dict(name="GPL v3", url="https://github.com/hgrf/racine/blob/master/LICENSE.md"),
     ),
-    tags=[
-        dict(name="samples", description="Endpoints related to samples"),
-        dict(name="shares", description="Endpoints related to shares"),
-        dict(name="actions", description="Endpoints related to actions"),
-    ],
+    tags=[dict(name=m.name, description=m.description) for m in api.modules],
     plugins=[FlaskPlugin(), MarshmallowPlugin()],
 )
 
 app = create_app("testing")
 with app.test_request_context():
-    spec.path(view=api.samples.createsample)
-    spec.path(view=api.samples.deletesample)
-    spec.path(view=api.samples.togglearchived)
-    spec.path(view=api.samples.togglecollaborative)
-    spec.path(view=api.samples.changeparent)
-
-    spec.path(view=api.shares.createshare)
-    spec.path(view=api.shares.deleteshare)
-
-    spec.path(view=api.actions.createaction)
-    spec.path(view=api.actions.deleteaction)
-    spec.path(view=api.actions.swapactionorder)
-    spec.path(view=api.actions.markasnews)
-    spec.path(view=api.actions.unmarkasnews)
-
-    spec.path(view=api.fields.getfield)
-    spec.path(view=api.fields.updatefield)
-
-    spec.path(view=api.emailing.send_mail_progress)
+    for m in api.modules:
+        for name, attr in m.module.__dict__.items():
+            if callable(attr):
+                if hasattr(attr, "__doc__") and "operationId:" in str(attr.__doc__):
+                    spec.path(view=attr)
 
 with open("docs/swagger.json", "w") as f:
     json.dump(spec.to_dict(), f, indent=4)

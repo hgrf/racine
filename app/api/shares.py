@@ -2,7 +2,7 @@ from flask import jsonify, request
 from marshmallow import fields
 
 from . import api
-from .common import OrderedSchema, IdParameter, EmptySchema  # noqa: F401
+from .common import OrderedSchema
 from .errors import bad_request
 
 from ..common import db
@@ -12,13 +12,15 @@ from ..models import News, Share, record_activity, token_auth
 
 
 class CreateShareContent(OrderedSchema):
-    sampleid = fields.Int()
-    userid = fields.Int()
-    username = fields.Str()
+    sampleid = fields.Int(metadata={"description": "Numeric ID of the sample to share"})
+    userid = fields.Int(metadata={"description": "Numeric ID of the user to share with"})
+    username = fields.Str(metadata={"description": "Username of the user to share with"})
 
 
-class CreateShareError(OrderedSchema):
-    pass
+class ShareContent(OrderedSchema):
+    username = fields.Str(metadata={"description": "Username of the user to share with"})
+    userid = fields.Int(metadata={"description": "Numeric ID of the user to share with"})
+    shareid = fields.Int(metadata={"description": "Numeric ID of the share"})
 
 
 @api.route("/share", methods=["PUT"])
@@ -28,6 +30,7 @@ def createshare():
     ---
     put:
       operationId: createShare
+      description: Create a share in the database.
       tags: [shares]
       requestBody:
         required: true
@@ -36,14 +39,11 @@ def createshare():
             schema: CreateShareContent
       responses:
         201:
-          content:
-            application/json:
-              schema: EmptySchema
           description: Share created
-        400:
           content:
             application/json:
-              schema: CreateShareError
+              schema: ShareContent
+        400:
           description: Failed to create share
     """
     sample = Sample.query.get(int(request.form.get("sampleid")))
@@ -82,20 +82,19 @@ def deleteshare(id):
     ---
     delete:
       operationId: deleteShare
+      description: Delete a share from the database.
       tags: [shares]
       parameters:
       - in: path
-        schema: IdParameter
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: Numeric ID of the share to delete.
       responses:
         204:
-          content:
-            application/json:
-              schema: EmptySchema
           description: Share deleted
         205:
-          content:
-            application/json:
-              schema: EmptySchema
           description: Share deleted, sample no longer accessible for current user
     """
     share = Share.query.get(id)

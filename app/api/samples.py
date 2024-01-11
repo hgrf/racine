@@ -3,7 +3,7 @@ from functools import wraps
 from marshmallow import fields
 
 from . import api
-from .common import OrderedSchema, EmptySchema  # noqa: F401
+from .common import OrderedSchema
 from .errors import bad_request
 from ..main.forms import NewSampleForm
 
@@ -13,31 +13,15 @@ from ..models.tree import is_indirectly_shared, logical_parent
 
 
 class SampleIdParameter(OrderedSchema):
-    sampleid = fields.Int()
+    sampleid = fields.Int(metadata={"description": "Numeric ID of the sample"})
 
 
 class NewSampleFormContent(OrderedSchema):
-    csrf_token = fields.Str()
-    name = fields.Str()
-    parent = fields.Str()
-    parentid = fields.Int()
-    description = fields.Str()
-
-
-class NewSampleResponse(OrderedSchema):
-    sampleid = fields.Int()
-
-
-class ToggleArchivedResponse(OrderedSchema):
-    isarchived = fields.Bool()
-
-
-class ToggleCollaborativeResponse(OrderedSchema):
-    iscollaborative = fields.Bool()
-
-
-class ParentIdParameter(OrderedSchema):
-    parentid = fields.Int()
+    csrf_token = fields.Str(metadata={"description": "CSRF (Cross-Site Request Forgery) token"})
+    name = fields.Str(metadata={"description": "Name of the sample"})
+    parent = fields.Str(metadata={"description": "Parent of the sample"})
+    parentid = fields.Int(metadata={"description": "ID of the parent of the sample"})
+    description = fields.Str(metadata={"description": "Description of the sample"})
 
 
 def validate_sample_access(func):
@@ -77,6 +61,7 @@ def createsample():
     ---
     put:
       operationId: createSample
+      description: Create a sample in the database.
       tags: [samples]
       requestBody:
         required: true
@@ -87,7 +72,12 @@ def createsample():
         201:
           content:
             application/json:
-              schema: NewSampleResponse
+              schema:
+                type: object
+                properties:
+                  sampleid:
+                    type: integer
+                    description: Form was not validated, but user should resubmit.
           description: Sample created
     """
     form = NewSampleForm()
@@ -127,15 +117,13 @@ def deletesample(sample):
     ---
     delete:
       operationId: deleteSample
+      description: Delete a sample from the database.
       tags: [samples]
       parameters:
       - in: path
         schema: SampleIdParameter
       responses:
         204:
-          content:
-            application/json:
-              schema: EmptySchema
           description: Sample deleted
     """
     record_activity("delete:sample", token_auth.current_user(), sample)
@@ -152,6 +140,7 @@ def togglearchived(sample):
     ---
     post:
       operationId: toggleArchived
+      description: Toggle the isarchived-flag of a sample.
       tags: [samples]
       parameters:
       - in: path
@@ -160,7 +149,11 @@ def togglearchived(sample):
         200:
           content:
             application/json:
-              schema: ToggleArchivedResponse
+              schema:
+                type: object
+                properties:
+                  isarchived:
+                    type: boolean
           description: isarchived-flag toggled
     """
     sample.isarchived = not sample.isarchived
@@ -176,6 +169,7 @@ def togglecollaborative(sample):
     ---
     post:
       operationId: toggleCollaborative
+      description: Toggle the iscollaborative-flag of a sample.
       tags: [samples]
       parameters:
       - in: path
@@ -184,7 +178,11 @@ def togglecollaborative(sample):
         200:
           content:
             application/json:
-              schema: ToggleCollaborativeResponse
+              schema:
+                type: object
+                properties:
+                  iscollaborative:
+                    type: boolean
           description: iscollaborative-flag toggled
     """
     sample.iscollaborative = not sample.iscollaborative
@@ -210,17 +208,17 @@ def changeparent(sample, parentid):
     ---
     post:
       operationId: changeParent
+      description: Change the parent of a sample.
       tags: [samples]
       parameters:
       - in: path
         schema: SampleIdParameter
       - in: path
-        schema: ParentIdParameter
+        name: parentid
+        schema:
+          type: integer
       responses:
         200:
-          content:
-            application/json:
-              schema: EmptySchema
           description: parent changed
     """
     user = token_auth.current_user()

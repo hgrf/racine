@@ -4,7 +4,7 @@ from marshmallow import fields
 
 from . import api
 from .samples import validate_sample_access
-from .common import OrderedSchema, IdParameter, EmptySchema  # noqa: F401
+from .common import OrderedSchema
 from .errors import bad_request
 from ..main.forms import MarkAsNewsForm, NewActionForm
 
@@ -12,34 +12,24 @@ from ..common import db
 from ..models import Action, News, Sample, record_activity, token_auth
 
 
-class SampleParameter(OrderedSchema):
-    sampleid = fields.Int()
-
-
 class NewActionFormContent(OrderedSchema):
-    csrf_token = fields.Str()
-    timestamp = fields.Date()
-    description = fields.Str()
-
-
-class CreateActionError(OrderedSchema):
-    resubmit = fields.Bool()
+    csrf_token = fields.Str(metadata={"description": "CSRF (Cross Site Request Forgery) token"})
+    timestamp = fields.Date(metadata={"description": "date of the action"})
+    description = fields.Str(metadata={"description": "description of the action"})
 
 
 class SwapActionOrderContent(OrderedSchema):
-    actionid = fields.Int()
-    swapid = fields.Int()
+    actionid = fields.Int(metadata={"description": "Numeric ID of the first action"})
+    swapid = fields.Int(
+        metadata={"description": "Numeric ID of the second action for swapping order"}
+    )
 
 
 class MarkAsNewsContent(OrderedSchema):
-    csrf_token = fields.Str()
-    title = fields.Str()
-    expires = fields.Date()
-    actionid = fields.Int()
-
-
-class UnmarkAsNewsContent(OrderedSchema):
-    actionid = fields.Int()
+    csrf_token = fields.Str(metadata={"description": "CSRF (Cross Site Request Forgery) token"})
+    title = fields.Str(metadata={"description": "title of the news"})
+    expires = fields.Date(metadata={"description": "expiration date of the news"})
+    actionid = fields.Int(metadata={"description": "Numeric ID of the action to mark as news"})
 
 
 @api.route("/action/<int:sampleid>", methods=["PUT"])
@@ -50,10 +40,15 @@ def createaction(sample):
     ---
     put:
       operationId: createAction
+      description: Create an action in the database.
       tags: [actions]
       parameters:
       - in: path
-        schema: SampleParameter
+        name: sampleid
+        schema:
+          type: integer
+        required: true
+        description: Numeric ID of the sample to add the action to.
       requestBody:
         required: true
         content:
@@ -61,14 +56,16 @@ def createaction(sample):
             schema: NewActionFormContent
       responses:
         201:
-          content:
-            application/json:
-              schema: EmptySchema
           description: Action created
         400:
           content:
             application/json:
-              schema: CreateActionError
+              schema:
+                type: object
+                properties:
+                  resubmit:
+                    type: boolean
+                    description: Form was not validated, but user should resubmit.
           description: Failed to create action
     """
     form = NewActionForm()
@@ -102,15 +99,17 @@ def deleteaction(id):
     ---
     delete:
       operationId: deleteAction
+      description: Delete an action from the database.
       tags: [actions]
       parameters:
       - in: path
-        schema: IdParameter
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: Numeric ID of the action to delete.
       responses:
         204:
-          content:
-            application/json:
-              schema: EmptySchema
           description: Action deleted
     """
     action = Action.query.get(id)
@@ -131,6 +130,7 @@ def swapactionorder():
     ---
     post:
       operationId: swapActionOrder
+      description: Swap the order of two actions in the database.
       tags: [actions]
       requestBody:
         required: true
@@ -139,9 +139,6 @@ def swapactionorder():
             schema: SwapActionOrderContent
       responses:
         200:
-          content:
-            application/json:
-              schema: EmptySchema
           description: Action order swapped
     """
     action = Action.query.get(int(request.form.get("actionid")))
@@ -160,6 +157,7 @@ def markasnews():
     ---
     post:
       operationId: markAsNews
+      description: Mark an action as news.
       tags: [actions]
       requestBody:
         required: true
@@ -168,9 +166,6 @@ def markasnews():
             schema: MarkAsNewsContent
       responses:
         200:
-          content:
-            application/json:
-              schema: EmptySchema
           description: Action marked as news
     """
     form = MarkAsNewsForm()
@@ -207,27 +202,27 @@ def markasnews():
     return "", 500  # this should never happen
 
 
-@api.route("/action/unmarkasnews", methods=["POST"])
+@api.route("/action/unmarkasnews/<int:actionid>", methods=["POST"])
 @token_auth.login_required
-def unmarkasnews():
+def unmarkasnews(actionid):
     """Unmark an action as news.
     ---
     post:
       operationId: unmarkAsNews
+      description: Unmark an action as news.
       tags: [actions]
-      requestBody:
+      parameters:
+      - in: path
+        name: actionid
+        schema:
+          type: integer
         required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema: UnmarkAsNewsContent
+        description: Numeric ID of the action to unmark as news.
       responses:
         200:
-          content:
-            application/json:
-              schema: EmptySchema
           description: Action unmarked as news
     """
-    action = Action.query.get(request.form.get("actionid"))
+    action = Action.query.get(actionid)
     if action is None:
         return bad_request("Action does not exist")
 

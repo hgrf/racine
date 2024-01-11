@@ -134,7 +134,7 @@ class Racine {
     if (!response) {
       errorMsg = 'Server error. Please check your connection.';
     } else if (response.error) {
-      if (response.body.message) {
+      if (response.body && response.body.message) {
         errorMsg = response.body.message;
       } else {
         errorMsg = response.error;

@@ -106,3 +106,24 @@ def test_create_user_with_existing_email(ctx: Context):
         },
     )
     expect_status_code(r, 400)
+
+
+def test_create_sample(ctx: Context):
+    """Test that samples can be created using the API."""
+    r = ctx.client.put(
+        "/api/sample",
+        headers={"Authorization": "Bearer " + ctx.api_token},
+        data={"name": "Sample_1", "description": "Test sample"},
+    )
+    expect_status_code(r, 201)
+
+
+def test_create_action(ctx: Context):
+    """Test that actions can be created using the API."""
+    sample_id = 1
+    r = ctx.client.put(
+        f"/api/action/{sample_id}",
+        headers={"Authorization": "Bearer " + ctx.api_token},
+        data={"description": "Test action"},
+    )
+    expect_status_code(r, 201)

@@ -37,7 +37,7 @@ def login():
 
     last_logged_in_names = []
     for user_id in last_logged_in:
-        user = User.query.get(user_id)
+        user = db.session.get(User, user_id)
         if user:
             last_logged_in_names.append(user.username)
 

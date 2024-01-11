@@ -29,7 +29,7 @@ def validate_sample_access(func):
     def wrapper(*args, **kwargs):
         if "sampleid" not in kwargs:
             return bad_request("Invalid use of decorator: sampleid is missing")
-        sample = Sample.query.get(kwargs.pop("sampleid"))
+        sample = db.session.get(Sample, kwargs.pop("sampleid"))
         if (
             sample is None
             or sample.isdeleted

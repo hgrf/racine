@@ -1,5 +1,5 @@
 {% if news %}
-    <h2>News</h2>
+    <h3>News</h3>
 {% endif %}
 {% for n in news %}
     <div class="news">
@@ -20,7 +20,10 @@
     </div>
 {% endfor %}
 
-<h2>Disk space</h2>
+{% if news %}
+<hr/>
+{% endif %}
+<h3>Disk space</h3>
 {{ (totuploadvol+dbsize)|filesizeformat }} out of {{ (availablevol+totuploadvol+dbsize)|filesizeformat }} occupied.
 <div class="progress" style="width: 200px;">
     <div class="progress-bar" role="progressbar"
@@ -28,7 +31,8 @@
     </div>
 </div>
 {% if recent_samples %}
-    <h2>Recent samples</h2>
+    <hr/>
+    <h3>Recent samples</h3>
 {% endif %}
 {% for s in recent_samples %}
     {# TODO: might want to rather use CSS for style #}
@@ -41,7 +45,8 @@
 {# information only for the administrator #}
 {% if current_user.is_admin %}
 {% if conns %}
-    <h2>Active SMB connections</h2>
+    <hr/>
+    <h3>Active SMB connections</h3>
     <table>
     {% for c in conns %}
         <tr><td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;">
@@ -51,7 +56,8 @@
     {% endfor %}
     </table>
 {% endif %}
-    <h2>Upload volume per user</h2>
+    <hr/>
+    <h3>Upload volume per user</h3>
     <table>
     {% for u in uploadvols %}
         {% if u[1] %}
@@ -71,7 +77,9 @@
     {% endfor %}
     </table>
 {% if newactionsallusers %}
-    <h2>Recent activity per user (actions added in the last 7 days):</h2>
+    <hr/>
+    <h3>Recent activity per user</h3>
+    <p>(actions added in the last 7 days)</p>
     <table>
     {% for n in newactionsallusers %}
         <tr>

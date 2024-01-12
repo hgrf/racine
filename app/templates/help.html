@@ -16,9 +16,9 @@
 
 {% block page_content %}
 <div class="js-toc-content">
-    <h2>Racine version</h2>
+    <h3>Racine version</h3>
     You are using Racine <b>{{ racine_version }}</b>.
-    <h2>External resources</h2>
+    <h3>External resources</h3>
     <p>For more information about Racine, please visit the following websites:
     <ul>
         <li>Get an overview on the <a href="https://hgrf.github.io/racine/">Racine website</a>.</li>
@@ -33,7 +33,7 @@
         </li>
     </ul>
     </p>
-    <h2>Introduction</h2>
+    <h3>Introduction</h3>
     <p>Racine is a sample management tool that enables researchers to keep track of their samples from any PC in a laboratory.
     The programme is a Flask-based web service that runs on a central server in the local network of your research institute and that can be
     accessed from all other computers on the same network using the normal web browser (should be a recent browser though).</p>
@@ -41,14 +41,14 @@
     a "file" and a "folder", any sample can contain other samples as well as the so-called <i>actions</i>. Samples can be shared with other
     users, enabling them to add actions. However, no user can modify the actions added by another user.</p>
 
-    <h2>Administrators</h2>
+    <h3>Administrators</h3>
     <p>Your administrators are:
     {% for admin in admins %}
     <br><a href="mailto:{{ admin.email }}">{{ admin.email }}</a>
     {% endfor %}
     </p>
 
-    <h2>The header</h2>
+    <h3>The header</h3>
     <p>The header contains a search bar and some icons. If you type a keyword in the search bar and press enter, a list of samples containing
     the keyword in their sample name will be displayed. You can also select a search result from the dropdown menu and go directly to the
     corresponding sample. In the case of shared samples, the sample owner is displayed after the <i class="glyphicon glyphicon-user"></i>-icon
@@ -59,7 +59,7 @@
     <i class="glyphicon glyphicon-log-out"></i>-icon logs you out of the system and the <i class="glyphicon glyphicon-question-sign"></i>-icon
     leads to this help page.</p>
 
-    <h2>The navigation bar</h2>
+    <h3>The navigation bar</h3>
     <p>The navigation bar on the left contains all your samples and the samples that other users shared with you. By double-clicking on a sample,
     you can load it into the editor. If you hold the CTRL key while double-clicking, the sample is opened in a new tab/window.
     By dragging a sample on another sample, you can define your hierarchy. When a sample contains other
@@ -74,12 +74,12 @@
     sorting mechanism is highlighted in dark grey.</p>
     <img src="/static/help/navigation.png">
 
-    <h2>The welcome page</h2>
+    <h3>The welcome page</h3>
     The welcome page shows you information about the available disk space on the server and about recent activity
     (samples that you have added actions to in the last seven days). You can click on the sample name to quickly
     continue working where you left off.
 
-    <h2>The editor</h2>
+    <h3>The editor</h3>
     <p>At the top of the editor window you see the sample name, image, description and shares. The name and the description can be edited by
     double-clicking on the corresponding field or by hovering with the mouse over the field and clicking on the edit button at the top right.
     A sample image can be added by clicking on the corresponding button. It can either be uploaded from your PC or it can be taken from a
@@ -99,7 +99,7 @@
     context menu. Note that vector graphics (SVG) cannot be rotated by Racine, only BMP, PNG, TIFF, JPEG.</p>
     <img src="/static/help/editor.png">
 
-    <h2>Image compression</h2>
+    <h3>Image compression</h3>
     <p>When you upload an image to the server, it is automatically scaled to a maximum lateral size of 800 pixels and
     converted to the JPEG format. When you open a sample in the editor, all images are shown in this format. However,
     the original image is also stored on the server and can be retrieved either by clicking on the image, in which
@@ -107,7 +107,7 @@
     <i class="glyphicon glyphicon-hd-video"></i>-icon that appears on the top right of the image when your mouse hovers
     over it, in which case the original image will be opened in a new window or tab.</p>
 
-    <h2>Sharing samples</h2>
+    <h3>Sharing samples</h3>
     <p>There are two types of shares: <i>direct</i> and <i>indirect shares</i>. Direct shares can be defined by adding the corresponding user to the
     share list on the upper right of the editor window. These direct shares will appear on the top level of that user's navigation bar. The other user
     can move the direct share to another location in his hierarchy, without affecting its location in the owner's hierarchy. This is called <i>
@@ -115,7 +115,7 @@
     lock next to the owner's name in the other user's navigation bar. These indirect shares cannot be mounted in a different location.</p>
     <img src="/static/help/sharing.png">
 
-    <h2>Collaborative samples</h2>
+    <h3>Collaborative samples</h3>
     <p>A sample can be marked as "collaborative" by clicking on the <img src="/static/images/collaborative.png" width="16" height="16">-button
     at the top of the editor. This enables the users that share this sample to edit all actions, even the ones that are not their own. However,
     you should take into account the following limitations of this functionality:
@@ -128,7 +128,7 @@
     </ul>
     </p>
 
-    <h2>Marking actions as news</h2>
+    <h3>Marking actions as news</h3>
     <p>An action can be marked as news by clicking on the flag next to the action:</p>
     <img src="/static/help/news.png">
     <p>When you click on the flag, a dialog will appear, prompting you to enter a title and an expiry date for the news. Once the news is
@@ -137,20 +137,20 @@
     <p>Note that only the user who has initially marked an action as news can remove this flag from the action. Otherwise, the news will
     only disappear once it expires.</p>
 
-    <h2>Using LaTeX</h2>
+    <h3>Using LaTeX</h3>
     <p>You can use LaTeX to typeset mathematical expressions in the sample description and in the actions. You can use \(...\) for in-line math,
     and \[...\] for displayed equations. The software also recognizes the TeX delimiters $$...$$ for displayed equations. The type-setting
     happens automatically once you save a modified action or description.</p>
     <img src="/static/help/latex.png">
 
-    <h2>Attaching files</h2>
+    <h3>Attaching files</h3>
     <p>By dragging and dropping files into a description or action field, it is automatically uploaded to the sample manager and stored on 
     the server. It can be downloaded by simply clicking on the link after the description/action is saved. If the uploaded file is an image,
     it will not be saved as an attachment, but it will be directly displayed in the editor. If you get an error message "HTTP 413", that means
     that the uploaded file is too large. The maximum file size is determined by the administrator.</p>
     <img src="/static/help/attachment.png">
 
-    <h2>Using file servers</h2>
+    <h3>Using file servers</h3>
     <p>The sample manager can help you to find images (for example from a microscope) on SMB file servers. The connection to the file servers has
     to be set up by the <a href="#administrators">administrators</a>. In order to access the file servers, click on the "file browser" icon in the
     editor (step 1 the figure below). A dialog will pop up and show you the different available network resources. By clicking on the "network"-icon
@@ -170,7 +170,7 @@
     <img src="/static/images/spacer.png" style="width:16px;height:16px;background:url(/static/ckeditor/skins/moono-lisa/icons_hidpi.png) 0 -1056px;background-size:16px 1104px;">-icon.
     </p>
 
-    <h2>Printing</h2>
+    <h3>Printing</h3>
     <p>By clicking on the <i class="glyphicon glyphicon-print"></i>-icon in the header bar, you get to the printing page, where you can print all
     actions added in a specific time window or to a specific sample. If you want to define a time window, simply fill in the <i>From</i>- and
     <i>To</i>-fields using the popup calender or by typing the date in the following format: YYYY-MM-DD. If you want to restrict the printing
@@ -180,36 +180,36 @@
     <p>By default, the user names associated with each action are displayed next to the action date. If you wish to disable this, you can activate
     the checkbox <i>Hide user names</i>. In order to save space and ink, you can reduce the image sizes using the corresponding drop down menu.</p>
 
-    <h2>Modifying your profile</h2>
+    <h3>Modifying your profile</h3>
     <p>In order to modify your profile, click on the <i class="glyphicon glyphicon-user"></i>-icon in the header menu.</p>
     
-    <h3>Changing your details</h3>
+    <h4>Changing your details</h4>
     <p>By selecting the "Change my details" entry in the menu on the left, you can change your user name or associated email address. You need
     to confirm these changes by typing your current password in the corresponding field. Your password can be changed by selecting "Change
     my password".</p>
 
-    <h3>Leaving the lab</h3>
+    <h4>Leaving the lab</h4>
     <p>The "Leave" menu entry leads to a page where you can designate someone who will "inherit" all your data once you leave the laboratory.
     You will still be able to log in after leaving. The designated user will see your name at the bottom of his navigation bar. By double-clicking
     on your name, the other user can access all of your samples.</p>
     <img src="/static/help/leaving.png?version=20191203">
 
 {% if current_user.is_admin %}
-    <h2>Modifying the settings</h2>
+    <h3>Modifying the settings</h3>
     <p>In order to access the settings page, click on the <i class="glyphicon glyphicon-wrench"></i>-symbol on the upper right.</p>
 
-    <h3>Set up email</h3>
+    <h4>Set up email</h4>
     <p>In order to enable users to reset their password via email, the administrator has to set up an email account on the corresponding settings
     page ("Email" menu item in the settings menu).</p>
 
-    <h3>Managing users</h3>
+    <h4>Managing users</h4>
     <p>In order to manage users, select the "Users" menu item
     in the settings menu. New users can be added using the form at the bottom of the page. Existing users can be deleted by clicking on the
     <i class="glyphicon glyphicon-trash"></i>-symbol in the corresponding row. The administrators can log in as any user by clicking on the
     corresponding <i class="glyphicon glyphicon-log-in"></i>-icon. User names, email addresses and the admin "flag" can be edited by double-
     clicking on the respective fields or by clicking on the edit button that appears when hovering over the fields.</p>
 
-    <h3>Managing file servers</h3>
+    <h4>Managing file servers</h4>
     <p>In order to manage file servers, select the "SMB Resources"
     menu item in the settings menu. New file servers can be added by filling in the fields at the bottom of the table and clicking on the "+" button.
     Existing resources can be modified or deleted as described above for the user table.</p>
@@ -217,7 +217,7 @@
     fields typically contain the same value (the network location of the SMB server). The <i>Share name</i>-field defines the name of the
     network share to be accessed on the SMB server and in the <i>Path</i>-field you can optionally define a subfolder.</p>
 
-    <h3>Other settings pages</h3>
+    <h4>Other settings pages</h4>
     <p>The "Log" page gives you access to the server's log file for debugging.</p>
     <p>The "Uploads" page provides information about lost, empty, unused and duplicate uploads. It can take a long time to load, since a lot
     of database and filesystem operations are required to collect this data.</p>

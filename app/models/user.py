@@ -4,6 +4,7 @@ import os
 
 from authlib.jose import JsonWebSignature
 from datetime import datetime, timedelta
+from flask import request
 from flask import current_app as app
 from flask_httpauth import HTTPTokenAuth
 from flask_login import UserMixin
@@ -22,7 +23,8 @@ def verify_token(token):
 
 @token_auth.error_handler
 def token_auth_error(status):
-    return "", 500  # error_response(status)
+    app.logger.warning(f"Authorization error {status}, peer {request.remote_addr}")
+    return f"Authorization error {status}", status
 
 
 @login_manager.user_loader

@@ -216,6 +216,9 @@ a#collapsebutton:not(.collapsed):after {
     font-weight: bold;
 }
 
+form#newactionform label {
+    display: none;
+}
 
 div.user:hover {
     background-color: #CCCCEE;

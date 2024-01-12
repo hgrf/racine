@@ -43,7 +43,7 @@
 | app/models/smbresource.py                                                          |       15 |        1 |     93% |        18 |
 | app/models/tree.py                                                                 |       54 |       37 |     31% |24, 33-43, 47-76, 80-93, 97-102 |
 | app/models/upload.py                                                               |       11 |        1 |     91% |        14 |
-| app/models/user.py                                                                 |       82 |       20 |     76% |25, 60, 64, 74-75, 81-92, 97, 104, 110 |
+| app/models/user.py                                                                 |       84 |       21 |     75% |26-27, 62, 66, 76-77, 83-94, 99, 106, 112 |
 | app/printdata/\_\_init\_\_.py                                                      |        3 |        0 |    100% |           |
 | app/printdata/forms.py                                                             |        8 |        0 |    100% |           |
 | app/printdata/views.py                                                             |       25 |       17 |     32% |     11-29 |
@@ -83,7 +83,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2472** | **1082** | **56%** |           |
+|                                                                          **TOTAL** | **2474** | **1083** | **56%** |           |
 
 
 ## Setup coverage badge

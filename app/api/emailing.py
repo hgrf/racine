@@ -12,10 +12,6 @@ from .common import OrderedSchema
 from ..models import token_auth
 
 
-class MailProgressRequest(OrderedSchema):
-    task_id = fields.Str()
-
-
 class MailProgressResponse(OrderedSchema):
     state = fields.Str()
     current = fields.Int()
@@ -54,13 +50,19 @@ def send_mail_task(to: list[str], subject: str, **kwargs):
 @api.route("/send_mail_progress/<task_id>", methods=["GET"])
 @token_auth.login_required
 def send_mail_progress(task_id: str):
-    """Get field value of a database item.
+    """Get progress of mail task.
     ---
     get:
       operationId: getMailProgress
+      description: Get progress of mail task.
+      tags: [emailing]
       parameters:
       - in: path
-        schema: MailProgressRequest
+        name: task_id
+        schema:
+          type: string
+        required: true
+        description: The task ID of the mail task.
       responses:
         200:
           content:

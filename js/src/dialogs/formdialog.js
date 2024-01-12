@@ -77,7 +77,11 @@ class FormDialog extends Dialog {
 
   apiCallback(error, data, response) {
     if (!response) {
+      this.dialog.modal('hide');
       R.errorDialog('Server error. Please check your connection.');
+    } else if (response.error) {
+      this.dialog.modal('hide');
+      R.errorDialog(response.error);
     } else if (response.body && response.body.error) {
       // form failed validation; because of invalid data or expired CSRF token
       for (const field in response.body.error) {

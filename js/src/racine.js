@@ -15,7 +15,7 @@ class Racine {
     this.apiClient = new API.ApiClient(window.location.origin);
     this.apiClient.authentications['bearerAuth'].accessToken = apiToken;
 
-    this.defaultAPI = new API.DefaultApi(this.apiClient);
+    this.emailingAPI = new API.EmailingApi(this.apiClient);
     this.samplesAPI = new API.SamplesApi(this.apiClient);
     this.sharesAPI = new API.SharesApi(this.apiClient);
     this.actionsAPI = new API.ActionsApi(this.apiClient);
@@ -95,6 +95,7 @@ class Racine {
       if (self.view instanceof views.main) {
         self.view.loadSample(suggestion.id);
       } else {
+        // TODO: why not location.href then ?
         self.errorDialog('Loading samples is not implemented for this view yet.');
       }
     });

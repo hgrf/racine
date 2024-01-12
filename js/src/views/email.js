@@ -35,7 +35,7 @@ class EmailView {
           function callback(error, data, response) {
             if (data.state === 'PENDING' || data.state === 'RUNNING') {
               setTimeout(function() {
-                R.defaultAPI.getMailProgress(taskId, callback);
+                R.emailingAPI.getMailProgress(taskId, callback);
               }, 1000);
             } else if (data.state === 'SUCCESS') {
               $('#overlay').css('display', 'none');
@@ -59,7 +59,7 @@ class EmailView {
               );
             }
           }
-          R.defaultAPI.getMailProgress(taskId, callback);
+          R.emailingAPI.getMailProgress(taskId, callback);
         },
         error: function(jqXHR, textStatus, errorThrown) {
           console.error('Error when communicating with server.');

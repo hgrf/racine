@@ -8,7 +8,7 @@
 | app/api/\_\_init\_\_.py                                                            |        9 |        0 |    100% |           |
 | app/api/actions.py                                                                 |       92 |       45 |     51% |89-90, 115-122, 144-150, 171-202, 225-248 |
 | app/api/common.py                                                                  |        4 |        0 |    100% |           |
-| app/api/emailing.py                                                                |       46 |       23 |     50% |29-51, 76-102 |
+| app/api/emailing.py                                                                |       44 |       23 |     48% |25-47, 78-104 |
 | app/api/errors.py                                                                  |       11 |        0 |    100% |           |
 | app/api/fields.py                                                                  |      103 |       56 |     46% |31-36, 40-45, 155-177, 182-207, 231-263 |
 | app/api/samples.py                                                                 |      117 |       58 |     50% |31, 38, 47-52, 99-109, 129-132, 159-161, 188-190, 194-200, 224-258 |
@@ -83,7 +83,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2474** | **1082** | **56%** |           |
+|                                                                          **TOTAL** | **2472** | **1082** | **56%** |           |
 
 
 ## Setup coverage badge

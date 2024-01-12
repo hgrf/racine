@@ -13,6 +13,7 @@
     border-bottom: 1px solid #CCCCCC;
     padding: 10px;
     font-weight: bold;
+    font-size: 18px;
 }
 
 .navbar-shortcuts > .left {
@@ -54,11 +55,14 @@
 .inheritance {
     display: flex;
     align-items: center;
+    font-weight: bold;
 }
 
 .inheritance > i {
     width: 28px;
     height: 28px;
+    font-size: 18px;
+    font-weight: normal;
 }
 
 .nav-entry > .nav-caret {

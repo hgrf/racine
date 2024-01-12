@@ -6,6 +6,8 @@
     min-height:48px;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 28px;
+    vertical-align: middle;
 }
 
 .user:hover {

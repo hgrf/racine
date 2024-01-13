@@ -41,6 +41,16 @@ class Racine {
 
   onDocumentReady() {
     const self = this;
+
+    $(window).on('scroll', function() {
+      const scroll = window.scrollY || document.documentElement.scrollTop;
+      if ( scroll >= 100 ) {
+        $('.page-header').addClass('smaller');
+      } else {
+        $('.page-header').removeClass('smaller');
+      }
+    });
+
     // login view and browser view do not have a sidebar
     if ((this.view instanceof views.login) || (this.view instanceof views.browser)) {
       this.view.onDocumentReady();

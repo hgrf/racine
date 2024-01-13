@@ -42,7 +42,7 @@ class UserBrowserDialog extends Dialog {
     // make recent collaborators list
     if (data.recent.length > 0) {
       this.recentCollaborators.append(
-          '<div>Recent collaborators:<br>&nbsp</div>',
+          '<div>Recent collaborators:</div>',
       );
     }
     for (const i in data.recent) {
@@ -67,7 +67,7 @@ class UserBrowserDialog extends Dialog {
     this.searchField.typeahead('destroy');
 
     // empty recent collaborators list
-    $('#recent-collaborators').html('');
+    this.recentCollaborators.html('');
 
     // update autocompletion for the text field and recent collaborators list
     R.usersAPI.getUserList(

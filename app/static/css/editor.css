@@ -45,8 +45,8 @@ i.editor-shortcut {
 }
 
 .sampleimage {
-    position:relative;
-    margin-bottom:30px;
+    position: relative;
+    margin-bottom: 10px;
 }
 
 .newsampleimage {
@@ -101,16 +101,16 @@ img#changesampleimage {
     display:none;
 }
 
-div.sampledescription {
-    margin-bottom:30px;
+div#sampledescription {
+    margin-bottom: 10px;
 }
 
 div.sampleshares {
-    margin-bottom:30px;
+    margin-bottom: 10px;
 }
 
 .ckeditable {
-    min-height:5em;
+    min-height: 100px;
 }
 
 .actiondate {

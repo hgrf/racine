@@ -86,6 +86,7 @@ const serverErrorMsg = 'Could not connect to the server. ' +
     field.children('i.edittrigger').remove();
     field.addClass('editabling');
     field.removeClass('editable');
+    field.removeClass('editable-empty');
     field.trigger('edit');
   }
 
@@ -97,6 +98,11 @@ const serverErrorMsg = 'Could not connect to the server. ' +
     // add the edit trigger icon
     $(this).each(function(index, field) {
       field = $(field);
+
+      if (!field.html().trim()) {
+        field.addClass('editable-empty');
+      }
+
       // we have to iterate because we could not do the if statement on a collection of fields
       if (!field.has('i.edittrigger').length) {
         field.append(`<i class="edittrigger ${R.icons.edit}"></i>`);
@@ -191,6 +197,12 @@ const serverErrorMsg = 'Could not connect to the server. ' +
           field.append(data.value);
           field.attr('contenteditable', false);
           field.removeClass('ckeditabling');
+
+          if (data.value === '') {
+            field.addClass('editable-empty');
+          } else {
+            field.removeClass('editable-empty');
+          }
 
           // typeset all equations in this field
           if (MathJax.Hub) {

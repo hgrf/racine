@@ -254,7 +254,7 @@ class SampleView extends AjaxView {
     $('#sampleimage').zoombutton();
     $('#sampleimage').lightbox();
 
-    if ($('#hiddenckeditor').length) {
+    if (self.hiddenEditor === null && $('#hiddenckeditor').length) {
       self.hiddenEditor = CKEDITOR.inline(
           $('#hiddenckeditor')[0],
           $.extend(

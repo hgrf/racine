@@ -79,7 +79,7 @@ class FormDialog extends Dialog {
     if (!response) {
       this.dialog.modal('hide');
       R.errorDialog('Server error. Please check your connection.');
-    } else if (response.error) {
+    } else if (response.error && !(response.body && response.body.error)) {
       this.dialog.modal('hide');
       R.errorDialog(response.error);
     } else if (response.body && response.body.error) {

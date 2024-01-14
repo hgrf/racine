@@ -4,6 +4,10 @@ import FormDialog from '../dialogs/formdialog';
 import ConfirmDeleteDialog from '../dialogs/confirmdelete';
 
 class NewUserDialog extends FormDialog {
+  onShown() {
+    this.fields.username.focus();
+  }
+
   submit(formdata) {
     R.usersAPI.createUser(formdata, this.apiCallback.bind(this));
   }

@@ -4,6 +4,10 @@ import FormDialog from '../dialogs/formdialog';
 import ConfirmDeleteDialog from '../dialogs/confirmdelete';
 
 class NewSMBResourceDialog extends FormDialog {
+  onShown() {
+    this.fields.name.focus();
+  }
+
   submit(formdata) {
     R.smbresourcesAPI.createSMBResource(formdata, this.apiCallback.bind(this));
   }

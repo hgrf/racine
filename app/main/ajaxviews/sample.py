@@ -1,5 +1,5 @@
 from datetime import date
-from flask import request, render_template
+from flask import jsonify, request, render_template
 from flask_login import current_user, login_required
 
 from . import ajaxviews
@@ -11,12 +11,12 @@ from ...models import Action, Sample
 @login_required
 def editor(sampleid):
     sample = Sample.query.get(sampleid)
-    shares = sample.shares
+    shares = sample.shares if sample is not None else []
     showparentactions = request.args.get("showparentactions") == "true"
     invertactionorder = request.args.get("invertactionorder") == "true"
 
     if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
-        return render_template("errors/404.html"), 404
+        return jsonify(error="Sample not found"), 404
     else:
         form = NewActionForm()
         form.description.data = ""

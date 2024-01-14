@@ -1,20 +1,19 @@
-from flask import jsonify, redirect, render_template, request
+from flask import jsonify, redirect, request
 from flask_login import current_user, login_required, login_user, logout_user
 
 from . import main
 from .forms import NewSampleForm, MarkAsNewsForm
-from ..version import RACINE_VERSION
+from ..common import render_racine_template
 from ..models import Sample, User
 
 
 def render_main_template(**params):
-    return render_template(
+    return render_racine_template(
         "main/main.html",
-        view="main",
-        api_token=current_user.get_token(),
+        js_view="main",
+        js_params=params,
         newsampleform=NewSampleForm(),
         markasnewsform=MarkAsNewsForm(),
-        params=params,
     )
 
 
@@ -29,7 +28,7 @@ def index():
 def sample(sampleid):
     sample = Sample.query.get(sampleid)
     if sample is None or not sample.is_accessible_for(current_user) or sample.isdeleted:
-        return render_template("errors/404.html"), 404
+        return render_racine_template("errors/404.html"), 404
     return render_main_template(ajaxView="sample", sampleid=sampleid)
 
 
@@ -47,7 +46,12 @@ def search():
 @login_required
 def help():
     admins = User.query.filter_by(is_admin=True).all()
-    return render_template("help.html", admins=admins, racine_version=RACINE_VERSION)
+    return render_racine_template(
+        "help.html",
+        js_view="help",
+        js_params={},
+        admins=admins,
+    )
 
 
 @main.route("/loginas", methods=["GET"])

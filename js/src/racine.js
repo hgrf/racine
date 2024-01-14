@@ -25,6 +25,10 @@ class Racine {
 
     if (view in views) {
       this.view = new views[view](params);
+    } else if (view === '') {
+      console.info('No view specified, using default view');
+      this.view = {};
+      this.view.onDocumentReady = function() {};
     } else {
       console.error('Unknown view: ' + view);
       return;
@@ -109,6 +113,7 @@ class Racine {
           if (self.view instanceof views.main) {
             self.view.loadSearchResults(field.val());
           } else {
+            // TODO: why not location.href then ?
             self.errorDialog('Search is not implemented for this view yet.');
           }
           field.typeahead('val', ''); // clear the search field

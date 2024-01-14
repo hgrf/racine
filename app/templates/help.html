@@ -221,11 +221,3 @@
 {% endif %}
 </div>
 {% endblock %}
-
-{% block scripts %}
-{{ super() }}
-    <script src="{{ url_for('static', filename='racine.js', version='20230402') }}"></script>
-    <script>
-        R.init("{{ api_token }}", "help");        
-    </script>
-{% endblock %}

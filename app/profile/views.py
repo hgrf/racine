@@ -3,13 +3,14 @@ from . import profile
 from .. import db
 from flask_login import login_required, current_user
 from .forms import ChangePasswordForm, ChangeDetailsForm
+from ..common import render_racine_template
 from ..models import User
 
 
 @profile.route("/overview", methods=["GET"])
 @login_required
 def overview():
-    return render_template("profile/overview.html")
+    return render_racine_template("profile/overview.html")
 
 
 @profile.route("/changedetails", methods=["GET", "POST"])
@@ -26,7 +27,7 @@ def changedetails():
         form.username.data = current_user.username
         form.email.data = current_user.email
 
-    return render_template("profile/changedetails.html", form=form)
+    return render_racine_template("profile/changedetails.html", form=form)
 
 
 @profile.route("/changepassword", methods=["GET", "POST"])
@@ -41,7 +42,7 @@ def changepassword():
             return redirect("/")
         else:
             flash("Password incorrect.")
-    return render_template("profile/changepassword.html", form=form)
+    return render_racine_template("profile/changepassword.html", form=form)
 
 
 @profile.route("/leave", methods=["GET"])
@@ -74,4 +75,4 @@ def leave():
             u.heir = user
         db.session.commit()
 
-    return render_template("profile/leave.html", user=user, api_token=current_user.get_token())
+    return render_racine_template("profile/leave.html", user=user)

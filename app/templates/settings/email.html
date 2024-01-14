@@ -18,9 +18,3 @@
 </form>
 {% endblock %}
 
-{% block scripts %}
-{{ super() }}
-<script>
-    R.init("{{ api_token }}", "email", { "task_id": "{{ task.id if task else 'null' }}" });
-</script>
-{% endblock %}

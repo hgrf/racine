@@ -1,6 +1,6 @@
 {% import "util/wtf.html" as wtf %}
 
-<h2 class="page-header">
+<h3 class="page-header">
     {% if sample.owner != current_user and sample.iscollaborative %}
         <img class="sample-attr" title="Collaborative" src="/static/images/collaborative.png">
     {% endif %}
@@ -17,7 +17,7 @@
     <i id="invertactionorder" class="editor-shortcut glyphicon glyphicon-resize-vertical" title="Invert action order"></i>
     <i id="showinnavigator" class="editor-shortcut glyphicon glyphicon-search" title="Show in navigator"></i>
     <div style="clear:both;"></div>
-</h2>
+</h3>
 <div class="container-fluid">
     <div class="row">
         {% set show_sampleimage_div = (sample.image != None or sample.owner == current_user) %}

@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% import "util/wtf.html" as wtf %}
 
+{% block title %}
+{{ super() }} - Print
+{% endblock %}
+
 {% block styles %}
     {{super()}}
     <link rel="stylesheet" href="{{url_for('static', filename='css/print.css')}}">

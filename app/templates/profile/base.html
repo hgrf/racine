@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% import "util/menuentry.html" as me %}
 
+{% block title %}
+{{ super() }} - Profile
+{% endblock %}
+
 {% block sidebarnav %}
     <ul class="nav nav-sidebar">
         {{ me.menu_entry("overview", "Overview", active) }}

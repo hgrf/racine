@@ -13,7 +13,7 @@
     {% endif %}
     <div id="samplename" class="{% if sample.owner == current_user %}editable{% endif %}" data-setter="/api/set/sample/name/{{ sample.id }}">{{ sample.name }}</div>
     {% if sample.owner == current_user %}
-        <i class="{{ icons.trashAlt }} editor-shortcut" title="Delete sample"
+        <i class="{{ icons.trash }} editor-shortcut" title="Delete sample"
            data-href="/delsample/{{ sample.id }}" data-type="sample" data-id="{{ sample.id }}"
            data-toggle="modal" data-target="#dlg-confirm-delete">
         </i>

@@ -143,11 +143,6 @@ div.sampleshares {
     min-height: 100px;
 }
 
-div#sampledescription.editable-empty::before {
-    content: '\F4C9';
-    font-family: 'bootstrap-icons';
-}
-
 div#sampledescription.editable-empty {
     color: #337ab7;
     font-size: 36px;

@@ -1,5 +1,5 @@
-from flask import render_template
 from . import printdata
+from ..common import render_racine_template
 from ..models import Sample, list_tree
 from .forms import RequestActionsForm
 from flask_login import login_required, current_user
@@ -26,8 +26,9 @@ def overview():
                 actions.append(a)
         actions = sorted(actions, key=lambda x: x.ordnum)
         actions = sorted(actions, key=lambda x: x.sample_id)
-    return render_template(
+    return render_racine_template(
         "print.html",
+        js_view="print",
         form=form,
         actions=actions,
         sampleerror=True if form.sampleid.data == "-1" else False,

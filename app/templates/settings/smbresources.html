@@ -47,10 +47,3 @@
     {% call dialog.render_form_dialog(form, 'dlg-new-smbresource', 'New SMB resource', 'modal-lg') %}
     {% endcall %}
 {% endblock %}
-
-{% block scripts %}
-{{ super() }}
-<script>
-    R.init("{{ api_token }}", "smbresources");
-</script>
-{% endblock %}

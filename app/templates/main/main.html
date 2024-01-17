@@ -33,10 +33,6 @@
     <script>
         CKEDITOR.timestamp='20201114';
     </script>
-    <script src="{{ url_for('static', filename='racine.js', version='20230402') }}"></script>
-    <script>
-        R.init("{{ api_token }}", "{{ view }}", {{ params|tojson }});
-    </script>
 {% endblock %}
 
 

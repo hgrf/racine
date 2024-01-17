@@ -39,10 +39,3 @@
     {% call dialog.render_form_dialog(form, 'dlg-new-user', 'New user', 'modal-lg') %}
     {% endcall %}
 {% endblock %}
-
-{% block scripts %}
-{{ super() }}
-<script>
-    R.init("{{ api_token }}", "users");        
-</script>
-{% endblock %}

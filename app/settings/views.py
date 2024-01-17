@@ -1,11 +1,12 @@
 import os
 import redis
 
-from flask import current_app as app, flash, jsonify, render_template
-from flask_login import current_user, login_required
+from flask import current_app as app, flash, jsonify
+from flask_login import login_required
 
 from . import settings
 from .forms import NewSMBResourceForm, NewUserForm, EmailSettings, UsageStatsSettings
+from ..common import render_racine_template
 from ..decorators import admin_required
 from ..emailing import send_mail, read_mailconfig, write_mailconfig
 from ..models import SMBResource, User, Upload, Action, Sample
@@ -15,9 +16,9 @@ from ..models import SMBResource, User, Upload, Action, Sample
 @login_required
 @admin_required
 def smbresources():
-    return render_template(
+    return render_racine_template(
         "settings/smbresources.html",
-        api_token=current_user.get_token(),
+        js_view="smbresources",
         smbresources=SMBResource.query.all(),
         form=NewSMBResourceForm(),
     )
@@ -27,9 +28,9 @@ def smbresources():
 @login_required
 @admin_required
 def users():
-    return render_template(
+    return render_racine_template(
         "settings/users.html",
-        api_token=current_user.get_token(),
+        js_view="users",
         users=User.query.all(),
         form=NewUserForm(),
     )
@@ -61,7 +62,7 @@ def email():
         pass
 
     return (
-        render_template("settings/email.html", api_token=current_user.get_token(), form=form)
+        render_racine_template("settings/email.html", js_view="email", form=form)
         if task is None
         else jsonify({"task_id": task.id}),
         200 if task is None else 202,
@@ -90,7 +91,7 @@ def stats():
     stats = r.get("usage-stats")
     if stats is None:
         stats = "No usage statistics transmitted yet."
-    return render_template("settings/stats.html", form=form, stats=stats)
+    return render_racine_template("settings/stats.html", form=form, stats=stats)
 
 
 # ----- two helper functions for the settings/uploads page
@@ -179,7 +180,7 @@ def uploads():  # noqa: C901 (ignore complexity, this function is not used in pr
             # print "Unused upload: ", u.id
             unused.append(u)
 
-    return render_template(
+    return render_racine_template(
         "settings/uploads.html",
         emptyfiles=emptyfiles,
         nofiles=nofiles,
@@ -195,4 +196,4 @@ def log():
     log = "Failed to load log"
     with open("data/racine.log", "r") as f:
         log = f.read()
-    return render_template("settings/log.html", log=log)
+    return render_racine_template("settings/log.html", log=log)

@@ -5,7 +5,6 @@ import TimedLoader from '../util/timedloader';
 
 class EmailView {
   constructor(params) {
-    this.task_id = params.task_id;
     this.spinner = new TimedLoader(10000, false);
   }
 

@@ -4,6 +4,7 @@ from . import auth
 from ..models import User, record_activity
 from .forms import LoginForm, PasswordResetRequestForm, PasswordResetForm
 from .. import db
+from ..common import render_racine_template
 from ..emailing import send_mail
 
 
@@ -43,8 +44,10 @@ def login():
 
     if not resp:
         resp = make_response(
-            render_template(
+            render_racine_template(
                 "auth/login.html",
+                js_view="login",
+                use_api=False,
                 form=form,
                 users=User.query.all(),
                 last_logged_in=last_logged_in_names,
@@ -85,7 +88,7 @@ def password_reset_request():
         else:
             flash("That email address could not be found in the database.")
         return redirect(url_for("auth.login"))
-    return render_template("auth/reset_password.html", form=form)
+    return render_racine_template("auth/reset_password.html", use_api=False, form=form)
 
 
 @auth.route("/reset/<token>", methods=["GET", "POST"])
@@ -100,7 +103,7 @@ def password_reset(token):
             return redirect(url_for("auth.login"))
         else:
             return redirect(url_for("main.index"))
-    return render_template("auth/reset_password.html", form=form)
+    return render_racine_template("auth/reset_password.html", use_api=False, form=form)
 
 
 @auth.route("/logout")

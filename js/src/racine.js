@@ -99,7 +99,6 @@ class Racine {
       if (self.view instanceof views.main) {
         self.view.loadSample(suggestion.id);
       } else {
-        // TODO: why not location.href then ?
         self.errorDialog('Loading samples is not implemented for this view yet.');
       }
     });
@@ -113,7 +112,6 @@ class Racine {
           if (self.view instanceof views.main) {
             self.view.loadSearchResults(field.val());
           } else {
-            // TODO: why not location.href then ?
             self.errorDialog('Search is not implemented for this view yet.');
           }
           field.typeahead('val', ''); // clear the search field

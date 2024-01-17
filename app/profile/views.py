@@ -55,7 +55,7 @@ def leave():
         user = User.query.filter_by(username=heirname).first()
         if user is None or user.heir is not None or user == current_user:
             flash("Please name a valid user that is still part of the laboratory.")
-            return render_template("profile/leave.html", user=None)
+            return render_racine_template("profile/leave.html", js_view="leave", user=None)
 
     confirm = request.args.get("confirm")
     reactivate = request.args.get("reactivate")
@@ -75,4 +75,4 @@ def leave():
             u.heir = user
         db.session.commit()
 
-    return render_racine_template("profile/leave.html", user=user)
+    return render_racine_template("profile/leave.html", js_view="leave", user=user)

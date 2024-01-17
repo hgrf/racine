@@ -93,6 +93,9 @@ div.folder, .resource, .historyitem {
 #pathbuttons {
     float: left;
 }
+i.btn-home {
+    font-size: 16px;
+}
 #upload-frame {
     float: right;
 }

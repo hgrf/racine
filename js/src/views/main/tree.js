@@ -4,6 +4,8 @@ import R from '../../racine';
 import {draggableHandlers, dropZoneHandlers} from './dragdrop';
 import {addNavCaret} from './navcarets';
 
+import icons from '../../util/icons';
+
 class Tree {
   constructor(mainView) {
     this.mainView = mainView;
@@ -90,8 +92,8 @@ class Tree {
       this.showarchived = true;
       $('.nav-entry-archived').css('display', 'block');
       $('.nav-children-archived').css('display', 'block');
-      $('.navbar-togglearchived').removeClass('glyphicon-eye-close');
-      $('.navbar-togglearchived').addClass('glyphicon-eye-open');
+      $('.navbar-togglearchived').removeClass(icons.invisible);
+      $('.navbar-togglearchived').addClass(icons.visible);
       $('.navbar-togglearchived').attr('title', 'Hide archived');
     }
 

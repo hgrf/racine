@@ -10,6 +10,8 @@ import ConfirmDeleteDialog from '../../dialogs/confirmdelete';
 
 import ckeditorconfig from '../../util/ckeditorconfig';
 
+import icons from '../../util/icons';
+
 /* Disable caching for AJAX requests.
  * This fixes a bug in Internet Explorer, e.g. when reloading the sample
  * after adding an action, the new action is not shown / when modifying an
@@ -20,6 +22,53 @@ import ckeditorconfig from '../../util/ckeditorconfig';
 -or-updating-in-internet-explorer-solution.html
  */
 $.ajaxSetup({cache: false});
+
+class ToggleButton {
+  constructor(selector, icon, title, initialState, callback) {
+    this.selector = selector;
+    this.icon = icon;
+    this.title = title;
+
+    this.button = $(selector);
+
+    if (icon.common) {
+      this.button.addClass(icon.common);
+    }
+
+    if (icon.activeSub || icon.inactiveSub) {
+      this.button.append(`<i class='${icon.common}'></i>`);
+    }
+
+    this.subIcon = this.button.children('i');
+
+    this.setState(initialState);
+    this.button.on('click', callback);
+  }
+
+  setState(state) {
+    this.state = state;
+
+    if (state) {
+      this.button.attr('title', this.title.active);
+      this.button.removeClass(this.icon.inactive);
+      this.button.addClass(this.icon.active);
+
+      if (this.icon.activeSub && this.icon.inactiveSub) {
+        this.subIcon.removeClass(this.icon.inactiveSub);
+        this.subIcon.addClass(this.icon.activeSub);
+      }
+    } else {
+      this.button.attr('title', this.title.inactive);
+      this.button.removeClass(this.icon.active);
+      this.button.addClass(this.icon.inactive);
+
+      if (this.icon.activeSub && this.icon.inactiveSub) {
+        this.subIcon.removeClass(this.icon.activeSub);
+        this.subIcon.addClass(this.icon.inactiveSub);
+      }
+    }
+  }
+}
 
 class SampleView extends AjaxView {
   constructor(mainView) {
@@ -163,35 +212,51 @@ class SampleView extends AjaxView {
     const self = this;
     const mV = this.mainView;
 
-    $('#archive').on('click', function() {
-      R.samplesAPI.toggleArchived(sampleid, function(error, data, response) {
-        if (!R.responseHasError(response)) {
-          if (data.isarchived) {
-            $('#archive').attr('title', 'De-archive');
-            $('#archive').attr('src', '/static/images/dearchive.png');
-            $(`#nav-entry${sampleid}`).addClass('nav-entry-archived');
-          } else {
-            $('#archive').attr('title', 'Archive');
-            $('#archive').attr('src', '/static/images/archive.png');
-            $(`#nav-entry${sampleid}`).removeClass('nav-entry-archived');
-          }
-        }
-      });
-    });
+    const sampleAttrs = $('#sampleattributes');
 
-    $('#collaborate').on('click', function() {
-      R.samplesAPI.toggleCollaborative(sampleid, function(error, data, response) {
-        if (!R.responseHasError(response)) {
-          if (data.iscollaborative) {
-            $('#collaborate').attr('title', 'Make non-collaborative');
-            $('#collaborate').attr('src', '/static/images/non-collaborative.png');
-          } else {
-            $('#collaborate').attr('title', 'Make collaborative');
-            $('#collaborate').attr('src', '/static/images/collaborative.png');
-          }
-        }
-      });
-    });
+    const btnArchive = new ToggleButton(
+        '#archive',
+        icons.btnArchive,
+        {active: 'De-archive', inactive: 'Archive'},
+        sampleAttrs.data('isarchived') === 'True',
+        function() {
+          R.samplesAPI.toggleArchived(sampleid, function(error, data, response) {
+            if (!R.responseHasError(response)) {
+              btnArchive.setState(data.isarchived);
+              if (data.isarchived) {
+                $(`#nav-entry${sampleid}`).addClass('nav-entry-archived');
+              } else {
+                $(`#nav-entry${sampleid}`).removeClass('nav-entry-archived');
+              }
+            }
+          });
+        },
+    );
+
+    const btnCollaborate = new ToggleButton(
+        '#collaborate',
+        icons.btnCollaborate,
+        {active: 'Make non-collaborative', inactive: 'Make collaborative'},
+        sampleAttrs.data('iscollaborative') === 'True',
+        function() {
+          R.samplesAPI.toggleCollaborative(sampleid, function(error, data, response) {
+            if (!R.responseHasError(response)) {
+              btnCollaborate.setState(data.iscollaborative);
+            }
+          });
+        },
+    );
+
+    new ToggleButton(
+        '#showparentactions',
+        icons.btnShowParentActions,
+        {active: 'Hide parent actions', inactive: 'Show parent actions'},
+        sampleAttrs.data('showparentactions') === 'True',
+        function() {
+          self.showparentactions = !self.showparentactions;
+          mV.loadSample(sampleid, true);
+        },
+    );
 
     $('#showinnavigator').on('click', () => {
       mV.tree.highlight(sampleid, true);
@@ -203,11 +268,6 @@ class SampleView extends AjaxView {
 
     $('#invertactionorder').on('click', function() {
       self.invertactionorder = !self.invertactionorder;
-      mV.loadSample(sampleid, true);
-    });
-
-    $('#showparentactions').on('click', function() {
-      self.showparentactions = !self.showparentactions;
       mV.loadSample(sampleid, true);
     });
   }
@@ -264,6 +324,17 @@ class SampleView extends AjaxView {
           ),
       );
     }
+
+    /* if a sample image is set, show icons to change or clear it */
+    $('div.imgeditable').append(
+        `<i id="changesampleimage" class="${icons.camera}" title="Change sample image"></i>` +
+        `<i id="clearsampleimage" class="${icons.remove}" title="Clear sample image"></i>`,
+    );
+
+    /* if no sample image is set, show an icon to add one */
+    $('div.newsampleimage').append(
+        `<a id="changesampleimage" href=""><i class="${icons.camera}"></i></a>`,
+    );
 
     $('#changesampleimage').on('click', function(event) {
       CKEDITOR.fbtype = 'img';

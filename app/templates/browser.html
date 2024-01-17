@@ -12,7 +12,7 @@
     <div id="header">
         <div id="pathbuttons" class="btn-group" role="group">
             <button type="button" class="btn btn-default folder" data-url="">
-                <i class="glyphicon glyphicon-home"></i>
+                <i class="btn-home {{ icons.home }}"></i>
             </button>
             {% if smb_path is not undefined and smb_path != '' %}
                 {% set curr_path = '' %}
@@ -29,7 +29,7 @@
         {% if request.args.get('upload') is not none and request.args.get('upload').lower() == 'true' %}
             <div id="upload-frame">
                 <form method="post" action="#" style="margin:0;padding:0;" enctype="multipart/form-data" id="uploadform">
-                    <img class="upload" src="/static/images/upload.png" width="30px" height="30px">
+                    <i class="upload {{ icons.upload }}"></i>
                     <strong>Upload:&nbsp;&nbsp;&nbsp;&nbsp;</strong>
                     <input style="display:inline;" type="file" name="upload" id="upload">
                     <input style="display:inline;" type="submit" value="OK">
@@ -59,7 +59,7 @@
                 <div class="resourcerow">
                     <div class="resource" data-url="{{ resource.name }}" data-id="{{ resource.id }}"
                          id="resource{{ resource.id }}">
-                        <img src="/static/images/resource.png">
+                        <i class="{{ icons.networkDrive }}"></i>
                         {{ resource.name }}
                     </div>
                     <div class="shortcuts" id="shortcuts{{ resource.id }}">

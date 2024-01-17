@@ -1,5 +1,7 @@
 import $ from 'jquery';
 
+import icons from '../util/icons';
+
 function dictToURI(dict) {
   const str = [];
   for (const p in dict) {
@@ -122,8 +124,8 @@ class BrowserView {
           if (!data.code) {
             if (data.userfolder != '') {
               shortcutsdiv.append(
-                  '<img class="shortcut" src="/static/images/user.png" ' +
-                  `data-url="${data.userfolder}">`,
+                  `<i class="shortcut" class="${icons.user}" ` +
+                  `data-url="${data.userfolder}"></i>`,
               );
             }
             if (data.samplefolder != '') {

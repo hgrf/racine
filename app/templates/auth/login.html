@@ -22,11 +22,11 @@
                 <form method="POST" action="#" id="loginform">
                     {{ form.hidden_tag() }}
                     <div class="form-group input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <span class="input-group-addon"><i class="{{ icons.user }}"></i></span>
                         {{ form.username(class_='form-control', placeholder='username') }}
                     </div>
                     <div class="form-group input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        <span class="input-group-addon"><i class="{{ icons.lock }}"></i></span>
                         {{ form.password(class_='form-control', placeholder='password') }}
                     </div>
                     <div class="form-group input-group">
@@ -44,7 +44,7 @@
             <div class="quicklogin col-sm-4">
                 {% for username in last_logged_in %}
                     <div class="user" data-username="{{ username }}">
-                        <img src="/static/images/user.png">
+                        <i class="{{ icons.user }}"></i>
                         <span>{{ username }}</span>
                     </div>
                 {% endfor %}

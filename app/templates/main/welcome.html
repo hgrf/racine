@@ -4,7 +4,7 @@
 {% for n in news %}
     <div class="news">
         <div class="news-title news-header-item" data-toggle="collapse" data-target="#news-content{{ n.id }}">
-            <i class="glyphicon glyphicon-flag togglenews"></i>
+            <i class="{{ icons.markAsNews }} togglenews"></i>
             {{ n.title if n.title else "[no title]"}}
         </div>
         <div class="news-expires news-header-item">Expires: {{ n.expires }}</div>
@@ -49,8 +49,8 @@
     <h3>Active SMB connections</h3>
     <table>
     {% for c in conns %}
-        <tr><td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;">
-            <img src="/static/images/resource.png" width="40">
+        <tr><td class="smbresource">
+            <i class="{{ icon.networkDrive }}"></i>
             {{ c.resource }}, {{ "not" if not c.inuse else "" }} in use
         </td></tr>
     {% endfor %}
@@ -62,7 +62,7 @@
     {% for u in uploadvols %}
         {% if u[1] %}
             <tr>
-                <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="/static/images/user.png" width="40">{{ u[0].username }}</td>
+                <td class="user"><i class="{{ icons.user }}"></i>{{ u[0].username }}</td>
                 <td style="padding-top: 10px;">
                     <div class="progress" style="width: 200px;">
                         <div class="progress-bar" role="progressbar" style="width:{{ u[1]/maxuploadvol*100 }}%;color:#000000";>
@@ -83,7 +83,7 @@
     <table>
     {% for n in newactionsallusers %}
         <tr>
-            <td style="padding-right: 20px; padding-bottom: 10px; vertical-align: top;"><img src="/static/images/user.png" width="40">{{ n[0].username }}</td>
+            <td class="user"><i class="{{ icons.user }}"></i>{{ n[0].username }}</td>
             <td style="padding-top: 10px;">
                 <div class="progress" style="width: 200px;">
                     <div class="progress-bar" role="progressbar" style="width:{{ n[1]/maxcountallusers*100 }}%;">

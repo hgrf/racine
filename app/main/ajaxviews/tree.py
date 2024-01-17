@@ -2,6 +2,7 @@ from flask import abort, request, render_template
 from flask_login import current_user, login_required
 
 from . import ajaxviews
+from ...common import icons
 from ...models import User, build_tree
 
 
@@ -18,6 +19,7 @@ def tree():
 
     return render_template(
         "main/tree.html",
+        icons=icons,
         root=build_tree(current_user, order=order),
         inheritance=User.query.filter_by(heir=current_user).all(),
         showarchived=showarchived,

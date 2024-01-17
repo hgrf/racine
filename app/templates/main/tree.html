@@ -11,7 +11,7 @@
                 {% if sample.owner != current_user %}
                     <div class="nav-entry-owner">
                         {% if node.indirectly_shared %}
-                            <i class="glyphicon glyphicon-lock"></i>
+                            <i class="{{ icons.lock }}"></i>
                         {% endif %}
                         {{ sample.owner.username }}
                     </div>
@@ -29,21 +29,21 @@
 <div class="navbar-shortcuts">
     <span class="left">
         <a data-toggle="modal" data-target="#dlg-new-sample" href="" title="New sample">
-            <i class="glyphicon glyphicon-plus"></i>
+            <i class="{{ icons.newItem }}"></i>
         </a>
     </span>
     <span class="right">
-        &nbsp;<i class="navbar-shortcut navbar-togglearchived glyphicon
-                        glyphicon-eye-{{ 'open' if showarchived else 'close' }}"
+        &nbsp;<i class="navbar-shortcut navbar-togglearchived {{ icons.btnArchive.common }}
+                        {{ icons.visible if showarchived else icons.invisible }}"
                  title="{{ 'Hide' if showarchived else 'Show' }} archived"></i>
-        &nbsp;<i class="navbar-shortcut navbar-sort-az glyphicon
-                        glyphicon-sort-by-alphabet{{ ' sort-active' if order=='name' else '' }}"
+        &nbsp;<i class="navbar-shortcut navbar-sort-az
+                        {{ icons.sortAlphabet }}{{ ' sort-active' if order=='name' else '' }}"
                  title="Sort alphabetically"></i>
-        &nbsp;<i class="navbar-shortcut navbar-sort-id glyphicon
-                        glyphicon-sort-by-order{{ ' sort-active' if order=='id' else '' }}"
+        &nbsp;<i class="navbar-shortcut navbar-sort-id
+                        {{ icons.sortNumber }}{{ ' sort-active' if order=='id' else '' }}"
                  title="Sort by ID"></i>
-        &nbsp;<i class="navbar-shortcut navbar-sort-lastmodified glyphicon
-                        glyphicon-calendar{{ ' sort-active' if order=='last_modified' else '' }}"
+        &nbsp;<i class="navbar-shortcut navbar-sort-lastmodified
+                        {{ icons.sortCalendar }}{{ ' sort-active' if order=='last_modified' else '' }}"
                  title="Sort by last modification"></i>
     </span>
 </div>
@@ -55,7 +55,7 @@
         <div class="nav-heading">Inheritance:</div>
         {% for i in inheritance %}
             <div class="inheritance" data-userid="{{ i.id }}">
-                <img src="/static/images/user.png" width="30">{{ i.username }}
+                <i class="{{ icons.user }}"></i>{{ i.username }}
             </div>
         {% endfor %}
     {% endif %}

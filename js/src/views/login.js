@@ -2,6 +2,8 @@ import $ from 'jquery';
 
 import substringMatcher from '../util/substringmatcher';
 
+import icons from '../util/icons';
+
 class LoginView {
   constructor(params) {
     this.params = params;
@@ -26,8 +28,7 @@ class LoginView {
       source: substringMatcher(self.params.users),
       templates: {
         suggestion: function(data) {
-          return '<div><img src="/static/images/user.png" width="24px" height="24px">' +
-            data + '</div>';
+          return `<div><i class="${icons.user}"></i>${data}</div>`;
         },
       },
     });

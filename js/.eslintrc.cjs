@@ -24,6 +24,7 @@ module.exports = {
     'src/api/**',
     'src/jquery-plugins/jquery.jeditable.js',
     'src/typeahead/**',
+    'src/util/icons.js',
   ],
   'globals': {
     'CKEDITOR': 'readonly',

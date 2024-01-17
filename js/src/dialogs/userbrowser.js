@@ -4,6 +4,8 @@ import R from '../racine';
 import Dialog from './dialog';
 import substringMatcher from '../util/substringmatcher';
 
+import icons from '../util/icons';
+
 class UserBrowserDialog extends Dialog {
   constructor(sampleidGetter) {
     super('#userbrowser');
@@ -31,7 +33,7 @@ class UserBrowserDialog extends Dialog {
           templates: {
             suggestion: function(data) {
               return `<div>
-              <img src="/static/images/user.png" width="24px" height="24px">
+              <i class="${icons.user}"></i>
               ${data}
               </div>`;
             },
@@ -49,7 +51,7 @@ class UserBrowserDialog extends Dialog {
       if (Object.hasOwn(data.recent, i)) {
         this.recentCollaborators.append(
             `<div class="user" data-name="${data.recent[i]}">
-              <img src="/static/images/user.png">${data.recent[i]}
+              <i class="${icons.user}"></i>${data.recent[i]}
             </div>`,
         );
       }
@@ -107,7 +109,7 @@ class UserBrowserDialog extends Dialog {
                 `<div class="sharelistentry" id="sharelistentry${data.shareid}">
                 <a data-type="share" data-id="${data.shareid}" data-toggle="modal"
                     data-target="#dlg-confirm-delete" href="">
-                  <i class="glyphicon glyphicon-remove"></i>
+                  <i class="${icons.remove}"></i>
                 </a>${data.username}
                 </div>`,
             );

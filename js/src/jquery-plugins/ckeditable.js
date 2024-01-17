@@ -3,6 +3,8 @@ import jQuery from 'jquery';
 import R from '../racine';
 import ckeditorconfig from '../util/ckeditorconfig';
 
+import icons from '../util/icons';
+
 const serverErrorMsg = 'Could not connect to the server. ' +
   'Please make sure you are connected and try again.';
 
@@ -98,8 +100,8 @@ const serverErrorMsg = 'Could not connect to the server. ' +
     $(this).each(function(index, field) {
       field = $(field);
       // we have to iterate because we could not do the if statement on a collection of fields
-      if (!field.has('img.edittrigger').length) {
-        field.append('<img class="edittrigger" src="/static/images/edit.png">');
+      if (!field.has('i.edittrigger').length) {
+        field.append(`<i class="edittrigger ${icons.edit}"></i>`);
       }
       // avoid accumulation of events
       field.find('img.edittrigger').unbind('click');

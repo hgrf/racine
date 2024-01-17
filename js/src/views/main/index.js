@@ -77,7 +77,7 @@ class MainView {
           self.pushCurrentState();
         }
       } else {
-        location.href = '/';
+        window.history.back();
       }
     });
 

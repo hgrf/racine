@@ -8,7 +8,12 @@
 {% endblock %}
 
 {% block page_content %}
-<h3 class="page-header">Users</h3>
+<h3 class="page-header">
+    Users
+    <a data-toggle="modal" data-target="#dlg-new-user" href="" title="New user">
+        <i class="glyphicon glyphicon-plus"></i>&nbsp;add
+    </a>
+</h3>
 <table class="table">
     <thead><tr>
         <th width="10%">ID</th><th width="20%">Admin</th><th width="35%">Name</th><th width="35%">Email</th>
@@ -28,10 +33,6 @@
     {% endfor %}
     </tbody>
 </table>
-
-<a data-toggle="modal" data-target="#dlg-new-user" href="" title="New user">
-    <i class="glyphicon glyphicon-plus"></i>&nbsp;New user
-</a>
 {% endblock %}
 
 {% block dialogs %}

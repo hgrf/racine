@@ -1,15 +1,8 @@
 {% import "util/wtf.html" as wtf %}
 
 <h3 class="page-header">
-    <div id="sampleattributes" style="display:none;"
-        data-isarchived="{{ sample.isarchived }}"
-        data-iscollaborative="{{ sample.iscollaborative }}"
-        data-showparentactions="{{ showparentactions }}">
-    </div>
     {% if sample.owner != current_user and sample.iscollaborative %}
         <i class="sample-attr {{ icons.user }}" title="Collaborative">
-            <i class="{{ icons.pencil }}"></i>
-        </i>
     {% endif %}
     <div id="samplename" class="{% if sample.owner == current_user %}editable{% endif %}" data-setter="/api/set/sample/name/{{ sample.id }}">{{ sample.name }}</div>
     {% if sample.owner == current_user %}
@@ -17,11 +10,19 @@
            data-href="/delsample/{{ sample.id }}" data-type="sample" data-id="{{ sample.id }}"
            data-toggle="modal" data-target="#dlg-confirm-delete">
         </i>
-        <i id="archive" class="editor-shortcut"></i>
-        <i id="collaborate" class="editor-shortcut {{ icons.user }}"></i>
+        <i id="archive" class="editor-shortcut"
+           title="{% if sample.isarchived %}De-archive{% else %}Archive{% endif %}" 
+           src="{% if sample.isarchived %}/static/images/dearchive.png{% else %}/static/images/archive.png{% endif %}">
+        </i>
+        <i id="collaborate" class="editor-shortcut"
+           title="{% if sample.iscollaborative %}Make non-collaborative{% else %}Make collaborative{% endif %}"
+           src="{% if sample.iscollaborative %}/static/images/non-collaborative.png{% else %}/static/images/collaborative.png{% endif %}">
+        </i>
     {% endif %}
     {% if sample.parent_id != 0 and sample.parent.actions != [] %}
-    <i id="showparentactions" class="editor-shortcut"></i>
+    <i id="showparentactions" class="editor-shortcut glyphicon glyphicon-eye-{{ 'open' if showparentactions else 'close' }}"
+       title="{{ 'Hide' if showparentactions else 'Show' }} parent actions">
+    </i>
     {% endif %}
     <i id="scrolltobottom" class="editor-shortcut {{ icons.scrollToBottom }}" title="Scroll to the bottom"></i>
     <i id="invertactionorder" class="editor-shortcut {{ icons.shuffle }}" title="Invert action order"></i>

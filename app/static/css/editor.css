@@ -23,10 +23,21 @@ img.sample-attr {
     height: 28px;
     margin-left: 15px;
     cursor: pointer;
+    transition: height 0.3s, width 0.3s;
+}
+
+.page-header.smaller .editor-shortcut {
+    width: 20px;
+    height: 20px;
 }
 
 i.editor-shortcut {
     font-size: 24px;
+    transition: font-size 0.3s;
+}
+
+.page-header.smaller i.editor-shortcut {
+    font-size: 16px;
 }
 
 #sampleimage {

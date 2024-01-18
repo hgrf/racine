@@ -1,6 +1,6 @@
 {% import "util/wtf.html" as wtf %}
 
-<h2 class="page-header">
+<h3 class="page-header">
     {% if sample.owner != current_user and sample.iscollaborative %}
         <img class="sample-attr" title="Collaborative" src="/static/images/collaborative.png">
     {% endif %}
@@ -17,14 +17,13 @@
     <i id="invertactionorder" class="editor-shortcut glyphicon glyphicon-resize-vertical" title="Invert action order"></i>
     <i id="showinnavigator" class="editor-shortcut glyphicon glyphicon-search" title="Show in navigator"></i>
     <div style="clear:both;"></div>
-</h2>
+</h3>
 <div class="container-fluid">
     <div class="row">
         {% set show_sampleimage_div = (sample.image != None or sample.owner == current_user) %}
         {% if show_sampleimage_div %}
         <div class="col-md-4 sampleimage">
             <div id="hiddenckeditor" contenteditable="true" style="display:none;"></div>
-            <div><strong>Image:</strong></div>
             {% if sample.image == None and sample.owner == current_user %}
                 <div class="newsampleimage">
                     <a id="changesampleimage" href=""><i class="glyphicon glyphicon-plus"></i> add sample image</a>
@@ -38,7 +37,6 @@
         </div>
         {% endif %}
         <div class="col-md-5 sampledescription">
-            <div><strong>Description:</strong></div>
             <div id="sampledescription" class="{% if sample.owner == current_user %}ckeditable editable{% endif %}" data-type="sample" data-field="description" data-id="{{ sample.id }}">
                 {{ sample.description|safe }}
             </div>

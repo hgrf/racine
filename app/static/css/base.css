@@ -145,17 +145,21 @@ body {
  * Main content
  */
 
-.main {
-  padding: 20px;
-}
-@media (min-width: 768px) {
-  .main {
-    padding-right: 40px;
-    padding-left: 40px;
-  }
-}
 .main .page-header {
-  margin-top: 0;
+  background: linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.9));
+  border-bottom: 1px solid #989ea4;
+  border-top: 1px solid #717d85;
+  margin: 0 0 8px 0;
+  padding: 15px 0 8px 10px;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 50px;
+  z-index: 500;
+  transition: font-size 0.3s, height 0.3s;
+}
+
+.main .page-header.smaller {
+  font-size: 16px;
 }
 
 /*

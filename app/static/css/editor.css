@@ -23,10 +23,21 @@ img.sample-attr {
     height: 28px;
     margin-left: 15px;
     cursor: pointer;
+    transition: height 0.3s, width 0.3s;
+}
+
+.page-header.smaller .editor-shortcut {
+    width: 20px;
+    height: 20px;
 }
 
 i.editor-shortcut {
     font-size: 24px;
+    transition: font-size 0.3s;
+}
+
+.page-header.smaller i.editor-shortcut {
+    font-size: 16px;
 }
 
 #sampleimage {
@@ -34,8 +45,8 @@ i.editor-shortcut {
 }
 
 .sampleimage {
-    position:relative;
-    margin-bottom:30px;
+    position: relative;
+    margin-bottom: 10px;
 }
 
 .newsampleimage {
@@ -63,7 +74,7 @@ img#changesampleimage {
 
 .imgeditable img#changesampleimage {
     position:absolute;
-    top:25px;
+    top:8px;
     right:55px;
     width:36px;
     height:36px;
@@ -90,16 +101,16 @@ img#changesampleimage {
     display:none;
 }
 
-div.sampledescription {
-    margin-bottom:30px;
+div#sampledescription {
+    margin-bottom: 10px;
 }
 
 div.sampleshares {
-    margin-bottom:30px;
+    margin-bottom: 10px;
 }
 
 .ckeditable {
-    min-height:5em;
+    min-height: 100px;
 }
 
 .actiondate {
@@ -216,6 +227,9 @@ a#collapsebutton:not(.collapsed):after {
     font-weight: bold;
 }
 
+form#newactionform label {
+    display: none;
+}
 
 div.user:hover {
     background-color: #CCCCEE;

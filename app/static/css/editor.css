@@ -113,13 +113,6 @@ div.sampleshares {
     min-height: 100px;
 }
 
-div#sampledescription.editable-empty {
-    color: #337ab7;
-    font-size: 36px;
-    line-height: 100px;
-    text-align: center;
-}
-
 .actiondate {
     display:inline;
     font-size:large;

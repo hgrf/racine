@@ -19,16 +19,16 @@
 | app/auth/forms.py                                                                  |       15 |        0 |    100% |           |
 | app/auth/views.py                                                                  |       72 |       34 |     53% |29, 35-37, 46, 69-91, 96-106, 113-117 |
 | app/browser/\_\_init\_\_.py                                                        |        3 |        0 |    100% |           |
-| app/browser/views.py                                                               |      308 |      252 |     18% |58-78, 100-125, 133-151, 155-168, 172-188, 211-245, 266, 275-278, 282-293, 314-343, 360-385, 403-431, 439-500, 509-534, 542-583, 591-598, 605-641, 645-649 |
-| app/common.py                                                                      |       12 |        0 |    100% |           |
+| app/browser/views.py                                                               |      310 |      252 |     19% |60-80, 102-127, 135-153, 157-170, 174-190, 213-247, 268, 277-280, 284-295, 316-345, 362-387, 405-433, 443-511, 525-550, 558-599, 607-614, 621-657, 661-665 |
+| app/common.py                                                                      |       16 |        0 |    100% |           |
 | app/config.py                                                                      |       40 |        0 |    100% |           |
 | app/decorators.py                                                                  |       12 |        3 |     75% |     10-12 |
 | app/emailing.py                                                                    |       19 |       12 |     37% |21-22, 27-34, 38-39 |
 | app/main/\_\_init\_\_.py                                                           |        5 |        0 |    100% |           |
 | app/main/ajaxviews/\_\_init\_\_.py                                                 |        3 |        0 |    100% |           |
-| app/main/ajaxviews/sample.py                                                       |       27 |       18 |     33% |     13-35 |
-| app/main/ajaxviews/search.py                                                       |       13 |        7 |     46% |     10-31 |
-| app/main/ajaxviews/tree.py                                                         |       14 |        7 |     50% |     11-19 |
+| app/main/ajaxviews/sample.py                                                       |       28 |       18 |     36% |     14-36 |
+| app/main/ajaxviews/search.py                                                       |       14 |        7 |     50% |     11-32 |
+| app/main/ajaxviews/tree.py                                                         |       15 |        7 |     53% |     12-20 |
 | app/main/ajaxviews/welcome.py                                                      |       51 |       37 |     27% |    20-103 |
 | app/main/errors.py                                                                 |       19 |        6 |     68% |10, 20, 25-29 |
 | app/main/forms.py                                                                  |       34 |        1 |     97% |        48 |
@@ -83,7 +83,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2481** | **1083** | **56%** |           |
+|                                                                          **TOTAL** | **2490** | **1083** | **57%** |           |
 
 
 ## Setup coverage badge

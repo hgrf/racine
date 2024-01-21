@@ -21,6 +21,12 @@
     height: 40px;
 }
 
+.tt-suggestion > i {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+}
+
 #flashmessages {
     margin-top:10px;
 }

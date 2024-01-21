@@ -47,9 +47,9 @@ def login():
             render_racine_template(
                 "auth/login.html",
                 js_view="login",
+                js_params={"users": [u.username for u in User.query.all()]},
                 use_api=False,
                 form=form,
-                users=User.query.all(),
                 last_logged_in=last_logged_in_names,
             )
         )

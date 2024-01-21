@@ -31,17 +31,17 @@ div.folder, .resource, .historyitem {
     float: left;
 }
 .shortcut {
+    display: inline-block;
+}
+.shortcut > i {
+    display: inline-block;
     width: 48px;
     height: 48px;
 }
-.folder img, .resource img, .historyitem img {
+.folder i:not(.btn-home), .resource i, .historyitem i {
     position:absolute;
     left:0px;
     top:0px;
-    width: 48px;
-    height: 48px;
-}
-.shortcuts img {
     width: 48px;
     height: 48px;
 }
@@ -69,6 +69,11 @@ div.folder, .resource, .historyitem {
 .file.selected:hover {
     background-color: #BBBBFF;
 }
+.file i {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+}
 .file img {
     max-width: 120px;
     max-height: 120px;
@@ -93,8 +98,23 @@ div.folder, .resource, .historyitem {
 #pathbuttons {
     float: left;
 }
+i.btn-home {
+    font-size: 16px;
+}
 #upload-frame {
     float: right;
+}
+#upload-frame form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0px;
+    padding: 0px;
+}
+#upload-frame form i {
+    width: 24px;
+    height: 24px;
+    margin-right: 5px;
 }
 #multiswitch {
     float: right;

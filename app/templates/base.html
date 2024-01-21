@@ -2,10 +2,10 @@
 
 {% block navbar_top_header %}
 <div class="nav-button nav-button-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-  <i class="glyphicon glyphicon-option-vertical"></i>
+  <i class="{{ icons.toggleHeaderNav }}"></i>
 </div>
 <div id="toggle-sidebar" class="nav-button nav-button-left nav-button-toggle">
-  <i class="glyphicon glyphicon-menu-hamburger"></i>
+  <i class="{{ icons.toggleTree }}"></i>
 </div>
 {% endblock %}
 
@@ -13,12 +13,12 @@
   <div id="navbar" class="navbar-collapse collapse">
     <ul class="nav navbar-nav navbar-right">
         {% if current_user.is_admin %}
-            <li><a href="/settings/smbresources"><i class="hidden-xs glyphicon glyphicon-wrench" title="Settings"></i><span class="visible-xs-block">Settings</span></a></li>
+            <li><a href="/settings/smbresources"><i class="hidden-xs {{ icons.settings }}" title="Settings"></i><span class="visible-xs-block">Settings</span></a></li>
         {% endif %}
-        <li><a href="/print"><i class="hidden-xs glyphicon glyphicon-print" title="Print"></i><span class="visible-xs-block">Print</span></a></li>
-        <li><a href="/profile/overview"><i class="hidden-xs glyphicon glyphicon-user" title="Profile"></i><span class="hidden-xs">&nbsp;&nbsp;{{ current_user.username }}</span><span class="visible-xs-block">Profile</span></a></li>
-        <li><a href="{{ url_for('auth.logout') }}"><i class="hidden-xs glyphicon glyphicon-log-out" title="Sign out"></i><span class="visible-xs-block">Sign out</span></a></li>
-        <li><a href="/help"><i class="hidden-xs glyphicon glyphicon-question-sign" title="Help"></i><span class="visible-xs-block">Help</span></a></li>
+        <li><a href="/print"><i class="hidden-xs {{ icons.printer }}" title="Print"></i><span class="visible-xs-block">Print</span></a></li>
+        <li><a href="/profile/overview"><i class="hidden-xs {{ icons.user }}" title="Profile"></i><span class="hidden-xs">&nbsp;&nbsp;{{ current_user.username }}</span><span class="visible-xs-block">Profile</span></a></li>
+        <li><a href="{{ url_for('auth.logout') }}"><i class="hidden-xs {{ icons.logout }}" title="Sign out"></i><span class="visible-xs-block">Sign out</span></a></li>
+        <li><a href="/help"><i class="hidden-xs {{ icons.help }}" title="Help"></i><span class="visible-xs-block">Help</span></a></li>
     </ul>
     <form class="nav navbar-form navbar-right">
         <input type="text" id="navbar-search" class="form-control" placeholder="Search...">

@@ -9,8 +9,11 @@
     {%- endblock metas %}
 
     {%- block styles %}
-    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/skeleton.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+    {% for s in icons.stylesheets %}
+      <link rel="stylesheet" href="{{url_for('static', filename='css/' + s)}}">
+    {% endfor %}
     {%- endblock styles %}
     {%- endblock head %}
   </head>

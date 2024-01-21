@@ -10,6 +10,8 @@ import ConfirmDeleteDialog from '../../dialogs/confirmdelete';
 
 import ckeditorconfig from '../../util/ckeditorconfig';
 
+import icons from '../../util/icons';
+
 /* Disable caching for AJAX requests.
  * This fixes a bug in Internet Explorer, e.g. when reloading the sample
  * after adding an action, the new action is not shown / when modifying an
@@ -163,31 +165,37 @@ class SampleView extends AjaxView {
     const self = this;
     const mV = this.mainView;
 
-    $('#archive').on('click', function() {
+    const btnArchive = $('#archive');
+    btnArchive.on('click', function() {
       R.samplesAPI.toggleArchived(sampleid, function(error, data, response) {
         if (!R.responseHasError(response)) {
           if (data.isarchived) {
-            $('#archive').attr('title', 'De-archive');
-            $('#archive').attr('src', '/static/images/dearchive.png');
+            btnArchive.attr('title', 'De-archive');
+            btnArchive.removeClass(`${icons.btnArchive.inactive}`);
+            btnArchive.addClass(`${icons.btnArchive.active}`);
             $(`#nav-entry${sampleid}`).addClass('nav-entry-archived');
           } else {
-            $('#archive').attr('title', 'Archive');
-            $('#archive').attr('src', '/static/images/archive.png');
+            btnArchive.attr('title', 'Archive');
+            btnArchive.removeClass(`${icons.btnArchive.active}`);
+            btnArchive.addClass(`${icons.btnArchive.inactive}`);
             $(`#nav-entry${sampleid}`).removeClass('nav-entry-archived');
           }
         }
       });
     });
 
-    $('#collaborate').on('click', function() {
+    const btnCollaborate = $('#collaborate');
+    btnCollaborate.on('click', function() {
       R.samplesAPI.toggleCollaborative(sampleid, function(error, data, response) {
         if (!R.responseHasError(response)) {
           if (data.iscollaborative) {
-            $('#collaborate').attr('title', 'Make non-collaborative');
-            $('#collaborate').attr('src', '/static/images/non-collaborative.png');
+            btnCollaborate.attr('title', 'Make non-collaborative');
+            btnCollaborate.removeClass(`${icons.btnCollaborate.inactive}`);
+            btnCollaborate.addClass(`${icons.btnCollaborate.active}`);
           } else {
-            $('#collaborate').attr('title', 'Make collaborative');
-            $('#collaborate').attr('src', '/static/images/collaborative.png');
+            btnCollaborate.attr('title', 'Make collaborative');
+            btnCollaborate.removeClass(`${icons.btnCollaborate.active}`);
+            btnCollaborate.addClass(`${icons.btnCollaborate.inactive}`);
           }
         }
       });
@@ -284,9 +292,9 @@ class SampleView extends AjaxView {
               *       more elegant way to sort this out
               */
             div.append(
-                `<img id="sampleimage" src="${url}">` +
-              '<img id="changesampleimage" src="/static/images/insertimage.png"' +
-                ' title="Change sample image">',
+                `<img id="sampleimage" src="${url}">
+                <i id="changesampleimage" class="${icons.changeImage}" title="Change sample image">
+                </i>`,
             );
             self.#setupSampleImage(sampleid);
           }

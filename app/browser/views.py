@@ -2,6 +2,7 @@ from flask import render_template, send_file, request, send_from_directory, json
 from flask_login import current_user, login_required
 from flask import current_app as app
 from .. import db
+from ..common import icons
 from ..models import SMBResource, Sample, Upload, Activity, ActivityType, record_activity
 import os
 from . import browser
@@ -24,6 +25,7 @@ PREVIEW_SIZE = [800, 800]
 class FileTile:
     name = ""
     ext = ""
+    icon = ""
     image = ""
     path = ""
 
@@ -428,7 +430,9 @@ def retrieve_smb_image(path):
         image_binary.seek(0)  # need to go back to beginning of stream
         return send_file(image_binary, mimetype="image/jpeg")
     except Exception:
-        return send_file(os.path.join(app.config["RACINE_FOLDER"], "app/static/images/file.png"))
+        return send_file(
+            os.path.join(app.config["RACINE_FOLDER"], "app/static/images/legacy-icons/file.png")
+        )
 
 
 @browser.route("/", defaults={"smb_path": ""})
@@ -459,7 +463,10 @@ def imagebrowser(smb_path):
     if resource is None:
         # list resources
         return render_template(
-            "browser.html", resources=SMBResource.query.all(), browser_history=browser_history
+            "browser.html",
+            icons=icons,
+            resources=SMBResource.query.all(),
+            browser_history=browser_history,
         )
     else:
         # list files and folders in current path
@@ -470,12 +477,16 @@ def imagebrowser(smb_path):
         except Exception:
             return render_template(
                 "browser.html",
+                icons=icons,
                 error=True,
                 message="Folder could not be found on server: " + smb_path,
             )
         if listpath is None:
             return render_template(
-                "browser.html", error=True, message="Could not connect to server: " + smb_path
+                "browser.html",
+                icons=icons,
+                error=True,
+                message="Could not connect to server: " + smb_path,
             )
         for item in listpath:
             # ignore . entry
@@ -488,17 +499,22 @@ def imagebrowser(smb_path):
                 if f.ext.lower() in IMAGE_EXTENSIONS:
                     f.image = "/browser/smbimg/" + f.path
                 else:
-                    f.image = "/static/images/file.png"
+                    f.icon = icons.file
                 files.append(f)
             else:
-                f.image = "/static/images/folder.png"
+                f.icon = icons.folder
                 folders.append(f)
 
         # sort by name and return
         files = sorted(files, key=lambda f: f.name.lower())
         folders = sorted(folders, key=lambda f: f.name.lower())
         return render_template(
-            "browser.html", error=False, files=files, folders=folders, smb_path=smb_path
+            "browser.html",
+            icons=icons,
+            error=False,
+            files=files,
+            folders=folders,
+            smb_path=smb_path,
         )
 
 

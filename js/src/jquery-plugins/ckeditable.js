@@ -3,6 +3,8 @@ import jQuery from 'jquery';
 import R from '../racine';
 import ckeditorconfig from '../util/ckeditorconfig';
 
+import icons from '../util/icons';
+
 const serverErrorMsg = 'Could not connect to the server. ' +
   'Please make sure you are connected and try again.';
 
@@ -78,12 +80,12 @@ const serverErrorMsg = 'Could not connect to the server. ' +
 
   function onEditRequested(event) {
     let field = $(this); // eslint-disable-line no-invalid-this
-    if (field.is('img.edittrigger')) {
+    if (field.is('i.edittrigger')) {
       field = field.parent();
     }
 
     field.unbind('dblclick');
-    field.children('img.edittrigger').remove();
+    field.children('i.edittrigger').remove();
     field.addClass('editabling');
     field.removeClass('editable');
     field.trigger('edit');
@@ -98,14 +100,14 @@ const serverErrorMsg = 'Could not connect to the server. ' +
     $(this).each(function(index, field) {
       field = $(field);
       // we have to iterate because we could not do the if statement on a collection of fields
-      if (!field.has('img.edittrigger').length) {
-        field.append('<img class="edittrigger" src="/static/images/edit.png">');
+      if (!field.has('i.edittrigger').length) {
+        field.append(`<i class="edittrigger ${icons.edit}"></i>`);
       }
       // avoid accumulation of events
-      field.find('img.edittrigger').unbind('click');
+      field.find('i.edittrigger').unbind('click');
       field.unbind('editabledone');
       // re-define events
-      field.find('img.edittrigger').click(onEditRequested);
+      field.find('i.edittrigger').click(onEditRequested);
       field.on('editabledone', function(event) {
         field.addClass('editable');
         field.removeClass('editabling');

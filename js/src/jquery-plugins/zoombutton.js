@@ -1,5 +1,7 @@
 import jQuery from 'jquery';
 
+import icons from '../util/icons';
+
 (function($) {
   $.fn.zoombutton = function() {
     const elements = $(this); // eslint-disable-line no-invalid-this
@@ -13,7 +15,7 @@ import jQuery from 'jquery';
       const separator = src.includes('?') ? '&' : '?';
       return (
         `<a class="zoombutton" target="_blank" href="${src}${separator}fullsize">` +
-          '<i class="glyphicon glyphicon-hd-video" title="Open full resolution in new window">' +
+          `<i class="${icons.highDef}" title="Open full resolution in new window">` +
           '</i>' +
         '</a>'
       );

@@ -1,6 +1,8 @@
 import $ from 'jquery';
 import {Bloodhound} from '../typeahead';
 
+import icons from './icons';
+
 const samples = new Bloodhound({
   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
   queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -30,7 +32,7 @@ function createSearchSample(searchfield) {
         if (result.parentname != '') {
           parentinfo =
             '<span style="white-space:nowrap;">' +
-              '<i class="glyphicon glyphicon-level-up"></i>' +
+              `<i class="${icons.childItem}"></i>` +
               '&nbsp;' + result.parentname +
             '</span>\n';
         } else {
@@ -39,7 +41,7 @@ function createSearchSample(searchfield) {
         if (!result.mysample) {
           ownerinfo =
             '<span style="white-space:nowrap;">' +
-              '<i class="glyphicon glyphicon-user"></i>' +
+              `<i class="${icons.user}"></i>` +
               '&nbsp;' + result.ownername +
             '</span>\n';
         } else {
@@ -65,23 +67,27 @@ function createSelectSample(searchfield, hiddenfield, valid=true, placeholder='N
   searchfield.wrap('<div class="input-group"></div>');
   searchfield.attr('placeholder', placeholder);
 
+  const commonClass = icons.selectSample.common;
+  const iconOk = icons.ok;
+  const iconAlert = icons.alert;
+
   const indicatorspan = $('<span class="input-group-addon"></span>');
-  const indicator = $('<i class="glyphicon glyphicon-'+(valid?'ok':'alert')+
+  const indicator = $('<i class="'+(valid?iconOk:iconAlert)+commonClass+
                       '" style="color:'+(valid?'green':'red')+';"></i>');
   indicatorspan.append(indicator);
   searchfield.after(indicatorspan);
 
   searchfield.markvalid = function() {
     hiddenfield.attr('value', '');
-    indicator.removeClass('glyphicon-alert');
-    indicator.addClass('glyphicon-ok');
+    indicator.removeClass(iconAlert);
+    indicator.addClass(iconOk);
     indicator.css('color', 'green');
   };
 
   searchfield.markinvalid = function() {
     hiddenfield.attr('value', -1);
-    indicator.removeClass('glyphicon-ok');
-    indicator.addClass('glyphicon-alert');
+    indicator.removeClass(iconOk);
+    indicator.addClass(iconAlert);
     indicator.css('color', 'red');
   };
 
@@ -95,8 +101,8 @@ function createSelectSample(searchfield, hiddenfield, valid=true, placeholder='N
 
   searchfield.bind('typeahead:select', function(ev, suggestion) {
     hiddenfield.attr('value', suggestion.id);
-    indicator.removeClass('glyphicon-alert');
-    indicator.addClass('glyphicon-ok');
+    indicator.removeClass(iconAlert);
+    indicator.addClass(iconOk);
     indicator.css('color', 'green');
   });
 

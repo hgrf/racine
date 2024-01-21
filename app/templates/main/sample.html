@@ -2,20 +2,29 @@
 
 <h3 class="page-header">
     {% if sample.owner != current_user and sample.iscollaborative %}
-        <img class="sample-attr" title="Collaborative" src="/static/images/collaborative.png">
+        <i class="sample-attr {{ icons.btnCollaborate.common }} {{ icons.btnCollaborate.inactive }}" title="Collaborative"></i>
     {% endif %}
     <div id="samplename" class="{% if sample.owner == current_user %}editable{% endif %}" data-setter="/api/set/sample/name/{{ sample.id }}">{{ sample.name }}</div>
     {% if sample.owner == current_user %}
-        <img class="editor-shortcut" title="Delete sample" src="/static/images/delete.png" data-href="/delsample/{{ sample.id }}" data-type="sample" data-id="{{ sample.id }}" data-toggle="modal" data-target="#dlg-confirm-delete">
-        <img class="editor-shortcut" title="{% if sample.isarchived %}De-archive{% else %}Archive{% endif %}" id="archive" src="{% if sample.isarchived %}/static/images/dearchive.png{% else %}/static/images/archive.png{% endif %}">
-        <img class="editor-shortcut" title="{% if sample.iscollaborative %}Make non-collaborative{% else %}Make collaborative{% endif %}" id="collaborate" src="{% if sample.iscollaborative %}/static/images/non-collaborative.png{% else %}/static/images/collaborative.png{% endif %}">
+        <i class="{{ icons.trashAlt }} editor-shortcut" title="Delete sample"
+           data-href="/delsample/{{ sample.id }}" data-type="sample" data-id="{{ sample.id }}"
+           data-toggle="modal" data-target="#dlg-confirm-delete">
+        </i>
+        <i id="archive" class="editor-shortcut {{ icons.btnArchive.common }} {% if sample.isarchived %}{{ icons.btnArchive.active }}{% else %}{{ icons.btnArchive.inactive }}{% endif %}"
+           title="{% if sample.isarchived %}De-archive{% else %}Archive{% endif %}">
+        </i>
+        <i id="collaborate" class="editor-shortcut {{ icons.btnCollaborate.common }} {% if sample.iscollaborative %}{{ icons.btnCollaborate.active }}{% else %}{{ icons.btnCollaborate.inactive }}{% endif %}"
+           title="{% if sample.iscollaborative %}Make non-collaborative{% else %}Make collaborative{% endif %}">
+        </i>
     {% endif %}
     {% if sample.parent_id != 0 and sample.parent.actions != [] %}
-    <i id="showparentactions" class="editor-shortcut glyphicon glyphicon-eye-{{ 'open' if showparentactions else 'close' }}" title="{{ 'Hide' if showparentactions else 'Show' }} parent actions"></i>
+    <i id="showparentactions" class="editor-shortcut {{ icons.btnShowParentActions.common }} {% if showparentactions %}{{ icons.btnShowParentActions.active }}{% else %}{{ icons.btnShowParentActions.inactive }}{% endif %}"
+       title="{{ 'Hide' if showparentactions else 'Show' }} parent actions">
+    </i>
     {% endif %}
-    <i id="scrolltobottom" class="editor-shortcut glyphicon glyphicon-arrow-down" title="Scroll to the bottom"></i>
-    <i id="invertactionorder" class="editor-shortcut glyphicon glyphicon-resize-vertical" title="Invert action order"></i>
-    <i id="showinnavigator" class="editor-shortcut glyphicon glyphicon-search" title="Show in navigator"></i>
+    <i id="scrolltobottom" class="editor-shortcut {{ icons.scrollToBottom }}" title="Scroll to the bottom"></i>
+    <i id="invertactionorder" class="editor-shortcut {{ icons.shuffle }}" title="Invert action order"></i>
+    <i id="showinnavigator" class="editor-shortcut {{ icons.highlightInTree }}" title="Show in navigator"></i>
     <div style="clear:both;"></div>
 </h3>
 <div class="container-fluid">
@@ -31,7 +40,7 @@
             {% elif sample.image != None %}
                 <div class="{% if sample.owner == current_user %}imgeditable{% endif %}">
                     <img id="sampleimage" src="{{ sample.image }}">
-                    <img id="changesampleimage" src="/static/images/insertimage.png" title="Change sample image">
+                    <i id="changesampleimage" class="{{ icons.changeImage }}" title="Change sample image"></i>
                 </div>
             {% endif %}
         </div>
@@ -50,10 +59,10 @@
                 <div class="sharelistentry" id="sharelistentry{{ share.id }}">
                     {% if sample.owner == current_user or share.user == current_user %}
                         <a data-type="share" data-id="{{ share.id }}" data-toggle="modal" data-target="#dlg-confirm-delete" href="">
-                            <i class="glyphicon glyphicon-remove"></i>
+                            <i class="{{ icons.remove }}"></i>
                         </a>
                     {% else %}
-                        <i class="glyphicon glyphicon-user"></i>
+                        <i class="{{ icons.user }}"></i>
                     {% endif %}
                     {{ share.user.username }}
                 </div>
@@ -66,7 +75,7 @@
                     <a id="collapsebutton" role="button" class="collapsed" data-toggle="collapse" href="#sharelistcontainer" aria-expanded="false" aria-controls="sharelistcontainer"></a>
                 {% endif %}
                 {% if sample.owner == current_user %}
-                    <a data-toggle="modal" data-target="#userbrowser" href=""><i class="glyphicon glyphicon-plus"></i> add share</a>
+                    <a data-toggle="modal" data-target="#userbrowser" href=""><i class="{{ icons.newItem }}"></i> add share</a>
                 {% endif %}
             </div>
         </div>
@@ -95,15 +104,15 @@
                 {% if action.owner != current_user %}<div style="font-style: italic">{{ action.owner.username }}</div>{% endif %}
                 {% if action.sample != sample %}<div style="font-style: italic;">{{ action.sample.name }}</div>{% endif %}
                 {% if action.owner == current_user or sample.iscollaborative %}
-                    <i class="actionicon glyphicon glyphicon-trash" data-type="action" data-id="{{ action.id }}" data-toggle="modal" data-target="#dlg-confirm-delete"></i>
+                    <i class="actionicon {{ icons.trash }}" data-type="action" data-id="{{ action.id }}" data-toggle="modal" data-target="#dlg-confirm-delete"></i>
                 {% if not i == 0 %} {# can  be moved up #}
-                    <i class="actionicon glyphicon glyphicon-arrow-up swapaction" data-id="{{ action.id }}" data-swapid="{{ actions[i-1].id }}"></i>
+                    <i class="actionicon {{ icons.arrowUp }} swapaction" data-id="{{ action.id }}" data-swapid="{{ actions[i-1].id }}"></i>
                 {% endif %}
                 {% if not (i+1) == actions|length %} {# can  be moved down #}
-                    <i class="actionicon glyphicon glyphicon-arrow-down swapaction" data-id="{{ action.id }}" data-swapid="{{ actions[i+1].id }}"></i>
+                    <i class="actionicon {{ icons.arrowDown }} swapaction" data-id="{{ action.id }}" data-swapid="{{ actions[i+1].id }}"></i>
                 {% endif %}
                 {% endif %}
-                <i id="togglenews-{{ action.id }}" class="actionicon glyphicon glyphicon-flag togglenews {% if not action.news_id %}markasnews{% else %}unmarkasnews{% endif %}" data-id="{{ action.id }}"></i>
+                <i id="togglenews-{{ action.id }}" class="actionicon {{ icons.markAsNews }} togglenews {% if not action.news_id %}markasnews{% else %}unmarkasnews{% endif %}" data-id="{{ action.id }}"></i>
             </div>
         </div>
         <div class="col-md-10 actiondescription{% if action.owner == current_user or sample.iscollaborative %} editable ckeditable{% endif %}" data-type="action" data-field="description" data-id="{{ action.id }}">{{ action.description|safe }}</div>

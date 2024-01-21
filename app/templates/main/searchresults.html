@@ -6,11 +6,11 @@
         <img src="/static/images/sample.png" width="24px">
         {{ r.name }} &nbsp;&nbsp;
         {% if not r.mysample %}
-            <i class="glyphicon glyphicon-user"></i>
+            <i class="{{ icons.user }}"></i>
             {{ r.ownername }} &nbsp;&nbsp;
         {% endif %}
         {% if r.parentname %}
-            <i class="glyphicon glyphicon-level-up"></i>
+            <i class="{{ icons.childItem }}"></i>
             {{ r.parentname }}
         {% endif %}
     </div>

@@ -1,0 +1,65 @@
+i.legacy-icon.legacy-icon-archived {
+    background-image : url("/static/images/legacy-icons/unarchive.png");
+    background-size: contain;
+}
+i.legacy-icon.legacy-icon-unarchived {
+    background: url("/static/images/legacy-icons/archive.png");
+    background-size: contain;
+}
+i.legacy-icon.legacy-icon-change-image {
+    background: url("/static/images/legacy-icons/insertimage.png");
+    background-size: contain;
+}
+i.legacy-icon.legacy-icon-collaborative {
+    background: url("/static/images/legacy-icons/collaborative.png");
+    background-size: contain;
+}
+i.legacy-icon.legacy-icon-non-collaborative {
+    background: url("/static/images/legacy-icons/non-collaborative.png");
+    background-size: contain;
+}
+i.legacy-icon.legacy-icon-file {
+    background: url("/static/images/legacy-icons/file.png");
+    background-size: contain;
+    background-position: center;
+}
+i.legacy-icon.legacy-icon-folder {
+    background: url("/static/images/legacy-icons/folder.png");
+    background-size: contain;
+}
+i.legacy-icon.legacy-icon-folder-inaccessible {
+    background: url("/static/images/legacy-icons/folder_inaccessible.png");
+    background-size: contain;
+}
+i.legacy-icon.legacy-icon-loader {
+    background: url("/static/images/legacy-icons/loader.gif");
+    background-size: contain;
+}
+i.legacy-icon.legacy-icon-network-drive {
+    background: url("/static/images/legacy-icons/resource.png");
+    background-size: contain;
+}
+i.legacy-icon.legacy-icon-sample {
+    background: url("/static/images/sample.png");
+    background-size: contain;
+}
+i.legacy-icon.legacy-icon-trash {
+    background: url("/static/images/legacy-icons/delete.png");
+    background-size: contain;
+
+}
+i.legacy-icon.legacy-icon-upload {
+    background: url("/static/images/legacy-icons/upload.png");
+    background-size: contain;
+}
+i.legacy-icon.legacy-icon-user {
+    background: url("/static/images/legacy-icons/user.png");
+    background-size: contain;
+}
+i.legacy-icon.legacy-icon-edit {
+    background: url("/static/images/legacy-icons/edit.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 1em;
+    width: 1.875em;
+}

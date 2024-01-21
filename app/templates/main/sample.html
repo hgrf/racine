@@ -13,12 +13,12 @@
         <i id="archive" class="editor-shortcut {{ icons.btnArchive.common }} {% if sample.isarchived %}{{ icons.btnArchive.active }}{% else %}{{ icons.btnArchive.inactive }}{% endif %}"
            title="{% if sample.isarchived %}De-archive{% else %}Archive{% endif %}">
         </i>
-        <i id="collaborate" class="editor-shortcut {{ icons.btnCollaborate.common }} {% if sample.iscollaborative%}{{ icons.btnCollaborate.active }}{% else %}{{ icons.btnCollaborate.inactive }}{% endif %}"
+        <i id="collaborate" class="editor-shortcut {{ icons.btnCollaborate.common }} {% if sample.iscollaborative %}{{ icons.btnCollaborate.active }}{% else %}{{ icons.btnCollaborate.inactive }}{% endif %}"
            title="{% if sample.iscollaborative %}Make non-collaborative{% else %}Make collaborative{% endif %}">
         </i>
     {% endif %}
     {% if sample.parent_id != 0 and sample.parent.actions != [] %}
-    <i id="showparentactions" class="editor-shortcut glyphicon glyphicon-eye-{{ 'open' if showparentactions else 'close' }}"
+    <i id="showparentactions" class="editor-shortcut {{ icons.btnShowParentActions.common }} {% if showparentactions %}{{ icons.btnShowParentActions.active }}{% else %}{{ icons.btnShowParentActions.inactive }}{% endif %}"
        title="{{ 'Hide' if showparentactions else 'Show' }} parent actions">
     </i>
     {% endif %}

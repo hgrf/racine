@@ -4,7 +4,6 @@
 {% block styles %}
 {{ super() }}
     <link rel="stylesheet" href="{{url_for('static', filename='css/login.css')}}">
-    <style>{{ icons.extraStyles['login.css']|safe }}</style>
     <meta http-equiv="refresh" content="1800">
 {% endblock %}
 

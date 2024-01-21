@@ -155,7 +155,7 @@ body {
   position: sticky;
   top: 50px;
   z-index: 500;
-  transition: font-size 0.3s, height 0.3s;
+  transition: height 0.3s;
 }
 
 .main .page-header.smaller {

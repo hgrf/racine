@@ -12,7 +12,8 @@
     max-width:200px;
 }
 
-img.sample-attr {
+i.sample-attr {
+    display: inline-block;
     width: 28px;
     height: 28px;
 }
@@ -23,21 +24,17 @@ img.sample-attr {
     height: 28px;
     margin-left: 15px;
     cursor: pointer;
-    transition: height 0.3s, width 0.3s;
-}
-
-.page-header.smaller .editor-shortcut {
-    width: 20px;
-    height: 20px;
 }
 
 i.editor-shortcut {
     font-size: 24px;
-    transition: font-size 0.3s;
+    transition: font-size 0.3s, width 0.3s, height 0.3s;
 }
 
 .page-header.smaller i.editor-shortcut {
     font-size: 16px;
+    width: 20px;
+    height: 20px;
 }
 
 #sampleimage {
@@ -54,7 +51,7 @@ i.editor-shortcut {
     padding-top: 10px;
 }
 
-img#changesampleimage {
+i#changesampleimage {
     display:none;
 }
 
@@ -63,7 +60,7 @@ img#changesampleimage {
     background-color: rgba(238, 238, 238, 0.4);
 }
 
-.imgeditable:hover img#changesampleimage {
+.imgeditable:hover i#changesampleimage {
     display:block;
     cursor:pointer;
 }
@@ -72,7 +69,7 @@ img#changesampleimage {
     display:block;
 }
 
-.imgeditable img#changesampleimage {
+.imgeditable i#changesampleimage {
     position:absolute;
     top:8px;
     right:55px;
@@ -147,11 +144,11 @@ img, table {
     position:relative;
 }
 
-.editable:hover img.edittrigger {
+.editable:hover i.edittrigger {
     display:block;
 }
 
-.editable img.edittrigger:hover {
+.editable i.edittrigger:hover {
     cursor:pointer;
 }
 
@@ -160,7 +157,7 @@ img, table {
     background-color: rgba(238, 238, 238, 0.4);
 }
 
-.editable img.edittrigger {
+.editable i.edittrigger {
     position:absolute;
     right:2px;
     top:0.2em;
@@ -169,7 +166,7 @@ img, table {
     max-height:25px;
 }
 
-.editabling img.edittrigger {
+.editabling i.edittrigger {
     display:none;
 }
 
@@ -236,9 +233,24 @@ div.user:hover {
     cursor: pointer;
 }
 
-div.user > img {
+td.user {
+    display: flex;
+    align-items: center;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.user > i {
+    display: inline-block;
     width: 48px;
     height: 48px;
+}
+
+.tt-suggestion > i {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
 }
 
 .list-entry {

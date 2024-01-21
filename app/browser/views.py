@@ -25,6 +25,7 @@ PREVIEW_SIZE = [800, 800]
 class FileTile:
     name = ""
     ext = ""
+    icon = ""
     image = ""
     path = ""
 
@@ -429,7 +430,9 @@ def retrieve_smb_image(path):
         image_binary.seek(0)  # need to go back to beginning of stream
         return send_file(image_binary, mimetype="image/jpeg")
     except Exception:
-        return send_file(os.path.join(app.config["RACINE_FOLDER"], "app/static/images/file.png"))
+        return send_file(
+            os.path.join(app.config["RACINE_FOLDER"], "app/static/images/legacy-icons/file.png")
+        )
 
 
 @browser.route("/", defaults={"smb_path": ""})
@@ -496,10 +499,10 @@ def imagebrowser(smb_path):
                 if f.ext.lower() in IMAGE_EXTENSIONS:
                     f.image = "/browser/smbimg/" + f.path
                 else:
-                    f.image = "/static/images/file.png"
+                    f.icon = icons.file
                 files.append(f)
             else:
-                f.image = "/static/images/folder.png"
+                f.icon = icons.folder
                 folders.append(f)
 
         # sort by name and return

@@ -2,21 +2,19 @@
 
 <h3 class="page-header">
     {% if sample.owner != current_user and sample.iscollaborative %}
-        <i class="sample-attr {{ icons.user }}" title="Collaborative">
+        <i class="sample-attr {{ icons.btnCollaborate.common }} {{ icons.btnCollaborate.inactive }}" title="Collaborative"></i>
     {% endif %}
     <div id="samplename" class="{% if sample.owner == current_user %}editable{% endif %}" data-setter="/api/set/sample/name/{{ sample.id }}">{{ sample.name }}</div>
     {% if sample.owner == current_user %}
-        <i class="{{ icons.trash }} editor-shortcut" title="Delete sample"
+        <i class="{{ icons.trashAlt }} editor-shortcut" title="Delete sample"
            data-href="/delsample/{{ sample.id }}" data-type="sample" data-id="{{ sample.id }}"
            data-toggle="modal" data-target="#dlg-confirm-delete">
         </i>
-        <i id="archive" class="editor-shortcut"
-           title="{% if sample.isarchived %}De-archive{% else %}Archive{% endif %}" 
-           src="{% if sample.isarchived %}/static/images/dearchive.png{% else %}/static/images/archive.png{% endif %}">
+        <i id="archive" class="editor-shortcut {{ icons.btnArchive.common }} {% if sample.isarchived %}{{ icons.btnArchive.active }}{% else %}{{ icons.btnArchive.inactive }}{% endif %}"
+           title="{% if sample.isarchived %}De-archive{% else %}Archive{% endif %}">
         </i>
-        <i id="collaborate" class="editor-shortcut"
-           title="{% if sample.iscollaborative %}Make non-collaborative{% else %}Make collaborative{% endif %}"
-           src="{% if sample.iscollaborative %}/static/images/non-collaborative.png{% else %}/static/images/collaborative.png{% endif %}">
+        <i id="collaborate" class="editor-shortcut {{ icons.btnCollaborate.common }} {% if sample.iscollaborative%}{{ icons.btnCollaborate.active }}{% else %}{{ icons.btnCollaborate.inactive }}{% endif %}"
+           title="{% if sample.iscollaborative %}Make non-collaborative{% else %}Make collaborative{% endif %}">
         </i>
     {% endif %}
     {% if sample.parent_id != 0 and sample.parent.actions != [] %}
@@ -42,7 +40,7 @@
             {% elif sample.image != None %}
                 <div class="{% if sample.owner == current_user %}imgeditable{% endif %}">
                     <img id="sampleimage" src="{{ sample.image }}">
-                    <img id="changesampleimage" src="/static/images/insertimage.png" title="Change sample image">
+                    <i id="changesampleimage" class="{{ icons.changeImage }}" title="Change sample image"></i>
                 </div>
             {% endif %}
         </div>

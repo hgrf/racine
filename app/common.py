@@ -12,174 +12,166 @@ login_manager.session_protection = "strong"
 login_manager.login_view = "auth.login"
 migrate = Migrate()
 
-icons_bootstrap = {
-    "stylesheets": [
-        "bootstrap-icons.css",
-    ],
+icons_legacy = {
+    "stylesheets": [],
     "extraStyles": {
+        "browser.css": """
+        i.legacy-icon.legacy-icon-file {
+            background: url("/static/images/legacy-icons/file.png");
+            background-size: contain;
+            background-position: center;
+        }
+        i.legacy-icon.legacy-icon-folder {
+            background: url("/static/images/legacy-icons/folder.png");
+            background-size: contain;
+        }
+        i.legacy-icon.legacy-icon-folder-inaccessible {
+            background: url("/static/images/legacy-icons/folder_inaccessible.png");
+            background-size: contain;
+        }
+        i.legacy-icon.legacy-icon-loader {
+            background: url("/static/images/legacy-icons/loader.gif");
+            background-size: contain;
+        }
+        i.legacy-icon.legacy-icon-network-drive {
+            background: url("/static/images/legacy-icons/resource.png");
+            background-size: contain;
+        }
+        i.legacy-icon.legacy-icon-sample {
+            background: url("/static/images/sample.png");
+            background-size: contain;
+        }
+        i.legacy-icon.legacy-icon-upload {
+            background: url("/static/images/legacy-icons/upload.png");
+            background-size: contain;
+        }
+        i.legacy-icon.legacy-icon-user {
+            background: url("/static/images/legacy-icons/user.png");
+            background-size: contain;
+        }
+        """,
         "editor.css": """
-            div#sampledescription.editable-empty::before {
-                content: '\\f4c9';
-                font-family: 'bootstrap-icons';
-            }
-            i.editor-shortcut {
-                font-size: 24px;
-            }
+        i.legacy-icon.legacy-icon-archived {
+            background-image : url("/static/images/legacy-icons/unarchive.png");
+            background-size: contain;
+        }
+        i.legacy-icon.legacy-icon-unarchived {
+            background: url("/static/images/legacy-icons/archive.png");
+            background-size: contain;
+        }
+        i.legacy-icon.legacy-icon-change-image {
+            background: url("/static/images/legacy-icons/insertimage.png");
+            background-size: contain;
+        }
+        i.legacy-icon.legacy-icon-collaborative {
+            background: url("/static/images/legacy-icons/collaborative.png");
+            background-size: contain;
+        }
+        i.legacy-icon.legacy-icon-non-collaborative {
+            background: url("/static/images/legacy-icons/non-collaborative.png");
+            background-size: contain;
+        }
+        i.legacy-icon.legacy-icon-network-drive {
+            background: url("/static/images/legacy-icons/resource.png");
+            background-size: contain;
+        }
+        i.legacy-icon.legacy-icon-trash {
+            background: url("/static/images/legacy-icons/delete.png");
+            background-size: contain;
+        }
+        i.legacy-icon.legacy-icon-user {
+            background: url("/static/images/legacy-icons/user.png");
+            background-size: contain;
+        }
+        i.legacy-icon.legacy-icon-edit {
+            background: url("/static/images/legacy-icons/edit.png");
+            background-size: contain;
+            background-repeat: no-repeat;
+            height: 1em;
+            width: 1.875em;
+        }
+        """,
+        "leave.css": """
+        i.legacy-icon.legacy-icon-user {
+            background: url("/static/images/legacy-icons/user.png");
+            background-size: contain;
+        }
+        """,
+        "login.css": """
+        i.legacy-icon.legacy-icon-user {
+            background: url("/static/images/legacy-icons/user.png");
+            background-size: contain;
+        }
         """,
         "navbar.css": """
-            .navbar-shortcuts {
-                font-size: 18px;
-            }
         """,
     },
-    "alert": "bi-exclamation-triangle-fill",
-    "arrowDown": "bi-arrow-down-circle-fill",
-    "arrowUp": "bi-arrow-up-circle-fill",
+    "alert": "glyphicon glyphicon-warning-sign",
+    "arrowDown": "glyphicon glyphicon-arrow-down",
+    "arrowUp": "glyphicon glyphicon-arrow-up",
     "btnArchive": {
-        "common": "",
-        "active": "bi-archive-fill",
-        "inactive": "bi-archive",
+        "common": "legacy-icon",
+        "active": "legacy-icon-archived",
+        "inactive": "legacy-icon-unarchived",
     },
     "btnCollaborate": {
-        "common": "",
-        "active": "bi-people-fill",
-        "inactive": "bi-people-fill",
-        "activeSub": "bi-pencil-fill",
-        "inactiveSub": "bi-lock-fill",
-    },
-    "btnShowParentActions": {
-        "common": "",
-        "active": "bi-eye-fill",
-        "inactive": "bi-eye-slash-fill",
-    },
-    "camera": "bi-camera-fill",
-    "childItem": "bi-folder-symlink-fill",
-    "edit": "bi-pencil-fill",
-    "help": "bi-question-circle-fill",
-    "highDef": "bi-badge-hd-fill",
-    "highlightInTree": "bi-binoculars-fill",
-    "home": "bi-house-fill",
-    "invisible": "bi-eye-slash-fill",
-    "lock": "bi-lock-fill",
-    "login": "bi-box-arrow-in-right",
-    "logout": "bi-door-closed-fill",
-    "markAsNews": "bi-flag-fill",
-    "navCaret": {
-        "common": "",
-        "collapsed": "bi-caret-right-fill",
-        "expanded": "bi-caret-down-fill",
-    },
-    "networkDrive": "bi-hdd-network-fill",
-    "newItem": "bi-plus-circle-fill",
-    "ok": "bi-check-lg",
-    "pencil": "bi-pencil-fill",
-    "printer": "bi-printer-fill",
-    "remove": "bi-x-square-fill",
-    "scrollToBottom": "bi-file-earmark-arrow-down-fill",
-    "selectSample": {
-        "common": "",
-    },
-    "settings": "bi-gear-fill",
-    "shuffle": "bi-shuffle",
-    "sortAlphabet": "bi-sort-alpha-down",
-    "sortCalendar": "bi-calendar-date-fill",
-    "sortNumber": "bi-sort-numeric-down",
-    "toggleHeaderNav": "bi-three-dots-vertical",
-    "toggleTree": "bi-collection",
-    "trash": "bi-trash3-fill",
-    "upload": "bi-cloud-arrow-up-fill",
-    "user": "bi-person-fill",
-    "visible": "bi-eye-fill",
-}
-
-icons_fontawesome = {
-    "stylesheets": [
-        "fontawesome.min.css",
-        "regular.min.css",
-        "solid.min.css",
-        "brands.min.css",
-    ],
-    "extraStyles": {
-        "editor.css": """
-            div#sampledescription.editable-empty::before {
-                content: '\\f303';
-                font-family: 'Font Awesome 6 Free';
-                font-weight: 900;
-            }
-            i.editor-shortcut {
-                font-size: 20px;
-            }
-        """,
-        "navbar.css": """
-            .navbar-shortcuts {
-                font-size: 16px;
-            }
-            .navbar-shortcut.sort-active {
-                padding: 2px;
-            }
-        """,
-    },
-    "alert": "fa-triangle-exclamation",
-    "arrowDown": "fa-solid fa-circle-up",
-    "arrowUp": "fa-solid fa-circle-down",
-    "btnArchive": {
-        "common": "fa-solid",
-        "active": "fa-box-archive",
-        "inactive": "fa-box-open",
-    },
-    "btnCollaborate": {
-        "common": "fa-solid",
-        "active": "fa-users",
-        "inactive": "fa-users",
-        "activeSub": "fa-pencil",
-        "inactiveSub": "fa-lock",
+        "common": "legacy-icon",
+        "active": "legacy-icon-non-collaborative",
+        "inactive": "legacy-icon-collaborative",
     },
     "btnShowParentActions": {
         "common": " fa-solid",
         "active": "fa-eye",
         "inactive": "fa-eye-slash",
     },
-    "camera": "fa-solid fa-camera",
-    "childItem": "fa-solid fa-folder-tree",
-    "edit": "fa-solid fa-pen-to-square",
-    "help": "fa-solid fa-circle-question",
-    "highDef": "fa-solid fa-photo-film",
-    "highlightInTree": "fa-solid fa-glasses",
-    "home": "fa-solid fa-house",
-    "invisible": "fa-eye-slash",
-    "lock": "fa-solid fa-lock",
-    "login": "fa-solid fa-right-to-bracket",
-    "logout": "fa-solid fa-door-closed",
-    "markAsNews": "fa-solid fa-paper-plane",
+    "changeImage": "legacy-icon legacy-icon-change-image",
+    "childItem": "glyphicon glyphicon-level-up",
+    "edit": "legacy-icon legacy-icon-edit",
+    "file": "legacy-icon legacy-icon-file",
+    "folder": "legacy-icon legacy-icon-folder",
+    "folderInaccessible": "legacy-icon legacy-icon-folder-inaccessible",
+    "help": "glyphicon glyphicon-question-sign",
+    "highDef": "glyphicon glyphicon-hd-video",
+    "highlightInTree": "glyphicon glyphicon-search",
+    "home": "glyphicon glyphicon-home",
+    "invisible": "glyphicon glyphicon-eye-slash",
+    "lock": "glyphicon glyphicon-lock",
+    "loader": "legacy-icon legacy-icon-loader",
+    "login": "glyphicon glyphicon-log-in",
+    "logout": "glyphicon glyphicon-log-out",
+    "markAsNews": "glyphicon glyphicon-flag",
     "navCaret": {
-        "common": " fa-solid",
-        "collapsed": "fa-caret-right",
-        "expanded": "fa-caret-down",
+        "common": " glyphicon",
+        "collapsed": "glyphicon-expand",
+        "expanded": "glyphicon-collapse-down",
     },
-    "networkDrive": "fa-solid fa-server",
-    "newItem": "fa-solid fa-circle-plus",
-    "ok": "fa-check",
+    "networkDrive": "legacy-icon legacy-icon-network-drive",
+    "newItem": "glyphicon glyphicon-plus",
+    "ok": "glyphicon glyphicon-ok",
     "pencil": "fa-pencil",
-    "printer": "fa-solid fa-print",
-    "remove": "fa-solid fa-square-xmark",
-    "scrollToBottom": "fa-solid fa-angles-down",
+    "printer": "glyphicon glyphicon-print",
+    "remove": "glyphicon glyphicon-remove",
+    "scrollToBottom": "glyphicon glyphicon-arrow-down",
     "selectSample": {
-        "common": " fa-solid",
+        "common": " glyphicon",
     },
-    "settings": "fa-solid fa-screwdriver-wrench",
-    "shuffle": "fa-solid fa-shuffle",
-    "sortAlphabet": "fa-solid fa-arrow-down-a-z",
-    "sortCalendar": "fa-solid fa-calendar-days",
-    "sortNumber": "fa-solid fa-arrow-down-1-9",
-    "toggleHeaderNav": "fa-solid fa-ellipsis-vertical",
-    "toggleTree": "fa-solid fa-folder-tree",
-    "trash": "fa-solid fa-trash-can",
-    "upload": "fa-solid fa-cloud-arrow-up",
-    "user": "fa-solid fa-user",
-    "visible": "fa-eye",
+    "settings": "glyphicon glyphicon-wrench",
+    "shuffle": "glyphicon glyphicon-resize-vertical",
+    "sortAlphabet": "glyphicon glyphicon-sort-by-alphabet",
+    "sortCalendar": "glyphicon glyphicon-calendar",
+    "sortNumber": "glyphicon glyphicon-sort-by-order",
+    "toggleHeaderNav": "glyphicon glyphicon-option-vertical",
+    "toggleTree": "glyphicon glyphicon-menu-hamburger",
+    "sample": "legacy-icon legacy-icon-sample",
+    "trash": "glyphicon glyphicon-trash",
+    "trashAlt": "legacy-icon legacy-icon-trash",
+    "upload": "legacy-icon legacy-icon-upload",
+    "user": "glyphicon glyphicon-user",
+    "userAlt": "legacy-icon legacy-icon-user",
+    "visible": "glyphicon glyphicon-eye-open",
 }
 
-icons_dict = icons_fontawesome
+icons_dict = icons_legacy
 icons = namedtuple("icons", icons_dict.keys())(**icons_dict)
 
 

@@ -50,7 +50,7 @@
     <table>
     {% for c in conns %}
         <tr><td class="smbresource">
-            <i class="{{ icon.networkDrive }}"></i>
+            <i class="{{ icons.networkDrive }}"></i>
             {{ c.resource }}, {{ "not" if not c.inuse else "" }} in use
         </td></tr>
     {% endfor %}
@@ -62,7 +62,7 @@
     {% for u in uploadvols %}
         {% if u[1] %}
             <tr>
-                <td class="user"><i class="{{ icons.user }}"></i>{{ u[0].username }}</td>
+                <td class="user"><i class="{{ icons.userAlt }}"></i>{{ u[0].username }}</td>
                 <td style="padding-top: 10px;">
                     <div class="progress" style="width: 200px;">
                         <div class="progress-bar" role="progressbar" style="width:{{ u[1]/maxuploadvol*100 }}%;color:#000000";>
@@ -83,7 +83,7 @@
     <table>
     {% for n in newactionsallusers %}
         <tr>
-            <td class="user"><i class="{{ icons.user }}"></i>{{ n[0].username }}</td>
+            <td class="user"><i class="{{ icons.userAlt }}"></i>{{ n[0].username }}</td>
             <td style="padding-top: 10px;">
                 <div class="progress" style="width: 200px;">
                     <div class="progress-bar" role="progressbar" style="width:{{ n[1]/maxcountallusers*100 }}%;">

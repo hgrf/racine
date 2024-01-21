@@ -32,7 +32,7 @@ class LeaveView {
           name: 'users',
           source: substringMatcher(data.users),
           templates: {
-            suggestion: (data) => `<div><i class="${icons.user}"></i>${data}</div>`,
+            suggestion: (data) => `<div><i class="${icons.userAlt}"></i>${data}</div>`,
           },
         });
       }

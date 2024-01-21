@@ -80,12 +80,12 @@ const serverErrorMsg = 'Could not connect to the server. ' +
 
   function onEditRequested(event) {
     let field = $(this); // eslint-disable-line no-invalid-this
-    if (field.is('img.edittrigger')) {
+    if (field.is('i.edittrigger')) {
       field = field.parent();
     }
 
     field.unbind('dblclick');
-    field.children('img.edittrigger').remove();
+    field.children('i.edittrigger').remove();
     field.addClass('editabling');
     field.removeClass('editable');
     field.trigger('edit');
@@ -104,10 +104,10 @@ const serverErrorMsg = 'Could not connect to the server. ' +
         field.append(`<i class="edittrigger ${icons.edit}"></i>`);
       }
       // avoid accumulation of events
-      field.find('img.edittrigger').unbind('click');
+      field.find('i.edittrigger').unbind('click');
       field.unbind('editabledone');
       // re-define events
-      field.find('img.edittrigger').click(onEditRequested);
+      field.find('i.edittrigger').click(onEditRequested);
       field.on('editabledone', function(event) {
         field.addClass('editable');
         field.removeClass('editabling');

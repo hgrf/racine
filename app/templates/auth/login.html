@@ -4,6 +4,7 @@
 {% block styles %}
 {{ super() }}
     <link rel="stylesheet" href="{{url_for('static', filename='css/login.css')}}">
+    <style>{{ icons.extraStyles['login.css']|safe }}</style>
     <meta http-equiv="refresh" content="1800">
 {% endblock %}
 
@@ -44,7 +45,7 @@
             <div class="quicklogin col-sm-4">
                 {% for username in last_logged_in %}
                     <div class="user" data-username="{{ username }}">
-                        <i class="{{ icons.user }}"></i>
+                        <i class="{{ icons.userAlt }}"></i>
                         <span>{{ username }}</span>
                     </div>
                 {% endfor %}

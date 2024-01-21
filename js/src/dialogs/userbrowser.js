@@ -33,7 +33,7 @@ class UserBrowserDialog extends Dialog {
           templates: {
             suggestion: function(data) {
               return `<div>
-              <i class="${icons.user}"></i>
+              <i class="${icons.userAlt}"></i>
               ${data}
               </div>`;
             },
@@ -51,7 +51,7 @@ class UserBrowserDialog extends Dialog {
       if (Object.hasOwn(data.recent, i)) {
         this.recentCollaborators.append(
             `<div class="user" data-name="${data.recent[i]}">
-              <i class="${icons.user}"></i>${data.recent[i]}
+              <i class="${icons.userAlt}"></i>${data.recent[i]}
             </div>`,
         );
       }

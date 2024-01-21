@@ -51,6 +51,16 @@
     padding-bottom: 10px;
 }
 
+.inheritance {
+    display: flex;
+    align-items: center;
+}
+
+.inheritance > i {
+    width: 28px;
+    height: 28px;
+}
+
 .nav-entry > .nav-caret {
     margin-right: 8px;
     width: 10px;

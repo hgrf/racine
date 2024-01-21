@@ -28,7 +28,7 @@ class LoginView {
       source: substringMatcher(self.params.users),
       templates: {
         suggestion: function(data) {
-          return `<div><i class="${icons.user}"></i>${data}</div>`;
+          return `<div><i class="${icons.userAlt}"></i>${data}</div>`;
         },
       },
     });

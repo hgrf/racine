@@ -98,12 +98,14 @@ class BrowserView {
         data: {'smbpath': historyitemdiv.data('url')},
         success: function(data) {
           if (!data.code) {
-            historyitemdiv.find('img').attr('src', '/static/images/folder.png');
+            historyitemdiv.find('i').removeClass();
+            historyitemdiv.find('i').addClass(`${icons.folder}`);
             historyitemdiv.addClass('available'); // for CSS :hover
             // add click handler for new elements
             historyitemdiv.click(folderclickhandler);
           } else {
-            historyitemdiv.find('img').attr('src', '/static/images/folder_inaccessible.png');
+            historyitemdiv.find('i').removeClass();
+            historyitemdiv.find('i').addClass(`${icons.folderInaccessible}`);
           }
         },
       });
@@ -124,21 +126,23 @@ class BrowserView {
           if (!data.code) {
             if (data.userfolder != '') {
               shortcutsdiv.append(
-                  `<i class="shortcut" class="${icons.user}" ` +
-                  `data-url="${data.userfolder}"></i>`,
+                  `<div class="shortcut" data-url="${data.userfolder}">
+                    <i class="${icons.userAlt}"></i>
+                  </div>`,
               );
             }
             if (data.samplefolder != '') {
               shortcutsdiv.append(
-                  '<img class="shortcut" ' +
-                  `src="/static/images/sample.png" data-url="${data.samplefolder}">`,
+                  `<div class="shortcut" data-url="${data.samplefolder}">
+                    <i class="${icons.sample}"</i>
+                  </div>`,
               );
             }
             resourcediv.addClass('available'); // for CSS :hover
 
             // add click handler for new elements
             resourcediv.click(folderclickhandler);
-            shortcutsdiv.children('img').click(folderclickhandler);
+            shortcutsdiv.children('.shortcut').click(folderclickhandler);
           } else {
             resourcediv.append(' (N/A)');
           }

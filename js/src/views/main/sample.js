@@ -213,47 +213,47 @@ class SampleView extends AjaxView {
     const mV = this.mainView;
 
     const btnArchive = new ToggleButton(
-      '#archive',
-      icons.btnArchive,
-      {active: 'De-archive', inactive: 'Archive'},
-      $('#sampleattributes').data('isarchived') === 'True',
-      function() {
-        R.samplesAPI.toggleArchived(sampleid, function(error, data, response) {
-          if (!R.responseHasError(response)) {
-            btnArchive.setState(data.isarchived);
-            if (data.isarchived) {
-              $(`#nav-entry${sampleid}`).addClass('nav-entry-archived');
-            } else {
-              $(`#nav-entry${sampleid}`).removeClass('nav-entry-archived');
+        '#archive',
+        icons.btnArchive,
+        {active: 'De-archive', inactive: 'Archive'},
+        $('#sampleattributes').data('isarchived') === 'True',
+        function() {
+          R.samplesAPI.toggleArchived(sampleid, function(error, data, response) {
+            if (!R.responseHasError(response)) {
+              btnArchive.setState(data.isarchived);
+              if (data.isarchived) {
+                $(`#nav-entry${sampleid}`).addClass('nav-entry-archived');
+              } else {
+                $(`#nav-entry${sampleid}`).removeClass('nav-entry-archived');
+              }
             }
-          }
-        });
-      }
+          });
+        },
     );
 
     const btnCollaborate = new ToggleButton(
-      '#collaborate',
-      icons.btnCollaborate,
-      {active: 'Make non-collaborative', inactive: 'Make collaborative'},
-      $('#sampleattributes').data('iscollaborative') === 'True',
-      function() {
-        R.samplesAPI.toggleCollaborative(sampleid, function(error, data, response) {
-          if (!R.responseHasError(response)) {
-            btnCollaborate.setState(data.iscollaborative);
-          }
-        });
-      }
+        '#collaborate',
+        icons.btnCollaborate,
+        {active: 'Make non-collaborative', inactive: 'Make collaborative'},
+        $('#sampleattributes').data('iscollaborative') === 'True',
+        function() {
+          R.samplesAPI.toggleCollaborative(sampleid, function(error, data, response) {
+            if (!R.responseHasError(response)) {
+              btnCollaborate.setState(data.iscollaborative);
+            }
+          });
+        },
     );
 
     new ToggleButton(
-      '#showparentactions',
-      icons.btnShowParentActions,
-      {active: 'Hide parent actions', inactive: 'Show parent actions'},
-      self.showparentactions,
-      function() {      
-        self.showparentactions = !self.showparentactions;
-        mV.loadSample(sampleid, true);
-      }
+        '#showparentactions',
+        icons.btnShowParentActions,
+        {active: 'Hide parent actions', inactive: 'Show parent actions'},
+        self.showparentactions,
+        function() {
+          self.showparentactions = !self.showparentactions;
+          mV.loadSample(sampleid, true);
+        },
     );
 
     $('#showinnavigator').on('click', () => {

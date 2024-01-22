@@ -53,7 +53,7 @@ install-mathjax:
 	rm -rf app/static/mathjax/.git
 
 install-js-dependencies: install-mathjax api-client
-	mkdir -p app/static/css
+	mkdir -p app/static/css/fonts
 	mkdir -p app/static/fonts
 
 	# install typeahead.js
@@ -78,6 +78,9 @@ install-js-dependencies: install-mathjax api-client
 
 	cp js/node_modules/bootstrap/dist/css/bootstrap.min.css app/static/css/bootstrap.min.css
 	cp js/node_modules/bootstrap/dist/fonts/* app/static/fonts/
+
+	cp js/node_modules/bootstrap-icons/font/bootstrap-icons.css app/static/css/bootstrap-icons.css
+	cp js/node_modules/bootstrap-icons/font/fonts/* app/static/css/fonts/
 
 	cp js/node_modules/tocbot/dist/tocbot.css app/static/css/tocbot.css
 

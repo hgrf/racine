@@ -1,0 +1,29 @@
+.navbar-right > li > a > i {
+  font-size: 16px;
+}
+
+.navbar-shortcuts {
+    font-size: 16px;
+}
+
+i.sample-attr {
+    font-size: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+}
+
+i.editor-shortcut {
+    font-size: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+}
+
+.page-header.smaller i.editor-shortcut {
+    font-size: 14px !important;
+    width: 14px !important;
+    height: 14px !important;
+}
+
+i.btn-home {
+    font-size: 14px !important;
+}

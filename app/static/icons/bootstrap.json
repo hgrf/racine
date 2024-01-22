@@ -1,0 +1,68 @@
+{
+    "stylesheets": ["bootstrap-icons.css", "legacy-icons.css", "icons-bootstrap.css"],
+    "alert": "bi-exclamation-triangle-fill",
+    "arrowDown": "bi-arrow-down-circle-fill",
+    "arrowUp": "bi-arrow-up-circle-fill",
+    "btnArchive": {
+        "common": "",
+        "active": "bi-archive-fill",
+        "inactive": "bi-archive"
+    },
+    "btnCollaborate": {
+        "common": "",
+        "active": "bi-people-fill",
+        "inactive": "bi-people-fill",
+        "activeSub": "bi-pencil-fill",
+        "inactiveSub": "bi-lock-fill"
+    },
+    "btnShowParentActions": {
+        "common": "",
+        "active": "bi-eye-fill",
+        "inactive": "bi-eye-slash-fill"
+    },
+    "changeImage": "bi-camera-fill",
+    "childItem": "bi-folder-symlink-fill",
+    "edit": "bi-pencil-square",
+    "file": "legacy-icon legacy-icon-file",
+    "folder": "legacy-icon legacy-icon-folder",
+    "folderInaccessible": "legacy-icon legacy-icon-folder-inaccessible",
+    "help": "bi-question-circle-fill",
+    "highDef": "bi-badge-hd-fill",
+    "highlightInTree": "bi-binoculars-fill",
+    "home": "bi-house-fill",
+    "invisible": "bi-eye-slash-fill",
+    "lock": "bi-lock-fill",
+    "loader": "legacy-icon legacy-icon-loader",
+    "login": "bi-box-arrow-in-right",
+    "logout": "bi-door-closed-fill",
+    "markAsNews": "bi-flag-fill",
+    "navCaret": {
+        "common": " ",
+        "collapsed": "bi-caret-right-fill",
+        "expanded": "bi-caret-down-fill"
+    },
+    "networkDrive": "bi-hdd-network-fill",
+    "newItem": "bi-plus-circle-fill",
+    "ok": "bi-check-lg",
+    "pencil": "bi-pencil-fill",
+    "printer": "bi-printer-fill",
+    "remove": "bi-x-square-fill",
+    "scrollToBottom": "bi-file-earmark-arrow-down-fill",
+    "selectSample": {
+        "common": " "
+    },
+    "settings": "bi-gear-fill",
+    "shuffle": "bi-shuffle",
+    "sortAlphabet": "bi-sort-alpha-down",
+    "sortCalendar": "bi-calendar-date-fill",
+    "sortNumber": "bi-sort-numeric-down",
+    "toggleHeaderNav": "bi-three-dots-vertical",
+    "toggleTree": "bi-collection",
+    "sample": "legacy-icon legacy-icon-sample",
+    "trash": "bi-trash3-fill",
+    "trashAlt": "bi-trash3-fill",
+    "upload": "bi-cloud-arrow-up-fill",
+    "user": "bi-person-fill",
+    "userAlt": "bi-person-circle",
+    "visible": "bi-eye-fill"
+}

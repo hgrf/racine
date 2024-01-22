@@ -14,21 +14,34 @@
 
 i.sample-attr {
     display: inline-block;
+    margin-right: 10px;
+    position: relative;
     width: 28px;
     height: 28px;
-}
-
-.editor-shortcut {
-    float: right;
-    width: 28px;
-    height: 28px;
-    margin-left: 15px;
-    cursor: pointer;
 }
 
 i.editor-shortcut {
+    float: right;
+    position: relative;
+    width: 28px;
+    height: 28px;
     font-size: 24px;
+    margin-left: 15px;
     transition: font-size 0.3s, width 0.3s, height 0.3s;
+    cursor: pointer;
+}
+
+i.editor-shortcut > i,
+i.sample-attr > i {
+    position: absolute;
+    right: -0.2em;
+    bottom: -0.2em;
+    font-size: 0.7em;
+    -webkit-text-stroke: 1px #666;
+    text-shadow: -1px 0px 2px #fff,
+                 0px -1px 2px #fff,
+                 1px 0px 2px #fff,
+                 0px 1px 2px #fff;
 }
 
 .page-header.smaller i.editor-shortcut {
@@ -163,8 +176,11 @@ img, table {
     right:2px;
     top:0.2em;
     display:none;
-    height:1em;
-    max-height:25px;
+    padding: 8px 10px 8px 10px;
+    font-size: 18px;
+    background-color: rgba(51, 0, 102, 0.3);
+    color:#660099;
+    line-height: normal;
 }
 
 .editabling i.edittrigger {
@@ -229,6 +245,10 @@ form#newactionform label {
     display: none;
 }
 
+div.user {
+    line-height: 40px;
+}
+
 div.user:hover {
     background-color: #CCCCEE;
     cursor: pointer;
@@ -244,6 +264,9 @@ td.user {
 
 .user > i {
     display: inline-block;
+    font-size: 36px;
+    line-height: 48px;
+    vertical-align: middle;
     width: 48px;
     height: 48px;
 }
@@ -286,7 +309,7 @@ div.news > div.news-title {
     cursor: pointer;
 }
 
-div.news > div.news-title > i.glyphicon {
+div.news > div.news-title > i {
     color: #FF0000;
 }
 

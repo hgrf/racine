@@ -34,9 +34,12 @@ div.folder, .resource, .historyitem {
     display: inline-block;
 }
 .shortcut > i {
-    display: inline-block;
+    float: left;
     width: 48px;
     height: 48px;
+    font-size: 36px;
+    line-height: 48px;
+    vertical-align: middle;
 }
 .folder i:not(.btn-home), .resource i, .historyitem i {
     position:absolute;
@@ -44,6 +47,9 @@ div.folder, .resource, .historyitem {
     top:0px;
     width: 48px;
     height: 48px;
+    font-size: 36px;
+    line-height: 48px;
+    vertical-align: middle;
 }
 .folder:hover, .resource.available:hover, .historyitem.available:hover, .shortcut:hover {
     cursor:pointer;
@@ -112,9 +118,12 @@ i.btn-home {
     padding: 0px;
 }
 #upload-frame form i {
+    font-size: 24px;
+    line-height: 24px;
     width: 24px;
     height: 24px;
-    margin-right: 5px;
+    margin-right: 8px;
+    vertical-align: middle;
 }
 #multiswitch {
     float: right;

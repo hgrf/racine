@@ -23,6 +23,53 @@ import icons from '../../util/icons';
  */
 $.ajaxSetup({cache: false});
 
+class ToggleButton {
+  constructor(selector, icon, title, initialState, callback) {
+    this.selector = selector;
+    this.icon = icon;
+    this.title = title;
+
+    this.button = $(selector);
+
+    if (icon.common) {
+      this.button.addClass(icon.common);
+    }
+
+    if (icon.activeSub || icon.inactiveSub) {
+      this.button.append(`<i class='${icon.common}'></i>`);
+    }
+
+    this.subIcon = this.button.children('i');
+
+    this.setState(initialState);
+    this.button.on('click', callback);
+  }
+
+  setState(state) {
+    this.state = state;
+
+    if (state) {
+      this.button.attr('title', this.title.active);
+      this.button.removeClass(this.icon.inactive);
+      this.button.addClass(this.icon.active);
+
+      if (this.icon.activeSub && this.icon.inactiveSub) {
+        this.subIcon.removeClass(this.icon.inactiveSub);
+        this.subIcon.addClass(this.icon.activeSub);
+      }
+    } else {
+      this.button.attr('title', this.title.inactive);
+      this.button.removeClass(this.icon.active);
+      this.button.addClass(this.icon.inactive);
+
+      if (this.icon.activeSub && this.icon.inactiveSub) {
+        this.subIcon.removeClass(this.icon.activeSub);
+        this.subIcon.addClass(this.icon.inactiveSub);
+      }
+    }
+  }
+}
+
 class SampleView extends AjaxView {
   constructor(mainView) {
     super(mainView);
@@ -165,41 +212,49 @@ class SampleView extends AjaxView {
     const self = this;
     const mV = this.mainView;
 
-    const btnArchive = $('#archive');
-    btnArchive.on('click', function() {
-      R.samplesAPI.toggleArchived(sampleid, function(error, data, response) {
-        if (!R.responseHasError(response)) {
-          if (data.isarchived) {
-            btnArchive.attr('title', 'De-archive');
-            btnArchive.removeClass(`${icons.btnArchive.inactive}`);
-            btnArchive.addClass(`${icons.btnArchive.active}`);
-            $(`#nav-entry${sampleid}`).addClass('nav-entry-archived');
-          } else {
-            btnArchive.attr('title', 'Archive');
-            btnArchive.removeClass(`${icons.btnArchive.active}`);
-            btnArchive.addClass(`${icons.btnArchive.inactive}`);
-            $(`#nav-entry${sampleid}`).removeClass('nav-entry-archived');
+    const btnArchive = new ToggleButton(
+      '#archive',
+      icons.btnArchive,
+      {active: 'De-archive', inactive: 'Archive'},
+      $('#sampleattributes').data('isarchived') === 'True',
+      function() {
+        R.samplesAPI.toggleArchived(sampleid, function(error, data, response) {
+          if (!R.responseHasError(response)) {
+            btnArchive.setState(data.isarchived);
+            if (data.isarchived) {
+              $(`#nav-entry${sampleid}`).addClass('nav-entry-archived');
+            } else {
+              $(`#nav-entry${sampleid}`).removeClass('nav-entry-archived');
+            }
           }
-        }
-      });
-    });
+        });
+      }
+    );
 
-    const btnCollaborate = $('#collaborate');
-    btnCollaborate.on('click', function() {
-      R.samplesAPI.toggleCollaborative(sampleid, function(error, data, response) {
-        if (!R.responseHasError(response)) {
-          if (data.iscollaborative) {
-            btnCollaborate.attr('title', 'Make non-collaborative');
-            btnCollaborate.removeClass(`${icons.btnCollaborate.inactive}`);
-            btnCollaborate.addClass(`${icons.btnCollaborate.active}`);
-          } else {
-            btnCollaborate.attr('title', 'Make collaborative');
-            btnCollaborate.removeClass(`${icons.btnCollaborate.active}`);
-            btnCollaborate.addClass(`${icons.btnCollaborate.inactive}`);
+    const btnCollaborate = new ToggleButton(
+      '#collaborate',
+      icons.btnCollaborate,
+      {active: 'Make non-collaborative', inactive: 'Make collaborative'},
+      $('#sampleattributes').data('iscollaborative') === 'True',
+      function() {
+        R.samplesAPI.toggleCollaborative(sampleid, function(error, data, response) {
+          if (!R.responseHasError(response)) {
+            btnCollaborate.setState(data.iscollaborative);
           }
-        }
-      });
-    });
+        });
+      }
+    );
+
+    new ToggleButton(
+      '#showparentactions',
+      icons.btnShowParentActions,
+      {active: 'Hide parent actions', inactive: 'Show parent actions'},
+      self.showparentactions,
+      function() {      
+        self.showparentactions = !self.showparentactions;
+        mV.loadSample(sampleid, true);
+      }
+    );
 
     $('#showinnavigator').on('click', () => {
       mV.tree.highlight(sampleid, true);
@@ -211,11 +266,6 @@ class SampleView extends AjaxView {
 
     $('#invertactionorder').on('click', function() {
       self.invertactionorder = !self.invertactionorder;
-      mV.loadSample(sampleid, true);
-    });
-
-    $('#showparentactions').on('click', function() {
-      self.showparentactions = !self.showparentactions;
       mV.loadSample(sampleid, true);
     });
   }

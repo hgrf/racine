@@ -51,8 +51,13 @@ i.editor-shortcut {
     padding-top: 10px;
 }
 
-i#changesampleimage {
-    display:none;
+.imgcontainer {
+    position: relative;
+    display: inline-block;
+}
+
+.imgcontainer:hover a.zoombutton {
+    display:block;
 }
 
 .imgeditable:hover {
@@ -60,42 +65,38 @@ i#changesampleimage {
     background-color: rgba(238, 238, 238, 0.4);
 }
 
-.imgeditable:hover i#changesampleimage {
-    display:block;
-    cursor:pointer;
-}
-
+.imgeditable:hover i#changesampleimage,
+.imgeditable:hover i#clearsampleimage,
 .imgeditable:hover a.zoombutton {
-    display:block;
+    display: block;
+    cursor: pointer;
 }
 
-.imgeditable i#changesampleimage {
-    position:absolute;
-    top:8px;
-    right:55px;
-    width:36px;
-    height:36px;
-    display:none;
-}
-
-.imgcontainer {
-    position:relative;
-    display:inline-block;
-}
-
-.imgcontainer:hover a.zoombutton {
-    display:block;
+.imgeditable i#changesampleimage,
+.imgeditable i#clearsampleimage,
+.imgcontainer a.zoombutton {
+    background-color: #CCCCCC;
+    padding: 2px 2px 2px 5px;
+    position: absolute;
+    top: 8px;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    font-size: 16pt;
+    display: none;
+    color: black;
 }
 
 .imgcontainer a.zoombutton {
-    position:absolute;
-    top:8px;
-    right:8px;
-    color:black;
-    font-size:14pt;
-    background-color:#CCCCCC;
-    padding:2px 2px 2px 5px;
-    display:none;
+    right: 8px;
+}
+
+.imgeditable i#changesampleimage {
+    right: 58px;
+}
+
+.imgeditable i#clearsampleimage {
+    right: 94px;
 }
 
 div#sampledescription {

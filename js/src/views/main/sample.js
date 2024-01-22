@@ -323,6 +323,17 @@ class SampleView extends AjaxView {
       );
     }
 
+    /* if a sample image is set, show icons to change or clear it */
+    $('div.imgeditable').append(
+        `<i id="changesampleimage" class="${icons.changeImage}" title="Change sample image"></i>` +
+        `<i id="clearsampleimage" class="${icons.remove}" title="Clear sample image"></i>`,
+    );
+
+    /* if no sample image is set, show a link to add one */
+    $('div.newsampleimage').append(
+        `<a id="changesampleimage" href=""><i class="${icons.newItem}"></i> add sample image</a>`,
+    );
+
     $('#changesampleimage').on('click', function(event) {
       CKEDITOR.fbtype = 'img';
       CKEDITOR.fbupload = true;
@@ -338,14 +349,7 @@ class SampleView extends AjaxView {
             div.removeClass('newsampleimage');
             div.addClass('imgeditable');
             div.empty();
-            /* TODO: this is duplicated code from templates/main/sample.html, there is probably a
-              *       more elegant way to sort this out
-              */
-            div.append(
-                `<img id="sampleimage" src="${url}">
-                <i id="changesampleimage" class="${icons.changeImage}" title="Change sample image">
-                </i>`,
-            );
+            div.append(`<img id="sampleimage" src="${url}">`);
             self.#setupSampleImage(sampleid);
           }
         });
@@ -353,6 +357,16 @@ class SampleView extends AjaxView {
       // use hidden CKEDITOR instance to open the filebrowser dialog
       self.hiddenEditor.execCommand('fb');
       event.preventDefault();
+    });
+
+    $('#clearsampleimage').on('click', function(event) {
+      R.fieldsAPI.setField('sample', sampleid, 'image', {'value': ''}, (err, data, response) => {
+        const div = $('div.imgeditable');
+        div.removeClass('imgeditable');
+        div.addClass('newsampleimage');
+        div.empty();
+        self.#setupSampleImage(sampleid);
+      });
     });
   }
 

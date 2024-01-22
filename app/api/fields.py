@@ -53,7 +53,7 @@ supported_targets = {
         "fields": {
             "name": lambda x: validate_form_field(NewSampleForm(), "name", x),
             "description": str,
-            "image": str,
+            "image": lambda x: x if isinstance(x, str) and x else None,
         },
     },
     "action": {

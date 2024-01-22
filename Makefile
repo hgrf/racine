@@ -55,6 +55,7 @@ install-mathjax:
 install-js-dependencies: install-mathjax api-client
 	mkdir -p app/static/css/fonts
 	mkdir -p app/static/fonts
+	mkdir -p app/static/webfonts
 
 	# install typeahead.js
 	wget -O js/src/typeahead/typeahead.bundle.js \
@@ -81,6 +82,12 @@ install-js-dependencies: install-mathjax api-client
 
 	cp js/node_modules/bootstrap-icons/font/bootstrap-icons.css app/static/css/bootstrap-icons.css
 	cp js/node_modules/bootstrap-icons/font/fonts/* app/static/css/fonts/
+
+	cp js/node_modules/@fortawesome/fontawesome-free/css/fontawesome.min.css app/static/css/fontawesome.min.css
+	cp js/node_modules/@fortawesome/fontawesome-free/css/regular.min.css app/static/css/regular.min.css
+	cp js/node_modules/@fortawesome/fontawesome-free/css/solid.min.css app/static/css/solid.min.css
+	cp js/node_modules/@fortawesome/fontawesome-free/css/brands.min.css app/static/css/brands.min.css
+	cp js/node_modules/@fortawesome/fontawesome-free/webfonts/* app/static/webfonts/
 
 	cp js/node_modules/tocbot/dist/tocbot.css app/static/css/tocbot.css
 

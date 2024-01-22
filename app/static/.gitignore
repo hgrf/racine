@@ -2,11 +2,16 @@ mathjax/
 
 css/bootstrap.min.css
 css/bootstrap-icons.css
+css/fontawesome.min.css
+css/regular.min.css
+css/solid.min.css
+css/brands.min.css
 css/lightbox.css
 css/tocbot.css
 css/typeahead.css
 
 fonts/
+webfonts/
 
 images/close.png
 images/loading.gif

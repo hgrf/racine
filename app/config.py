@@ -22,8 +22,8 @@ class Config:
         result_backend="redis://racine-redis",
         task_ignore_result=True,
     )
-    # can be one of "bootstrap", "legacy"
-    ICON_THEME = "bootstrap"
+    # can be one of "fontawesome", "bootstrap", "legacy"
+    ICON_THEME = "fontawesome"
 
     @staticmethod
     def init_app(app):

@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import R from '../racine';
+import R from '../../racine';
 
 // this function adds a caret to naventry
 function addNavCaret(naventry) {

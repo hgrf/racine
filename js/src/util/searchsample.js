@@ -1,7 +1,6 @@
+import R from '../racine';
 import $ from 'jquery';
 import {Bloodhound} from '../typeahead';
-
-import icons from './icons';
 
 const samples = new Bloodhound({
   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
@@ -32,7 +31,7 @@ function createSearchSample(searchfield) {
         if (result.parentname != '') {
           parentinfo =
             '<span style="white-space:nowrap;">' +
-              `<i class="${icons.childItem}"></i>` +
+              `<i class="${R.icons.childItem}"></i>` +
               '&nbsp;' + result.parentname +
             '</span>\n';
         } else {
@@ -41,7 +40,7 @@ function createSearchSample(searchfield) {
         if (!result.mysample) {
           ownerinfo =
             '<span style="white-space:nowrap;">' +
-              `<i class="${icons.user}"></i>` +
+              `<i class="${R.icons.user}"></i>` +
               '&nbsp;' + result.ownername +
             '</span>\n';
         } else {
@@ -67,9 +66,9 @@ function createSelectSample(searchfield, hiddenfield, valid=true, placeholder='N
   searchfield.wrap('<div class="input-group"></div>');
   searchfield.attr('placeholder', placeholder);
 
-  const commonClass = icons.selectSample.common;
-  const iconOk = icons.ok;
-  const iconAlert = icons.alert;
+  const commonClass = R.icons.selectSample.common;
+  const iconOk = R.icons.ok;
+  const iconAlert = R.icons.alert;
 
   const indicatorspan = $('<span class="input-group-addon"></span>');
   const indicator = $('<i class="'+(valid?iconOk:iconAlert)+commonClass+

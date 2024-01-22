@@ -9,7 +9,7 @@ from sqlalchemy.sql import func
 
 from . import ajaxviews
 from ...smbinterface import smbinterface
-from ...common import db, icons
+from ...common import db
 from ...models import Action, Activity, Upload, User, Sample
 
 
@@ -102,7 +102,7 @@ def welcome():
 
     return render_template(
         "main/welcome.html",
-        icons=icons,
+        icons=current_app.config["ICONS"],
         conns=smbinterface.conns,
         recent_samples=recent_samples,
         newactionsallusers=newactionsallusers,

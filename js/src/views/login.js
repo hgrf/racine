@@ -1,8 +1,7 @@
+import R from '../racine';
 import $ from 'jquery';
 
 import substringMatcher from '../util/substringmatcher';
-
-import icons from '../util/icons';
 
 class LoginView {
   constructor(params) {
@@ -28,7 +27,7 @@ class LoginView {
       source: substringMatcher(self.params.users),
       templates: {
         suggestion: function(data) {
-          return `<div><i class="${icons.userAlt}"></i>${data}</div>`;
+          return `<div><i class="${R.icons.userAlt}"></i>${data}</div>`;
         },
       },
     });

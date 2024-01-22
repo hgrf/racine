@@ -10,8 +10,6 @@ import ConfirmDeleteDialog from '../../dialogs/confirmdelete';
 
 import ckeditorconfig from '../../util/ckeditorconfig';
 
-import icons from '../../util/icons';
-
 /* Disable caching for AJAX requests.
  * This fixes a bug in Internet Explorer, e.g. when reloading the sample
  * after adding an action, the new action is not shown / when modifying an
@@ -214,7 +212,7 @@ class SampleView extends AjaxView {
 
     const btnArchive = new ToggleButton(
         '#archive',
-        icons.btnArchive,
+        R.icons.btnArchive,
         {active: 'De-archive', inactive: 'Archive'},
         $('#sampleattributes').data('isarchived') === 'True',
         function() {
@@ -233,7 +231,7 @@ class SampleView extends AjaxView {
 
     const btnCollaborate = new ToggleButton(
         '#collaborate',
-        icons.btnCollaborate,
+        R.icons.btnCollaborate,
         {active: 'Make non-collaborative', inactive: 'Make collaborative'},
         $('#sampleattributes').data('iscollaborative') === 'True',
         function() {
@@ -247,7 +245,7 @@ class SampleView extends AjaxView {
 
     new ToggleButton(
         '#showparentactions',
-        icons.btnShowParentActions,
+        R.icons.btnShowParentActions,
         {active: 'Hide parent actions', inactive: 'Show parent actions'},
         self.showparentactions,
         function() {
@@ -325,13 +323,13 @@ class SampleView extends AjaxView {
 
     /* if a sample image is set, show icons to change or clear it */
     $('div.imgeditable').append(
-        `<i id="changesampleimage" class="${icons.changeImage}" title="Change sample image"></i>` +
-        `<i id="clearsampleimage" class="${icons.remove}" title="Clear sample image"></i>`,
+        `<i id="changesampleimage" class="${R.icons.changeImage}" title="Change sample image"></i>
+        <i id="clearsampleimage" class="${R.icons.remove}" title="Clear sample image"></i>`,
     );
 
     /* if no sample image is set, show a link to add one */
     $('div.newsampleimage').append(
-        `<a id="changesampleimage" href=""><i class="${icons.newItem}"></i> add sample image</a>`,
+        `<a id="changesampleimage" href=""><i class="${R.icons.newItem}"></i> add sample image</a>`,
     );
 
     $('#changesampleimage').on('click', function(event) {

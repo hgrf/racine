@@ -3,8 +3,6 @@ import R from '../racine';
 
 import substringMatcher from '../util/substringmatcher';
 
-import icons from '../util/icons';
-
 class LeaveView {
   constructor(params) {
     this.params = params;
@@ -32,7 +30,7 @@ class LeaveView {
           name: 'users',
           source: substringMatcher(data.users),
           templates: {
-            suggestion: (data) => `<div><i class="${icons.userAlt}"></i>${data}</div>`,
+            suggestion: (data) => `<div><i class="${R.icons.userAlt}"></i>${data}</div>`,
           },
         });
       }

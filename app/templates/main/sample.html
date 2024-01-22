@@ -7,7 +7,9 @@
         data-showparentactions="{{ showparentactions }}">
     </div>
     {% if sample.owner != current_user and sample.iscollaborative %}
-        <i class="sample-attr {{ icons.btnCollaborate.common }} {{ icons.btnCollaborate.inactive }}" title="Collaborative"></i>
+        <i class="sample-attr {{ icons.btnCollaborate.common }} {{ icons.btnCollaborate.active }}" title="Collaborative">
+            <i class="{{ icons.btnCollaborate.activeSub }}"></i>
+        </i>
     {% endif %}
     <div id="samplename" class="{% if sample.owner == current_user %}editable{% endif %}" data-setter="/api/set/sample/name/{{ sample.id }}">{{ sample.name }}</div>
     {% if sample.owner == current_user %}

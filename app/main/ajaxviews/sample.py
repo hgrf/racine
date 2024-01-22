@@ -1,10 +1,10 @@
 from datetime import date
+from flask import current_app as app
 from flask import jsonify, request, render_template
 from flask_login import current_user, login_required
 
 from . import ajaxviews
 from ..forms import NewActionForm
-from ...common import icons
 from ...models import Action, Sample
 
 
@@ -35,7 +35,7 @@ def editor(sampleid):
 
         return render_template(
             "main/sample.html",
-            icons=icons,
+            icons=app.config["ICONS"],
             sample=sample,
             actions=actions,
             newactionform=form,

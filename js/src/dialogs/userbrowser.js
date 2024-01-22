@@ -4,8 +4,6 @@ import R from '../racine';
 import Dialog from './dialog';
 import substringMatcher from '../util/substringmatcher';
 
-import icons from '../util/icons';
-
 class UserBrowserDialog extends Dialog {
   constructor(sampleidGetter) {
     super('#userbrowser');
@@ -33,7 +31,7 @@ class UserBrowserDialog extends Dialog {
           templates: {
             suggestion: function(data) {
               return `<div>
-              <i class="${icons.userAlt}"></i>
+              <i class="${R.icons.userAlt}"></i>
               ${data}
               </div>`;
             },
@@ -51,7 +49,7 @@ class UserBrowserDialog extends Dialog {
       if (Object.hasOwn(data.recent, i)) {
         this.recentCollaborators.append(
             `<div class="user" data-name="${data.recent[i]}">
-              <i class="${icons.userAlt}"></i>${data.recent[i]}
+              <i class="${R.icons.userAlt}"></i>${data.recent[i]}
             </div>`,
         );
       }
@@ -109,7 +107,7 @@ class UserBrowserDialog extends Dialog {
                 `<div class="sharelistentry" id="sharelistentry${data.shareid}">
                 <a data-type="share" data-id="${data.shareid}" data-toggle="modal"
                     data-target="#dlg-confirm-delete" href="">
-                  <i class="${icons.remove}"></i>
+                  <i class="${R.icons.remove}"></i>
                 </a>${data.username}
                 </div>`,
             );

@@ -8,8 +8,19 @@ class Racine {
   constructor() {
   }
 
-  init(apiToken, view, params) {
+  init(apiToken, iconTheme, view, params) {
     const self = this;
+
+    if (iconTheme !== null) {
+      this.iconTheme = iconTheme;
+      fetch(`/static/icons/${iconTheme}.json`)
+          .then((response) => response.json())
+          .then((json) => {
+            self.icons = json;
+            self.init(apiToken, null, view, params);
+          });
+      return;
+    }
 
     this.apiToken = apiToken;
     this.apiClient = new API.ApiClient(window.location.origin);

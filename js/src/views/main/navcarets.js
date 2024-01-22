@@ -1,9 +1,9 @@
 import $ from 'jquery';
-import icons from '../../util/icons';
+import R from '../racine';
 
 // this function adds a caret to naventry
 function addNavCaret(naventry) {
-  naventry.prepend(`<i class="nav-caret ${icons.navCaret.common}"></i>`);
+  naventry.prepend(`<i class="nav-caret ${R.icons.navCaret.common}"></i>`);
   updateNavCaret(naventry);
 }
 
@@ -11,8 +11,8 @@ function addNavCaret(naventry) {
 function updateNavCaret(naventry) {
   const glyph = naventry.find('i.nav-caret').first();
   const target = $(naventry.data('target'));
-  const iconCollapsed = icons.navCaret.collapsed;
-  const iconExpanded = icons.navCaret.expanded;
+  const iconCollapsed = R.icons.navCaret.collapsed;
+  const iconExpanded = R.icons.navCaret.expanded;
 
   if (target.children().length > 0) {
     if (target.is(':hidden')) {

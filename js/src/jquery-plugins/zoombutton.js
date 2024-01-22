@@ -1,6 +1,5 @@
+import R from '../racine';
 import jQuery from 'jquery';
-
-import icons from '../util/icons';
 
 (function($) {
   $.fn.zoombutton = function() {
@@ -15,7 +14,7 @@ import icons from '../util/icons';
       const separator = src.includes('?') ? '&' : '?';
       return (
         `<a class="zoombutton" target="_blank" href="${src}${separator}fullsize">` +
-          `<i class="${icons.highDef}" title="Open full resolution in new window">` +
+          `<i class="${R.icons.highDef}" title="Open full resolution in new window">` +
           '</i>' +
         '</a>'
       );

@@ -1,6 +1,5 @@
+import R from '../racine';
 import $ from 'jquery';
-
-import icons from '../util/icons';
 
 function dictToURI(dict) {
   const str = [];
@@ -99,13 +98,13 @@ class BrowserView {
         success: function(data) {
           if (!data.code) {
             historyitemdiv.find('i').removeClass();
-            historyitemdiv.find('i').addClass(`${icons.folder}`);
+            historyitemdiv.find('i').addClass(`${R.icons.folder}`);
             historyitemdiv.addClass('available'); // for CSS :hover
             // add click handler for new elements
             historyitemdiv.click(folderclickhandler);
           } else {
             historyitemdiv.find('i').removeClass();
-            historyitemdiv.find('i').addClass(`${icons.folderInaccessible}`);
+            historyitemdiv.find('i').addClass(`${R.icons.folderInaccessible}`);
           }
         },
       });
@@ -127,14 +126,14 @@ class BrowserView {
             if (data.userfolder != '') {
               shortcutsdiv.append(
                   `<div class="shortcut" data-url="${data.userfolder}">
-                    <i class="${icons.userAlt}"></i>
+                    <i class="${R.icons.userAlt}"></i>
                   </div>`,
               );
             }
             if (data.samplefolder != '') {
               shortcutsdiv.append(
                   `<div class="shortcut" data-url="${data.samplefolder}">
-                    <i class="${icons.sample}"</i>
+                    <i class="${R.icons.sample}"</i>
                   </div>`,
               );
             }

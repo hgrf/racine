@@ -56,6 +56,6 @@
 {{ super() }}
     <script src="{{ url_for('static', filename='racine.js', version=racine_version) }}"></script>
     <script>
-        R.init("{{ api_token }}", "{{ js_view }}", {{ js_params|tojson }});
+        R.init("{{ api_token }}", "{{ config['ICON_THEME'] }}", "{{ js_view }}", {{ js_params|tojson }});
     </script>
 {% endblock %}

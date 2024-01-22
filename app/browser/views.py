@@ -2,7 +2,6 @@ from flask import render_template, send_file, request, send_from_directory, json
 from flask_login import current_user, login_required
 from flask import current_app as app
 from .. import db
-from ..common import icons
 from ..models import SMBResource, Sample, Upload, Activity, ActivityType, record_activity
 import os
 from . import browser
@@ -464,7 +463,7 @@ def imagebrowser(smb_path):
         # list resources
         return render_template(
             "browser.html",
-            icons=icons,
+            icons=app.config["ICONS"],
             resources=SMBResource.query.all(),
             browser_history=browser_history,
         )
@@ -477,14 +476,14 @@ def imagebrowser(smb_path):
         except Exception:
             return render_template(
                 "browser.html",
-                icons=icons,
+                icons=app.config["ICONS"],
                 error=True,
                 message="Folder could not be found on server: " + smb_path,
             )
         if listpath is None:
             return render_template(
                 "browser.html",
-                icons=icons,
+                icons=app.config["ICONS"],
                 error=True,
                 message="Could not connect to server: " + smb_path,
             )
@@ -499,10 +498,10 @@ def imagebrowser(smb_path):
                 if f.ext.lower() in IMAGE_EXTENSIONS:
                     f.image = "/browser/smbimg/" + f.path
                 else:
-                    f.icon = icons.file
+                    f.icon = app.config["ICONS"].file
                 files.append(f)
             else:
-                f.icon = icons.folder
+                f.icon = app.config["ICONS"].folder
                 folders.append(f)
 
         # sort by name and return
@@ -510,7 +509,7 @@ def imagebrowser(smb_path):
         folders = sorted(folders, key=lambda f: f.name.lower())
         return render_template(
             "browser.html",
-            icons=icons,
+            icons=app.config["ICONS"],
             error=False,
             files=files,
             folders=folders,

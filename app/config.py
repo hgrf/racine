@@ -1,5 +1,7 @@
+import json
 import os
 import logging.handlers
+from collections import namedtuple
 from logging import Formatter
 
 basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -20,6 +22,7 @@ class Config:
         result_backend="redis://racine-redis",
         task_ignore_result=True,
     )
+    ICON_THEME = "legacy"
 
     @staticmethod
     def init_app(app):
@@ -31,6 +34,10 @@ class Config:
         )
         file_handler.setLevel(logging.WARNING)
         app.logger.addHandler(file_handler)
+
+        with open("app/static/icons/{}.json".format(app.config["ICON_THEME"]), "r") as f:
+            icons_dict = json.load(f)
+        app.config["ICONS"] = namedtuple("icons", icons_dict.keys())(**icons_dict)
 
 
 class DevelopmentConfig(Config):

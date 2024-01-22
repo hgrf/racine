@@ -1,8 +1,8 @@
+from flask import current_app as app
 from flask import request, render_template, jsonify
 from flask_login import current_user
 
 from . import ajaxviews
-from ...common import icons
 from ...models import search_tree
 
 
@@ -29,4 +29,6 @@ def search():
 
     if request.args.get("autocomplete") is not None:
         return jsonify(results=results)
-    return render_template("main/searchresults.html", icons=icons, results=results, term=keyword)
+    return render_template(
+        "main/searchresults.html", icons=app.config["ICONS"], results=results, term=keyword
+    )

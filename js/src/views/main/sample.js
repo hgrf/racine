@@ -329,7 +329,9 @@ class SampleView extends AjaxView {
 
     /* if no sample image is set, show a link to add one */
     $('div.newsampleimage').append(
-        `<a id="changesampleimage" href=""><i class="${R.icons.newItem}"></i> add sample image</a>`,
+        `<a id="changesampleimage" href="">
+          <i class="${R.icons.changeImage}" title="Add sample image"></i>
+        </a>`,
     );
 
     $('#changesampleimage').on('click', function(event) {

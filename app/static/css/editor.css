@@ -60,8 +60,19 @@ i.sample-attr > i {
 }
 
 .newsampleimage {
-    font-weight: bold;
-    padding-top: 10px;
+    height: 100px;
+}
+
+.newsampleimage i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: inline-block;
+    font-size: 36px;
+    text-align: center;
+    width: 42px;
+    height: 42px;
 }
 
 .imgcontainer {

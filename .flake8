@@ -11,5 +11,8 @@ per-file-ignores =
     migrations/versions/*.py:E266,E402
 exclude = 
     .git
+    data
+    docker
+    docs
     uploads
     venv

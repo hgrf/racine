@@ -42,7 +42,7 @@ class UserBrowserDialog extends Dialog {
     // make recent collaborators list
     if (data.recent.length > 0) {
       this.recentCollaborators.append(
-          '<div>Recent collaborators:<br>&nbsp</div>',
+          '<p>Recent collaborators:</p>',
       );
     }
     for (const i in data.recent) {

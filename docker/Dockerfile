@@ -55,6 +55,7 @@ COPY ./docs/module.mk /tmp/app_static/docs/module.mk
 COPY ./site/module.mk /tmp/app_static/site/module.mk
 COPY ./patches /tmp/app_static/patches
 COPY ./js /tmp/app_static/js
+COPY ./app/static/icons /tmp/app_static/app/static/icons
 
 RUN cd /tmp/app_static && \
     mkdir -p app/static/images && \

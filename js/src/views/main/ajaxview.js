@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import R from '../../racine';
 
 class AjaxView {
   constructor(mainView) {
@@ -37,6 +38,7 @@ class AjaxView {
   }
 
   onLoadError(state, jqXHR) {
+    R.errorDialog(`Error loading ${state.ajaxView} view.`);
   }
 
   onDocumentReady() {

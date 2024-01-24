@@ -21,7 +21,7 @@
 | app/browser/\_\_init\_\_.py                                                        |        3 |        0 |    100% |           |
 | app/browser/views.py                                                               |      309 |      252 |     18% |59-79, 101-126, 134-152, 156-169, 173-189, 212-246, 267, 276-279, 283-294, 315-344, 361-386, 404-432, 442-510, 524-549, 557-598, 606-613, 620-656, 660-664 |
 | app/common.py                                                                      |       13 |        0 |    100% |           |
-| app/config.py                                                                      |       46 |        0 |    100% |           |
+| app/config.py                                                                      |       47 |        0 |    100% |           |
 | app/decorators.py                                                                  |       12 |        3 |     75% |     10-12 |
 | app/emailing.py                                                                    |       19 |       12 |     37% |21-22, 27-34, 38-39 |
 | app/main/\_\_init\_\_.py                                                           |        5 |        0 |    100% |           |
@@ -83,7 +83,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2492** | **1083** | **57%** |           |
+|                                                                          **TOTAL** | **2493** | **1083** | **57%** |           |
 
 
 ## Setup coverage badge

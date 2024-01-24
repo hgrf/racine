@@ -79,6 +79,7 @@ div.folder, .resource, .historyitem {
     display: inline-block;
     width: 60px;
     height: 60px;
+    font-size: 48px;
 }
 .file img {
     max-width: 120px;

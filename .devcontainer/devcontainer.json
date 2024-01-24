@@ -12,7 +12,10 @@
   "customizations": {
     "vscode": {
       "settings": {
-        "editor.rulers": [ 100 ]
+        "editor.rulers": [ 100 ],
+        "files.associations": {
+          "**/app/templates/**/*.html": "jinja-html"
+        }
       },
       "extensions": [
         "samuelcolvin.jinjahtml",

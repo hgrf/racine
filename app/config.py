@@ -36,7 +36,10 @@ class Config:
         file_handler.setLevel(logging.WARNING)
         app.logger.addHandler(file_handler)
 
-        with open("app/static/icons/{}.json".format(app.config["ICON_THEME"]), "r") as f:
+        icon_theme_file = os.path.join(
+            os.path.dirname(__file__), "static", "icons", "{}.json".format(app.config["ICON_THEME"])
+        )
+        with open(icon_theme_file, "r") as f:
             icons_dict = json.load(f)
         app.config["ICONS"] = namedtuple("icons", icons_dict.keys())(**icons_dict)
 

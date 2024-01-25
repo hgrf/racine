@@ -1,5 +1,5 @@
 {
-    "stylesheets": ["bootstrap-icons.css", "legacy-icons.css", "icons-bootstrap.css"],
+    "stylesheets": ["bootstrap-icons.css", "legacy-icons.css", "icons-extra-styles.css"],
     "alert": "bi-exclamation-triangle-fill",
     "arrowDown": "bi-arrow-down-circle-fill",
     "arrowUp": "bi-arrow-up-circle-fill",

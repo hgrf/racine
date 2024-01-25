@@ -4,7 +4,7 @@
         "regular.min.css",
         "solid.min.css",
         "brands.min.css",
-        "icons-bootstrap.css"
+        "icons-extra-styles.css"
     ],
     "alert": "fa-triangle-exclamation",
     "arrowDown": "fa-solid fa-circle-up",

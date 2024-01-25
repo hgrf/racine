@@ -4,7 +4,7 @@
 
 | Name                                                                               |    Stmts |     Miss |   Cover |   Missing |
 |----------------------------------------------------------------------------------- | -------: | -------: | ------: | --------: |
-| app/\_\_init\_\_.py                                                                |       46 |        3 |     93% | 25-26, 43 |
+| app/\_\_init\_\_.py                                                                |       54 |        7 |     87% |27-28, 45, 50-54 |
 | app/api/\_\_init\_\_.py                                                            |        9 |        0 |    100% |           |
 | app/api/actions.py                                                                 |       92 |       45 |     51% |89-90, 115-122, 144-150, 171-202, 225-248 |
 | app/api/common.py                                                                  |        4 |        0 |    100% |           |
@@ -30,7 +30,7 @@
 | app/main/ajaxviews/search.py                                                       |       14 |        7 |     50% |     11-32 |
 | app/main/ajaxviews/tree.py                                                         |       15 |        7 |     53% |     12-20 |
 | app/main/ajaxviews/welcome.py                                                      |       51 |       37 |     27% |    20-103 |
-| app/main/errors.py                                                                 |       19 |        6 |     68% |10, 20, 25-29 |
+| app/main/errors.py                                                                 |       11 |        2 |     82% |     7, 17 |
 | app/main/forms.py                                                                  |       34 |        1 |     97% |        48 |
 | app/main/views.py                                                                  |       40 |       16 |     60% |29-32, 38-42, 48-49, 60-69 |
 | app/models/\_\_init\_\_.py                                                         |       13 |        0 |    100% |           |

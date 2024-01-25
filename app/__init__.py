@@ -1,12 +1,14 @@
 import os
+import traceback
 
 from celery import Celery, Task
+from flask import current_app
 from flask import Flask
 
 from wtforms.fields import HiddenField
 
 from .api.fields import maybe_update_activity_types
-from .common import db, login_manager, migrate
+from .common import db, login_manager, migrate, render_racine_template
 from .config import config
 from .usagestats import usage_stats_task
 
@@ -44,6 +46,14 @@ def celery_init_app(app: Flask) -> Celery:
     return celery_app
 
 
+def error_handler(e):
+    if current_app.config["LOG_EXCEPTIONS"]:
+        current_app.logger.error("Unhandled Exception: %s", traceback.format_exc())
+        return render_racine_template("errors/500.html", use_api=False), 500
+    else:
+        raise
+
+
 def create_app(config_name=os.getenv("FLASK_CONFIG") or "default"):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
@@ -59,6 +69,8 @@ def create_app(config_name=os.getenv("FLASK_CONFIG") or "default"):
     app.jinja_env.globals["bootstrap_is_hidden_field"] = lambda field: isinstance(
         field, HiddenField
     )
+
+    app.register_error_handler(Exception, error_handler)
 
     app.register_blueprint(api_blueprint, url_prefix="/api")
     app.register_blueprint(main_blueprint)

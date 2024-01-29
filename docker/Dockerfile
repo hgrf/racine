@@ -36,6 +36,16 @@ COPY ./docker/prestart.sh /app/prestart.sh
 # And then will start Supervisor, which in turn will start Nginx and uWSGI
 CMD ["/start.sh"]
 
+FROM racine-base AS racine-dev
+
+RUN apt update && \
+    apt install -y default-jre && \
+    apt install -y npm && \
+    apt install -y watchman && \
+    rm -rf /var/lib/apt/lists/* && \
+    npm install -g n && \
+    n stable
+
 FROM racine-base AS racine
 
 ENV FLASK_CONFIG production

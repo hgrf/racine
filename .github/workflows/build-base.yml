@@ -1,0 +1,49 @@
+name: Build base
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build-base:
+    name: Build base
+    runs-on: ubuntu-latest
+    outputs:
+      VERSION: ${{ steps.version_step.outputs.VERSION }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Determine version
+      id: version_step
+      run: |
+        sed s'/v//g' <(echo "VERSION=`make version`") >> "$GITHUB_OUTPUT"
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build docker images
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: docker/Dockerfile
+        push: false
+        load: true
+        target: racine-dev
+        tags: racine-dev:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Build app-static
+      run: |
+        docker run --rm -v $PWD:/app -w /app racine-dev:latest make install-js-dependencies
+        tar -czvf app-static.tar.gz app/static
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: app-static
+        path: app/static/

@@ -1,12 +1,12 @@
 name: Docker build
 
 on:
-  push:
-    tags:
-      - "v*.*.*"
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  # NOTE: This event will only trigger a workflow run if the workflow file is on the default branch.
+  # https://docs.github.com/en/actions/reference/events-that-trigger-workflows#workflow_run
+  workflow_run:
+    workflows: [Build base]
+    types: 
+      - completed
 
 jobs:
   # based on https://stackoverflow.com/a/64373702

@@ -52,7 +52,8 @@ api-client: api-spec build/openapi-generator-cli.jar
 	java -jar build/openapi-generator-cli.jar generate \
 		-i docs/api.yaml -g javascript -p modelPropertyNaming=original -o js/src/api
 
-install-mathjax:
+js-deps: build/.js_deps_done
+build/.js_deps_done:
 	rm -rf app/static/mathjax
 
 	git clone -b 2.7.1 --depth 1 \
@@ -60,11 +61,6 @@ install-mathjax:
 		app/static/mathjax
 
 	rm -rf app/static/mathjax/.git
-
-install-js-dependencies: install-mathjax api-client
-	mkdir -p app/static/css/fonts
-	mkdir -p app/static/fonts
-	mkdir -p app/static/webfonts
 
 	# install typeahead.js
 	wget -O js/src/typeahead/typeahead.bundle.js \
@@ -84,7 +80,15 @@ install-js-dependencies: install-mathjax api-client
 	# c.f. https://github.com/hgrf/racine/commit/89d8b57e795ccfbeb73dc18faecc1d0016a8a008#diff-5f8e3a2bd35e7f0079090b176e06d0568d5c8e4468c0febbfa61014d72b16246
 	git apply patches/jquery.jeditable.patch
 
-	cd js && npm install && npx rollup -c
+	cd js && npm install
+
+	touch build/.js_deps_done
+
+js-assets: build/.js_assets_done build/.js_deps_done
+build/.js_assets_done:
+	mkdir -p app/static/fonts
+	mkdir -p app/static/css/fonts
+	mkdir -p app/static/webfonts
 
 	cp js/node_modules/bootstrap/dist/css/bootstrap.min.css app/static/css/bootstrap.min.css
 	cp js/node_modules/bootstrap/dist/fonts/* app/static/fonts/
@@ -103,9 +107,15 @@ install-js-dependencies: install-mathjax api-client
 	cp js/node_modules/lightbox2/dist/css/lightbox.css app/static/css/lightbox.css
 	cp js/node_modules/lightbox2/dist/images/* app/static/images/
 
+	touch build/.js_assets_done
+
 js-version:
 	cd js && npm version --allow-same-version ${RACINE_VERSION}
 	cd desktop && npm version --allow-same-version ${RACINE_VERSION}
+
+.PHONY: js-build
+js-build: js-deps js-assets api-client
+	cd js && npx rollup -c
 
 run-no-docker:
 	flask run --debug

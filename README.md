@@ -78,8 +78,8 @@ Now you enter this directory and you create a virtual environment for python - a
 Finally, all that remains to do is to install the required python packages and JavaScript
 dependencies:
 
-    make install-dependencies
-    make install-js-dependencies
+    make app-deps app-dev-deps
+    make js-build
     
 Now you have to initialise the database by running:
 

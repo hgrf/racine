@@ -2,6 +2,6 @@
     "trigger", "./js/src",
     {
         "name": "js",        
-        "command": ["bash", "-c", "cd .. && npx rollup -c"]
+        "command": ["make", "js-build"]
     }
 ]

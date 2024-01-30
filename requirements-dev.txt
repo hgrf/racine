@@ -15,3 +15,6 @@ handsdown==2.0.1
 mkdocs==1.4.2
 mkdocs-material==9.1.5
 mkdocs-render-swagger-plugin==0.1.1
+
+# desktop
+pyinstaller==6.1.0

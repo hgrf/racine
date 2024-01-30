@@ -9,13 +9,12 @@ RACINE_API_VERSION := $(shell						\
 	done < version.csv && echo $$RACINE_API_VERSION	\
 )
 
-# TODO: for now, if you want to add an include, do not forget to update the Dockerfile
-include .github/workflows/module.mk
-include app/static/module.mk
-include desktop/module.mk
-include docker/module.mk
-include docs/module.mk
-include site/module.mk
+-include .github/workflows/module.mk
+-include app/static/module.mk
+-include desktop/module.mk
+-include docker/module.mk
+-include docs/module.mk
+-include site/module.mk
 
 .PHONY: version
 version:

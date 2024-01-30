@@ -13,13 +13,6 @@ ENV UWSGI_INI /app/docker/uwsgi.ini
 
 COPY ./Makefile /app/Makefile
 COPY ./version.csv /app/version.csv
-# TODO: is there any way to auto-detect these?
-COPY ./.github/workflows/module.mk /app/.github/workflows/module.mk
-COPY ./app/static/module.mk /app/app/static/module.mk
-COPY ./desktop/module.mk /app/desktop/module.mk
-COPY ./docker/module.mk /app/docker/module.mk
-COPY ./docs/module.mk /app/docs/module.mk
-COPY ./site/module.mk /app/site/module.mk
 COPY ./requirements.txt /app/requirements.txt
 COPY ./requirements-dev.txt /app/requirements-dev.txt
 

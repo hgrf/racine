@@ -48,7 +48,7 @@ jobs:
             fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/app-static.zip`, Buffer.from(download.data));
 
       - name: Unzip artifact
-        run: unzip app-static.zip -o -d app/static
+        run: unzip -o app-static.zip -d app/static
 
       - name: Build AppImage
         run: make desktop-dist
@@ -98,7 +98,7 @@ jobs:
             fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/app-static.zip`, Buffer.from(download.data));
 
       - name: Unzip artifact
-        run: unzip app-static.zip -o -d app/static
+        run: unzip -o app-static.zip -d app/static
 
       - name: Build executable
         run: make desktop-dist

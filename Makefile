@@ -24,10 +24,18 @@ version:
 api-version:
 	@echo ${RACINE_API_VERSION}
 
-install-dependencies:
+app-deps: build/.app_deps_done
+build/.app_deps_done: requirements.txt
 	python -m pip install ${PIP_OPTIONS} --upgrade pip
-	pip install ${PIP_OPTIONS} -r requirements-dev.txt
 	pip install ${PIP_OPTIONS} -r requirements.txt
+	mkdir -p build
+	touch build/.app_deps_done
+
+app-dev-deps: build/.app_dev_deps_done
+build/.app_dev_deps_done: requirements-dev.txt
+	pip install ${PIP_OPTIONS} -r requirements-dev.txt
+	mkdir -p build
+	touch build/.app_dev_deps_done
 
 .PHONY: api-spec
 api-spec:

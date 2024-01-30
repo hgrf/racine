@@ -16,7 +16,7 @@ COPY ./version.csv /app/version.csv
 COPY ./requirements.txt /app/requirements.txt
 COPY ./requirements-dev.txt /app/requirements-dev.txt
 
-RUN make install-dependencies PIP_OPTIONS=--no-cache-dir
+RUN make app-deps app-dev-deps PIP_OPTIONS=--no-cache-dir
 
 # replace prestart script from base image
 COPY ./docker/prestart.sh /app/prestart.sh

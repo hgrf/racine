@@ -33,7 +33,7 @@ jobs:
 
     - name: Build app-static
       run: |
-        make install-dependencies
+        make app-deps app-dev-deps
         make install-js-dependencies
 
     - name: Upload app-static
@@ -190,7 +190,7 @@ jobs:
         cache: "pip"
 
     - name: Install developer dependencies
-      run: make install-dependencies
+      run: make app-deps app-dev-deps
 
     - name: Download app-static
       uses: actions/download-artifact@v4
@@ -220,7 +220,7 @@ jobs:
         cache: "pip"
 
     - name: Install developer dependencies
-      run: make install-dependencies
+      run: make app-deps app-dev-deps
       shell: bash
 
     # c.f. https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#using-data-from-the-triggering-workflow

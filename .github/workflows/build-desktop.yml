@@ -25,15 +25,30 @@ jobs:
           make install-dependencies
           pip install pyinstaller==6.1.0
 
+      # c.f. https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#using-data-from-the-triggering-workflow
       - name: Download app-static
-        uses: actions/download-artifact@v3
+        uses: actions/github-script@v6
         with:
-          name: "app-static"
+          script: |
+            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: context.payload.workflow_run.id,
+            });
+            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == 'app-static'
+            })[0];
+            let download = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
+            let fs = require('fs');
+            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/app-static.zip`, Buffer.from(download.data));
 
-      - name: Unpack app/static
-        run: |
-          ls app-static.tar.gz
-          tar -xzvf app-static.tar.gz
+      - name: Unzip artifact
+        run: unzip app-static.zip -d app/static
 
       - name: Build AppImage
         run: make desktop-dist
@@ -61,7 +76,7 @@ jobs:
         shell: bash
 
       # c.f. https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#using-data-from-the-triggering-workflow
-      - name: Download artifact
+      - name: Download app-static
         uses: actions/github-script@v6
         with:
           script: |
@@ -83,7 +98,7 @@ jobs:
             fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/app-static.zip`, Buffer.from(download.data));
 
       - name: Unzip artifact
-        run: unzip app-static.zip
+        run: unzip app-static.zip -d app/static
 
       - name: Build executable
         run: make desktop-dist

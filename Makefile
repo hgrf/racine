@@ -29,6 +29,7 @@ install-dependencies:
 	pip install ${PIP_OPTIONS} -r requirements-dev.txt
 	pip install ${PIP_OPTIONS} -r requirements.txt
 
+.PHONY: api-spec
 api-spec:
 	python patches/generate-api-spec.py
 
@@ -37,6 +38,7 @@ build/openapi-generator-cli.jar:
 	wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/6.2.1/openapi-generator-cli-6.2.1.jar \
 		-O build/openapi-generator-cli.jar
 
+.PHONY: api-client
 api-client: api-spec build/openapi-generator-cli.jar
 	rm -rf js/src/api	
 	java -jar build/openapi-generator-cli.jar generate \
@@ -100,18 +102,23 @@ js-version:
 run-no-docker:
 	flask run --debug
 
+.PHONY: test
 test:
 	coverage run -m pytest
 
+.PHONY: coverage-report
 coverage-report: test
 	coverage html
 
+.PHONY: black
 black:
 	black .
 
+.PHONY: black-check
 black-check:
 	black . --check
 
+.PHONY: flake8
 FLAKE_EXTRA_ARGS ?=	--exit-zero
 flake8:
 	# stop the build if there are Python syntax errors or undefined names
@@ -129,8 +136,10 @@ flake8:
 		--tee --output-file ./reports/flake8/flake8stats.txt \
 		${FLAKE_EXTRA_ARGS}
 
+.PHONY: flake8-check
 flake8-check:
 	FLAKE_EXTRA_ARGS= make flake8
 
+.PHONY: eslint
 eslint:
 	cd js && npx eslint --max-warnings 0 .

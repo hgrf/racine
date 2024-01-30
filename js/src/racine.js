@@ -84,15 +84,6 @@ class Racine {
       self.mobileHideSidebar();
     });
 
-    $('.nav-button-toggle').click(function() {
-      const element = $(this); // eslint-disable-line no-invalid-this
-      if (element.hasClass('active')) {
-        element.removeClass('active');
-      } else {
-        element.addClass('active');
-      }
-    });
-
     this.#setupHeaderSearch();
 
     this.view.onDocumentReady();

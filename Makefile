@@ -77,7 +77,8 @@ install-js-dependencies: install-mathjax api-client
 	cd js && npm install && npx rollup -c
 
 	cp js/node_modules/bootstrap/dist/css/bootstrap.min.css app/static/css/bootstrap.min.css
-	cp js/node_modules/bootstrap/dist/fonts/* app/static/fonts/
+	cp js/node_modules/bootstrap-icons/font/bootstrap-icons.css app/static/css/bootstrap-icons.css
+	cp js/node_modules/bootstrap-icons/font/fonts/* app/static/css/fonts/
 
 	cp js/node_modules/bootstrap-icons/font/bootstrap-icons.css app/static/css/bootstrap-icons.css
 	cp js/node_modules/bootstrap-icons/font/fonts/* app/static/css/fonts/

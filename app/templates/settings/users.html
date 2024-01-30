@@ -10,7 +10,7 @@
 {% block page_content %}
 <h3 class="page-header">
     Users
-    <a data-toggle="modal" data-target="#dlg-new-user" href="" title="New user">
+    <a data-bs-toggle="modal" data-bs-target="#dlg-new-user" href="" title="New user">
         <i class="{{ icons.newItem }}"></i>&nbsp;add
     </a>
 </h3>
@@ -23,7 +23,7 @@
     <tr>
         <td>
             {{ user.id }}
-            <i class="actionicon {{ icons.trash }}" data-type="user" data-id="{{ user.id }}" data-toggle="modal" data-target="#dlg-confirm-delete"></i>
+            <i class="actionicon {{ icons.trash }}" data-type="user" data-id="{{ user.id }}" data-bs-toggle="modal" data-bs-target="#dlg-confirm-delete"></i>
             <i class="actionicon loginas {{ icons.login }}" data-userid="{{ user.id }}"></i>
         </td>
         <td><div class="editable cmbeditable" data-setter="/api/set/user/is_admin/{{ user.id }}">{{ user.is_admin }}</div></td>

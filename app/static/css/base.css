@@ -30,51 +30,24 @@ body {
 
 .navbar-brand > img {
   float: left;
-  height: 1.4em;
-  margin-top: -0.2em;
+  height: 1.6em;
+  margin-top: -0.1em;
   margin-right: 10px;
-}
-
-.nav-button {
-    display: none;
-}
-
-@media (max-width: 767px) {
-    .nav-button {
-        display: inline;
-        float: right;
-        color: #9d9d9d;
-        font-size: 18px;
-        line-height: 20px;
-        padding: 15px;
-        margin: 0px;
-        cursor: pointer;
-    }
-    .nav-button:hover {
-        color: #ffffff;
-    }
-    .nav-button.active {
-        color: #ffffff;
-    }
-    .nav-button-left {
-        float: left;
-    }
 }
 
 /*
  * Sidebar
  */
 
-
 /* Hide for mobile, show later */
 .sidebar {
   display: none;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 991px) {
     .sidebar.overlay {
         position: fixed;
-        top: 50px;
+        top: 56px;
         bottom: 0;
         left: 0;
         z-index: 1000; /* top */
@@ -90,10 +63,10 @@ body {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .sidebar {
     position: fixed;
-    top: 50px;
+    top: 56px;
     bottom: 0;
     left: 0;
     z-index: 1000;
@@ -107,14 +80,14 @@ body {
 }
 
 /* Content overlay for small screen sidebar */
-@media (max-width: 767px) {
+@media (max-width: 991px) {
     .content-overlay {
         /* full screen */
         width: 100vw;
         /* transparent black */
         background: rgba(0, 0, 0, 0.8);
         position: fixed;
-        top: 50px;
+        top: 56px;
         bottom: 0;
         left: 0;
         display: none;

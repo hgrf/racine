@@ -39,8 +39,8 @@ class FormDialog extends Dialog {
       event.preventDefault();
 
       // clean up error messages
-      self.form.find('.form-group').removeClass('has-error');
-      self.form.find('span.help-block').remove();
+      self.form.find('.form-control').removeClass('is-invalid');
+      self.form.find('div.invalid-feedback').remove();
 
       self.beforeSubmit();
 
@@ -95,12 +95,14 @@ class FormDialog extends Dialog {
         }
         // get form group
         const formgroup = $(`#${this.prefix}${field}`).closest('.form-group');
-        // add the has-error to the form group
-        formgroup.addClass('has-error');
+        // add the has-error to the form control
+        $(`#${this.prefix}${field}`).addClass('is-invalid');
         // add the error message to the form group
         for (const i in response.body.error[field]) {
           if (Object.hasOwn(response.body.error, field)) {
-            formgroup.append(`<span class="help-block">${response.body.error[field][i]}</span>`);
+            formgroup.append(
+                `<div class="invalid-feedback">${response.body.error[field][i]}</div>`,
+            );
           }
         }
       }

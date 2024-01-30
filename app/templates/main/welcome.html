@@ -3,7 +3,7 @@
 {% endif %}
 {% for n in news %}
     <div class="news">
-        <div class="news-title news-header-item" data-toggle="collapse" data-target="#news-content{{ n.id }}">
+        <div class="news-title news-header-item" data-bs-toggle="collapse" data-bs-target="#news-content{{ n.id }}">
             <i class="{{ icons.markAsNews }} togglenews"></i>
             {{ n.title if n.title else "[no title]"}}
         </div>
@@ -19,6 +19,8 @@
         <div id="news-content{{ n.id }}" class="news-content collapse out">{{ n.render_content()|safe }}</div>
     </div>
 {% endfor %}
+</div>
+{% endif %}
 
 {% if news %}
 <hr/>
@@ -30,6 +32,8 @@
          style="width:{{ (totuploadvol+dbsize)/(totuploadvol+availablevol+dbsize)*100 }}%;color:#000000;">
     </div>
 </div>
+</div>
+
 {% if recent_samples %}
     <hr/>
     <h3>Recent samples</h3>
@@ -41,6 +45,8 @@
         {{ s.name }}
     </div>
 {% endfor %}
+</div>
+{% endif %}
 
 {# information only for the administrator #}
 {% if current_user.is_admin %}
@@ -55,6 +61,7 @@
         </td></tr>
     {% endfor %}
     </table>
+</div>
 {% endif %}
     <hr/>
     <h3>Upload volume per user</h3>
@@ -76,6 +83,8 @@
         {% endif %}
     {% endfor %}
     </table>
+</div>
+
 {% if newactionsallusers %}
     <hr/>
     <h3>Recent activity per user</h3>
@@ -95,4 +104,5 @@
     {% endfor %}
     </table>
 {% endif %}
+</div>
 {% endif %}

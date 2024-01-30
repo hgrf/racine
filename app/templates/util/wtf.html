@@ -15,8 +15,8 @@
 
 {% macro _hz_form_wrap(horizontal_columns, form_type, add_group=False, required=False) %}
 {% if form_type == "horizontal" %}
-  {% if add_group %}<div class="form-group{% if required %} required{% endif %}">{% endif %}
-  <div class="col-{{horizontal_columns[0]}}-offset-{{horizontal_columns[1]}}
+  {% if add_group %}<div class="form-group mb-3{% if required %} required{% endif %}">{% endif %}
+  <div class="offset-{{horizontal_columns[0]}}-{{horizontal_columns[1]}}
               col-{{horizontal_columns[0]}}-{{horizontal_columns[2]}}
              ">
 {% endif %}
@@ -65,7 +65,7 @@ the necessary fix for required=False attributes, but will also not set the requi
 
   {# note: same issue as above - should check widget, not field type #}
   {% call _hz_form_wrap(horizontal_columns, form_type, True, required=required) %}
-    {{field(class='btn btn-%s' % button_map.get(field.name, 'default'),
+    {{field(class='btn btn-%s' % button_map.get(field.name, 'primary'),
             **field_kwargs)}}
   {% endcall %}
 {%- elif field.type == 'FormField' -%}
@@ -85,7 +85,7 @@ the necessary fix for required=False attributes, but will also not set the requi
     {%- endfor %}
   </fieldset>
 {% else -%}
-  <div class="form-group {% if field.errors %} has-error{% endif -%}
+  <div class="form-group mb-3{% if field.errors %} is-invalid{% endif -%}
                          {%- if field.flags.required %} required{% endif -%}
   ">
       {%- if form_type == "inline" %}
@@ -93,23 +93,23 @@ the necessary fix for required=False attributes, but will also not set the requi
         {% if field.type == 'FileField' %}
           {{field(**kwargs)|safe}}
         {% else %}
-          {{field(class="form-control", **kwargs)|safe}}
+          {{field(class="form-control"+(" is-invalid" if field.errors else ""), **kwargs)|safe}}
         {% endif %}
       {% elif form_type == "horizontal" %}
-        {{field.label(class="control-label " + (
+        {{field.label(class="form-label " + (
           " col-%s-%s" % horizontal_columns[0:2]
         ))|safe}}
         <div class=" col-{{horizontal_columns[0]}}-{{horizontal_columns[2]}}">
           {% if field.type == 'FileField' %}
             {{field(**kwargs)|safe}}
           {% else %}
-            {{field(class="form-control", **kwargs)|safe}}
+            {{field(class="form-control"+(" is-invalid" if field.errors else ""), **kwargs)|safe}}
           {% endif %}
         </div>
         {%- if field.errors %}
           {%- for error in field.errors %}
             {% call _hz_form_wrap(horizontal_columns, form_type, required=required) %}
-              <p class="help-block">{{error}}</p>
+              <div class="invalid-feedback">{{error}}</div>
             {% endcall %}
           {%- endfor %}
         {%- elif field.description -%}
@@ -118,7 +118,7 @@ the necessary fix for required=False attributes, but will also not set the requi
           {% endcall %}
         {%- endif %}
       {%- else -%}
-        {{field.label(class="control-label")|safe}}
+        {{field.label(class="form-label")|safe}}
         {% if field.type == 'FileField' %}
           {{field(**kwargs)|safe}}
         {% else %}
@@ -127,7 +127,7 @@ the necessary fix for required=False attributes, but will also not set the requi
 
         {%- if field.errors %}
           {%- for error in field.errors %}
-            <p class="help-block">{{error}}</p>
+            <div class="invalid-feedback">{{error}}</div>
           {%- endfor %}
         {%- elif field.description -%}
           <p class="help-block">{{field.description|safe}}</p>

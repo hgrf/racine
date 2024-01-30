@@ -21,7 +21,7 @@ jobs:
           python-version: "3.10"
 
       - name: Install developer dependencies
-        run: make install-dependencies
+        run: make app-deps app-dev-deps
 
       - name: Lint with flake8
         run: make flake8-check
@@ -38,7 +38,7 @@ jobs:
           python-version: "3.10"
 
       - name: Install developer dependencies
-        run: make install-dependencies
+        run: make app-deps app-dev-deps
 
       - name: Run tests and produce .coverage file
         run: make test
@@ -70,7 +70,7 @@ jobs:
           python-version: "3.10"
 
       - name: Install developer dependencies
-        run: make install-dependencies
+        run: make app-deps app-dev-deps
 
       - name: Check coding style
         run: make black-check
@@ -105,7 +105,7 @@ jobs:
           python-version: "3.10"
 
       - name: Install developer dependencies
-        run: make install-dependencies
+        run: make app-deps app-dev-deps
 
       - name: Lint with flake8
         run: make flake8

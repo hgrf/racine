@@ -1,5 +1,5 @@
-[![Docker build](https://github.com/hgrf/racine/actions/workflows/build-docker.yml/badge.svg)](https://github.com/hgrf/racine/actions/workflows/build-docker.yml)
-[![Desktop build](https://github.com/hgrf/racine/actions/workflows/build-desktop.yml/badge.svg)](https://github.com/hgrf/racine/actions/workflows/build-desktop.yml)
+[![Build](https://github.com/hgrf/racine/actions/workflows/build.yml/badge.svg)](https://github.com/hgrf/racine/actions/workflows/build.yml)
+[![Quality](https://github.com/hgrf/racine/actions/workflows/quality.yml/badge.svg)](https://github.com/hgrf/racine/actions/workflows/quality.yml)
 ![coverage](https://raw.githubusercontent.com/hgrf/racine/python-coverage-comment-action-data/badge.svg)
 ![flake8](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/hgrf/1cfaee423c85504cd204cf4649e2cf29/raw/flake8-badge.json)
 ![eslint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/hgrf/1cfaee423c85504cd204cf4649e2cf29/raw/eslint-badge.json)
@@ -78,8 +78,8 @@ Now you enter this directory and you create a virtual environment for python - a
 Finally, all that remains to do is to install the required python packages and JavaScript
 dependencies:
 
-    make install-dependencies
-    make install-js-dependencies
+    make app-deps app-dev-deps
+    make js-build
     
 Now you have to initialise the database by running:
 

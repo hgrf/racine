@@ -1,5 +1,6 @@
 [![Build](https://github.com/hgrf/racine/actions/workflows/build.yml/badge.svg)](https://github.com/hgrf/racine/actions/workflows/build.yml)
 [![Quality](https://github.com/hgrf/racine/actions/workflows/quality.yml/badge.svg)](https://github.com/hgrf/racine/actions/workflows/quality.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=hgrf_racine&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=hgrf_racine)
 ![coverage](https://raw.githubusercontent.com/hgrf/racine/python-coverage-comment-action-data/badge.svg)
 ![flake8](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/hgrf/1cfaee423c85504cd204cf4649e2cf29/raw/flake8-badge.json)
 ![eslint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/hgrf/1cfaee423c85504cd204cf4649e2cf29/raw/eslint-badge.json)

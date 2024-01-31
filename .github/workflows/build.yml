@@ -168,7 +168,10 @@ jobs:
     - name: Push to ghcr
       uses: docker/build-push-action@v5
       with:
+        context: .
+        file: docker/Dockerfile
         push: true
+        target: racine
         tags: ghcr.io/hgrf/racine:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max

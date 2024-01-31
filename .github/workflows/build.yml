@@ -155,6 +155,9 @@ jobs:
       COMPOSE_FILE: docker/docker-compose.yml
 
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Login to ghcr
       uses: docker/login-action@v3
       with:

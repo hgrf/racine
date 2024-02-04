@@ -13,6 +13,10 @@ api-client: api-spec build/openapi-generator-cli.jar
 	java -jar build/openapi-generator-cli.jar generate \
 		-i docs/api.yaml -g javascript -p modelPropertyNaming=original -o js/src/api
 
+	java -jar build/openapi-generator-cli.jar generate \
+		-i docs/api.yaml -g dart -p modelPropertyNaming=original -o build/openapi
+	# TODO: what about intl dependency?
+
 js-deps: build/.js_deps_done
 build/.js_deps_done:
 	rm -rf app/static/mathjax

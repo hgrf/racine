@@ -14,6 +14,10 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  html: ^0.15.4
+  openapi:
+    path: ../build/openapi
+  requests: 4.7.0
 
 dev_dependencies:
   flutter_test:

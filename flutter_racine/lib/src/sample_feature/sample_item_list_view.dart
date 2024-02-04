@@ -4,19 +4,52 @@ import '../settings/settings_view.dart';
 import 'sample_item.dart';
 import 'sample_item_details_view.dart';
 
+import 'package:requests/requests.dart';
+import 'package:html/parser.dart';
+
 /// Displays a list of SampleItems.
-class SampleItemListView extends StatelessWidget {
+class SampleItemListView extends StatefulWidget {
   const SampleItemListView({
     super.key,
-    this.items = const [SampleItem(1), SampleItem(2), SampleItem(3)],
   });
 
-  static const routeName = '/';
+  static const routeName = '/list';
 
-  final List<SampleItem> items;
+  @override
+  _SampleItemListViewState createState() => _SampleItemListViewState();
+}
+
+class _SampleItemListViewState extends State<SampleItemListView> {
+  _SampleItemListViewState();
+
+  List<Sample> items = [];
+  bool itemsRequested = false;
 
   @override
   Widget build(BuildContext context) {
+    if (items.isEmpty) {
+      if (!itemsRequested) {
+        // Request items from the server.
+        Requests.get('http://localhost:5678/aview/tree', queryParameters: {'order': 'id', 'showarchived': 'false'}).then((response) {
+          final document = parse(response.content());
+          List<Sample> newItems = [];
+          document.getElementsByClassName('nav-entry').forEach((element) {
+            int id = int.parse(element.attributes['data-id']??'0');
+            if (id > 0) {
+              newItems.add(Sample(id, element.attributes['data-name']??''));
+            }
+          });
+          setState(() {
+            items = newItems;
+          });
+        });
+        itemsRequested = true;
+      }
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sample Items'),
@@ -49,7 +82,7 @@ class SampleItemListView extends StatelessWidget {
           final item = items[index];
 
           return ListTile(
-            title: Text('SampleItem ${item.id}'),
+            title: Text('${item.name}'),
             leading: const CircleAvatar(
               // Display the Flutter Logo image asset.
               foregroundImage: AssetImage('assets/images/flutter_logo.png'),
@@ -61,6 +94,7 @@ class SampleItemListView extends StatelessWidget {
               Navigator.restorablePushNamed(
                 context,
                 SampleItemDetailsView.routeName,
+                arguments: item.id,
               );
             }
           );

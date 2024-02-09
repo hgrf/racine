@@ -7,6 +7,7 @@ const path = require("path");
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow = null;
 let subpy = null;
+let subpyReady = false;
 
 const PY_DIST_FOLDER = "dist-python/run_app"; // python distributable folder
 const PY_SRC_FOLDER = "../desktop"; // path to the python source
@@ -26,7 +27,7 @@ const getPythonScriptPath = () => {
       PY_DIST_FOLDER,
       PY_MODULE.slice(0, -3) + ".exe"
     );
-  } else if (process.platform === "linux") {
+  } else if (process.platform === "linux" || process.platform === "darwin") {
     return path.join(
       __dirname,
       PY_DIST_FOLDER,
@@ -39,36 +40,30 @@ const getPythonScriptPath = () => {
 const startPythonSubprocess = () => {
   let script = getPythonScriptPath();
   if (isRunningInBundle()) {
-    console.log("Running in bundle");
+    console.log("Running in bundle: " + script);
     subpy = require("child_process").execFile(script, []);
-    subpy.stdout.on('data', (data) => { console.log(`stdout: ${data.trim()}`); });
-    subpy.stderr.on('data', (data) => {
-      console.error(`stderr: ${data.trim()}`);
-      if (data.includes("Running on http")) {
-        console.log("Python subprocess is ready to accept connections.");
-        mainWindow.loadURL("http://localhost:4040/");
-      }
-    });
   } else {
     let env = process.env;
     env.PYTHONPATH = path.join(__dirname, "..");
     console.log(`Running in dev mode with PYTHONPATH=${env.PYTHONPATH}`);
     subpy = require("child_process").spawn("python", [script], { cwd: path.join(process.cwd(), ".."), env: env });
-    subpy.stdout.on('data', (data) => { console.log(`stdout: ${data}`); });
-    subpy.stderr.on('data', (data) => {
-      console.error(`stderr: ${data}`);
-      if (data.includes("Running on http")) {
-        console.log("Python subprocess is ready to accept connections.");
-        mainWindow.loadURL("http://localhost:4040/");
-      }
-    });
-    
-    subpy.on('close', (code) => {
-      subpy = null;
-      if (code !== 0)
-        throw new Error(`Child process failed with code ${code}.`);
-    });
   }
+
+  subpy.stdout.on('data', (data) => { console.log(`stdout: ${data}`); });
+  subpy.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+    if (data.includes("Running on http")) {
+      console.log("Python subprocess is ready to accept connections.");
+      subpyReady = true;
+      mainWindow.loadURL("http://localhost:4040/");
+    }
+  });
+ 
+  subpy.on('close', (code) => {
+    subpy = null;
+    if (code !== 0 && code !== null)
+      throw new Error(`Child process failed with code ${code}.`);
+  });
 };
 
 const killPythonSubprocess = () => {
@@ -102,7 +97,11 @@ const createMainWindow = () => {
     console.log(`Finished loading page ${url}.`);
   });
 
-  mainWindow.loadFile(path.join(__dirname, "spinner.html"));
+  if (subpyReady) {
+    mainWindow.loadURL("http://localhost:4040/");
+  } else {
+    mainWindow.loadFile(path.join(__dirname, "spinner.html"));
+  }
 
   // Open the DevTools if flask is running in development mode
   if (process.env.FLASK_ENV === "development") {
@@ -146,11 +145,14 @@ app.on("activate", () => {
   if (subpy == null) {
     startPythonSubprocess();
   }
-  if (win === null) {
+  if (mainWindow === null) {
     createMainWindow();
   }
 });
 
 app.on("quit", function () {
-  // do some additional cleanup
+  // kill python subprocess (for MacOS)
+  if (subpy != null) {
+    killPythonSubprocess();
+  }
 });

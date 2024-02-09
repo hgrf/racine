@@ -219,6 +219,66 @@ jobs:
         name: "RacineDesktop AppImage ${{ needs.version.outputs.VERSION }}"
         path: "desktop/dist/RacineDesktop-${{ needs.version.outputs.VERSION }}.AppImage"
 
+  build-macos:
+    name: Build macOS x64 executable
+    runs-on: macos-latest
+    needs: [version, build-app-static]
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+        cache: "pip"
+
+    - name: Install developer dependencies
+      run: make app-deps app-dev-deps
+
+    - name: Download app-static
+      uses: actions/download-artifact@v4
+      with:
+        name: app-static
+        path: app/static/
+
+    - name: Build executable
+      run: make desktop-dist
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: "RacineDesktop ${{ needs.version.outputs.VERSION }} macOS x64 dmg"
+        path: "desktop/dist/RacineDesktop-${{ needs.version.outputs.VERSION }}.dmg"
+
+  build-macos-arm64:
+    name: Build macOS arm64 executable
+    runs-on: macos-14
+    needs: [version, build-app-static]
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+        cache: "pip"
+
+    - name: Install developer dependencies
+      run: make app-deps app-dev-deps
+
+    - name: Download app-static
+      uses: actions/download-artifact@v4
+      with:
+        name: app-static
+        path: app/static/
+
+    - name: Build executable
+      run: make desktop-dist
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: "RacineDesktop ${{ needs.version.outputs.VERSION }} macOS arm64 dmg"
+        path: "desktop/dist/RacineDesktop-${{ needs.version.outputs.VERSION }}-arm64.dmg"
+
   build-windows:
     name: Build Windows executable
     runs-on: windows-latest

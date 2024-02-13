@@ -9,6 +9,12 @@ from flask_migrate import upgrade
 
 if __name__ == "__main__":
     try:
+        print("Changing to working directory...")
+        workdir = os.path.join(
+            os.environ.get("HOME") or os.environ.get("USERPROFILE"), "RacineDesktop"
+        )
+        os.makedirs(workdir, exist_ok=True)
+        os.chdir(workdir)
         print("Creating directories...")
         os.makedirs("data", exist_ok=True)
         os.makedirs("database", exist_ok=True)
@@ -27,7 +33,7 @@ if __name__ == "__main__":
                 upgrade(os.path.join(os.path.dirname(__file__), "migrations"))
             else:
                 # for dev
-                upgrade("migrations")
+                upgrade(os.path.join(os.path.dirname(__file__), "..", "migrations"))
 
         # recreate the app to make sure activity types are initialized
         app = create_app("standalone")

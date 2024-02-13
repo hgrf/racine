@@ -2,7 +2,6 @@
 
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
-const { env } = require("process");
 
 // Keep a global reference of the mainWindowdow object, if you don't, the mainWindowdow will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -39,7 +38,6 @@ const getPythonScriptPath = () => {
 
 const startPythonSubprocess = () => {
   let script = getPythonScriptPath();
-  // TODO: should make SURE that these processes are killed when the app is closed
   if (isRunningInBundle()) {
     console.log("Running in bundle");
     subpy = require("child_process").execFile(script, []);
@@ -51,13 +49,6 @@ const startPythonSubprocess = () => {
         mainWindow.loadURL("http://localhost:4040/");
       }
     });
-    // TODO: this does not work with the current mechanism of killing the python subprocesses
-    //       => we need a better way to shut down the app
-    // subpy.on('close', (code) => {
-    //   console.log(`child process exited with code ${code}`);
-    //   if (code !== 0)
-    //     throw new Error("Child process failed with code " + code.toString() + ".");
-    // });
   } else {
     let env = process.env;
     env.PYTHONPATH = path.join(__dirname, "..");
@@ -73,39 +64,19 @@ const startPythonSubprocess = () => {
     });
     
     subpy.on('close', (code) => {
-      console.log(`child process exited with code ${code}`);
+      subpy = null;
       if (code !== 0)
-        // TODO: why does this not kill the app?
-        throw new Error("Child process failed with code " + code.toString() + ".");
+        throw new Error(`Child process failed with code ${code}.`);
     });
   }
 };
 
-const killPythonSubprocesses = (main_pid) => {
-  const python_script_name = path.basename(getPythonScriptPath());
-  let cleanup_completed = false;
-  const psTree = require("ps-tree");
-  psTree(main_pid, function (err, children) {
-    let python_pids = children
-      .filter(function (el) {
-        return el.COMMAND == python_script_name;
-      })
-      .map(function (p) {
-        return p.PID;
-      });
-    // kill all the spawned python processes
-    python_pids.forEach(function (pid) {
-      process.kill(pid);
-    });
-    subpy = null;
-    cleanup_completed = true;
-  });
-  return new Promise(function (resolve, reject) {
-    (function waitForSubProcessCleanup() {
-      if (cleanup_completed) return resolve();
-      setTimeout(waitForSubProcessCleanup, 30);
-    })();
-  });
+const killPythonSubprocess = () => {
+  if (subpy == null)
+    return;
+  console.log("Killing python subprocess...");
+  process.kill(subpy.pid);
+  subpy = null;
 };
 
 const createMainWindow = () => {
@@ -164,10 +135,8 @@ app.on("window-all-closed", () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== "darwin") {
-    let main_process_pid = process.pid;
-    killPythonSubprocesses(main_process_pid).then(() => {
-      app.quit();
-    });
+    killPythonSubprocess();
+    app.quit();
   }
 });
 

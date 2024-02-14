@@ -274,6 +274,12 @@ jobs:
         name: app-static
         path: app/static/
 
+    - name: Trust self-signed certificate
+      run: |
+        echo "${{ secrets.CSC_LINK }}" | base64 -d > racine.p12
+        sudo security add-trusted-cert -d -r trustRoot -p codeSign -k /Library/Keychains/System.keychain racine.p12
+        rm racine.p12
+
     - name: Build executable
       run: make desktop-dist
 

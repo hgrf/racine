@@ -1,7 +1,7 @@
 {
   "name": "racine-desktop",
   "version": "0.2.0",
-  "description": "",
+  "description": "A desktop demo of the Racine lab book",
   "main": "renderer.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -18,13 +18,19 @@
       "**/*.node"
     ],
     "mac": {
-      "category": "public.app-category.utilities"
+      "category": "public.app-category.utilities",
+      "signIgnore": [
+        "\\.eot",
+        "\\.otf",
+        "\\.png",
+        "\\.woff"
+      ]
     },
     "files": [
       "renderer.js",
       "icon.png",
       "spinner.html",
-      "node_modules/**/*"
+      "!node_modules/**/*"
     ],
     "extraResources": [
       {
@@ -36,13 +42,13 @@
       }
     ]
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Holger Graef",
+  "license": "GPL-3.0-only",
   "dependencies": {
     "ps-tree": "^1.2.0"
   },
   "devDependencies": {
-    "electron": "27.0.3",
-    "electron-builder": "23.6.0"
+    "electron": "28.2.2",
+    "electron-builder": "24.9.1"
   }
 }

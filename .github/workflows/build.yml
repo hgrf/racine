@@ -275,10 +275,7 @@ jobs:
         path: app/static/
 
     - name: Trust self-signed certificate
-      run: |
-        echo "$CSC_LINK" | base64 -d > racine.p12
-        sudo security add-trusted-cert -d -r trustRoot -p codeSign -k /Library/Keychains/System.keychain racine.p12
-        rm racine.p12
+      run: sudo security add-trusted-cert -d -r trustRoot -p codeSign -k /Library/Keychains/System.keychain desktop/racine-macos.cer
 
     - name: Build executable
       run: make desktop-dist

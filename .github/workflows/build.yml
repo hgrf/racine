@@ -223,6 +223,9 @@ jobs:
     name: Build macOS x64 executable
     runs-on: macos-latest
     needs: [version, build-app-static]
+    env:
+      CSC_LINK: ${{ secrets.CSC_LINK }}
+      CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
     steps:
     - uses: actions/checkout@v4
 
@@ -273,9 +276,6 @@ jobs:
       with:
         name: app-static
         path: app/static/
-
-    - name: Trust self-signed certificate
-      run: sudo security add-trusted-cert -d -r trustRoot -p codeSign -k /Library/Keychains/System.keychain desktop/racine-macos.cer
 
     - name: Build executable
       run: make desktop-dist

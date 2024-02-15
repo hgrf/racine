@@ -18,6 +18,7 @@
       "**/*.node"
     ],
     "mac": {
+      "hardenedRuntime": true,
       "category": "public.app-category.utilities",
       "signIgnore": [
         "\\.eot",

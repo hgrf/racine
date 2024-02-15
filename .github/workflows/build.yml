@@ -289,6 +289,9 @@ jobs:
     name: Build Windows executable
     runs-on: windows-latest
     needs: [version, build-app-static]
+    env:
+      CSC_LINK: ${{ secrets.CSC_LINK }}
+      CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
     steps:
     - uses: actions/checkout@v4
   

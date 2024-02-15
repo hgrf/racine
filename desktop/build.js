@@ -14,7 +14,7 @@ const Platform = builder.Platform
 * @type {import('electron-builder').Configuration}
 * @see https://www.electron.build/configuration/configuration
 */
-const options = package_data.build;
+const options = package_data._buildMePlease;
 
 builder.build({
   config: options

@@ -6,11 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "package": "npm run -s package-electron && npm run -s package-cleanup",
+    "package": "node package_python.js && npm run -s package-electron && npm run -s package-cleanup",
     "package-electron": "node build.js",
     "package-cleanup": "rm -rf build && rm -rf run_app.spec && rm -rf dist-python"
   },
-  "build": {
+  "_buildMePlease": {
     "appId": "com.racine.desktop",
     "productName": "RacineDesktop",
     "asar": false,

@@ -19,6 +19,12 @@
     ],
     "mac": {
       "category": "public.app-category.utilities",
+      "signIgnore": [
+        "\\.eot",
+        "\\.otf",
+        "\\.png",
+        "\\.woff"
+      ]
     },
     "files": [
       "renderer.js",

@@ -64,8 +64,8 @@
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a id="nextFileLink" class="nav" href="d_5129300603c71d00_test_main_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.4.2">coverage.py v7.4.2</a>,
-            created at 2024-02-22 20:22 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.4.3">coverage.py v7.4.3</a>,
+            created at 2024-03-05 12:02 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"/>
@@ -99,7 +99,7 @@
     <p class="run"><span class="n"><a id="t17" href="#t17">17</a></span><span class="t"><span class="key">def</span> <span class="nam">expect_status_code</span><span class="op">(</span><span class="nam">r</span><span class="op">:</span> <span class="nam">TestResponse</span><span class="op">,</span> <span class="nam">code</span><span class="op">:</span> <span class="nam">int</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t18" href="#t18">18</a></span><span class="t">    <span class="key">assert</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t19" href="#t19">19</a></span><span class="t">        <span class="nam">r</span><span class="op">.</span><span class="nam">status_code</span> <span class="op">==</span> <span class="nam">code</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t20" href="#t20">20</a></span><span class="t">    <span class="op">)</span><span class="op">,</span> <span class="str">f"Expected status code {code}, got {r.status_code}, response: {r.data.decode('utf-8')}"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t20" href="#t20">20</a></span><span class="t">    <span class="op">)</span><span class="op">,</span> <span class="fst">f"</span><span class="fst">Expected status code </span><span class="op">{</span><span class="nam">code</span><span class="op">}</span><span class="fst">, got </span><span class="op">{</span><span class="nam">r</span><span class="op">.</span><span class="nam">status_code</span><span class="op">}</span><span class="fst">, response: </span><span class="op">{</span><span class="nam">r</span><span class="op">.</span><span class="nam">data</span><span class="op">.</span><span class="nam">decode</span><span class="op">(</span><span class="str">'utf-8'</span><span class="op">)</span><span class="op">}</span><span class="fst">"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t21" href="#t21">21</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t22" href="#t22">22</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t23" href="#t23">23</a></span><span class="t"><span class="nam">g_ctx</span> <span class="op">=</span> <span class="key">None</span>&nbsp;</span><span class="r"></span></p>
@@ -205,7 +205,7 @@
     <p class="pln"><span class="n"><a id="t123" href="#t123">123</a></span><span class="t">    <span class="str">"""Test that actions can be created using the API."""</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t124" href="#t124">124</a></span><span class="t">    <span class="nam">sample_id</span> <span class="op">=</span> <span class="num">1</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t125" href="#t125">125</a></span><span class="t">    <span class="nam">r</span> <span class="op">=</span> <span class="nam">ctx</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">put</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t126" href="#t126">126</a></span><span class="t">        <span class="str">f"/api/action/{sample_id}"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t126" href="#t126">126</a></span><span class="t">        <span class="fst">f"</span><span class="fst">/api/action/</span><span class="op">{</span><span class="nam">sample_id</span><span class="op">}</span><span class="fst">"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t127" href="#t127">127</a></span><span class="t">        <span class="nam">headers</span><span class="op">=</span><span class="op">{</span><span class="str">"Authorization"</span><span class="op">:</span> <span class="str">"Bearer "</span> <span class="op">+</span> <span class="nam">ctx</span><span class="op">.</span><span class="nam">api_token</span><span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t128" href="#t128">128</a></span><span class="t">        <span class="nam">data</span><span class="op">=</span><span class="op">{</span><span class="str">"description"</span><span class="op">:</span> <span class="str">"Test action"</span><span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t129" href="#t129">129</a></span><span class="t">    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -256,8 +256,8 @@
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a id="nextFileLink" class="nav" href="d_5129300603c71d00_test_main_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.4.2">coverage.py v7.4.2</a>,
-            created at 2024-02-22 20:22 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.4.3">coverage.py v7.4.3</a>,
+            created at 2024-03-05 12:02 +0000
         </p>
     </div>
 </footer>

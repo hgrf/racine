@@ -7,8 +7,8 @@
         "icons-extra-styles.css"
     ],
     "alert": "fa-triangle-exclamation",
-    "arrowDown": "fa-solid fa-circle-up",
-    "arrowUp": "fa-solid fa-circle-down",
+    "arrowDown": "fa-solid fa-circle-down",
+    "arrowUp": "fa-solid fa-circle-up",
     "btnArchive": {
         "common": "fa-solid",
         "active": "fa-box-archive",

@@ -4,7 +4,10 @@
 
 | Name                                                                               |    Stmts |     Miss |   Cover |   Missing |
 |----------------------------------------------------------------------------------- | -------: | -------: | ------: | --------: |
-| app/\_\_init\_\_.py                                                                |       54 |        7 |     87% |27-28, 45, 50-54 |
+| app/\_\_init\_\_.py                                                                |       45 |        5 |     89% | 26-30, 45 |
+| app/abstract/\_\_init\_\_.py                                                       |        0 |        0 |    100% |           |
+| app/abstract/async\_task.py                                                        |      106 |       62 |     42% |19-20, 42-65, 68-69, 72-87, 90-94, 111-113, 117, 120, 125-137, 143, 147-150, 159-162 |
+| app/abstract/kv\_store.py                                                          |       16 |        7 |     56% |10-14, 18-21 |
 | app/api/\_\_init\_\_.py                                                            |        9 |        0 |    100% |           |
 | app/api/actions.py                                                                 |       92 |       45 |     51% |89-90, 115-122, 144-150, 171-202, 225-248 |
 | app/api/common.py                                                                  |        4 |        0 |    100% |           |
@@ -21,7 +24,7 @@
 | app/browser/\_\_init\_\_.py                                                        |        3 |        0 |    100% |           |
 | app/browser/views.py                                                               |      309 |      252 |     18% |59-79, 101-126, 134-152, 156-169, 173-189, 212-246, 267, 276-279, 283-294, 315-344, 361-386, 404-432, 442-510, 524-549, 557-598, 606-613, 620-656, 660-664 |
 | app/common.py                                                                      |       13 |        0 |    100% |           |
-| app/config.py                                                                      |       47 |        0 |    100% |           |
+| app/config.py                                                                      |       49 |        0 |    100% |           |
 | app/decorators.py                                                                  |       12 |        3 |     75% |     10-12 |
 | app/emailing.py                                                                    |       19 |       12 |     37% |21-22, 27-34, 38-39 |
 | app/main/\_\_init\_\_.py                                                           |        5 |        0 |    100% |           |
@@ -52,12 +55,12 @@
 | app/profile/views.py                                                               |       60 |       41 |     32% |13, 19-30, 36-45, 51-78 |
 | app/settings/\_\_init\_\_.py                                                       |        3 |        0 |    100% |           |
 | app/settings/forms.py                                                              |       36 |        0 |    100% |           |
-| app/settings/views.py                                                              |      126 |       90 |     29% |19, 31, 43-64, 76-94, 99-107, 111-124, 133-183, 196-199 |
+| app/settings/views.py                                                              |      125 |       89 |     29% |19, 31, 43-64, 76-93, 98-106, 110-123, 132-182, 195-198 |
 | app/smbinterface.py                                                                |       84 |       67 |     20% |29-51, 57-71, 94-110, 114-145, 149, 154-173 |
 | app/tests/\_\_init\_\_.py                                                          |        0 |        0 |    100% |           |
 | app/tests/test\_api.py                                                             |       63 |        2 |     97% |     61-62 |
 | app/tests/test\_main.py                                                            |       26 |        0 |    100% |           |
-| app/usagestats.py                                                                  |       55 |       35 |     36% |27-85, 90-100 |
+| app/usagestats.py                                                                  |       53 |       33 |     38% |27-82, 87-97 |
 | app/validators.py                                                                  |       14 |        5 |     64% |     16-21 |
 | app/version.py                                                                     |       12 |        1 |     92% |        15 |
 | migrations/env.py                                                                  |       33 |       10 |     70% |43-47, 62-66, 88 |
@@ -83,7 +86,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2493** | **1083** | **57%** |           |
+|                                                                          **TOTAL** | **2605** | **1147** | **56%** |           |
 
 
 ## Setup coverage badge

@@ -352,6 +352,16 @@ jobs:
       with:
         name: "RacineDesktop AppImage ${{ needs.version.outputs.VERSION }}"
 
+    - name: Download macOS x64 executable
+      uses: actions/download-artifact@v3
+      with:
+        name: "RacineDesktop ${{ needs.version.outputs.VERSION }} macOS x64 dmg"
+
+    - name: Download macOS arm64 executable
+      uses: actions/download-artifact@v3
+      with:
+        name: "RacineDesktop ${{ needs.version.outputs.VERSION }} macOS arm64 dmg"
+
     - name: Download Windows executable
       uses: actions/download-artifact@v3
       with:
@@ -362,4 +372,6 @@ jobs:
       with:
         files: |
           RacineDesktop-${{ needs.version.outputs.VERSION }}.AppImage
+          RacineDesktop-${{ needs.version.outputs.VERSION }}.dmg
+          RacineDesktop-${{ needs.version.outputs.VERSION }}-arm64.dmg
           RacineDesktop Setup ${{ needs.version.outputs.VERSION }}.exe

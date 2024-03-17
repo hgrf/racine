@@ -1,12 +1,13 @@
 import os
 import traceback
 
-from celery import Celery, Task
 from flask import current_app
 from flask import Flask
 
 from wtforms.fields import HiddenField
 
+from .abstract.async_task import async_init_app
+from .abstract.kv_store import kvs_init_app
 from .api.fields import maybe_update_activity_types
 from .common import db, login_manager, migrate, render_racine_template
 from .config import config
@@ -19,31 +20,6 @@ from .browser import browser as browser_blueprint
 from .settings import settings as settings_blueprint
 from .profile import profile as profile_blueprint
 from .printdata import printdata as printdata_blueprint
-
-
-def celery_init_app(app: Flask) -> Celery:
-    class FlaskTask(Task):
-        def __call__(self, *args: object, **kwargs: object) -> object:
-            with app.app_context():
-                return self.run(*args, **kwargs)
-
-    celery_app = Celery(app.name, task_cls=FlaskTask)
-    celery_app.config_from_object(app.config["CELERY"])
-    celery_app.conf.update(
-        dict(
-            CELERYBEAT_SCHEDULE=dict(
-                usage_stats_task=dict(
-                    task="usage_stats_task",
-                    schedule=60.0,
-                )
-            )
-        )
-    )
-    celery_app.set_default()
-    app.extensions["celery"] = celery_app
-    if not app.config["TESTING"]:
-        usage_stats_task.delay()
-    return celery_app
 
 
 def error_handler(e):
@@ -63,7 +39,10 @@ def create_app(config_name=os.getenv("FLASK_CONFIG") or "default"):
     maybe_update_activity_types(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
-    celery_init_app(app)
+    async_init_app(app)
+    kvs_init_app(app)
+    if not app.config["TESTING"]:
+        usage_stats_task.delay()
 
     # https://github.com/mbr/flask-bootstrap/blob/3.3.7.1/flask_bootstrap/__init__.py
     app.jinja_env.globals["bootstrap_is_hidden_field"] = lambda field: isinstance(

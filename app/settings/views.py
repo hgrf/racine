@@ -1,11 +1,11 @@
 import os
-import redis
 
 from flask import current_app as app, flash, jsonify
 from flask_login import login_required
 
 from . import settings
 from .forms import NewSMBResourceForm, NewUserForm, EmailSettings, UsageStatsSettings
+from ..abstract.kv_store import kvs_get
 from ..common import render_racine_template
 from ..decorators import admin_required
 from ..emailing import send_mail, read_mailconfig, write_mailconfig
@@ -87,8 +87,7 @@ def stats():
     except Exception:
         pass
 
-    r = redis.Redis(host="racine-redis", port=6379, decode_responses=True)
-    stats = r.get("usage-stats")
+    stats = kvs_get("usage-stats")
     if stats is None:
         stats = "No usage statistics transmitted yet."
     return render_racine_template("settings/stats.html", form=form, stats=stats)

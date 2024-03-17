@@ -22,6 +22,9 @@ class Config:
         result_backend="redis://racine-redis",
         task_ignore_result=True,
     )
+    REDIS = dict(
+        host="racine-redis",
+    )
     # can be one of "fontawesome", "bootstrap", "legacy"
     ICON_THEME = "fontawesome"
 
@@ -79,9 +82,8 @@ class StandaloneConfig(Config):
     )
     UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
     LOG_EXCEPTIONS = True
-    CELERY = dict(
-        task_always_eager=True,
-    )
+    CELERY = None
+    REDIS = None
 
 
 config = {

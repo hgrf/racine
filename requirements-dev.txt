@@ -1,5 +1,5 @@
 # code formatting
-black==23.3.0
+black==24.3.0
 pre-commit==3.2.1
 
 # linting

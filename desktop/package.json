@@ -1,6 +1,6 @@
 {
   "name": "racine-desktop",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A desktop demo of the Racine lab book",
   "main": "renderer.js",
   "scripts": {

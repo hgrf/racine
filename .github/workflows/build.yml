@@ -126,11 +126,17 @@ jobs:
         context: .
         file: docker/Dockerfile
         push: false
-        load: true
         target: racine
         tags: racine:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
+        outputs: type=docker,dest=/tmp/racine.tar
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: racine
+        path: /tmp/racine.tar
 
   run-tests:
     name: Run tests in docker
@@ -150,14 +156,11 @@ jobs:
     if: github.event_name == 'push'
     name: Push docker image
     runs-on: ubuntu-latest
-    needs: [build-docker, run-tests]
+    needs: [build-docker, run-tests, version]
     env:
       COMPOSE_FILE: docker/docker-compose.yml
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
     - name: Login to ghcr
       uses: docker/login-action@v3
       with:
@@ -168,21 +171,28 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: Push to ghcr
-      uses: docker/build-push-action@v5
+    - name: Download artifact
+      uses: actions/download-artifact@v4
       with:
-        context: .
-        file: docker/Dockerfile
-        push: true
-        target: racine
-        tags: ghcr.io/hgrf/racine:latest
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        name: racine
+        path: /tmp
+
+    - name: Load Docker image
+      run: |
+        docker load --input /tmp/racine.tar
+        docker image ls -a
+
+    - name: Push to ghcr
+      run: |
+        docker tag racine:latest \
+                   ghcr.io/hgrf/racine:latest && \
+        docker push ghcr.io/hgrf/racine:latest && \
+        echo Successfully pushed ghcr.io/hgrf/racine:latest
 
     - name: Push to ghcr (tagged)
       if: startsWith(github.ref, 'refs/tags/')
       run: |
-        sed s'/refs\/tags\///g' <(echo "${{ github.ref }}") | (read TAG; \
+        sed s'/refs\/tags\/v//g' <(echo "${{ github.ref }}") | (read TAG; \
           docker tag ghcr.io/hgrf/racine:latest \
                      ghcr.io/hgrf/racine:$TAG &&  \
           docker push ghcr.io/hgrf/racine:$TAG && \
@@ -348,22 +358,22 @@ jobs:
     needs: [version, build-appimage, build-macos, build-macos-arm64, build-windows, build-docker, run-tests]
     steps:
     - name: Download AppImage
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: "RacineDesktop AppImage ${{ needs.version.outputs.VERSION }}"
 
     - name: Download macOS x64 executable
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: "RacineDesktop ${{ needs.version.outputs.VERSION }} macOS x64 dmg"
 
     - name: Download macOS arm64 executable
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: "RacineDesktop ${{ needs.version.outputs.VERSION }} macOS arm64 dmg"
 
     - name: Download Windows executable
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: "RacineDesktop Setup ${{ needs.version.outputs.VERSION }}"
 

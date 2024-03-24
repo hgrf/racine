@@ -43,5 +43,3 @@ ENV FLASK_CONFIG production
 COPY ./app /app/app/
 COPY ./migrations /app/migrations/
 COPY ./docker/uwsgi.ini /app/docker/uwsgi.ini
-
-COPY ./app/static /app/app/static

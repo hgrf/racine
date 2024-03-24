@@ -345,7 +345,7 @@ jobs:
     name: Publish release
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
-    needs: [version, build-appimage, build-windows, build-docker, run-tests]
+    needs: [version, build-appimage, build-macos, build-macos-arm64, build-windows, build-docker, run-tests]
     steps:
     - name: Download AppImage
       uses: actions/download-artifact@v3

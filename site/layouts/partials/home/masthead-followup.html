@@ -130,12 +130,8 @@
         You can use this demo app to get an idea of Racine's features and to take notes for yourself.
       </p>
       <p>
-      Download demo app for
-        <i class="fab fa-linux"></i>
-        <a href="https://github.com/hgrf/racine/releases/download/{{ getenv "RACINE_VERSION" }}/RacineDesktop-{{ replace (getenv "RACINE_VERSION") "v" "" }}.AppImage" class="link-secondary">Linux (AppImage)</a>
-        &nbsp;&middot;&nbsp;
-        <i class="fab fa-windows"></i>
-        <a href="https://github.com/hgrf/racine/releases/download/{{ getenv "RACINE_VERSION" }}/RacineDesktop.Setup.{{ replace (getenv "RACINE_VERSION") "v" "" }}.exe" class="link-secondary">Windows (Installer)</a>
+        Download demo app for
+        <div class="download-demo" data-version="{{ replace (getenv "RACINE_VERSION") "v" "" }}"></div>
       </p>
     </div>
   </section>

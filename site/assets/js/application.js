@@ -10,8 +10,61 @@
  * For details, see https://creativecommons.org/licenses/by/3.0/.
  */
 
+function getOs() {
+  var os = 'notsup';
+  if (window.navigator.userAgent.indexOf('Windows') != -1)
+    os = 'win';
+  if (window.navigator.userAgent.indexOf('OS X') != -1)
+    os = 'osx';
+  if (window.navigator.userAgent.indexOf('Linux') != -1)
+    os = 'linux';
+
+  return os;
+}
+
+const downloadUrl = {
+  win: '',
+  osx: 'https://github.com/hgrf/racine/releases/download/vXXX/RacineDesktop-XXX.dmg',
+  osx_arm64: 'https://github.com/hgrf/racine/releases/download/vXXX/RacineDesktop-XXX-arm64.dmg',
+  linux: 'https://github.com/hgrf/racine/releases/download/vXXX/RacineDesktop-XXX.AppImage',
+  notsup: 'https://github.com/hgrf/racine/releases/vXXX'
+};
+
+const downloadText = {
+  win: 'Windows (Installer)',
+  osx: 'macOS (x64 .dmg)',
+  osx_arm64: 'macOS (arm64 .dmg)',
+  linux: 'Linux (AppImage)',
+  notsup: 'supported platforms'
+};
+
+const downloadIcon = {
+  win: 'fab fa-windows',
+  osx: 'fab fa-apple',
+  osx_arm64: 'fab fa-apple',
+  linux: 'fab fa-linux',
+  notsup: 'fas fa-download'
+};
+
+function makeLink(os, version) {
+  return `<a class="link-secondary" href=${downloadUrl[os].replace(/XXX/g, version)}>
+      <i class="${downloadIcon[os]}"></i>&nbsp;${downloadText[os]}
+      </a>`;
+}
+
 (() => {
   'use strict'
+
+  const os = getOs();
+  const elms = document.querySelectorAll('div.download-demo');
+  for (let i = 0; i < elms.length; i++) {
+    const elm = elms[i];
+    const version = elm.getAttribute('data-version');
+    elm.innerHTML = makeLink(os, version);
+    if (os === 'osx') {
+      elm.innerHTML += makeLink('osx_arm64', version);
+    }
+  }
 
   // Scroll the active sidebar link into view
   const sidenav = document.querySelector('.bd-sidebar')

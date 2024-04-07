@@ -50,6 +50,37 @@ used/available disk space.
 If you want to use SSL, add the certificate `server.crt` and key `server.key` in the folder
 `racine/ssl`. Also create a file `server_name.txt` which contains the server name.
 
+### Set up as a system service
+
+Create the file `/etc/systemd/system/racine.service` with the following content:
+
+```
+[Unit]
+Description=Service for Racine
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=<path to racine directory>
+Environment=COMPOSE_HTTP_TIMEOUT=600
+ExecStart=/usr/bin/env /usr/bin/docker compose -f <path to racine directory>/docker-compose.yml up -d
+ExecStop=/usr/bin/env /usr/bin/docker compose -f <path to racine directory>/docker-compose.yml stop
+StandardOutput=syslog
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Then run:
+
+```sh
+systemctl daemon-reload
+systemctl enable racine
+systemctl start racine
+```
+
 ## Using the Desktop app
 
 The latest Racine desktop application can be downloaded from the [Releases](https://github.com/hgrf/racine/releases)

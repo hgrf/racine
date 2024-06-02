@@ -29,7 +29,7 @@ index cfd9a8e2..8257a7cf 100644
          var onedit   = settings.onedit   || function() { }; 
          var onsubmit = settings.onsubmit || function() { };
          var onreset  = settings.onreset  || function() { };
-@@ -390,6 +396,7 @@
+@@ -387,6 +393,7 @@
                          if (settings.tooltip) {
                              $(self).attr('title', settings.tooltip);                
                          }
@@ -37,10 +37,3 @@ index cfd9a8e2..8257a7cf 100644
                      }                    
                  }
              };            
-@@ -540,4 +547,5 @@
-         ajaxoptions: {}
-     };
- 
--})(window.loader_jquery['1.4.2']['jquery']);
-+})(jQuery);
-+

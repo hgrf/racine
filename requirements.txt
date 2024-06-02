@@ -37,7 +37,7 @@ PyYAML==6.0
 redis==4.5.4
 requests==2.31.0
 SQLAlchemy==2.0.8
-tqdm==4.65.0
+tqdm==4.66.3
 typing_extensions==4.5.0
 urllib3==1.26.18
 visitor==0.1.3

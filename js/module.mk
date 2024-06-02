@@ -37,7 +37,7 @@ build/.js_deps_done:
 
 	# install jeditable
 	wget -O js/src/jquery-plugins/jquery.jeditable.js \
-		https://sscdn.net/js/jquery/latest/jeditable/1.7.1/jeditable.js
+		https://raw.githubusercontent.com/NicolasCARPi/jquery_jeditable/1.7.3/jquery.jeditable.js
 	# c.f. https://github.com/hgrf/racine/commit/89d8b57e795ccfbeb73dc18faecc1d0016a8a008#diff-5f8e3a2bd35e7f0079090b176e06d0568d5c8e4468c0febbfa61014d72b16246
 	git apply patches/jquery.jeditable.patch
 

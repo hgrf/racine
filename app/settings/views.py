@@ -62,9 +62,11 @@ def email():
         pass
 
     return (
-        render_racine_template("settings/email.html", js_view="email", form=form)
-        if task is None
-        else jsonify({"task_id": task.id}),
+        (
+            render_racine_template("settings/email.html", js_view="email", form=form)
+            if task is None
+            else jsonify({"task_id": task.id})
+        ),
         200 if task is None else 202,
     )
 

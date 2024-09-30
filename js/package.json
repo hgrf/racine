@@ -20,7 +20,7 @@
     "@rollup/plugin-terser": "^0.4.4",
     "eslint": "^8.37.0",
     "eslint-config-google": "^0.14.0",
-    "rollup": "^3.20.2",
+    "rollup": "^3.29.5",
     "rollup-plugin-polyfill-node": "^0.12.0"
   }
 }

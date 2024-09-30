@@ -1,3 +1,45 @@
+## v0.3.1
+
+### Bugfixes
+
+* API: fix: ignore deleted users in user list (#252)
+* UI: do not show deleted users in shares
+
+### Security patches
+
+* Build(deps): bump werkzeug from 3.0.1 to 3.0.3 (#242)
+* Build(deps): bump jinja2 from 3.1.3 to 3.1.4 (#243)
+* Build(deps): bump idna from 3.4 to 3.7 (#238)
+* Build(deps): bump tqdm from 4.65.0 to 4.66.3 (#241)
+* Build(deps): bump pillow from 10.2.0 to 10.3.0 (#237)
+* Build(deps): bump requests from 2.31.0 to 2.32.2 (#245)
+* Build(deps): bump dnspython from 2.3.0 to 2.6.1 (#239)
+* Build(deps-dev): bump black from 23.3.0 to 24.3.0 (#234)
+* Build(deps-dev): bump ejs from 3.1.9 to 3.1.10 in /desktop (#240)
+* Build(deps): bump cryptography from 42.0.4 to 43.0.1 (#251)
+* Build(deps): bump certifi from 2023.7.22 to 2024.7.4 (#250)
+* Build(deps): bump authlib from 1.2.0 to 1.3.1 (#246)
+* Build(deps-dev): bump rollup from 3.20.7 to 3.29.5 in /js (#254)
+* Build(deps): bump urllib3 from 1.26.18 to 1.26.19 (#247)
+
+### CI
+
+* fix fetching of jeditable and bump it to 1.7.3
+* CI: docker push: leave the v on the tag
+* fix macOS x64 build
+
+### Doc
+
+* add instructions for setup as system service
+
+### Website
+
+* website: add macOS demo app download and detect OS
+* Build(deps): bump ws and socket.io in /site (#248)
+* Build(deps-dev): bump braces from 3.0.2 to 3.0.3 in /site (#249)
+* Build(deps): bump axios and bundlewatch in /site (#256)
+* Build(deps): bump body-parser from 1.20.0 to 1.20.3 in /site (#253)
+
 ## v0.3.0
 
 ### Features

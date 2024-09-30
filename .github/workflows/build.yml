@@ -231,7 +231,7 @@ jobs:
 
   build-macos:
     name: Build macOS x64 executable
-    runs-on: macos-latest
+    runs-on: macos-13
     needs: [version, build-app-static]
     env:
       CSC_LINK: ${{ secrets.CSC_LINK }}

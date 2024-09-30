@@ -300,8 +300,8 @@ jobs:
     runs-on: windows-latest
     needs: [version, build-app-static]
     env:
-      CSC_LINK: ${{ secrets.CSC_LINK }}
-      CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+      CSC_LINK: ${{ secrets.CSC_LINK_WINDOWS }}
+      CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD_WINDOWS }}
     steps:
     - uses: actions/checkout@v4
   

@@ -142,8 +142,9 @@ def userlist():
     if mode == "share":
         # get list of people who already share this sample
         sample = Sample.query.get(int(request.form.get("sampleid")))
-        sharers = [share.user for share in sample.shares]
-        sharers.append(sample.owner)
+        sharers = [share.user for share in sample.shares if share.user is not None]
+        if sample.owner is not None:
+            sharers.append(sample.owner)
 
         # get list of max. 5 people that the current user has recently shared with
         list1 = [

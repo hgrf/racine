@@ -17,7 +17,7 @@
 | app/api/samples.py                                                                 |      117 |       58 |     50% |31, 38, 47-52, 99-109, 129-132, 159-161, 188-190, 194-200, 224-258 |
 | app/api/shares.py                                                                  |       65 |       24 |     63% |53-54, 56, 60, 73, 100-125 |
 | app/api/smbresources.py                                                            |       48 |       13 |     73% |46, 65-72, 95-99 |
-| app/api/users.py                                                                   |       73 |       29 |     60% |55, 69-71, 76, 99-103, 138-189 |
+| app/api/users.py                                                                   |       74 |       12 |     84% |55, 69-71, 76, 177-180, 185-190 |
 | app/auth/\_\_init\_\_.py                                                           |        3 |        0 |    100% |           |
 | app/auth/forms.py                                                                  |       15 |        0 |    100% |           |
 | app/auth/views.py                                                                  |       72 |       34 |     53% |29, 35-37, 46, 69-91, 96-106, 113-117 |
@@ -39,7 +39,7 @@
 | app/models/\_\_init\_\_.py                                                         |       13 |        0 |    100% |           |
 | app/models/action.py                                                               |       18 |        3 |     83% |20, 24, 27 |
 | app/models/activity.py                                                             |       30 |        3 |     90% |16, 32, 39 |
-| app/models/handlers.py                                                             |       38 |       28 |     26% |8-59, 63-90, 103, 106-107 |
+| app/models/handlers.py                                                             |       38 |       27 |     29% |8-59, 63-90, 103, 107 |
 | app/models/news.py                                                                 |       46 |       24 |     48% |28-53, 57-65 |
 | app/models/sample.py                                                               |       33 |        3 |     91% |40, 49, 53 |
 | app/models/share.py                                                                |        9 |        1 |     89% |        12 |
@@ -58,7 +58,7 @@
 | app/settings/views.py                                                              |      125 |       89 |     29% |19, 31, 43-64, 78-95, 100-108, 112-125, 134-184, 197-200 |
 | app/smbinterface.py                                                                |       84 |       67 |     20% |29-51, 57-71, 94-110, 114-145, 149, 154-173 |
 | app/tests/\_\_init\_\_.py                                                          |        0 |        0 |    100% |           |
-| app/tests/test\_api.py                                                             |       63 |        2 |     97% |     61-62 |
+| app/tests/test\_api.py                                                             |       68 |        2 |     97% |     61-62 |
 | app/tests/test\_main.py                                                            |       26 |        0 |    100% |           |
 | app/usagestats.py                                                                  |       53 |       33 |     38% |27-82, 87-97 |
 | app/validators.py                                                                  |       14 |        5 |     64% |     16-21 |
@@ -86,7 +86,7 @@
 | migrations/versions/a45942d815f\_added\_upload\_table.py                           |        8 |        1 |     88% |        35 |
 | migrations/versions/cb354c75d49\_added\_activity\_table.py                         |       10 |        2 |     80% |     52-53 |
 | migrations/versions/e5dcaf21bbf0\_smb\_port\_and\_domain.py                        |       14 |        3 |     79% |     30-32 |
-|                                                                          **TOTAL** | **2605** | **1147** | **56%** |           |
+|                                                                          **TOTAL** | **2611** | **1129** | **57%** |           |
 
 
 ## Setup coverage badge

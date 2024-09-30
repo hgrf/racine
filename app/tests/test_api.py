@@ -166,3 +166,23 @@ def test_create_smbresource(ctx: Context):
         },
     )
     expect_status_code(r, 201)
+
+
+def test_pr252(ctx: Context):
+    """Test that obtaining a user list in "share" mode works after deleting a user."""
+
+    # delete user Alice
+    r = ctx.client.delete(
+        "/api/user/2",
+        headers={"Authorization": "Bearer " + ctx.api_token},
+    )
+
+    assert r.status_code == 204
+
+    # get list of users in "share" mode
+    r = ctx.client.post(
+        "/api/users",
+        headers={"Authorization": "Bearer " + ctx.api_token},
+        data={"mode": "share", "sampleid": 1},
+    )
+    assert r.status_code == 200

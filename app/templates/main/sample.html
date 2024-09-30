@@ -54,7 +54,7 @@
             <div id="sharelistcontainer" {% if shares|length > 4 %}class="collapse" aria-expanded="false"{% endif %}>
             <div id="sharelist">
             <div><strong>Shared with:</strong></div>
-            {% for share in shares %}
+            {% for share in shares if share.user is not none %}
                 <div class="sharelistentry" id="sharelistentry{{ share.id }}">
                     {% if sample.owner == current_user or share.user == current_user %}
                         <a data-type="share" data-id="{{ share.id }}" data-toggle="modal" data-target="#dlg-confirm-delete" href="">
